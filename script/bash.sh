@@ -21,10 +21,13 @@ fi
 cd "$repo_root"
 mkdir -p out
 
-basename=$(basename "${texfile}")
+
+# Compute path relative to repo root so files in subfolders work
+relpath="${texfile#$repo_root/}"
+basename=$(basename "${relpath}")
 name="${basename%.*}"
 
 # Run latexmk in repo root, write intermediates to out/
-latexmk -pdf -interaction=nonstopmode -synctex=1 -outdir=out "${basename}"
+latexmk -pdf -interaction=nonstopmode -synctex=1 -outdir=out "${relpath}"
 
 exit 0

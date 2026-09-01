@@ -1,0 +1,16 @@
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-outdir",
+      "command": "bash",
+      "args": ["${workspaceFolder}/script/bash.sh", "%DOC%"]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk (outdir)",
+      "tools": ["latexmk-outdir"]
+    }
+  ],
+  "latex-workshop.latex.autoBuild.run": "onFileChange"
+}

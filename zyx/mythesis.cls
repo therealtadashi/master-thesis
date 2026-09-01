@@ -12,8 +12,8 @@
   \PassOptionsToClass{\CurrentOption}{scrbook}
 }
 
-\DeclareOption{de}{
-  \renewcommand{\mylanguage}{de}
+\DeclareOption{en}{
+  \renewcommand{\mylanguage}{en}
 }
 
 \DeclareOption{wip}{

@@ -1,0 +1,79 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\chapter{Background}\label{ch:background}
+
+This chapter explains key concepts and terminalogy relevant to this thesis.
+It establishes the theoretical and technical foundation necessary for understanding the development of 
+the proposed monitoring tool.
+The contents are structured as follows: Section~\ref{sec:fim} introduces the concept of Federated Identity 
+Management and describes the roles of the Identity Provider and Service Provider, including their interaction 
+during the authentication process. 
+Section~\ref{sec:shibboleth} introduces Shibboleth as an open-source implementation of SAML, with a 
+particular focus on the Shibboleth IdP, which is highly relevant to this thesis. 
+Finally, Section~\ref{sec:saml} provides an overview of the SAML framework and its role in 
+federated authentication.
+
+\section{Technical Foundation of Federated Identity Management}\label{sec:fim}
+
+As already mentioned in the introduction, FIM allows users to access all their resources they 
+need by using a single digital identity. 
+It provides \acrfull{sso} functionalities across all applications of an organization. 
+Through the properties granted by incorporating SSO into the federation, it eliminated the need 
+to create, remember and manage multiple usernames and passwords for users and the organization. 
+By centralising identity management, the number of systems holding credentials is reduced. 
+Fewer accounts and identity management systems means fewer vectors to attack and credential of a user to steal. 
+It also eases the identity management by centralizing it on a server. 
+This centralisation introduces new risks. 
+FIM relies on a foundation of trust between organizations and this trust is heavily reliant on 
+the security of the IdP. 
+The centralization by incorporating an IdP means it creates a single point of trust, 
+or in different words, it concentrates the risk onto a single server. 
+
+A compromise of a primary IdP could potentially grant broad unauthorised access across the 
+entire federation. 
+This characteristic requires both the IdP and SP to maintain a high level of security. 
+The policies defined for each SP in the IdP must accurately translate to the rules 
+at the corresponding SP. 
+The configuration of the IdP and that of each SP must remain consistent with one another. 
+Certificates, keys and protocol settings are maintained separately on both sides, and a mismatch between 
+them can weaken the security of a transaction without either party noticing.
+To better understand the interaction within a federated identity system, the roles and responsibilities of 
+the IdP and SP are described in the following.
+
+A federation consists of two kinds of participants. 
+The IdP authenticates users and issues statements about them. 
+The SP offers the resource a user wants to reach and relies on those statements instead of authenticating 
+the user itself. 
+Neither role is meaningful without the other, and their interaction follows a fixed pattern. 
+
+When a user requests a protected resource, the SP does not check credentials. 
+It determines which IdP is responsible for the user and redirects the browser there together 
+with an authentication request. 
+The IdP authenticates the user by whatever means the deployment provides, and returns a signed statement 
+asserting that the authentication took place and describing the user by a set of attributes. 
+The SP verifies the signature, evaluates the statement and grants or denies access on that basis. 
+The credentials themselves never leave the IdP.
+
+This division has a consequence for how a federation is configured. 
+Because the IdP serves many SPs, it does not treat them uniformly. 
+It maintains a separate configuration for each partner, specifying for instance whether the statement 
+is to be encrypted, which authentication methods are permitted, and which attributes are released. 
+The SP maintains its own configuration in turn, stating what it expects to receive and what 
+it will accept.
+
+Both sides therefore hold configuration that describes the same relationship, and both are 
+maintained independently. 
+What binds them together is the metadata each party publishes about itself: the endpoints at which 
+it can be reached, and the certificates by which its statements can be verified. 
+Trust within a federation rests on these metadata being current and correctly exchanged. 
+Whether the two configurations remain consistent with one another, however, is not something the 
+protocol itself verifies.
+
+\section{Shibboleth}\label{sec:shibboleth}
+
+\section{SAML}\label{sec:saml}
+
+
+\end{document}

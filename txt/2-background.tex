@@ -73,7 +73,84 @@ protocol itself verifies.
 
 \section{Shibboleth}\label{sec:shibboleth}
 
-\section{SAML}\label{sec:saml}
+Shibboleth is a free and open-source web single sign-on software suite that 
+implements SAML and other standards for FIM. 
+It is widely used in federated authentication environments and places particular 
+emphasis on privacy and decentralized identity management. 
+The Shibboleth Consortium provides separate software components for the IdP and 
+SP, enabling organizations to participate in federated identity infrastructures.
 
+For the scope of this thesis, the Shibboleth IdP is of particular relevance, as it 
+is responsible for authenticating users and issuing SAML assertions to participating 
+SPs. 
+The IdP is implemented as a Java-based web application and is typically deployed 
+using a Java servlet container such as Apache Tomcat. 
+User identities and associated attributes are commonly managed through an external 
+directory service, such as a Lightweight Directory Access Protocol (LDAP) server, 
+which provides the IdP with the information required for authentication and 
+attribute release.
+It builds on the OpenSAML library for the construction and validation of SAML messages, which is relevant 
+because vulnerabilities reported for OpenSAML apply to Shibboleth deployments as well.
+
+\subsection{Profile flows and interception points}\label{subsec:profile-flows}
+
+The IdP processes each request as a workflow built on Spring Web Flow. 
+Every top-level flow implements one of the supported protocol interfaces, referred to as profiles, such 
+as SAML 2 SP-initiated SSO. 
+Within a top-level flow, reusable subflows carry out recurring tasks such as 
+authentication~\cite{ShibProfileHandling}.
+
+To allow deployers to extend this behaviour without copying or editing the internal flow definitions, 
+the IdP provides a set of defined hooks. 
+A subflow attached to such a hook is called an interceptor, and three hooks exist: 
+\begin{enumerate}
+    \item inbound message processing
+    \item post-authentication processing and
+    \item outbound message processing
+\end{enumerate}
+The first and third are available in any profile flow, whereas the second applies only to profiles that 
+actually authenticate a user~\cite{ShibProfileHandling}.
+An interceptor is registered as a bean and enabled by adding its flow identifier to the corresponding list 
+property of a profile configuration in \texttt{conf/relying-party.xml}. 
+No modification of the IdP source code is required.
+
+The choice of hook determines what an interceptor can observe. 
+An inbound interceptor sees the incoming message context but not the outcome of authentication, 
+since that has not yet taken place. 
+An outbound interceptor sees the state of the tree produced by the profile execution, including the 
+outgoing message. 
+The post-authentication hook runs in the middle of processing, after the user has been authenticated but 
+before the outgoing message is constructed. 
+It can therefore observe both the incoming request and the authentication result, but not the response that 
+is issued afterwards.
+
+\subsection{The context tree}\label{subsec:context-tree}
+
+The root of the context tree for any profile flow is the \texttt{ProfileRequestContext}. 
+It carries the state of a request through the sequence of steps and is the object an interceptor receives. 
+Attached to it are child contexts holding the inbound and outbound messages, the identity of the relying 
+party and whether that identity could be verified, and, once authentication has completed, the authenticated 
+subject~\cite{ShibProfileHandling}.
+
+\subsection{Audit logging}\label{subsec:audit-logging}
+
+The IdP writes one line per completed transaction to \texttt{idp-audit.log}. 
+The set of fields is not fixed but defined by the deployer in \texttt{conf/audit.xml}, so the 
+information available in the log depends on the configuration of the individual 
+deployment~\cite{AuditLoggingConfigurationV5}. 
+Authentication attempts that do not result in a completed transaction, in particular failed password 
+validations, produce no entry in this log~\cite{AuditLoggingConfigurationV4}. 
+
+\subsection{Configuration}\label{subsec:config}
+
+Three configuration files are relevant in the following. 
+\texttt{relying-party.xml} holds the per-partner configuration described in Section~\ref{sec:fim}, 
+including which profiles are enabled and which security settings apply~\cite{RelyingPartyConfiguration}. 
+\texttt{metadata-providers.xml} declares where the \acrshort{idp} obtains metadata for 
+its partners~\cite{MetadataConfiguration}. 
+\texttt{attribute-filter.xml} governs which attributes are released to which 
+relying party~\cite{AttributeFilterConfiguration}.
+
+\section{SAML}\label{sec:saml}
 
 \end{document}

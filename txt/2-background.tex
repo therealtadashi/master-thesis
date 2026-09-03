@@ -198,21 +198,21 @@ A signature is represented by the \texttt{Signature} element and can be applied 
 or to selected parts of an XML document~\cite{SAMLAssertions}.
 
 Depending on the location of the signature relative to the signed data, XML signatures can be categorized 
-into three types. 
+into three types~\cite{W3CXMLSIG}. 
 An enveloped signature is contained within the XML element that it signs. 
 In contrast, an enveloping signature contains the signed data within the signature itself. 
 A detached signature is neither contained within nor a parent of the signed data and references the signed 
 content externally. 
 In the context of SAML, enveloped signatures are commonly used to sign SAML assertions and protocol 
-messages~\cite{W3CXMLSIG}.
+messages.
 
 XML Encryption provides confidentiality for sensitive information contained in SAML messages. 
 Instead of transmitting the original XML content in plaintext, the protected content is replaced by 
-an \texttt{EncryptedData} element containing the resulting ciphertext. 
+an \texttt{EncryptedData} element containing the resulting ciphertext~\cite{W3CXMLENC}. 
 XML Encryption therefore enables selective and persistent confidentiality of individual elements within 
 an XML document. 
 This allows, for example, sensitive attributes contained in a SAML assertion to be encrypted without 
-requiring the entire message to be encrypted~\cite{W3CXMLENC}.
+requiring the entire message to be encrypted.
 
 Although XML Signature and XML Encryption provide important security mechanisms, their use and 
 configuration depend on the respective SAML profile, deployment, and implementation. 

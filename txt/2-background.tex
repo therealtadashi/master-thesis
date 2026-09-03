@@ -204,7 +204,7 @@ In contrast, an enveloping signature contains the signed data within the signatu
 A detached signature is neither contained within nor a parent of the signed data and references the signed 
 content externally. 
 In the context of SAML, enveloped signatures are commonly used to sign SAML assertions and protocol 
-messages.
+messages~\cite{W3CXMLSIG}.
 
 XML Encryption provides confidentiality for sensitive information contained in SAML messages. 
 Instead of transmitting the original XML content in plaintext, the protected content is replaced by 
@@ -212,7 +212,7 @@ an \texttt{EncryptedData} element containing the resulting ciphertext.
 XML Encryption therefore enables selective and persistent confidentiality of individual elements within 
 an XML document. 
 This allows, for example, sensitive attributes contained in a SAML assertion to be encrypted without 
-requiring the entire message to be encrypted.
+requiring the entire message to be encrypted~\cite{W3CXMLENC}.
 
 Although XML Signature and XML Encryption provide important security mechanisms, their use and 
 configuration depend on the respective SAML profile, deployment, and implementation. 

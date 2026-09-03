@@ -1,12 +1,17 @@
 # Related Works
 
-@article{TamperDetection,
-  author = {Snodgrass, Richard and Yao, Shilong and Collberg, Christian},
-  year   = {2004},
-  month  = {10},
-  title  = {Tamper Detection in Audit Logs},
-  isbn   = {9780120884698},
-  doi    = {10.1016/B978-012088469-8/50046-2}
+@inproceedings{TamperDetection,
+  author    = {Snodgrass, Richard T. and Yao, Shilong Stanley and Collberg, Christian},
+  title     = {Tamper detection in audit logs},
+  year      = {2004},
+  isbn      = {0120884690},
+  publisher = {VLDB Endowment},
+  abstract  = {Audit logs are considered good practice for business systems, and are required by federal regulations for secure systems, drug approval data, medical information disclosure, financial records, and electronic voting. Given the central role of audit logs, it is critical that they are correct and inalterable. It is not sufficient to say, "our data is correct, because we store all interactions in a separate audit log." The integrity of the audit log itself must also be guaranteed. This paper proposes mechanisms within a database management system (DBMS), based on cryptographically strong one-way hash functions, that prevent an intruder, including an auditor or an employee or even an unknown bug within the DBMS itself, from silently corrupting the audit log. We propose that the DBMS store additional information in the database to enable a separate audit log validator to examine the database along with this extra information and state conclusively whether the audit log has been compromised. We show with an implementation on a high-performance storage engine that the overhead for auditing is low and that the validator can efficiently and correctly determine if the audit log has been compromised.},
+  booktitle = {Proceedings of the Thirtieth International Conference on Very Large Data Bases - Volume 30},
+  pages     = {504-–515},
+  numpages  = {12},
+  location  = {Toronto, Canada},
+  series    = {VLDB '04}
 }
 
 @inproceedings{VulnerSAMLCloud,
@@ -67,7 +72,6 @@
   title     = {Toward Automated Formal Security Analysis of SAML V2.0 Web Browser SSO Standard—The POST/Artifact Use Case},
   volume    = {13},
   issn      = {2169-3536},
-  url       = {http://dx.doi.org/10.1109/ACCESS.2025.3622379},
   doi       = {10.1109/access.2025.3622379},
   journal   = {IEEE Access},
   publisher = {Institute of Electrical and Electronics Engineers (IEEE)},
@@ -94,14 +98,11 @@
   author  = {Shibboleth Consortium},
   title   = {Shaping the future of shibboleth software},
   url     = {https://www.shibboleth.net},
-  year    = {2026},
-  month   = {10},
-  day     = {07},
   urldate = {2026-09-01}
 }
 
 @online{DFNAAI,
-  author  = {Dfn.de},
+  author  = {German National Research and Education Network (DFN)},
   title   = {DFN-AAI portal},
   url     = {https://www.aai.dfn.de/index.en.html},
   urldate = {2026-09-01}
@@ -138,36 +139,51 @@
 }
 
 @online{ShibProfileHandling,
-  author  = {Atlassian.net},
+  author  = {Cantor, Scott},
   title   = {ProfileHandling},
+  year    = {2023},
+  month   = {11},
+  day     = {14},
   url     = {https://shibboleth.atlassian.net/wiki/spaces/IDP5/pages/3199511979/ProfileHandling},
   urldate = {2026-09-02}
 }
 
 @online{AuditLoggingConfiguration,
-  author  = {Atlassian.net},
+  author  = {Cantor, Scott},
   title   = {AuditLoggingConfiguration},
+  year    = {2026},
+  month   = {06},
+  day     = {22},
   url     = {https://shibboleth.atlassian.net/wiki/spaces/IDP5/pages/3199509698/AuditLoggingConfiguration},
   urldate = {2026-09-02}
 }
 
 @online{RelyingPartyConfiguration,
-  author  = {Atlassian.net},
+  author  = {Cantor, Scott},
   title   = {RelyingPartyConfiguration},
+  year    = {2025},
+  month   = {05},
+  day     = {09},
   url     = {https://shibboleth.atlassian.net/wiki/spaces/IDP5/pages/3199508044/RelyingPartyConfiguration},
   urldate = {2026-09-02}
 }
 
 @online{MetadataConfiguration,
-  author  = {Atlassian.net},
+  author  = {Cantor, Scott},
   title   = {MetadataConfiguration},
+  year    = {2024},
+  month   = {02},
+  day     = {15},
   url     = {https://shibboleth.atlassian.net/wiki/spaces/IDP5/pages/3199506698/MetadataConfiguration},
   urldate = {2026-09-02}
 }
 
 @online{AttributeFilterConfiguration,
-  author  = {Atlassian.net},
+  author  = {Cantor, Scott},
   title   = {AttributeFilterConfiguration},
+  year    = {2023},
+  month   = {11},
+  day     = {14},
   url     = {https://shibboleth.atlassian.net/wiki/spaces/IDP5/pages/3199501794/AttributeFilterConfiguration},
   urldate = {2026-09-02}
 }
@@ -225,4 +241,18 @@
   organization = {OASIS Open},
   url          = {https://www.oasis-open.org/2005/03/13/members-approve-security-assertion-markup-language-saml-v2-0-as-oasis-standard/},
   urldate      = {2026-09-03}
+}
+
+@online{W3CXMLSIG,
+  author  = {World Wide Web Consortium (W3C)},
+  title   = {XML Signature Syntax and Processing Version 1.1},
+  url     = {https://www.w3.org/TR/xmldsig-core/},
+  urldate = {2026-09-03}
+}
+
+@online{W3CXMLENC,
+  author  = {World Wide Web Consortium (W3C)},
+  title   = {XML Encryption Syntax and Processing Version 1.1},
+  url     = {https://www.w3.org/TR/xmlenc-core/},
+  urldate = {2026-09-03}
 }

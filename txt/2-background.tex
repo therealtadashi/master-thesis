@@ -218,6 +218,49 @@ of these mechanisms in the standard.
 Incorrect configuration or implementation may result in insufficient protection, such as assertions that 
 are not appropriately signed or sensitive information that is transmitted without encryption.
 
+\subsection{SAML Bindings}\label{subsec:saml-bindings}
+
+SAML bindings define how SAML protocol messages are transported using underlying 
+communication protocols. 
+They are particularly relevant for the Web Browser SSO profile, where the user's web 
+browser acts as an intermediary between the IdP and SP. 
+The SAML specification defines several bindings for different communication scenarios. 
+In a typical SP-initiated Web Browser SSO process, the HTTP-Redirect and HTTP-POST 
+bindings are particularly relevant.
+
+\subsubsection{HTTP-Redirect Binding}
+
+The HTTP-Redirect binding is designed for scenarios in which SAML requester and 
+responder communicate through an HTTP user agent acting as an intermediary. 
+In the SP-initiated SSO flow, the SP acts as the SAML requester and the IdP as the 
+SAML responder. 
+The authentication request is encoded and transmitted as part of the URL query string 
+of an HTTP redirect. 
+The user's browser follows the redirect and thereby forwards the request to the IdP.
+
+Since the message is transported through the URL using the HTTP GET method, the 
+binding is particularly suitable for relatively small SAML messages, such as an 
+authentication request. 
+The HTTP-Redirect binding therefore provides the mechanism by which the SP can 
+initiate the authentication process without requiring a direct communication channel 
+between the SP and IdP.
+
+\subsubsection{HTTP-POST Binding}
+
+The HTTP-POST binding is likewise designed for communication between a SAML requester 
+and responder through an HTTP user agent. 
+In the return direction of the typical SP-initiated SSO flow, the IdP acts as the 
+SAML requester and the SP as the SAML responder. 
+The SAML response is embedded in an HTML form and transmitted to the SP using the HTTP 
+POST method. 
+The user's browser acts as an intermediary by submitting the form to 
+the SP~\cite{SAMLBinding}. 
+
+Compared with the HTTP-Redirect binding, HTTP-POST is better suited for larger SAML 
+messages because the message is not encoded into the URL. 
+This makes it particularly suitable for SAML responses containing assertions and 
+associated security-related information. 
+
 \subsection{Web Browser SSO Authentication Process}\label{subsec:sso-auth-process}
 
 The SAML Web Browser SSO profile enables a user to authenticate to an IdP and subsequently access a 

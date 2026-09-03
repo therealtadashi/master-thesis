@@ -22,8 +22,10 @@ need by using a single digital identity.
 It provides \acrfull{sso} functionalities across all applications of an organization. 
 Through the properties granted by incorporating SSO into the federation, it eliminated the need 
 to create, remember and manage multiple usernames and passwords for users and the organization. 
-By centralising identity management, the number of systems holding credentials is reduced. 
-Fewer accounts and identity management systems means fewer vectors to attack and credential of a user to steal. 
+By centralising identity management, the number of systems holding credentials is 
+reduced~\cite{NIST80063C}. 
+Fewer accounts and identity management systems means fewer vectors to attack and credential of a 
+user to steal. 
 It also eases the identity management by centralizing it on a server. 
 This centralisation introduces new risks. 
 FIM relies on a foundation of trust between organizations and this trust is heavily reliant on 
@@ -33,7 +35,7 @@ or in different words, it concentrates the risk onto a single server.
 
 A compromise of a primary IdP could potentially grant broad unauthorised access across the 
 entire federation. 
-This characteristic requires both the IdP and SP to maintain a high level of security. 
+This characteristic requires both the IdP and SP to maintain a high level of security~\cite{NIST80063C}. 
 The policies defined for each SP in the IdP must accurately translate to the rules 
 at the corresponding SP. 
 The configuration of the IdP and that of each SP must remain consistent with one another. 
@@ -43,14 +45,14 @@ To better understand the interaction within a federated identity system, the rol
 the IdP and SP are described in the following.
 
 A federation consists of two kinds of participants. 
-The IdP authenticates users and issues statements about them. 
+The IdP authenticates users and issues statements about them~\cite{SAMLOverview}. 
 The SP offers the resource a user wants to reach and relies on those statements instead of authenticating 
 the user itself. 
 Neither role is meaningful without the other, and their interaction follows a fixed pattern. 
 
 When a user requests a protected resource, the SP does not check credentials. 
 It determines which IdP is responsible for the user and redirects the browser there together 
-with an authentication request. 
+with an authentication request~\cite{SAMLOverview}. 
 The IdP authenticates the user by whatever means the deployment provides, and returns a signed statement 
 asserting that the authentication took place and describing the user by a set of attributes. 
 The SP verifies the signature, evaluates the statement and grants or denies access on that basis. 
@@ -67,7 +69,7 @@ Both sides therefore hold configuration that describes the same relationship, an
 maintained independently. 
 What binds them together is the metadata each party publishes about itself: the endpoints at which 
 it can be reached, and the certificates by which its statements can be verified. 
-Trust within a federation rests on these metadata being current and correctly exchanged. 
+Trust within a federation rests on these metadata being current and correctly exchanged~\cite{SAMLMetadata}. 
 Whether the two configurations remain consistent with one another, however, is not something the 
 protocol itself verifies.
 
@@ -78,7 +80,7 @@ implements SAML and other standards for FIM.
 It is widely used in federated authentication environments and places particular 
 emphasis on privacy and decentralized identity management. 
 The Shibboleth Consortium provides separate software components for the IdP and 
-SP, enabling organizations to participate in federated identity infrastructures.
+SP, enabling organizations to participate in federated identity infrastructures~\cite{Shibboleth}.
 
 For the scope of this thesis, the Shibboleth IdP is of particular relevance, as it 
 is responsible for authenticating users and issuing SAML assertions to participating 
@@ -90,7 +92,8 @@ directory service, such as a Lightweight Directory Access Protocol (LDAP) server
 which provides the IdP with the information required for authentication and 
 attribute release.
 It builds on the OpenSAML library for the construction and validation of SAML messages, which is relevant 
-because vulnerabilities reported for OpenSAML apply to Shibboleth deployments as well.
+because vulnerabilities reported for OpenSAML apply to Shibboleth deployments 
+as well~\cite{ShibbolethGIAC}.
 
 \subsection{Profile flows and interception points}\label{subsec:profile-flows}
 
@@ -137,9 +140,9 @@ subject~\cite{ShibProfileHandling}.
 The IdP writes one line per completed transaction to \texttt{idp-audit.log}. 
 The set of fields is not fixed but defined by the deployer in \texttt{conf/audit.xml}, so the 
 information available in the log depends on the configuration of the individual 
-deployment~\cite{AuditLoggingConfigurationV5}. 
+deployment. 
 Authentication attempts that do not result in a completed transaction, in particular failed password 
-validations, produce no entry in this log~\cite{AuditLoggingConfigurationV4}. 
+validations, produce no entry in this log~\cite{AuditLoggingConfiguration}. 
 
 \subsection{Configuration}\label{subsec:config}
 
@@ -158,10 +161,10 @@ Structured Information Standards (OASIS) for the exchange of authentication, aut
 security-related information between different parties.
 SAML is a fundamental component of FIM and is widely used to enable SSO across organizational and 
 security boundaries. 
-The second major version, SAML 2.0, was published by OASIS in March 2005.
-SAML 1.1 had already gained widespread adoption in federated identity environments. 
+The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAMLOverview}.
+SAML 1.1 had already gained widespread adoption in federated identity environments~\cite{SAML1Standard}. 
 However, several competing approaches existed at the time, including the Identity Federation Framework 
-(ID-FF) developed by the Liberty Alliance and the Shibboleth architecture. 
+(ID-FF) developed by the Liberty Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
 SAML 2.0 consolidated several of these approaches into a common standard and introduced additional 
 capabilities, particularly with regard to federation, interoperability, and privacy. 
 
@@ -210,13 +213,6 @@ XML Encryption therefore enables selective and persistent confidentiality of ind
 an XML document. 
 This allows, for example, sensitive attributes contained in a SAML assertion to be encrypted without 
 requiring the entire message to be encrypted.
-
-Although XML Signature and XML Encryption provide important security mechanisms, their use and 
-configuration depend on the respective SAML profile, deployment, and implementation. 
-Consequently, the security properties of a SAML-based system cannot be derived solely from the existence 
-of these mechanisms in the standard. 
-Incorrect configuration or implementation may result in insufficient protection, such as assertions that 
-are not appropriately signed or sensitive information that is transmitted without encryption.
 
 Although XML Signature and XML Encryption provide important security mechanisms, their use and 
 configuration depend on the respective SAML profile, deployment, and implementation. 

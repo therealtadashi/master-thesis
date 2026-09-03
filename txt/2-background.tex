@@ -172,7 +172,7 @@ such as a user, system, or service.
 An assertion contains statements made by an issuer about the principal, which may include authentication, 
 authorization, and attribute information. 
 Since these statements can have security-critical implications, their authenticity and integrity must be 
-ensured. 
+ensured~\cite{SAMLAssertions}. 
 Therefore, the SAML element can be protected by a digital signature following the XML Signature standard, 
 allowing a relying party to verify that the assertion was issued by the stated issuer and has not been 
 modified.
@@ -192,7 +192,7 @@ cryptographically bind the assertion to its issuer.
 The XML Signature standard defines the syntax and processing rules for creating, representing, and 
 verifying XML-based digital signatures. 
 A signature is represented by the \texttt{Signature} element and can be applied to an entire SAML assertion 
-or to selected parts of an XML document.
+or to selected parts of an XML document~\cite{SAMLAssertions}.
 
 Depending on the location of the signature relative to the signed data, XML signatures can be categorized 
 into three types. 
@@ -218,6 +218,17 @@ of these mechanisms in the standard.
 Incorrect configuration or implementation may result in insufficient protection, such as assertions that 
 are not appropriately signed or sensitive information that is transmitted without encryption.
 
+Although XML Signature and XML Encryption provide important security mechanisms, their use and 
+configuration depend on the respective SAML profile, deployment, and implementation. 
+SAML is therefore not a security protocol in itself, but a framework whose optional features can be 
+composed in different ways, and the resulting security properties follow from the composition chosen. 
+Hartl and Derek make this explicit by deriving eight protocol variants from the optional features 
+of a single use case and analysing each separately~\cite{FormalSecAnalysisSAML}. 
+Consequently, the security properties of a SAML-based system cannot be derived solely from the existence 
+of these mechanisms in the standard. 
+Incorrect configuration or implementation may result in insufficient protection, such as assertions that 
+are not appropriately signed or sensitive information that is transmitted without encryption.
+
 \subsection{SAML Bindings}\label{subsec:saml-bindings}
 
 SAML bindings define how SAML protocol messages are transported using underlying 
@@ -226,7 +237,7 @@ They are particularly relevant for the Web Browser SSO profile, where the user's
 browser acts as an intermediary between the IdP and SP. 
 The SAML specification defines several bindings for different communication scenarios. 
 In a typical SP-initiated Web Browser SSO process, the HTTP-Redirect and HTTP-POST 
-bindings are particularly relevant.
+bindings are particularly relevant~\cite{SAMLBinding}.
 
 \subsubsection{HTTP-Redirect Binding}
 
@@ -249,12 +260,11 @@ between the SP and IdP.
 
 The HTTP-POST binding is likewise designed for communication between a SAML requester 
 and responder through an HTTP user agent. 
-In the return direction of the typical SP-initiated SSO flow, the IdP acts as the 
-SAML requester and the SP as the SAML responder. 
-The SAML response is embedded in an HTML form and transmitted to the SP using the HTTP 
-POST method. 
+In the return direction of the typical SP-initiated SSO flow, the IdP transmits the SAML 
+response to the SP. 
+The SAML response is embedded in an HTML form and sent to the SP using the HTTP POST method.
 The user's browser acts as an intermediary by submitting the form to 
-the SP~\cite{SAMLBinding}. 
+the SP. 
 
 Compared with the HTTP-Redirect binding, HTTP-POST is better suited for larger SAML 
 messages because the message is not encoded into the URL. 
@@ -280,7 +290,16 @@ The SP validates the received SAML response and assertion, including the digital
 applicable validity conditions. 
 If the assertion is considered valid, the SP evaluates the contained statements and attributes to 
 determine whether the user is authorized to access the requested resource. 
-If the authorization requirements are satisfied, the SP grants the user access to the protected service.
+If the authorization requirements are satisfied, the SP grants the user access to the protected 
+service~\cite{SAMLOverview}.
+Figure~\ref{fig:sp-initiated-sso} illustrates the described authentication process.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.75\textwidth]{../img/sp-init-sso}
+    \caption{SP-Initiated SSO with Redirect and POST Bindings~\cite{SAMLOverview}}
+    \label{fig:sp-initiated-sso}
+\end{figure}
 
 The use of the user's web browser as an intermediary introduces an important security consideration. 
 The SAML messages exchanged between the IdP and SP are transmitted through the user's browser and 
@@ -296,5 +315,36 @@ SAML requests and assertions contain unique identifiers that allow the SP and Id
 and detect previously processed messages. 
 In particular, an assertion's unique identifier must not be reused, and the recipient is expected to 
 enforce the applicable validity conditions and replay-related constraints. 
+
+\subsection{SAML Metadata}\label{subsec:saml-metadata}
+
+SAML metadata provides a standardized way for SAML entities to describe their configuration and 
+capabilities to other participating entities. 
+It enables IdPs and SPs to obtain information required for establishing communication and processing 
+SAML messages without requiring every configuration parameter to be exchanged manually. 
+The SAML metadata specification organizes this information around roles supported by an entity, 
+which are represented using role descriptors within an \texttt{EntityDescriptor} element~\cite{SAMLMetadata}.
+
+For an IdP, the \texttt{IDPSSODescriptor} describes information relevant to its role as a SAML IdP. 
+Similarly, an SP can be described using an \texttt{SPSSODescriptor}. 
+These descriptors contain information such as supported SAML protocols, communication endpoints, 
+supported bindings, and cryptographic keys. 
+For example, an SP metadata document can specify its Assertion Consumer Service (ACS) endpoint and the 
+bindings supported for receiving SAML responses, while an IdP can specify its SSO Service endpoints and 
+the corresponding supported bindings.
+
+Cryptographic information contained in metadata is particularly important for the security of SAML 
+communication. 
+Metadata can contain certificates and public keys used by participating entities for verifying digital 
+signatures or encrypting SAML messages. 
+Consequently, the metadata configuration directly influences how SAML messages are validated and which 
+endpoints and cryptographic keys are considered valid by an implementation.
+
+The security of the metadata itself is therefore an important aspect of a SAML deployment. 
+If an entity accepts manipulated metadata, an attacker could potentially influence endpoints, 
+supported bindings, or cryptographic keys used during SAML message processing. 
+SAML metadata can itself be protected using digital signatures, allowing an entity to verify the integrity 
+and origin of the metadata before using it for configuration or trust decisions.
+
 
 \end{document}

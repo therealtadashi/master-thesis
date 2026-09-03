@@ -15,13 +15,13 @@ This dominant method of password-based authentication, which is responsible for 
 users online, poses a significant risk to companies and other large organisations.
 One way in which malicious attackers take advantage of this vulnerable authentication method is by using 
 large databases of leaked user credentials (often including email addresses and corresponding passwords) 
-to authenticate at \acrshort{sp_plu} as the affected user.
+to authenticate at Service Providers (SPs) as the affected user.
 This attack method is called credential stuffing.
 Verizon reports that credential abuse was the leading initial attack vector in 22\% of the 12,195 confirmed 
 data breaches in 2025~\cite{VerizonDataBreach}.
 
 To reduce the number of places where credentials are created and stored, the \acrfull{fim} was developed.
-\acrshort{fim} allows users to authenticate on multiple \acrshort{sp_plu} using the same credentials, which 
+\acrshort{fim} allows users to authenticate on multiple SPs using the same credentials, which 
 are provided by an \acrfull{idp}. 
 \acrshort{fim} consolidates authentication behind a single trusted authority called 
 the \acrshort{idp}.
@@ -33,10 +33,10 @@ to guarantee that the user is who they say they are.
 Shibboleth, developed by Internet2, is one of the most widely deployed open-source implementations of 
 this model in the research and education (R\&E) sector~\cite{Shibboleth}. 
 Under this model, a user authenticates with their organisation's \acrshort{idp} once.
-The \acrshort{idp} then issues cryptographically signed SAML assertions that \acrshort{sp_plu} accept 
+The \acrshort{idp} then issues cryptographically signed SAML assertions that SPs accept 
 as proof of identity.
 This architecture is widely deployed in higher education and research federation such as DFN-AAI~\cite{DFNAAI}, 
-where a single \acrshort{idp} serves dozens of \acrshort{sp_plu} simultaneously.
+where a single \acrshort{idp} serves dozens of SPs simultaneously.
 
 This architectural property introduces a critical consequence: the \acrshort{idp} becomes a single point of trust 
 for the entire federation. 

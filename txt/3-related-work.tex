@@ -1,0 +1,127 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\chapter{Related Work}\label{ch:related-work}
+
+Similar concepts and projects were examined to develop a monitoring tool for an IdP operating on the 
+application layer. 
+The primary objective was to identify research or implementation that aligns with the thesis's 
+overarching goal and the limitations imposed by these solutions.
+These related works provide valuable insights and foundational knowledge for this thesis by highlighting 
+research gaps and areas of coverage lacking in developed solutions in this specific scenario.
+The most relevant studies and projects in this field are presented and analysed in the following sections.
+
+\section{Why Monitor from the Inside?}\label{sec:why-inside}
+
+Its not a new concept:
+- OWASP AppSensor: 
+    - A network-based IDS does not have insight in the application specific traffic.
+    - A WAF does not full understand the custom, intricate features of an web application
+- This work follows an established line of research rather than proposing a new approach
+
+Classification based on a published taxonomy:
+- Yuan und Malek, Dimension Architecture Level:
+    - Network: Suricata, Snort
+    - Host: EDR
+    - Software / Application: this thesis
+- Dimension Self-Protection Level: 
+    - Monitor & Detect complete, 
+    - Analyze & Characterize parially via correlation and severity
+    - Plan & Prevent intentially out of scope -> the system notifies, it does not intercept 
+
+Two precedents:
+- BlackWatch:
+    - same architekture for generic web application, asynchonous transfer identical reasoning
+    - The main challenge here is one aspect: 
+        - Developers must integrate an identification code into their own application. 
+        - This work uses a designated extension point
+    
+\section{Why SIEM Functionalities is not Enough}\label{sec:why-not-siem}
+
+The limitation stems from the definition
+- A SIEM processes logs and events. 
+- This leads to two limitations: Anything not recorded in a log is invisible. 
+- Anything recorded in a log but that has been tampered with is considered valid
+
+The closest equivalent: Wazuh
+- Combines log analysis, file integrity monitoring, and configuration assessment
+- The limitation lies in how runtime events are handled: 
+    - Configuration is checked in isolation against static policies, not linked to a specific login
+- Example: MFA-BYPASS—A login without MFA goes unnoticed. 
+- A login without MFA on a service provider that requires MFA is flagged as an anomaly
+
+Log Integrity as a Structural Difference:
+- Graves documents that log entries in Shibboleth can be manipulated
+- OWASP A09 lists the lack of protection against manipulation as a separate vulnerability, citing CWE-117
+- A system that solely consumes logs can compare multiple log sources, but all are files on the same system and are exposed to the same class of attackers
+- Interceptor reports and audit entries are generated independently and may contradict each other
+
+Distinction from the Cryptographic Alternative:
+- Schneier, Kelsey, and Snodgrass make manipulation cryptographically detectable, at the cost of restructuring the logging layer and relying on external trust services. 
+    - Snodgrass reports up to 16 percent overhead
+- This approach does not provide cryptographic proof, but it does not require any intervention in the logging chain
+- To be honest: The evaluation of discrepancies as a security signal has not yet been implemented. 
+    - The mechanism already detects them, but evaluates them as a quality metric.
+
+The Gap in AppSensor:
+- All detection points monitor a user within a session
+- Three rules have equivalents there: AE2, AE3, and AE13/SE5/SE6
+- What the schema does not account for is a target-vs.-actual comparison. 
+    - AppSensor was designed for applications that authenticate their own users. 
+    - An IdP authenticates on behalf of third parties, and part of the security-relevant states lies in the configuration of its partners
+- A Detection Point, on the other hand, is compatible with: IE6, Violation of Security Log Integrity
+
+\section{Derivation of the Rules}\label{sec:rules}
+
+Three Reference Frameworks:
+- FIM Survey by Simpson and Groß: eleven vulnerabilities, fourteen attack classes, linked in cross-protocol issues. 
+    - Six concern SAML, one concerns Shibboleth
+- OASIS Security Considerations: prescriptive guidelines on what a deployment should do
+- STRIDE according to Graves: what kind of impact an attack would have
+
+Varying levels of evidence: 
+- The survey empirically demonstrates that an attack occurred. 
+- OASIS specifies what measures are intended to counter it. 
+- Where both are present, as with the replay rules, the reasoning is strongest.
+
+Two observations from the table
+- “Lack of Binding” appears in three of the six SAML rows, making it the most frequently documented SAML vulnerability. 
+    - The replay rules address precisely this
+- Several rules form “target-actual” pairs: the same vulnerability, once as a configuration state and once as an event that has occurred. 
+    - This is a standalone argument in favor of the three-source architecture
+- It should be noted that two rules cannot be assigned to any grid. 
+    - SUSPICIOUS-USER-AGENT is an indicator with no documented link to an attack, while BEHAVIOUR-ANOMALY is a detection method rather than an attack class.
+
+Severity:
+- Derived from Graves risk scale R1 through R5
+- Two-tiered, because the rules detect partly enabling factors and partly events
+- Two rules were downgraded and adjusted in the code
+
+\section{What Is Structurally Impossible}\label{sec:structureally-impossible}
+
+It demonstrates that the limitations of the approach have been thoroughly considered rather than merely listed.
+
+Three Groups of Reasons:
+- Other System Levels: 
+    - Weak DNS and DNS poisoning affect name resolution. 
+    - The same applies to DDoS and UI redressing
+- Other party: 
+    - Vulnerable SP and CSRF occur between the browser and the SP. 
+    - The same applies to XSS and session swapping
+- Only indirectly observable: 
+    - Lack of Binding and MITM. 
+    - The prerequisites are observable, not the event itself
+
+Two special cases should be highlighted:
+- No Trust Infrastructure and Bogus Merchant is the only Shibboleth-related entry in the survey and remains open. 
+    - The malicious SP is registered normally and is formally legitimate.
+- A malicious provider is structurally undetectable. 
+    - Since the system runs within the IdP, the observer and the potential attacker are one and the same. 
+    - This limitation applies to every IdP-side system.
+
+And now, the connection to motivation: 
+- None of the thirteen rules reaches R5.
+- The Sunburst case from the beginning, specifically, would not be detectable with this system.
+
+\end{document}

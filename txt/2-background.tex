@@ -95,7 +95,7 @@ It builds on the OpenSAML library for the construction and validation of SAML me
 because vulnerabilities reported for OpenSAML apply to Shibboleth deployments 
 as well~\cite{ShibbolethGIAC}.
 
-\subsection{Profile flows and interception points}\label{subsec:profile-flows}
+\subsection{Profile Flows and Interception Points}\label{subsec:profile-flows}
 
 The IdP processes each request as a workflow built on Spring Web Flow. 
 Every top-level flow implements one of the supported protocol interfaces, referred to as profiles, such 
@@ -127,7 +127,7 @@ before the outgoing message is constructed.
 It can therefore observe both the incoming request and the authentication result, but not the response that 
 is issued afterwards.
 
-\subsection{The context tree}\label{subsec:context-tree}
+\subsection{The Context Tree}\label{subsec:context-tree}
 
 The root of the context tree for any profile flow is the \texttt{ProfileRequestContext}. 
 It carries the state of a request through the sequence of steps and is the object an interceptor receives. 
@@ -135,7 +135,7 @@ Attached to it are child contexts holding the inbound and outbound messages, the
 party and whether that identity could be verified, and, once authentication has completed, the authenticated 
 subject~\cite{ShibProfileHandling}.
 
-\subsection{Audit logging}\label{subsec:audit-logging}
+\subsection{Audit Logging}\label{subsec:audit-logging}
 
 The IdP writes one line per completed transaction to \texttt{idp-audit.log}. 
 The set of fields is not fixed but defined by the deployer in \texttt{conf/audit.xml}, so the 

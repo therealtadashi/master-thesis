@@ -4,31 +4,72 @@
 
 \chapter{Related Work}\label{ch:related-work}
 
-Similar concepts and projects were examined to develop a monitoring tool for an IdP operating on the 
-application layer. 
-The primary objective was to identify research or implementation that aligns with the thesis's 
-overarching goal and the limitations imposed by these solutions.
-These related works provide valuable insights and foundational knowledge for this thesis by highlighting 
-research gaps and areas of coverage lacking in developed solutions in this specific scenario.
-The most relevant studies and projects in this field are presented and analysed in the following sections.
+Existing research and implementations were examined to identify approaches relevant to the 
+development of a monitoring system for an IdP operating at the application layer. 
+The primary objective was to identify solutions that address the overarching goal of this 
+thesis and to analyse their respective limitations and areas of applicability.
+
+These related works provide valuable insights and a foundation for this thesis by identifying 
+existing approaches, their areas of coverage, and gaps that remain relevant to the 
+considered scenario. 
+The most relevant studies and projects are presented and analysed in the following sections.
 
 \section{Why Monitor from the Inside?}\label{sec:why-inside}
 
-Its not a new concept:
-- OWASP AppSensor: 
-    - A network-based IDS does not have insight in the application specific traffic.
-    - A WAF does not full understand the custom, intricate features of an web application
-- This work follows an established line of research rather than proposing a new approach
+As discussed in the introduction~\ref{ch:introduction}, the proposed monitoring system operates 
+directly within the application layer of the Shibboleth IdP. 
+Its objective is to detect attacks based on events and behaviour observable from 
+within the application.
 
-Classification based on a published taxonomy:
-- Yuan und Malek, Dimension Architecture Level:
-    - Network: Suricata, Snort
-    - Host: EDR
-    - Software / Application: this thesis
-- Dimension Self-Protection Level: 
-    - Monitor & Detect complete, 
-    - Analyze & Characterize parially via correlation and severity
-    - Plan & Prevent intentially out of scope -> the system notifies, it does not intercept 
+The underlying concept is not new. 
+The OWASP AppSensor project describes an approach in which intrusion detection and response 
+capabilities are integrated directly into an application~\cite{OWASPAppSensor}. 
+In contrast to network-based security mechanisms, application-layer monitoring can make use of 
+information about the application's internal state and semantics.
+
+A network firewall primarily controls network communication, while a network-based \acrfull{ids} 
+has limited visibility into application-specific behaviour. 
+A \acrfull{waf} can provide additional protection against generic application-layer attacks, such 
+as SQL injection, but typically has limited knowledge of the internal logic and state of a specific 
+application. 
+Consequently, application-integrated detection mechanisms can complement network- and perimeter-based 
+security controls by analysing application-specific events and behaviour~\cite{OWASPAppSensor}.
+
+In the following, the proposed system is classified using the taxonomy for self-protecting software 
+systems introduced by Yuan and Malek~\cite{Taxonomy}. 
+Two dimensions of this taxonomy are particularly relevant to the scope of this work: the 
+\texttt{Architecture Level} and the \texttt{Self-Protection Level}.
+
+The \texttt{Architecture Level} describes the layer at which a security mechanism operates and 
+distinguishes between Network, Host, Software/Application, and Services. 
+This dimension allows the observation position of different security mechanisms to be compared. 
+Network-based \acrfull{ids}, such as Suricata and Snort, operate primarily at the network level, 
+whereas \acrfull{edr} solutions operate at the host level. 
+The proposed system operates at the Software / Application level, as it observes events directly 
+within the Shibboleth IdP. 
+The distinction between these systems therefore lies primarily in the layer at which 
+security-relevant information becomes observable.
+
+The second relevant dimension is the \texttt{Self-Protection Level}, which describes the degree of 
+self-protection according to the MAPE process of Monitor, Analyze, Plan, and Execute. 
+The proposed system fully covers the \textit{Monitor & Detect} level by collecting and detecting 
+security-relevant events within the IdP. 
+The \textit{Analyze & Characterize} level is partially addressed through event correlation and 
+severity classification. 
+In contrast, \textit{Plan & Prevent} is outside the scope of this work. 
+The system generates alerts based on detected events but does not autonomously modify the system 
+state or take preventive countermeasures.
+
+The resulting classification is a direct consequence of the underlying design principle of 
+this work. 
+The proposed system follows the concept of a \textit{Looking Glass}, in which security-relevant 
+events are made observable without interfering with the operation of the monitored system. 
+Rieckers applies a similar principle to the passive observation of a 
+federation infrastructure~\cite{EAPeduroam}, which is adopted by this work. 
+Extending the system with automatic response mechanisms would contradict this passive 
+observation principle. 
+Furthermore, erroneous automated responses could negatively affect the availability or operation 
+of the IdP and thereby potentially impact multiple SPs that rely on it.
 
 Two precedents:
 - BlackWatch:

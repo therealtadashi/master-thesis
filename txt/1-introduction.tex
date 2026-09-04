@@ -21,27 +21,27 @@ Verizon reports that credential abuse was the leading initial attack vector in 2
 data breaches in 2025~\cite{VerizonDataBreach}.
 
 To reduce the number of places where credentials are created and stored, the \acrfull{fim} was developed.
-\acrshort{fim} allows users to authenticate on multiple SPs using the same credentials, which 
+FIM allows users to authenticate on multiple SPs using the same credentials, which 
 are provided by an \acrfull{idp}. 
-\acrshort{fim} consolidates authentication behind a single trusted authority called 
-the \acrshort{idp}.
-When a user attempts to gain access on the \acrfull{sp} in \acrshort{fim}, the user's browser is redirected 
-to the \acrshort{idp}.
-The user authenticates with the \acrshort{idp} and the \acrshort{idp} communicates with the \acrshort{sp} 
-to guarantee that the user is who they say they are.
+FIM consolidates authentication behind a single trusted authority called the IdP.
+When a user attempts to gain access on the \acrfull{sp} in FIM, the user's browser is redirected 
+to the IdP.
+The user authenticates with the IdP and the IdP communicates with the SP to guarantee that the user is 
+who they say they are.
 
 Shibboleth, developed by Internet2, is one of the most widely deployed open-source implementations of 
 this model in the research and education (R\&E) sector~\cite{Shibboleth}. 
-Under this model, a user authenticates with their organisation's \acrshort{idp} once.
-The \acrshort{idp} then issues cryptographically signed SAML assertions that SPs accept 
+Under this model, a user authenticates with their organisation's IdP once.
+The IdP then issues cryptographically signed SAML assertions that SPs accept 
 as proof of identity.
-This architecture is widely deployed in higher education and research federation such as DFN-AAI~\cite{DFNAAI}, 
-where a single \acrshort{idp} serves dozens of SPs simultaneously.
+This architecture is widely deployed in higher education and research federation such 
+as DFN-AAI~\cite{DFNAAI}, 
+where a single IdP serves dozens of SPs simultaneously.
 
-This architectural property introduces a critical consequence: the \acrshort{idp} becomes a single point of trust 
-for the entire federation. 
-A compromised, misconfigured or vulnerable \acrshort{idp} does not affect one application.
-It undermines the security of every relying \acrshort{sp}.
+This architectural property introduces a critical consequence: the IdP becomes a single point of trust 
+for the entire federation~\cite{IdPSinglePointOfTrust}. 
+A compromised, misconfigured or vulnerable IdP does not affect one application.
+It undermines the security of every relying SP.
 A notable example of this vulnerability is the Sunburst supply chain attack. 
 After gaining initial access, the attackers obtained the trusted SAML signing certificate and used it to 
 forge authentication assertions, granting unauthorised access to all connected services without triggering 
@@ -49,21 +49,21 @@ a single failed login~\cite{FireEyeSSC,MicrosoftBlogSSC}.
 Beyond targeted attacks, the SAML protocol itself is susceptible to well-documented vulnerabilities, 
 such as \acrfull{xsw}~\cite{VulnerSAMLCloud, BreakingSAML}, Response Injection, Assertion Artifact Leakage 
 and IdP Spoofing~\cite{SecAnalysisSSO}.
-These vulnerabilities allow an attacker to forge or manipulate the security claim that the security claims 
-that the \acrshort{sp} accepts as authoritative once the signature validates.
+These vulnerabilities enable attackers to forge or manipulate security claims accepted by the SP as 
+authoritative once the signature has been validated.
 
 Despite this elevated risk profile, systematic security monitoring at the application layer of Shibboleth 
-\acrshort{idp} deployments remains largely absent. 
+IdP deployments remains largely absent. 
 Existing approaches such as AAIEye~\cite{MonitoringAAI} focus primarily on operational availability, 
 leaving security-relevant aspects unaddressed. 
 The research literature reflects a comparable gap: a survey of security analyses in federated identity 
 management finds Shibboleth to be among the least examined protocols, and formal analyses of SAML remain 
-scarce despite its deployment across government, enterprise and education~\cite{FIMSurvey, FormalSecAnalysisSAML}.
+scarce despite its deployment across government, enterprise and education~\cite{FIMSurvey}.
 
 This thesis addresses this gap by proposing a security-oriented monitoring system that operates directly 
 within the Shibboleth application layer. 
 Analogous to a network Looking Glass, which provides transparency into the internal routing state 
-of a network node, the proposed system acts as a Security Looking Glass for the Shibboleth \acrshort{idp}. 
+of a network node, the proposed system acts as a Security Looking Glass for the Shibboleth IdP. 
 It makes application-layer security parameters and authentication workflows visible that are otherwise 
 inaccessible from outside the application. 
 Rather than testing the deployment actively, the system observes it, and thereby provides federation 
@@ -71,14 +71,14 @@ operators with a continuous view of the security posture of their authentication
 
 Three research questions guide this work:
 \begin{itemize}
-    \item RQ1 Which security-relevant data can be collected at the application layer of a Shibboleth \acrshort{idp}, and through which mechanisms are these data accessible?
+    \item RQ1 Which security-relevant data can be collected at the application layer of a Shibboleth IdP, and through which mechanisms are these data accessible?
     \item RQ2 How can these data be correlated in order to detect configuration weaknesses and anomalies in the authentication process?
-    \item RQ3 What measurable overhead does the resulting system impose on the monitored \acrshort{idp}?
+    \item RQ3 What measurable overhead does the resulting system impose on the monitored IdP?
 \end{itemize}
 
 The remainder of this thesis is structured as follows. 
 \begin{itemize}
-    \item Chapter \ref{ch:background} introduces the technical foundations of \acrshort{fim}, SAML and the Shibboleth \acrshort{idp}. 
+    \item Chapter \ref{ch:background} introduces the technical foundations of FIM, SAML and the Shibboleth IdP. 
     \item Chapter 3 positions this work within existing research on application-layer intrusion detection and delimits it from network- and host-based monitoring systems. 
     \item Chapter 4 presents the architecture of the proposed system, and 
     \item Chapter 5 describes its implementation devided in layers. 

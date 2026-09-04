@@ -23,15 +23,15 @@ It provides \acrfull{sso} functionalities across all applications of an organiza
 Through the properties granted by incorporating SSO into the federation, it eliminated the need 
 to create, remember and manage multiple usernames and passwords for users and the organization. 
 By centralising identity management, the number of systems holding credentials is 
-reduced~\cite{NIST80063C}. 
+reduced. 
 Fewer accounts and identity management systems means fewer vectors to attack and credential of a 
-user to steal. 
+user to steal~\cite{NIST80063C}. 
 It also eases the identity management by centralizing it on a server. 
 This centralisation introduces new risks. 
 FIM relies on a foundation of trust between organizations and this trust is heavily reliant on 
 the security of the IdP. 
 The centralization by incorporating an IdP means it creates a single point of trust, 
-or in different words, it concentrates the risk onto a single server. 
+or in different words, it concentrates the risk onto a single server~\cite{IdPSinglePointOfTrust}. 
 
 A compromise of a primary IdP could potentially grant broad unauthorised access across the 
 entire federation. 
@@ -160,8 +160,8 @@ The \acrfull{saml} is an XML-based standard developed by the organization for th
 Structured Information Standards (OASIS) for the exchange of authentication, authorization, and other 
 security-related information between different parties.
 SAML is a fundamental component of FIM and is widely used to enable SSO across organizational and 
-security boundaries. 
-The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAMLOverview}.
+security boundaries~\cite{SAMLOverview}. 
+The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
 SAML 1.1 had already gained widespread adoption in federated identity environments~\cite{SAML1Standard}. 
 However, several competing approaches existed at the time, including the Identity Federation Framework 
 (ID-FF) developed by the Liberty Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 

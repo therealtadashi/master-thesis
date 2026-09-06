@@ -71,13 +71,20 @@ observation principle.
 Furthermore, erroneous automated responses could negatively affect the availability or operation 
 of the IdP and thereby potentially impact multiple SPs that rely on it.
 
-Two precedents:
-- BlackWatch:
-    - same architekture for generic web application, asynchonous transfer identical reasoning
-    - The main challenge here is one aspect: 
-        - Developers must integrate an identification code into their own application. 
-        - This work uses a designated extension point
-    
+There are two architectural precedents that are particularly relevant to this work.
+BlackWatch by Hall et al. applies a similar architecture to generic web 
+applications~\cite{BlackWatch}. 
+Detection points are placed directly within the application to identify security-relevant events. 
+These events are collected by the separate BlackWatch application, where they are analysed using 
+rule-based and reputation-based mechanisms. 
+The results are then made available through a web-based reporting interface.
+The separation between the monitored application and the analysis component allows the detection 
+and analysis functionality to be decoupled from the application itself. 
+A key challenge identified by Hall et al. is the integration and configuration of detection 
+points within the application. 
+Developers must identify suitable locations where suspicious behaviour can be detected and 
+implement the corresponding detection logic~\cite{BlackWatch}.
+
 \section{Why SIEM Functionalities is not Enough}\label{sec:why-not-siem}
 
 The limitation stems from the definition

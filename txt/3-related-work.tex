@@ -177,29 +177,30 @@ a new domain that is rarely implemented.
 
 \section{Derivation of the Rules}\label{sec:rules}
 
-Three Reference Frameworks:
-- FIM Survey by Simpson and Groß: eleven vulnerabilities, fourteen attack classes, linked in cross-protocol issues. 
-    - Six concern SAML, one concerns Shibboleth
-- OASIS Security Considerations: prescriptive guidelines on what a deployment should do
-- STRIDE according to Graves: what kind of impact an attack would have
+The FIM survey by Simpson and Groß identifies 11 vulnerabilities and 14 attack 
+classes based on a systematic literature review~\cite{FIMSurvey}. 
+These are grouped into cross-protocol issues. 
+An issue exists when the same weakness is exploited by the same attack class, 
+results in the same CIA consequence, and is documented in at least two different 
+protocols. 
+Six of the fourteen issues concern SAML, and one directly concerns Shibboleth. 
+In contrast, the OASIS SAML Security and Privacy Considerations prescriptively define 
+what a deployment should do~\cite{SAMLSecurityConsideration}.
 
-Varying levels of evidence: 
-- The survey empirically demonstrates that an attack occurred. 
-- OASIS specifies what measures are intended to counter it. 
-- Where both are present, as with the replay rules, the reasoning is strongest.
+The third framework is STRIDE, a scheme for classifying threats according to their 
+mode of operation~\cite{ThreatModeling}. 
+It distinguishes between spoofing, tampering, repudiation, information disclosure, 
+denial of service, and elevation of privilege. 
+Graves uses this framework in his threat analysis for Shibboleth~\cite{ShibbolethGIAC}. 
+While the FIM Survey and OASIS answer the question of whether a rule corresponds to 
+a documented vulnerability, STRIDE classifies the type of impact a successful 
+attack would have.
 
-Two observations from the table
-- “Lack of Binding” appears in three of the six SAML rows, making it the most frequently documented SAML vulnerability. 
-    - The replay rules address precisely this
-- Several rules form “target-actual” pairs: the same vulnerability, once as a configuration state and once as an event that has occurred. 
-    - This is a standalone argument in favor of the three-source architecture
-- It should be noted that two rules cannot be assigned to any grid. 
-    - SUSPICIOUS-USER-AGENT is an indicator with no documented link to an attack, while BEHAVIOUR-ANOMALY is a detection method rather than an attack class.
-
-Severity:
-- Derived from Graves risk scale R1 through R5
-- Two-tiered, because the rules detect partly enabling factors and partly events
-- Two rules were downgraded and adjusted in the code
+The FIM Survey and OASIS differ in their level of evidence. 
+The Survey empirically demonstrates that an attack has actually occurred. 
+OASIS normatively specifies what a deployment should do to counter it. 
+Where both are present simultaneously, as in the case of replay rules, the reasoning 
+is strongest.
 
 \section{What Is Structurally Impossible}\label{sec:structureally-impossible}
 

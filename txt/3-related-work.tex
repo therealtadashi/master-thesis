@@ -14,6 +14,34 @@ existing approaches, their areas of coverage, and gaps that remain relevant to t
 considered scenario. 
 The most relevant studies and projects are presented and analysed in the following sections.
 
+\section{Security Analyses of SAML and Shibboleth}\label{sec:saml-analyses}
+
+The security of SAML-based federations has been examined from two directions. 
+Empirical studies analyse existing implementations, while formal approaches reason about the 
+specification itself.
+
+Somorovsky et al. examined fourteen SAML frameworks and found critical XSW vulnerabilities in 
+eleven of them~\cite{BreakingSAML}. 
+Their analysis is confined to the processing of assertions at the SP, and it does not consider 
+what information is available at the IdP during or after such an attack. 
+Mainka et al. extended this line of work to cloud environments and reported that a majority of 
+the analysed SaaS providers were vulnerable to at least one of eight identified attack 
+vectors~\cite{VulnerSAMLCloud}.
+
+A second line of work approaches the problem formally. 
+Sommer analyses the Shibboleth implementation with respect to authentication, session integrity 
+and logout consistency~\cite{SecAnalysisSSO}, while Hartl and Derek analyse the SAML 
+specification itself~\cite{FormalSecAnalysisSAML}. 
+The latter derive eight protocol variants from the optional features of a single use case and 
+prove the security properties of each separately. 
+Their premise is that SAML is not a security protocol in itself, but a framework whose optional 
+features can be composed in different ways.
+
+Both approaches establish which configurations are secure under a given set of assumptions. 
+Neither verifies whether a deployed system actually satisfies those assumptions. 
+Formal analysis therefore answers which configuration is secure, whereas this work observes 
+which configuration is in effect.
+
 \section{Why Monitor from the Inside?}\label{sec:why-inside}
 
 As discussed in the introduction~\ref{ch:introduction}, the proposed monitoring system operates 
@@ -45,7 +73,7 @@ Two dimensions of this taxonomy are particularly relevant to the scope of this w
 The \texttt{Architecture Level} describes the layer at which a security mechanism operates and 
 distinguishes between Network, Host, Software/Application, and Services. 
 This dimension allows the observation position of different security mechanisms to be compared. 
-Network-based \acrfull{ids}, such as Suricata and Snort, operate primarily at the network level, 
+Network-based IDS, such as Suricata and Snort, operate primarily at the network level, 
 whereas \acrfull{edr} solutions operate at the host level. 
 The proposed system operates at the Software / Application level, as it observes events directly 
 within the Shibboleth IdP. 
@@ -55,7 +83,7 @@ security-relevant information becomes observable.
 While the Architecture Level describes where the system operates, the \texttt{Self-Protection Level} 
 describes the degree of self-protection according to the MAPE process of Monitor, Analyze, 
 Plan, and Execute. 
-The proposed system fully covers the \textit{Monitor & Detect} level by collecting and detecting 
+The proposed system fully covers the \textit{Monitor \& Detect} level by collecting and detecting 
 security-relevant events within the IdP. 
 The \textit{Analyze & Characterize} level is partially addressed through event correlation and 
 severity classification. 
@@ -88,7 +116,17 @@ and analysis functionality to be decoupled from the application itself.
 A key challenge identified by Hall et al. is the integration and configuration of detection 
 points within the application. 
 Developers must identify suitable locations where suspicious behaviour can be detected and 
-implement the corresponding detection logic~\cite{BlackWatch}.
+implement the corresponding detection logic~\cite{BlackWatch}. 
+
+A complementary perspective is provided by Martín and Beltrán, who propose 
+behavioural anomaly detection at the SP rather than the IdP~\cite{UEBAFederation}. 
+Their argument is that delegating authentication to an IdP does not transfer the entire security 
+responsibility, and that the relying party can contribute to detection even after authentication 
+has succeeded. 
+The IdP side is explicitly outside their scope, and protocol-level information such as assertion 
+structure, attribute release policies or SP metadata is consequently not considered. 
+Taken together with the present work, the two perspectives address opposite ends of the 
+same federation.
 
 \section{Why SIEM Functionality Is Not Enough}\label{sec:why-not-siem}
 
@@ -178,8 +216,9 @@ behaviour, but also on configuration and trust relationships involving its feder
 This creates a detection category that is not directly represented in the AppSensor model: 
 comparing an observed runtime event against the configuration that should govern that event.
 One AppSensor detection point, however, is directly applicable. 
-IE6, \textit{Violation of Security Log Integrity}, addresses the integrity of security logs and 
-cites NIST SP 800-92 and Snodgrass et al. as supporting references~\cite{NIST80092}. 
+IE6, \textit{Violation of Security Log Integrity}, addresses the integrity of 
+security logs and cites NIST SP 800-92 and Snodgrass et al. as supporting 
+references~\cite{OWASPAppSensor, NIST80092, TamperDetection}. 
 The discrepancy-based approach used in this work therefore does not introduce the general concept 
 of detecting log integrity violations. 
 Instead, it applies an established detection principle to the specific domain of federated 
@@ -226,7 +265,7 @@ and explicitly addressed by the SAML security considerations.
 
 \section{What Is Structurally Impossible}\label{sec:structureally-impossible}
 
-This section explains why the proposed monitoring system has some potential structurall 
+This section explains why the proposed monitoring system has some potential structural 
 difficulties. 
 It demonstrates that the limitations of the approach have been thoroughly considered 
 rather than merely listed.

@@ -187,34 +187,49 @@ identity management and extends it with application-level observations from the 
 
 \section{Derivation of the Rules}\label{sec:rules}
 
-The FIM survey by Simpson and Groß identifies 11 vulnerabilities and 14 attack 
-classes based on a systematic literature review~\cite{FIMSurvey}. 
-These are grouped into cross-protocol issues. 
-An issue exists when the same weakness is exploited by the same attack class, 
-results in the same CIA consequence, and is documented in at least two different 
-protocols. 
-Six of the fourteen issues concern SAML, and one directly concerns Shibboleth. 
-In contrast, the OASIS SAML Security and Privacy Considerations prescriptively define 
-what a deployment should do~\cite{SAMLSecurityConsideration}.
+The derivation of the detection rules is based on three complementary sources: the FIM survey 
+by Simpson and Groß, the OASIS SAML Security and Privacy Considerations, and the STRIDE threat 
+classification scheme.
+The FIM survey identifies 11 vulnerabilities and 14 attack classes based on a systematic 
+literature review~\cite{FIMSurvey}. 
+The vulnerabilities are grouped into cross-protocol issues where the same weakness is exploited 
+by the same attack class, results in the same CIA consequence, and is documented for at least 
+two different protocols. 
+Six of the fourteen identified issues concern SAML, while one directly concerns Shibboleth. 
+The survey therefore provides the primary basis for identifying attack scenarios that are 
+relevant to federated identity management.
 
-The third framework is STRIDE, a scheme for classifying threats according to their 
-mode of operation~\cite{ThreatModeling}. 
-It distinguishes between spoofing, tampering, repudiation, information disclosure, 
-denial of service, and elevation of privilege. 
-Graves uses this framework in his threat analysis for Shibboleth~\cite{ShibbolethGIAC}. 
-While the FIM Survey and OASIS answer the question of whether a rule corresponds to 
-a documented vulnerability, STRIDE classifies the type of impact a successful 
-attack would have.
+While the survey describes vulnerabilities that have been documented in the literature, the 
+OASIS SAML Security and Privacy Considerations provide a normative perspective by specifying 
+security requirements and recommended countermeasures for SAML 
+deployments~\cite{SAMLSecurityConsideration}. 
+This allows the detection rules to be derived not only from observed or documented attacks, 
+but also from the security properties that a SAML deployment is expected to enforce.
 
-The FIM Survey and OASIS differ in their level of evidence. 
-The Survey empirically demonstrates that an attack has actually occurred. 
-OASIS normatively specifies what a deployment should do to counter it. 
-Where both are present simultaneously, as in the case of replay rules, the reasoning 
-is strongest.
+A third perspective is provided by STRIDE, a threat classification scheme that categorizes 
+threats according to their mode of operation~\cite{ThreatModeling}. 
+It distinguishes between spoofing, tampering, repudiation, information disclosure, denial 
+of service, and elevation of privilege. 
+Graves applies this framework to the analysis of threats against 
+Shibboleth~\cite{ShibbolethGIAC}. 
+In this work, STRIDE is used to characterize the security impact of the attack scenarios 
+identified by the other two sources.
+
+The three sources therefore serve different purposes in the derivation process. 
+The FIM survey identifies documented vulnerabilities and attack classes, OASIS specifies the 
+security requirements that a SAML deployment should satisfy, and STRIDE provides a classification 
+of the resulting security impact. 
+Where the evidence from the survey and the requirements specified by OASIS overlap, the basis 
+for a detection rule is particularly strong. 
+Replay attacks provide an example of such an overlap, as they are documented in the literature 
+and explicitly addressed by the SAML security considerations.
 
 \section{What Is Structurally Impossible}\label{sec:structureally-impossible}
 
-It demonstrates that the limitations of the approach have been thoroughly considered rather than merely listed.
+This section explains why the proposed monitoring system has some potential structurall 
+difficulties. 
+It demonstrates that the limitations of the approach have been thoroughly considered 
+rather than merely listed.
 
 Three Groups of Reasons:
 - Other System Levels: 
@@ -228,14 +243,17 @@ Three Groups of Reasons:
     - The prerequisites are observable, not the event itself
 
 Two special cases should be highlighted:
-- No Trust Infrastructure and Bogus Merchant is the only Shibboleth-related entry in the survey and remains open. 
+- No Trust Infrastructure and Bogus Merchant is the only Shibboleth-related entry in the 
+survey and remains open. 
     - The malicious SP is registered normally and is formally legitimate.
 - A malicious provider is structurally undetectable. 
-    - Since the system runs within the IdP, the observer and the potential attacker are one and the same. 
+    - Since the system runs within the IdP, the observer and the potential attacker are 
+    one and the same. 
     - This limitation applies to every IdP-side system.
 
 And now, the connection to motivation: 
-- None of the thirteen rules reaches R5.
-- The Sunburst case from the beginning, specifically, would not be detectable with this system.
+- None of the thirteen rules reaches R5 presented in Graves.
+- The Sunburst case from the beginning, specifically, would not be detectable 
+with this system.
 
 \end{document}

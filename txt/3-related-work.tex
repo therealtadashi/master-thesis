@@ -35,6 +35,8 @@ application.
 Consequently, application-integrated detection mechanisms can complement network- and perimeter-based 
 security controls by analysing application-specific events and behaviour~\cite{OWASPAppSensor}.
 
+This application-level perspective also provides a basis for classifying the proposed system 
+within an established security taxonomy.
 In the following, the proposed system is classified using the taxonomy for self-protecting software 
 systems introduced by Yuan and Malek~\cite{Taxonomy}. 
 Two dimensions of this taxonomy are particularly relevant to the scope of this work: the 
@@ -50,8 +52,9 @@ within the Shibboleth IdP.
 The distinction between these systems therefore lies primarily in the layer at which 
 security-relevant information becomes observable.
 
-The second relevant dimension is the \texttt{Self-Protection Level}, which describes the degree of 
-self-protection according to the MAPE process of Monitor, Analyze, Plan, and Execute. 
+While the Architecture Level describes where the system operates, the \texttt{Self-Protection Level} 
+describes the degree of self-protection according to the MAPE process of Monitor, Analyze, 
+Plan, and Execute. 
 The proposed system fully covers the \textit{Monitor & Detect} level by collecting and detecting 
 security-relevant events within the IdP. 
 The \textit{Analyze & Characterize} level is partially addressed through event correlation and 
@@ -60,8 +63,8 @@ In contrast, \textit{Plan & Prevent} is outside the scope of this work.
 The system generates alerts based on detected events but does not autonomously modify the system 
 state or take preventive countermeasures.
 
-The resulting classification is a direct consequence of the underlying design principle of 
-this work. 
+This limited level of self-protection is intentional and follows from the passive design 
+principle of this work.
 The proposed system follows the concept of a \textit{Looking Glass}, in which security-relevant 
 events are made observable without interfering with the operation of the monitored system. 
 Rieckers applies a similar principle to the passive observation of a 
@@ -71,13 +74,15 @@ observation principle.
 Furthermore, erroneous automated responses could negatively affect the availability or operation 
 of the IdP and thereby potentially impact multiple SPs that rely on it.
 
-There are two architectural precedents that are particularly relevant to this work.
-BlackWatch by Hall et al. applies a similar architecture to generic web 
-applications~\cite{BlackWatch}. 
+The Looking Glass principle is also reflected in existing application-level 
+monitoring approaches. 
+One relevant architectural precedent is BlackWatch by Hall et al.~\cite{BlackWatch}.
+BlackWatch applies a similar architecture to generic web applications. 
 Detection points are placed directly within the application to identify security-relevant events. 
 These events are collected by the separate BlackWatch application, where they are analysed using 
 rule-based and reputation-based mechanisms. 
 The results are then made available through a web-based reporting interface.
+
 The separation between the monitored application and the analysis component allows the detection 
 and analysis functionality to be decoupled from the application itself. 
 A key challenge identified by Hall et al. is the integration and configuration of detection 

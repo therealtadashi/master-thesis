@@ -90,95 +90,100 @@ points within the application.
 Developers must identify suitable locations where suspicious behaviour can be detected and 
 implement the corresponding detection logic~\cite{BlackWatch}.
 
-\section{Why SIEM Functionalities is not Enough}\label{sec:why-not-siem}
+\section{Why SIEM Functionality Is Not Enough}\label{sec:why-not-siem}
 
 A \acrfull{siem} primarily operates on logs and security-relevant events. 
 This is not a criticism, but a description of its basic operating principle. 
 Two limitations follow from this principle. 
-First, information that is not represented in an event or log is not available to the SIEM 
-for analysis. 
+First, information that is not represented in an event or log is not available to the SIEM for 
+analysis. 
 Second, the SIEM generally relies on the information provided by its data sources and therefore 
 cannot independently verify information that is incorrect or has been manipulated at the source.
 
-The collection, storage, and correlation of log data used in this work correspond to established 
-SIEM functionality and do not constitute an original contribution. 
+These limitations do not diminish the value of SIEM systems, but they define the boundary within 
+which they operate. 
+The collection, storage, and correlation of log data used in this work therefore correspond to 
+established SIEM functionality and do not constitute an original contribution. 
 OWASP A09 explicitly recommends centralized logging and monitoring and identifies solutions such 
 as the ELK stack as possible tools for addressing logging and monitoring 
 vulnerabilities~\cite{OWASPA09}.
 
-The contribution of this work instead lies in the collection and verification of 
-application-level security events. 
+The question therefore shifts from how events are analysed to how their underlying sources can 
+be verified. 
 Wazuh is particularly relevant in this context, as it combines log analysis with file integrity 
 monitoring and security configuration assessment, thereby addressing both event-based analysis 
-and the verification of system state~\cite{WazuhDocumentation}.
-
+and the verification of system state~\cite{WazuhDocumentation}. 
 However, these mechanisms primarily address configuration and file state rather than the 
 relationship between configuration and individual runtime events. 
-The security configuration assessment evaluates system configurations against defined policies, 
+Security configuration assessment evaluates system configurations against defined policies, 
 while file integrity monitoring detects changes to monitored files. 
-Neither mechanism directly establishes whether a particular runtime event is consistent with 
-the configuration state that was active when the event occurred.
+Neither mechanism directly establishes whether a particular runtime event is consistent with the 
+configuration state that was active when the event occurred.
 
-Graves demonstrates for Shibboleth that log entries can be tampered with. 
-He therefore recommends keeping Apache logs separate, since the logs from Tomcat and the IdP 
-itself can be tampered with by an attacker~\cite{ShibbolethGIAC}.
-OWASP A09 lists the lack of log tampering protection as a separate vulnerability and refers 
-to CWE-117: An attacker inserts, modifies, deletes, or forges entries to mislead 
-subsequent analysis~\cite{OWASPA09, CWE117}. 
-Thus, the correlation mechanism described in this work is no longer merely a technical 
-necessity, but a safety measure supported by the literature. 
+A further concern arises when considering the integrity of the log sources themselves. 
+Graves demonstrates that log entries can be tampered with in a Shibboleth deployment and therefore 
+recommends keeping Apache logs separate, since logs produced by Tomcat and the IdP itself can 
+potentially be modified by an attacker with sufficient system access~\cite{ShibbolethGIAC}. 
+OWASP A09 likewise identifies insufficient protection against log tampering as a security concern 
+and refers to CWE-117, which describes the insertion, modification, deletion, or forgery of log 
+entries to mislead subsequent analysis~\cite{OWASPA09,CWE117}.
 
-Although a system that relies solely on log analysis can compare multiple log sources, all 
-of these sources are files on the same system and are therefore vulnerable to the same class 
-of attackers.
+This makes the correlation of independent event sources more than a technical convenience. 
+It provides an additional means of identifying inconsistencies between records of the same event. 
+A system that relies solely on log analysis can compare multiple log sources, but if all sources 
+are stored as files on the same system, they remain exposed to an attacker with sufficient 
+file-system access.
 
-Schneier and Kelsey, as well as Snodgrass et al., make tampering cryptographically 
-detectable~\cite{TamperDetection, CryptoSupportSecureLogs}. 
-The cost of this is a redesign of the logging or storage layer, as well as a reliance on 
-external trusted services. 
-Snodgrass reports an overhead of up to 16 percent for this~\cite{TamperDetection}. 
-The approach taken in this theis is different: comparing two independent records of the 
-same event. 
+Cryptographic approaches provide a stronger solution to this problem. 
+Schneier and Kelsey, as well as Snodgrass et al., describe mechanisms that make tampering with 
+stored logs cryptographically detectable~\cite{TamperDetection,CryptoSupportSecureLogs}. 
+However, these approaches require changes to the logging or storage architecture and may depend 
+on external trusted components. 
+Snodgrass et al. report an overhead of up to 16 percent for their approach~\cite{TamperDetection}.
 
-The difference lies in the time window and the class of attacker, not in a trust boundary. 
-A log file can be manipulated over a period of weeks by anyone with file system access using 
-standard tools. 
-A report from the Custom Interceptor Flow, on the other hand, exists for only milliseconds and 
-is then out of reach. 
-However, whoever controls the JVM process also controls the interceptor.
+The approach taken in this work is different. 
+Instead of modifying the existing logging infrastructure, two independently generated records 
+of the same event are compared. 
+The difference is therefore not based on a new trust boundary, but on the temporal and 
+architectural separation between the records. 
+A log file may remain accessible to an attacker with file-system access for an extended period, 
+whereas a report generated by the Custom Interceptor Flow exists only for the duration of the 
+corresponding application processing. 
+This does not make the interceptor report immutable: an attacker controlling the JVM process 
+could also manipulate it. 
+Its purpose is instead to provide a second, independently generated observation of the same 
+event.
 
-In conclusion, it should be noted that this is not a Shibboleth-specific finding. 
-Graves describes the application of a generic class of weaknesses to Shibboleth, not a 
-documented vulnerability~\cite{ShibbolethGIAC}. 
-There are no reported log injection flaws in Shibboleth in the CVE databases. 
-The risk therefore stems from the nature of file-based logs in general and not from a known 
-vulnerability in this specific implementation.
+The remaining question is whether such application-level detection is already sufficiently 
+covered by existing frameworks. 
+Of the works considered, AppSensor is conceptually closest to this work. 
+However, its detection model is based on different assumptions about the monitored 
+application~\cite{OWASPAppSensor}.
 
-Of all the works considered, AppSensor is conceptually closest to this work. 
-However, the framework does not cover the domain under consideration, for a structural reason 
-rather than because it is incomplete.
-All detection points monitor a single user during a session~\cite{OWASPAppSensor}. 
-They look for tampered cookies, altered parameters, or injection attempts. 
+AppSensor detection points primarily monitor the behaviour of a user within an application 
+session. 
+They can detect events such as tampered cookies, modified parameters, or injection attempts. 
+The framework therefore asks whether a user's behaviour is suspicious. 
+It does not provide a mechanism for comparing an observed runtime event with a configuration 
+or security state declared by a third party.
 
-What the framework does not provide for, however, is a target-vs.-actual comparison. 
-Each detection point asks whether the user has done something anomalous. 
-None of them asks whether what happened corresponds to a third party's declared configuration.
+This limitation follows from the architectural assumptions of the framework. 
+AppSensor is designed for applications in which the application itself is the primary authority 
+over the user's interaction. 
+An IdP, in contrast, performs authentication and issues identity information on behalf of other 
+entities. 
+Consequently, security-relevant conditions may depend not only on the IdP's own runtime 
+behaviour, but also on configuration and trust relationships involving its federation partners.
 
-The reason for this lies in the framework's design assumptions. 
-AppSensor was designed for applications that authenticate their users themselves. 
-However, an IdP does not authenticate on its own behalf, but on behalf of third parties. 
-Consequently, some security relevant states do not lie in its own behavior, but in the 
-configuration of its partners. 
-This domain therefore requires a category of detection points that AppSensor's schema does 
-not recognize.
-
-One detection point, however, is directly applicable. 
-IE6: Violation of Security Log Integrity, describes precisely the issue addressed by the 
-correlation discrepancy approach in this work. 
-AppSensor identifies it and cites NIST SP 800-92 as well as Snodgrass et al. as 
-its basis~\cite{NIST80092}. 
-This approach is not a new invention, but rather a recognised detection point in 
-a new domain that is rarely implemented. 
+This creates a detection category that is not directly represented in the AppSensor model: 
+comparing an observed runtime event against the configuration that should govern that event.
+One AppSensor detection point, however, is directly applicable. 
+IE6, \textit{Violation of Security Log Integrity}, addresses the integrity of security logs and 
+cites NIST SP 800-92 and Snodgrass et al. as supporting references~\cite{NIST80092}. 
+The discrepancy-based approach used in this work therefore does not introduce the general concept 
+of detecting log integrity violations. 
+Instead, it applies an established detection principle to the specific domain of federated 
+identity management and extends it with application-level observations from the Shibboleth IdP.
 
 \section{Derivation of the Rules}\label{sec:rules}
 

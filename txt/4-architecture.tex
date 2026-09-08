@@ -4,6 +4,44 @@
 
 \chapter{Architecture}\label{ch:architecture}
 
+\section{Requirements for the System}\label{sec:requirements}
+What comes after the research questions and the related work:
+- multiple sources / data to correlate
+- passive monitoring without acting on alerts
+- no source code editing in Shibboleth (work as a plugin)
+- Store saved data on a differente trust boundary of a IdP
 
+\section{Overview}\label{sec:overview}
+- The four layers and their coordiation / how they work together
+- Architecture diagram
+
+\section{Data Aggregation Layer}\label{sec:dataaggregation}
+- The three data sources (audit, config, interceptor), with the questions: 
+    - What does it see, and why does it see it? 
+    - Explain the different interceptor points when explaining about the intercepor
+        - what would I see when I would intercept it earlier
+        - or later in the hook
+
+\section{Transport Layer and Trust Boundary}\label{sec:trust}
+- Why do I store the data outside of the trust boundary
+- HMAC, Pseudonymization at the source
+- (Und die Entscheidung für asynchronen Versand mit ihrer Begründung.)
+
+\section{Correlation Layer}\label{sec:correlation}
+- Why is the correlation necessary?
+- Explain the idea of the Fallback-Chain
+- Why a chain and not a strategy
+- without implementation details
+
+\section{Detection Layer}\label{sec:detection}
+- How is a rule build
+- the four rule engines and why four
+- Principle of backtracking when fields are missing
+
+\section{Design Decision and Alternatives}\label{sec:design}
+- What you rejected and why—no automatic response
+- no interference with the logging chain
+- no machine learning.
+- This section transforms a system description into a well-founded design.
 
 \end{document}

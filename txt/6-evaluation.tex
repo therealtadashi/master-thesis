@@ -1,0 +1,39 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\chapter{Evaluation of the System}\label{ch:related-work}
+
+\section{What Is Structurally Impossible}\label{sec:structureally-impossible}
+
+This section explains why the proposed monitoring system has some potential structural 
+difficulties. 
+It demonstrates that the limitations of the approach have been thoroughly considered 
+rather than merely listed.
+
+Three Groups of Reasons:
+- Other System Levels: 
+    - Weak DNS and DNS poisoning affect name resolution. 
+    - The same applies to DDoS and UI redressing
+- Other party: 
+    - Vulnerable SP and CSRF occur between the browser and the SP. 
+    - The same applies to XSS and session swapping
+- Only indirectly observable: 
+    - Lack of Binding and MITM. 
+    - The prerequisites are observable, not the event itself
+
+Two special cases should be highlighted:
+- No Trust Infrastructure and Bogus Merchant is the only Shibboleth-related entry in the 
+survey and remains open. 
+    - The malicious SP is registered normally and is formally legitimate.
+- A malicious provider is structurally undetectable. 
+    - Since the system runs within the IdP, the observer and the potential attacker are 
+    one and the same. 
+    - This limitation applies to every IdP-side system.
+
+And now, the connection to motivation: 
+- None of the thirteen rules reaches R5 presented in Graves.
+- The Sunburst case from the beginning, specifically, would not be detectable 
+with this system.
+
+\end{document}

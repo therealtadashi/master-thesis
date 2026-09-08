@@ -3,7 +3,7 @@
     {
       "name": "latexmk-outdir",
       "command": "bash",
-      "args": ["${workspaceFolder}/script/bash.sh", "%DOC%"]
+      "args": ["/Users/tadashitoyokawa/Desktop/Thesis/master-thesis/script/bash.sh", "%DOC%"]
     }
   ],
   "latex-workshop.latex.recipes": [

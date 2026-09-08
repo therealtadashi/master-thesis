@@ -85,9 +85,9 @@ describes the degree of self-protection according to the MAPE process of Monitor
 Plan, and Execute. 
 The proposed system fully covers the \textit{Monitor \& Detect} level by collecting and detecting 
 security-relevant events within the IdP. 
-The \textit{Analyze & Characterize} level is partially addressed through event correlation and 
+The \textit{Analyze \& Characterize} level is partially addressed through event correlation and 
 severity classification. 
-In contrast, \textit{Plan & Prevent} is outside the scope of this work. 
+In contrast, \textit{Plan \& Prevent} is outside the scope of this work. 
 The system generates alerts based on detected events but does not autonomously modify the system 
 state or take preventive countermeasures.
 
@@ -262,37 +262,5 @@ Where the evidence from the survey and the requirements specified by OASIS overl
 for a detection rule is particularly strong. 
 Replay attacks provide an example of such an overlap, as they are documented in the literature 
 and explicitly addressed by the SAML security considerations.
-
-\section{What Is Structurally Impossible}\label{sec:structureally-impossible}
-
-This section explains why the proposed monitoring system has some potential structural 
-difficulties. 
-It demonstrates that the limitations of the approach have been thoroughly considered 
-rather than merely listed.
-
-Three Groups of Reasons:
-- Other System Levels: 
-    - Weak DNS and DNS poisoning affect name resolution. 
-    - The same applies to DDoS and UI redressing
-- Other party: 
-    - Vulnerable SP and CSRF occur between the browser and the SP. 
-    - The same applies to XSS and session swapping
-- Only indirectly observable: 
-    - Lack of Binding and MITM. 
-    - The prerequisites are observable, not the event itself
-
-Two special cases should be highlighted:
-- No Trust Infrastructure and Bogus Merchant is the only Shibboleth-related entry in the 
-survey and remains open. 
-    - The malicious SP is registered normally and is formally legitimate.
-- A malicious provider is structurally undetectable. 
-    - Since the system runs within the IdP, the observer and the potential attacker are 
-    one and the same. 
-    - This limitation applies to every IdP-side system.
-
-And now, the connection to motivation: 
-- None of the thirteen rules reaches R5 presented in Graves.
-- The Sunburst case from the beginning, specifically, would not be detectable 
-with this system.
 
 \end{document}

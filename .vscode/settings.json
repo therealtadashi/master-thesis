@@ -3,13 +3,18 @@
     {
       "name": "latexmk-outdir",
       "command": "bash",
-      "args": ["/Users/tadashitoyokawa/Desktop/Thesis/master-thesis/script/bash.sh", "%DOC%"]
+      "args": [
+        "${workspaceFolder}/script/bash.sh",
+        "%DOC%"
+      ]
     }
   ],
   "latex-workshop.latex.recipes": [
     {
       "name": "latexmk (outdir)",
-      "tools": ["latexmk-outdir"]
+      "tools": [
+        "latexmk-outdir"
+      ]
     }
   ],
   "latex-workshop.latex.autoBuild.run": "onFileChange"

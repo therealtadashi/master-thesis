@@ -2,13 +2,14 @@
 
 \begin{document}
 
-\chapter{Methodology}\label{ch:methodology}
+\chapter{System Design}\label{ch:system-design}
 
 \section{Requirements for the System}\label{sec:requirements}
 What comes after the research questions and the related work:
-- multiple sources / data to correlate
-- passive monitoring without acting on alerts
-- no source code editing in Shibboleth (work as a plugin)
+- Four requirements: multiple independent sources, because a single source does not allow for a comparison of actual versus target figures. 
+- passive monitoring without acting on alerts (Looking-Glass Principle)
+- no source code editing in Shibboleth (work as a plugin), so that it remains a deployment artifact
+- Storage outside the IdP's trust boundary, with implications for transport and pseudonymization.
 - Store saved data on a differente trust boundary of a IdP
 
 \section{Overview}\label{sec:overview}
@@ -16,32 +17,40 @@ What comes after the research questions and the related work:
 - Architecture diagram
 
 \section{Data Aggregation Layer}\label{sec:dataaggregation}
+- Through what kinds of channels does an application actually disclose information—five types.
+- Two can be ruled out because they cannot be linked to a specific login. This answers RQ1.
 - The three data sources (audit, config, interceptor), with the questions: 
     - What does it see, and why does it see it? 
     - Explain the different interceptor points when explaining about the intercepor
         - what would I see when I would intercept it earlier
         - or later in the hook
+- the dynamic field adaption
+- the admin decides the audit format / what is being logged
+- Then, in sections 4.5 and 4.6, simply address the implications for rules and correlation.
 
 \section{Transport Layer and Trust Boundary}\label{sec:trust}
 - Why do I store the data outside of the trust boundary
 - HMAC, Pseudonymization at the source
-- (Und die Entscheidung für asynchronen Versand mit ihrer Begründung.)
+- And the decision to use asynchronous transmission, with the rationale that the analysis must not slow down the monitored service
 
 \section{Correlation Layer}\label{sec:correlation}
 - Why is the correlation necessary?
+- Two independent accounts of the same event.
 - Explain the idea of the Fallback-Chain
 - Why a chain and not a strategy
+    - the admin decides what is being logged
 - without implementation details
 
 \section{Detection Layer}\label{sec:detection}
 - How is a rule build
 - the four rule engines and why four
-- Principle of backtracking when fields are missing
+    - the differ in the input
+- And the rollback in the event of missing fields, as a consequence of 4.3.
 
-\section{Design Decision and Alternatives}\label{sec:design}
-- What you rejected and why—no automatic response
-- no interference with the logging chain
+\section{Design Decision and Rejected Alternatives}\label{sec:design}
+- why no automatic response
+- no intervention in the logging chain
 - no machine learning.
-- This section transforms a system description into a well-founded design.
+- For each decision: What would have been the alternative, and why not?
 
 \end{document}

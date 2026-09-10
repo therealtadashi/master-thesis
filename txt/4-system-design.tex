@@ -55,10 +55,21 @@ These considerations result in five requirements:
 \end{itemize}
 
 \section{Overview}\label{sec:overview}
-- The four layers and their coordiation / how they work together
-- Architecture diagram
 
-\section{Data Aggregation Layer}\label{sec:dataaggregation}
+The proposed system comprises four layers. 
+The data collection layer gathers security-relevant information from within the Shibboleth IdP, 
+drawing on three sources: the audit log written by the IdP, its static configuration and metadata files, 
+and a custom interceptor executing inside the IdP itself.
+Because the monitoring backend resides outside the trust boundary of the IdP, sensitive attributes such 
+as usernames and IP addresses are pseudonymised before transmission. 
+The transport layer then transfers the collected records to the backend over an authenticated channel.
+Within the backend, incoming records are persisted and periodically correlated, so that observations 
+originating from different sources but describing the same authentication event can be linked. 
+The detection layer evaluates the resulting data against the rule catalogue in order to identify 
+configuration weaknesses and anomalies in the authentication process.
+Finally, the presentation layer makes the detected findings accessible to the operator through a web interface.
+
+\section{Data Aggregation Layer}\label{sec:data-aggregation}
 - Through what kinds of channels does an application actually disclose information—five types.
 - Two can be ruled out because they cannot be linked to a specific login. This answers RQ1.
 - The three data sources (audit, config, interceptor), with the questions: 
@@ -75,7 +86,7 @@ These considerations result in five requirements:
 - HMAC, Pseudonymization at the source
 - And the decision to use asynchronous transmission, with the rationale that the analysis must not slow down the monitored service
 
-\section{Correlation Layer}\label{sec:correlation}
+\section{Storage, Correlation and Detection Layer}\label{sec:processing}
 - Why is the correlation necessary?
 - Two independent accounts of the same event.
 - Explain the idea of the Fallback-Chain
@@ -83,11 +94,13 @@ These considerations result in five requirements:
     - the admin decides what is being logged
 - without implementation details
 
-\section{Detection Layer}\label{sec:detection}
 - How is a rule build
 - the four rule engines and why four
     - the differ in the input
 - And the rollback in the event of missing fields, as a consequence of 4.3.
+
+\section{Visualization Layer}\label{sec:Visualization}
+- How is it visualised
 
 \section{Design Decision and Rejected Alternatives}\label{sec:design}
 - why no automatic response

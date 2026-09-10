@@ -62,13 +62,14 @@ drawing on three sources: the audit log written by the IdP, its static configura
 and a custom interceptor executing inside the IdP itself. 
 Because the monitoring backend resides outside the trust boundary of the IdP, sensitive attributes such 
 as usernames and IP addresses are pseudonymised before transmission. 
-The transport layer then transfers the collected records to the backend over an authenticated channel.
+The transport layer then transfers the collected records to the backend application over an authenticated channel. 
 Within the backend, incoming records are persisted and periodically correlated, so that observations 
 originating from different sources but describing the same authentication event can be linked. 
 The detection layer evaluates the resulting data against the rule catalogue in order to identify 
 configuration weaknesses and anomalies in the authentication process. 
-Finally, the presentation layer makes the detected findings accessible to the operator through a web interface.
-Figure~\ref{fig:deployment} illustrates the UML deployment diagram of the proposed system.
+Finally, the presentation layer makes the detected findings accessible to the operator through a frontend 
+web application.
+Figure~\ref{fig:deployment} illustrates the UML deployment diagram of the proposed system. 
 
 \begin{figure}[ht]
     \centering
@@ -78,8 +79,37 @@ Figure~\ref{fig:deployment} illustrates the UML deployment diagram of the propos
 \end{figure}
 
 \section{Data Aggregation Layer}\label{sec:data-aggregation}
-- Through what kinds of channels does an application actually disclose information—five types.
-- Two can be ruled out because they cannot be linked to a specific login. This answers RQ1.
+
+The design of the collection layer begins with a broader question than the choice of individual data sources. 
+Through which kinds of channel does an application disclose information about itself at all?
+Applied to the Shibboleth IdP, five such channels can be identified. 
+The application writes log files, it reads static configuration and metadata, it maintains runtime state that 
+is accessible through defined extension points, it exposes status endpoints, and it publishes metrics via Java 
+Management Extensions. 
+
+Not all of these are suitable for the purpose of this work. 
+The system described here associates every finding with an individual authentication event, since a security 
+relevant condition is only meaningful in the context of the transaction in which it occurred. 
+A channel that cannot be related to a single login can therefore not contribute to correlation or to the 
+generation of an alert. 
+
+Two of the five channels fail this criterion. 
+Status endpoints report the state of the deployment as a whole, such as its version, uptime, configured metadata 
+providers or the status of the underlying services. 
+They therefore address availability rather than the security of individual transactions. 
+JMX metrics are aggregates by construction. 
+A counter reports that a number of logins occurred, not which login was affected. 
+An alert derived from either source could not be attributed to a transaction. 
+
+The remaining three channels form the collection layer of this work. 
+These are the audit log, the configuration files, and the runtime state accessible through an interceptor. 
+They are described in the following sections. 
+
+\subsection{The Audit Logs}\label{subsec:audit-log}
+
+
+
+
 - The three data sources (audit, config, interceptor), with the questions: 
     - What does it see, and why does it see it? 
     - Explain the different interceptor points when explaining about the intercepor

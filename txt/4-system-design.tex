@@ -107,17 +107,59 @@ They are described in the following sections.
 
 \subsection{The Audit Logs}\label{subsec:audit-log}
 
+All logging within the Shibboleth IdP is performed through the abstract logging API SLF4J, 
+with Logback as the default implementation. 
+By default, three classes of log files are produced. 
+The diagnostic logs, \textit{idp-process.log} and \textit{idp-warn.log}, contain messages generated during 
+the normal operation of the software. 
+The general audit log, \textit{idp-audit.log}, records the results of authentication transactions for each SP. 
+Finally, the consent audit log, \textit{idp-consent-audit.log}, contains audit records of user decisions 
+regarding data privacy and terms of use~\cite{LoggingConfiguration}.
+
+The amount of information recorded in the diagnostic logs depends on the configured logging 
+level, which determines the severity of messages that are written. 
+The \textit{idp-warn.log} file is a filtered view of \textit{idp-process.log} and contains 
+only messages logged at the \texttt{WARN} level or higher.
+
+In contrast to the diagnostic logs, the audit log is intended to be machine readable. 
+It records one entry per completed transaction, written once the IdP has finished processing 
+the request. 
+This has two consequences for the information it can provide. 
+On the one hand, the entry reflects the final outcome of a transaction, including properties 
+that are only determined at the end of processing, such as the encryption applied to the 
+outgoing assertion. 
+On the other hand, events that never result in a completed transaction produce no entry. 
+Failed password validations in particular are not recorded in the audit log, since the 
+authentication flow terminates before a transaction is concluded.
+
+As mentioned in Section~\ref{subsec:audit-logging}, the fields that are written to the audit 
+log are not fixed. 
+The audit format is configured per profile in \textit{conf/audit.xml}, where each field is 
+represented by a formatting token, and the set of available tokens can be extended within the 
+IdP~\cite{AuditLoggingConfiguration}. 
+Which information a given deployment records is therefore determined by its administrator and 
+may differ between installations. 
+
+This property has direct implications for the monitoring system developed in this work. 
+The system cannot assume the presence of a fixed set of audit fields, since the information 
+required by a particular detection rule may simply not be recorded. 
+The detection logic must therefore take the configured audit format into account and determine 
+whether the information a given rule depends on is available at all. 
+The same constraint applies to the correlation between audit entries and interceptor records. 
+Rather than relying on a fixed set of fields, the correlation must adapt to the information 
+that a given deployment provides, which requires a strategy capable of selecting an appropriate 
+matching approach depending on the fields available for a given audit event.
+
+\subsection{Configuration and Metadata File}\label{subsec:static-configuration}
 
 
+\subsection{Interceptor}\label{subsec:interceptor}
 
-- The three data sources (audit, config, interceptor), with the questions: 
-    - What does it see, and why does it see it? 
-    - Explain the different interceptor points when explaining about the intercepor
-        - what would I see when I would intercept it earlier
-        - or later in the hook
-- the dynamic field adaption
-- the admin decides the audit format / what is being logged
-- Then, in sections 4.5 and 4.6, simply address the implications for rules and correlation.
+- Explain the different interceptor points when explaining about the intercepor
+    - what would I see when I would intercept it earlier
+    - or later in the hook
+
+- What does it see, and why does it see it? 
 
 \section{Transport Layer and Trust Boundary}\label{sec:trust}
 - Why do I store the data outside of the trust boundary

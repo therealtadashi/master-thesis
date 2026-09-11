@@ -150,8 +150,73 @@ Rather than relying on a fixed set of fields, the correlation must adapt to the 
 that a given deployment provides, which requires a strategy capable of selecting an appropriate 
 matching approach depending on the fields available for a given audit event.
 
-\subsection{Configuration and Metadata File}\label{subsec:static-configuration}
+\subsection{Metadata and Relying Party File}\label{subsec:static-configuration}
 
+In a Shibboleth IdP, SAML metadata describes the entities that participate in a federation 
+and provides the information required for establishing communication between them. 
+Metadata is represented in XML and contains information about the roles, endpoints, supported 
+protocols, and cryptographic keys of the participating entities~\cite{Metadata}.
+
+A SAML entity can support one or more roles, which are represented by role descriptors within 
+the metadata. 
+For SPs, the relevant role is represented by the \texttt{md:SPSSODescriptor} element. 
+This descriptor contains information required by the IdP to communicate with the SP, including 
+the supported SAML protocol families specified by the \texttt{protocolSupportEnumeration} 
+attribute, cryptographic keys, supported name identifier formats, and the endpoints provided 
+by the SP~\cite{MetadataForSP}.
+A central component of an SP's metadata is the \texttt{md:AssertionConsumerService} element. 
+It specifies an endpoint to which the IdP can send SAML responses and assertions on behalf 
+of the SP. 
+By explicitly enumerating these endpoints in the metadata, the IdP can determine the locations 
+to which SAML messages may be sent~\cite{MetadataForSP}.
+
+The Shibboleth IdP consumes metadata through configured metadata providers. 
+These providers define the sources from which SAML metadata is obtained and are configured using 
+\texttt{<MetadataProvider>} elements in \textit{conf/metadata-providers.xml}~\cite{MetadataConfiguration}. 
+The metadata therefore forms an essential part of the IdP configuration, as it determines which 
+federation entities are known to the IdP and which endpoints, protocols, and cryptographic 
+information are associated with them. 
+
+Alongside the runtime information recorded in the audit log, the IdP holds a second class of 
+information that describes not what happened, but what is supposed to happen. 
+This information is contained in the configuration files of the deployment, most notably in 
+\textit{relying-party.xml}.
+
+This file specifies which functional features the IdP supports and allows these settings to be 
+customised based on the identity of a relying party. 
+It determines which profiles are enabled for a given partner and allows security configurations 
+to be attached at various levels. 
+These include whether assertions and other content are encrypted, at which layer signing is 
+performed, and which cryptographic algorithms are used~\cite{RelyingPartyConfiguration}.
+
+Of particular relevance to this work is that these settings are not global. 
+A deployment defines default behaviour that applies to all partners, and may then override this 
+behaviour for individual relying parties or groups of them. 
+A single IdP therefore enforces a set of independent, per partner policies rather than one uniform 
+policy, and the security properties of a given transaction depend on which policy applies to the 
+SP involved. 
+
+Two settings are relevant in the context of this work. 
+The first concerns encryption. 
+A deployment may disable the encryption of assertions for a particular partner, for instance where 
+a SP does not support it, which means that assertions for that partner are transmitted 
+in plain text. 
+The second concerns authentication. 
+A deployment may specify which authentication flows are permitted for a partner, and thereby 
+require multi factor authentication for some SP while accepting password based authentication 
+for others.
+
+Both settings describe a target state. 
+Whether a given login actually satisfied it is recorded in the audit log, not in the configuration. 
+Neither source is sufficient on its own. 
+A comparison between them is only possible if both are available to the monitoring system, which 
+is the reason why the configuration is treated as an independent data source in this work.
+
+Finally, \textit{relying-party.xml} is also the file in which interceptor flows are enabled for a 
+profile. 
+The extension point used by the collection mechanism described in 
+Section~\ref{subsec:interceptor} is therefore configured in the same place as the security settings 
+it observes.
 
 \subsection{Interceptor}\label{subsec:interceptor}
 

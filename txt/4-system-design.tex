@@ -220,11 +220,57 @@ it observes.
 
 \subsection{Interceptor}\label{subsec:interceptor}
 
-- Explain the different interceptor points when explaining about the intercepor
-    - what would I see when I would intercept it earlier
-    - or later in the hook
+As mentioned Section~\ref{subsec:profile-flows} Shibboleth provides three interception points 
+within its profile processing: inbound message processing, post-authentication processing, and 
+outbound message processing. 
+Interceptors are implemented as Spring Web Flow subflows that are executed at these predefined 
+points without requiring modifications to the underlying profile 
+flow~\cite{ProfileHandling, ProfileInterceptConfiguration}.
 
-- What does it see, and why does it see it? 
+Inbound interceptors are executed during the processing of an incoming request. 
+At this point, the inbound \texttt{MessageContext} tree is generally populated and, where 
+applicable, contains a \texttt{RelyingPartyContext} as well as contexts required for operations 
+such as transport or message authentication~\cite{ProfileHandling}.
+
+Consequently, an inbound interceptor can observe information associated with the received message 
+and the context in which it is being processed. 
+This makes the interception point particularly suitable for security checks on the incoming request. 
+Shibboleth itself uses inbound interceptors for various security policy checks. 
+An interceptor may also modify the context tree, although such modifications directly influence 
+subsequent profile processing~\cite{ProfileHandling}.
+
+For the monitoring system developed in this work, the inbound interception point is therefore relevant 
+for observing properties of the incoming SAML message and its processing context before the main 
+profile execution continues.
+
+The post-authentication interception point is executed after authentication and attribute lookup have 
+taken place, but before the profile constructs the outgoing message. 
+Unlike the inbound and outbound hooks, this interception point is only available for a subset of 
+profiles, particularly profiles that perform user authentication~\cite{ProfileHandling}.
+
+The interceptor therefore has access to a later state of the processing context. 
+In particular, information related to the authenticated identity and resolved attributes is available 
+at this stage. 
+The interceptor can also modify the context before the outgoing response is constructed, including 
+changes to the authenticated identity or attributes~\cite{ProfileHandling}. 
+
+This makes the post-authentication interception point particularly suitable for the monitoring system 
+developed in this work, as it provides access to authentication-related information that is not yet 
+available at the inbound stage while still allowing the resulting SAML response to be observed 
+indirectly through the processing context.
+
+Outbound interceptors run shortly before the final stage of profile processing that produces the 
+response to the client. 
+Their input therefore represents the state produced by the preceding profile execution and typically 
+contains a populated outbound \texttt{MessageContext}. 
+The message may not yet be in its final form, since operations such as signing can still occur 
+afterwards~\cite{ProfileHandling}.
+
+The outbound interception point consequently provides access to the information that is about to 
+be returned to the relying party. 
+Interceptors can inspect or modify the outbound context and may also terminate processing~\cite{ProfileHandling}.
+For the monitoring system, this interception point is useful for observing the result of the 
+authentication workflow and properties of the response that is about to be issued by the IdP.
 
 \section{Transport Layer and Trust Boundary}\label{sec:trust}
 - Why do I store the data outside of the trust boundary

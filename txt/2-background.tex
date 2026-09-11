@@ -101,7 +101,7 @@ The IdP processes each request as a workflow built on Spring Web Flow.
 Every top-level flow implements one of the supported protocol interfaces, referred to as profiles, such 
 as SAML 2 SP-initiated SSO. 
 Within a top-level flow, reusable subflows carry out recurring tasks such as 
-authentication~\cite{ShibProfileHandling}.
+authentication~\cite{ProfileHandling}.
 
 To allow deployers to extend this behaviour without copying or editing the internal flow definitions, 
 the IdP provides a set of defined hooks. 
@@ -112,7 +112,7 @@ A subflow attached to such a hook is called an interceptor, and three hooks exis
     \item outbound message processing
 \end{enumerate}
 The first and third are available in any profile flow, whereas the second applies only to profiles that 
-actually authenticate a user~\cite{ShibProfileHandling}.
+actually authenticate a user~\cite{ProfileHandling}.
 An interceptor is registered as a bean and enabled by adding its flow identifier to the corresponding list 
 property of a profile configuration in \texttt{conf/relying-party.xml}. 
 No modification of the IdP source code is required.
@@ -133,7 +133,7 @@ The root of the context tree for any profile flow is the \texttt{ProfileRequestC
 It carries the state of a request through the sequence of steps and is the object an interceptor receives. 
 Attached to it are child contexts holding the inbound and outbound messages, the identity of the relying 
 party and whether that identity could be verified, and, once authentication has completed, the authenticated 
-subject~\cite{ShibProfileHandling}.
+subject~\cite{ProfileHandling}.
 
 \subsection{Audit Logging}\label{subsec:audit-logging}
 

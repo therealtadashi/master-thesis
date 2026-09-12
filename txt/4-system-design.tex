@@ -291,24 +291,52 @@ division of responsibilities.
 
 \section{Transport Layer and Trust Boundary}\label{sec:trust}
 
-- HMAC, Pseudonymization at the source
-- And the decision to use asynchronous transmission, with the rationale that the analysis must not slow down the monitored service
+After the data has been aggregated on the Shibboleth IdP side, it has to be transferred to 
+the monitoring tool, which is located entirely on a different boundary to the IdP, for further 
+processing and storage. 
+As already mentioned in Section~\ref{sec:overview} the monitoring tool resides ouside of the 
+trust boundary of the IdP. 
+The tool is intentionally deployed outside the trust boundary. 
+This separation is required to avoid placing the monitoring system under the same security 
+assumptions and access controls as the system it monitors.
 
-Tust boundary
-- Why do I store the data outside of the trust boundary (outside of the IdP)
-    - Reference Section 3.3, that sources are on the same system and on the same attacksurface. 
-    - with this the data leaves the control of the IdP
-    - with that follows the next points: 
-        - not a extra feature, its necessary
+If the monitoring functionality were deployed entirely within the IdP, an attacker who compromises 
+the IdP could potentially compromise or manipulate the monitoring functionality at the same time. 
+In this case, the system would be able to observe security-relevant events, but the same 
+compromise could also affect the collection, storage, or analysis of these observations.
 
-Pseudonymization
-- What is being hashed
-- Why at the source and not in the backend
-- the identification information of a user must be the same when its bening generated at different sources
-    - correlation is impossible
-    - mentioned in overview
-- The same salt must be used
-- A note on CWE-532 as evidence that plaintext data in logs is a recognized vulnerability.
+By transferring the collected information to a separate monitoring component, the observation 
+and analysis functions are separated from the monitored application. 
+This creates an additional security boundary and reduces the dependency of the monitoring system 
+on the integrity of the IdP itself.
+The external component therefore does not exist solely for scalability or architectural convenience. 
+Its separation from the IdP is an intentional security measure that aims to preserve the independence 
+of the monitoring and analysis process in the event of a compromise of the monitored system. 
+
+There are also consequences to this design decision. 
+The collected data leaves the security domain in which the original authentication 
+data is processed and becomes accessible to a separate component with a different trust 
+relationship. 
+Therefore, transmitting original sensitive user information, such as usernames and client IP addresses, 
+would expose more personal information than is necessary for the intended processing purpose. 
+CWE-532, also notes that logging sensitive user data, often provides attackers with an additional, 
+less-protected path to acquiring the information~\cite{CWE532}. 
+
+The monitoring functionality does not require the original identity of a user to perform its security analysis. 
+It primarily requires the ability to distinguish and correlate events belonging to the same subject.
+To reduce this exposure, sensitive identifiers are pseudonymised before they leave the IdP trust boundary. 
+The monitoring system can therefore preserve the ability to correlate multiple events belonging to the same 
+subject without transmitting the original identifier. 
+Pseudonymisation reduces the risk associated with unauthorised access to the monitoring system, while still 
+allowing the required security analysis to be performed. 
+
+To enable this correlation across the different data sources, all components that generate monitoring data 
+must apply the same pseudonymisation algorithm and the same secret salt. 
+Otherwise, identical identifiers would result in different pseudonyms and events originating from different 
+sources could no longer be reliably correlated. 
+The secret salt is therefore treated as a shared cryptographic parameter between the data collection components 
+and must be protected accordingly. 
+
 
 Authentifizierung des Transports
 - Why HMAC: 

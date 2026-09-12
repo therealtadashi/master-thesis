@@ -291,40 +291,42 @@ division of responsibilities.
 
 \section{Transport Layer and Trust Boundary}\label{sec:trust}
 
-After the data has been aggregated on the Shibboleth IdP side, it has to be transferred to 
-the monitoring tool, which is located entirely on a different boundary to the IdP, for further 
-processing and storage. 
-As already mentioned in Section~\ref{sec:overview} the monitoring tool resides ouside of the 
+After the data has been aggregated on the Shibboleth IdP side, it is transferred to the 
+monitoring tool for further processing and storage. 
+As stated in Section~\ref{sec:overview}, this tool is deliberately deployed outside the 
 trust boundary of the IdP. 
-The tool is intentionally deployed outside the trust boundary. 
-This separation is required to avoid placing the monitoring system under the same security 
-assumptions and access controls as the system it monitors.
+The separation avoids placing the monitoring system under the same security assumptions 
+and access controls as the system it monitors. 
 
 If the monitoring functionality were deployed entirely within the IdP, an attacker who compromises 
 the IdP could potentially compromise or manipulate the monitoring functionality at the same time. 
-In this case, the system would be able to observe security-relevant events, but the same 
-compromise could also affect the collection, storage, or analysis of these observations.
+An attacker would then be in a position to influence the recording of their own activity, 
+since collection, storage and analysis would all fall under the same control. 
 
 By transferring the collected information to a separate monitoring component, the observation 
 and analysis functions are separated from the monitored application. 
 This creates an additional security boundary and reduces the dependency of the monitoring system 
 on the integrity of the IdP itself.
-The external component therefore does not exist solely for scalability or architectural convenience. 
-Its separation from the IdP is an intentional security measure that aims to preserve the independence 
-of the monitoring and analysis process in the event of a compromise of the monitored system. 
+The external component therefore does not exist solely for scalability or architectural 
+convenience. 
+What the separation protects is the data that has already been transmitted. 
+An attacker who gains control of the IdP can influence which records are produced from that point 
+onward, but not those that have already left the system. 
+The independence is thus temporal rather than absolute. 
 
-There are also consequences to this design decision. 
+This design decision has consequences. 
 The collected data leaves the security domain in which the original authentication 
 data is processed and becomes accessible to a separate component with a different trust 
 relationship. 
 Therefore, transmitting original sensitive user information, such as usernames and client IP addresses, 
 would expose more personal information than is necessary for the intended processing purpose. 
-CWE-532, also notes that logging sensitive user data, often provides attackers with an additional, 
-less-protected path to acquiring the information~\cite{CWE532}. 
+A comparable concern is described by CWE-532 for log files, where the inclusion of sensitive user data 
+provides attackers with an additional and less protected path to obtaining that information~\cite{CWE532}. 
+The same reasoning applies to data transferred to a component outside the original security domain.
 
-The monitoring functionality does not require the original identity of a user to perform its security analysis. 
-It primarily requires the ability to distinguish and correlate events belonging to the same subject.
 To reduce this exposure, sensitive identifiers are pseudonymised before they leave the IdP trust boundary. 
+The monitoring functionality does not require the original identity of a user to perform its security analysis. 
+It primarily requires the ability to distinguish and correlate events belonging to the same subject. 
 The monitoring system can therefore preserve the ability to correlate multiple events belonging to the same 
 subject without transmitting the original identifier. 
 Pseudonymisation reduces the risk associated with unauthorised access to the monitoring system, while still 
@@ -337,22 +339,40 @@ sources could no longer be reliably correlated.
 The secret salt is therefore treated as a shared cryptographic parameter between the data collection components 
 and must be protected accordingly. 
 
+The deployment of the monitoring tool outside the IdP trust boundary introduces an additional security concern. 
+The endpoints of the monitoring tool accept data from collection components that reside outside its own 
+trust boundary. 
+Consequently, the monitoring tool cannot assume that every received message originates from an authorised data 
+collection component.
 
-Authentifizierung des Transports
-- Why HMAC: 
-    - The endpoint receives data from external sources, so it must be able to verify that the data comes from the interceptor. 
-    - Without this, anyone could feed in reports and thereby disrupt the correlation.
-- details in next chapter
+Without message authentication, an attacker could submit forged or manipulated records to the exposed endpoints. 
+Injected events would not only produce false findings but could also interfere with the correlation of genuine 
+ones, since a fabricated record may be matched against a real audit entry.
 
-Asynchroner Versand
-- That's the most interesting part of this section because it involves a real balancing act.
-- The Interceptor runs during the authentication process—any delay affects every login.
-- In other words, “fire-and-forget,” without waiting for a response.
-- The cost: If a report goes missing, no one notices right away.
-- This is a deliberate choice to prioritize non-interference over a delivery guarantee.
-- And the reference to BlackWatch, which made the same decision for the same reasons.
-- What I would leave out: retry logic, serialization format, specific HTTP details. 
-    - All in Chapter 5.
+The transmitted data must therefore be authenticated before the monitoring tool accepts it. 
+In this work, this is achieved using a \acrfull{hmac}. 
+The collection components and the monitoring tool share a secret key that is used to generate and verify a 
+message authentication code for each transmitted message.
+
+The final design decision concerning the transport layer is whether the collection component should wait for 
+the monitoring tool to confirm receiving the data.
+The interceptor executes within the authentication flow of the IdP. 
+Any time spent transmitting a record is therefore time added to the login of the user who triggered it. 
+Waiting for a response would make the duration of every authentication dependent on the availability and 
+response time of a component outside the IdP, and a monitoring tool that is slow or temporarily unreachable 
+would delay the service it observes.
+
+The records are consequently transmitted asynchronously. 
+The interceptor dispatches the record and continues processing without awaiting a response.
+This has a cost. 
+If a transmission fails, the collection component does not learn of it, and the record is lost without 
+any indication at the point where it originated. 
+The design therefore prioritises non interference with the monitored service over a guarantee of delivery. 
+For a monitoring system that observes a central authentication service, this trade off appears justified. 
+A monitoring component that degrades the availability of the service it observes would undermine its own purpose. 
+Hall et al. arrive at the same decision for the same reason, transmitting detection events separately rather 
+than in response to the triggering request so that analysis does not delay the monitored 
+application~\cite{BlackWatch}. 
 
 \section{Storage, Correlation and Detection Layer}\label{sec:processing}
 - Why is the correlation necessary?

@@ -272,10 +272,59 @@ Interceptors can inspect or modify the outbound context and may also terminate p
 For the monitoring system, this interception point is useful for observing the result of the 
 authentication workflow and properties of the response that is about to be issued by the IdP.
 
+The monitoring system uses the post-authentication interception point. 
+This choice determines what the collection mechanism can observe. 
+An inbound interceptor would see the incoming message but not the outcome of authentication, 
+since that has not yet taken place. 
+An outbound interceptor would see the response about to be issued, but the request that caused 
+it is no longer the object of processing at that stage. 
+The post-authentication point is the only one at which both the incoming message and the 
+authentication result are available in the same context.
+
+What remains outside its view is the outgoing response, including the assertion identifier, 
+the encryption actually applied and the final status of the transaction. 
+These properties are recorded in the audit log, which is written after the transaction 
+has completed. 
+The complementarity of the two sources described in Section~\ref{subsec:audit-log} therefore 
+follows from their position in the processing sequence rather than from a deliberate 
+division of responsibilities.
+
 \section{Transport Layer and Trust Boundary}\label{sec:trust}
-- Why do I store the data outside of the trust boundary
+
 - HMAC, Pseudonymization at the source
 - And the decision to use asynchronous transmission, with the rationale that the analysis must not slow down the monitored service
+
+Tust boundary
+- Why do I store the data outside of the trust boundary (outside of the IdP)
+    - Reference Section 3.3, that sources are on the same system and on the same attacksurface. 
+    - with this the data leaves the control of the IdP
+    - with that follows the next points: 
+        - not a extra feature, its necessary
+
+Pseudonymization
+- What is being hashed
+- Why at the source and not in the backend
+- the identification information of a user must be the same when its bening generated at different sources
+    - correlation is impossible
+    - mentioned in overview
+- The same salt must be used
+- A note on CWE-532 as evidence that plaintext data in logs is a recognized vulnerability.
+
+Authentifizierung des Transports
+- Why HMAC: 
+    - The endpoint receives data from external sources, so it must be able to verify that the data comes from the interceptor. 
+    - Without this, anyone could feed in reports and thereby disrupt the correlation.
+- details in next chapter
+
+Asynchroner Versand
+- That's the most interesting part of this section because it involves a real balancing act.
+- The Interceptor runs during the authentication process—any delay affects every login.
+- In other words, “fire-and-forget,” without waiting for a response.
+- The cost: If a report goes missing, no one notices right away.
+- This is a deliberate choice to prioritize non-interference over a delivery guarantee.
+- And the reference to BlackWatch, which made the same decision for the same reasons.
+- What I would leave out: retry logic, serialization format, specific HTTP details. 
+    - All in Chapter 5.
 
 \section{Storage, Correlation and Detection Layer}\label{sec:processing}
 - Why is the correlation necessary?

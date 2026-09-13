@@ -374,18 +374,94 @@ Hall et al. arrive at the same decision for the same reason, transmitting detect
 than in response to the triggering request so that analysis does not delay the monitored 
 application~\cite{BlackWatch}. 
 
-\section{Storage, Correlation and Detection Layer}\label{sec:processing}
-- Why is the correlation necessary?
-- Two independent accounts of the same event.
-- Explain the idea of the Fallback-Chain
-- Why a chain and not a strategy
-    - the admin decides what is being logged
-- without implementation details
+\section{Correlation and Detection Layer}\label{sec:processing}
 
-- How is a rule build
-- the four rule engines and why four
-    - the differ in the input
-- And the rollback in the event of missing fields, as a consequence of 4.3.
+When the collected data arrives at the monitoring tool, it must first be stored for subsequent 
+processing. 
+The different data sources transmit their information through separate endpoints and at 
+different times, which means that information belonging to the same authentication event does 
+not necessarily arrive together. 
+The corresponding records can therefore not always be correlated upon arrival. 
+Instead, they are stored until the required information from the other source becomes available.
+
+This introduces the first challenge for the correlation process. 
+Data collected by the custom interceptor within the Shibboleth IdP is transmitted immediately 
+after the collection process has completed, so the corresponding report reaches the monitoring 
+tool shortly after the authentication event has been processed. 
+The audit entry follows a different path. 
+Audit logs are collected by log shippers that operate periodically, and the corresponding entry 
+therefore reaches the monitoring tool later than the interceptor report. 
+This temporal offset is the reason why the two records cannot be matched by a simple database 
+join at the time of arrival.
+
+A further consequence follows from this. 
+A report may arrive at a point when its counterpart does not yet exist, which means that an 
+unsuccessful correlation attempt does not necessarily indicate that no counterpart will ever 
+arrive. 
+The correlation process must therefore retry over a defined period and, once that period has 
+elapsed, treat the record as permanently uncorrelated. 
+Without this distinction, a record still awaiting its counterpart would be indistinguishable 
+from one that will never receive it, and the proportion of successfully correlated records 
+could not be determined.
+
+The second challenge arises from the dynamic nature of the audit log discussed in 
+Section~\ref{subsec:audit-log}. 
+Since the audit format is determined by the configuration of the deployment, the information 
+available in an audit record is not fixed, and the correlation must adapt to the fields that 
+are actually present.
+
+This creates an asymmetric correlation problem. 
+The data collected by the custom interceptor is static by design and always contains the same 
+set of fields. 
+The audit data, in contrast, is dynamic and may lack information required by a particular 
+correlation strategy. 
+The static interceptor report, which arrives first, therefore has to be matched against a 
+dynamic audit record that arrives later.
+
+Depending on the fields available in the audit record, different correlation strategies are 
+applicable, and these differ in how reliably they identify the corresponding record. 
+A strategy based on a unique identifier that both sources share establishes the relationship 
+unambiguously, whereas a strategy based on attributes that several transactions may have in 
+common can only approximate it. 
+The correlation process consequently applies the available strategies in a defined priority 
+order, using the strongest applicable strategy first and weaker ones only where the required 
+fields are absent. 
+The strategy used for a given record is recorded alongside the result, since it determines how 
+reliable the resulting correlation is. 
+The precision achieved by each strategy is examined in Chapter~\ref{ch:evaluation}.
+
+Once the data has been collected and stored, it is evaluated against a catalogue of detection 
+rules, where possible. 
+A rule receives a single object as input and either returns a finding or nothing. 
+The conditions are stated explicitly rather than learned from data, which means that every 
+finding can be traced back to the condition that produced it and, through the derivation in 
+Section~\ref{sec:rules}, to the documented weakness or requirement it is based on. 
+
+The rules do not all operate on the same kind of input. 
+Four input types occur in this system: login events derived from the audit log, the configuration 
+of a service provider, its metadata, and the reports produced by the interceptor. 
+These differ not only in structure but also in the rhythm at which they appear. 
+Login events occur continuously during operation, whereas a configuration or a metadata document 
+changes rarely and may remain unchanged for long periods of time.
+
+Evaluating all rules against all data whenever any of it changes would therefore be inefficient 
+and, in the case of configuration data, largely redundant. 
+The detection logic is consequently divided into four engines, each responsible for one input 
+type. 
+An engine evaluates the rules that apply to its input and can be scheduled according to the 
+frequency at which that input actually changes.
+
+A further consideration follows from the dynamic audit format described in 
+Section~\ref{subsec:audit-log}. 
+A rule may depend on a field that a given deployment does not record, in which case the rule 
+cannot reach a valid conclusion. 
+Evaluating it regardless would produce a result that appears definite but rests on absent 
+information, and a rule that cannot observe a condition must not report its absence as a finding. 
+Each rule therefore declares which fields it requires, and the engine verifies their availability 
+before evaluating the rule. 
+Where the required information is not recorded, the rule withdraws rather than returning a 
+result. 
+Which rules are active in a given deployment is thus determined by what that deployment logs. 
 
 \section{Visualization Layer}\label{sec:Visualization}
 - How is it visualised

@@ -471,6 +471,81 @@ Where the required information is not recorded, the rule withdraws rather than r
 result. 
 Which rules are active in a given deployment is thus determined by what that deployment logs. 
 
+Which conditions the rules examine is a separate question from how they are evaluated. 
+The catalogue of thirteen rules used in this work was not assembled from experience but derived 
+from three complementary frameworks.
+The FIM survey by Simpson and Groß identifies eleven vulnerabilities and fourteen attack classes 
+based on a systematic literature review~\cite{FIMSurvey}. 
+These are grouped into cross protocol issues. 
+Such an issue exists where the same weakness is exploited by the same attack class, results in 
+the same CIA consequence, and is documented for at least two different protocols. 
+Six of the fourteen issues concern SAML, and one concerns Shibboleth directly. 
+The survey is therefore not merely a catalogue of weaknesses and attacks, but records which 
+weakness has been exploited by which attack in practice.
+
+The OASIS SAML Security and Privacy Considerations serve a different purpose. 
+Rather than describing what has occurred, they specify normatively what a deployment is expected 
+to do~\cite{SAMLSecurityConsideration}.
+
+The third framework is STRIDE, a scheme for classifying threats according to their mode of 
+operation~\cite{ThreatModeling}. 
+It distinguishes between spoofing, tampering, repudiation, information disclosure, denial of 
+service, and elevation of privilege. 
+Graves applies this framework in his threat analysis of Shibboleth~\cite{ShibbolethGIAC}. 
+Whereas the survey and OASIS answer whether a rule corresponds to a documented weakness, STRIDE 
+characterises the kind of impact a successful attack would have.
+
+The survey and OASIS also differ in the kind of evidence they provide. 
+The survey documents that an attack has occurred in practice, while OASIS states what a deployment 
+should do to prevent it. 
+Where both apply, as with the replay rules, a rule rests on empirical and normative grounds alike. 
+Table~\ref{tab:rules} shows the resulting assignment for the thirteen rules.
+
+\begin{table}[h]
+\centering
+\caption{Assignment of the 13 Detection Rules to Documented Vulnerabilities and Attack Classes}\label{tab:rules}
+\small
+\begin{tabular}{p{3.3cm}p{2.7cm}p{2.4cm}p{1.1cm}l}
+\toprule
+Rule & Vulnerability & Attack Class & STRIDE & Source \\
+\midrule
+WEAK\_ENCRYPTION                                     & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey,BSITR02102,SAMLSecurityConsideration} \\
+UNENCRYPTED\_\linebreak ASSERTION                    & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey,ShibbolethGIAC} \\
+WEAK\_\linebreak CONFIGURATION                       & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey} \\
+MISSING\_MFA                                         & Weak User Credentials      & Enables Brute Force      & S, E    & \cite{FIMSurvey} \\
+MFA\_BYPASS                                          & Weak User Credentials      & Enables Brute Force      & S, E    & \cite{FIMSurvey} \\
+BRUTE\_FORCE                                         & Weak User Credentials      & Brute Force              & S, E    & \cite{FIMSurvey} \\
+FAILED\_LOGIN                                        & Weak User Credentials      & Indicator, not an attack & S       & \cite{OWASPA09} \\
+ASSERTION\_REPLAY                                    & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
+REQUEST\_REPLAY                                      & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
+SIGNATURE\_\linebreak WRAPPING\_\linebreak SUSPECTED & Message Formatting         & Message Modification     & S, T, E & \cite{BreakingSAML,ShibbolethGIAC} \\
+CERTIFICATE\_\linebreak EXPIRED                      & None                       & None                     & S       & \cite{SAMLSecurityConsideration} \\
+SUSPICIOUS\_\linebreak USER\_AGENT                   & None                       & None                     & ---     & --- \\
+BEHAVIOUR\_\linebreak ANOMALY                        & Multiple                   & Detection method         & S       & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two observations follow from this assignment. 
+Lack of binding appears in three of the six SAML related entries and is therefore the most frequently 
+documented weakness of the protocol in the survey. 
+Both replay rules address it directly. 
+Furthermore, several rules form pairs in which the same weakness is captured twice, once as a 
+configuration state and once as an event that has occurred. 
+MISSING\_MFA examines whether a service provider requires multi factor authentication at all, whereas 
+MFA\_BYPASS examines whether an actual login circumvented that requirement. 
+This distinction is a direct consequence of the three source architecture described in 
+Section~\ref{sec:data-aggregation}: the configuration states what is intended, and the audit log 
+records what took place.
+
+Two rules cannot be assigned to any of the three frameworks. 
+SUSPICIOUS\_USER\_AGENT identifies an indicator for which no documented relation to a specific attack 
+class could be established. 
+BEHAVIOUR\_ANOMALY is a detection method rather than an attack class, since it may reveal several 
+different attacks indirectly without corresponding to any one of them. 
+Both rules are retained in the catalogue, and the absence of a derivation is stated here rather 
+than omitted.
+
 \subsection{Severity Classification}\label{subsec:severity}
 
 Each alert detected by the detection layer described in Section~\ref{sec:processing} is assigned 

@@ -73,18 +73,53 @@ Further contexts, among them the \texttt{AuthenticationContext} and the
 \texttt{SessionContext}, supply information about the authentication flow that was used 
 and the session state at the time of the request~\cite{AuthenticationContext, SessionContext}. 
 
-The information obtained from these contexts is extracted, parsed, and combined into a 
-single payload. 
-Sensitive identifiers are pseudonymised at this point, before the payload leaves the IdP, 
-as described in Section~\ref{sec:trust}. 
-The transmission of the payload is covered in Section~\ref{sec:impl-transport}. 
+The information obtained from these contexts is extracted, parsed, and combined into 
+a single payload. 
+Before this payload leaves the IdP, the sensitive identifiers it contains are 
+pseudonymised, as required by the design described in Section~\ref{sec:trust}.
+
+The implementation of this step is complicated by the fact that it takes place in two 
+different components. 
+The interceptor pseudonymises the identifiers it collects within the Java application, 
+whereas the audit fields are pseudonymised by Logstash during preprocessing. 
+Both must produce the same value for the same identifier, since the correlation described 
+in Section~\ref{subsec:correlation} relies on comparing hashed subjects and addresses 
+across the two sources. 
+A mismatch would not cause an error but would silently prevent records from being matched.
+Both components therefore apply the same hash function and share the same secret salt. 
+The salt is provided through the deployment configuration rather than embedded in either 
+component, so that it can be rotated without modifying the interceptor or the Logstash pipeline.
 
 \section{Transport Layer}\label{sec:impl-transport}
 
-- HMAC-Calculation und -Examination, 
-- Endpoint with the filter, that validates the signature, 
-- the pseudonymization with the shared Salt
-- asynchronous transmission
+Before the aggregated data is transmitted, the collecting component authenticates itself to 
+the monitoring tool using an HMAC signature, as outlined in Section~\ref{sec:trust}. 
+Both Logstash and the interceptor hold the shared secret and sign the records they send, 
+so that the backend can verify that a received message originates from an authorised collection 
+component.
+
+The verification is conditional on configuration. 
+If no secret is configured on the sending side, the message is transmitted unsigned, and the 
+backend enforces validation only where a secret has been configured there as well. 
+This makes it possible to deploy the system without prior key distribution, for instance in a 
+test environment, at the cost of accepting unauthenticated records in that case. 
+A production deployment is therefore expected to configure the secret on both sides. 
+
+The monitoring tool provides separate endpoints for different use cases. 
+Each aggregation component has a dedicated endpoint for transmitting its data, thereby separating 
+the individual responsibilities of the components within the system. 
+
+As mentioned in Section~\ref{sec:trust}, the interceptor sends the payload asynchronously. 
+This means that the interceptor does not wait for a response from the monitoring tool and can 
+immediately proceed with the next authentication process.
+However, this also means that, in the event of packet loss, the interceptor receives no information 
+about whether the payload was successfully delivered.
+To measure the overhead introduced by the interceptor, an option to enable synchronous payload 
+delivery was implemented. 
+In synchronous mode, the interceptor sends the payload to the backend application and waits for 
+a response before proceeding with the next authentication process.
+The exact overhead introduced by the interceptor is discussed in Section~\ref{sec:overhead}.
+
 
 \section{Correlation and Detection Layer}\label{sec:impl-processing}
 

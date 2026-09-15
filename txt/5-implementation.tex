@@ -4,10 +4,92 @@
 
 \chapter{Implementation}\label{ch:implementation}
 
-\section{Data Collection Layer}\label{sec:data-collection}
+This chapter describes the implementation of the proposed monitoring tool and 
+discusses the main challenges encountered during development. 
+It follows the same structure as Chapter~\ref{ch:system-design} by examining 
+each system layer and describing its technical implementation. 
 
-\section{Transport, Storage and Processing Layer}\label{sec:transport-storage}
+\section{Data Aggregation Layer}\label{sec:impl-aggregation}
 
-\section{Visualisation Layer}\label{sec:visualisation}
+As described in Section~\ref{sec:data-aggregation}, the data aggregation layer 
+uses log shippers to collect and parse log entries and static configuration 
+files, as well as a custom interceptor that operates within the Shibboleth IdP. 
+The log shipping stack consists of Filebeat for reading the source files and 
+Logstash for preprocessing and transmitting the collected data. 
+Both components are deployed on the IdP side. 
+
+A key aspect of the implementation is the handling of audit log entries. 
+Instead of parsing the audit log according to a fixed format, Logstash processes 
+the audit fields as key-value pairs. 
+This provides the technical basis for adapting to changes in the configured audit 
+format and enables the monitoring system to handle the dynamic structure of the 
+audit logs. 
+
+The monitoring tool handles these dynamic changes by maintaining a field registry. 
+The registry periodically retrieves the most recent audit entries stored in the 
+database and extracts the names of all fields that are currently present. 
+Using only recent entries ensures that fields no longer written by the IdP are 
+eventually removed from the registry. 
+Both the detection rules and the correlation strategies query the registry before 
+they are applied, which is how the withdrawal described in 
+Section~\ref{subsec:detection} is realised in practice. 
+
+A particular difficulty of this mechanism is that a missing field does not manifest 
+itself as an error. 
+If the audit format of a deployment does not include a field that a rule depends on, 
+no exception is raised and no entry is written to any log. 
+The information is simply absent, and a rule evaluating it would silently operate on 
+incomplete data. 
+The registry therefore does not only serve adaptability, but also makes this absence 
+explicit and detectable. 
+
+The static configuration files are collected by the same log shipping stack, but 
+processed differently. 
+Unlike the audit log, which is written continuously and line by line, 
+\textit{relying-party.xml} and the metadata documents change rarely and are read 
+as a whole. 
+Filebeat is therefore configured to transmit the complete file whenever a change 
+is detected, and Logstash forwards it without field level parsing. 
+The interpretation of the XML structure takes place in the monitoring tool itself, 
+where the relevant security settings are extracted and stored per service provider. 
+
+Unlike the log shippers, the interceptor is a custom component developed as part of 
+this work. 
+It is registered as a Spring bean within the Shibboleth IdP and activated through the 
+\texttt{postAuthenticationFlows} property of the corresponding profile configuration. 
+The interceptor therefore integrates into the IdP without any modification of its 
+source code, which is how the third requirement of Section~\ref{sec:requirements} is met. 
+
+The interceptor extends the \texttt{AbstractProfileAction} API of the Shibboleth IdP and 
+operates on the \texttt{ProfileRequestContext}, which represents the current state of the 
+profile execution~\cite{AbstractProfileAction, ProfileRequestContext}. 
+From this context it accesses the child contexts that carry the information relevant to 
+the monitoring purpose. 
+The \texttt{RelyingPartyContext} identifies the SP for which the authentication is 
+performed, the \texttt{SubjectContext} provides the authenticated subject, and the 
+\texttt{InboundMessageContext} gives access to the raw SAML request as it was 
+received~\cite{RelyingPartyContext, SubjectContext, InOutOperationContext}. 
+Further contexts, among them the \texttt{AuthenticationContext} and the 
+\texttt{SessionContext}, supply information about the authentication flow that was used 
+and the session state at the time of the request~\cite{AuthenticationContext, SessionContext}. 
+
+The information obtained from these contexts is extracted, parsed, and combined into a 
+single payload. 
+Sensitive identifiers are pseudonymised at this point, before the payload leaves the IdP, 
+as described in Section~\ref{sec:trust}. 
+The transmission of the payload is covered in Section~\ref{sec:impl-transport}. 
+
+\section{Transport Layer}\label{sec:impl-transport}
+
+- HMAC-Calculation und -Examination, 
+- Endpoint with the filter, that validates the signature, 
+- the pseudonymization with the shared Salt
+- asynchronous transmission
+
+\section{Correlation and Detection Layer}\label{sec:impl-processing}
+
+- ElasticSearch stores all the collected data from the data collection layer
+
+\section{Visualization Layer}\label{sec:impl-visualization}
 
 \end{document}

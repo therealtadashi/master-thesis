@@ -105,21 +105,24 @@ This makes it possible to deploy the system without prior key distribution, for 
 test environment, at the cost of accepting unauthenticated records in that case. 
 A production deployment is therefore expected to configure the secret on both sides. 
 
-The monitoring tool provides separate endpoints for different use cases. 
-Each aggregation component has a dedicated endpoint for transmitting its data, thereby separating 
-the individual responsibilities of the components within the system. 
+The monitoring tool provides a separate endpoint for each type of collected data. 
+An interceptor report, an audit entry and a configuration document differ in structure and in the 
+processing they require, so that separating them at the interface avoids having to determine the 
+type of a record before it can be handled.
 
 As mentioned in Section~\ref{sec:trust}, the interceptor sends the payload asynchronously. 
-This means that the interceptor does not wait for a response from the monitoring tool and can 
-immediately proceed with the next authentication process.
-However, this also means that, in the event of packet loss, the interceptor receives no information 
-about whether the payload was successfully delivered.
-To measure the overhead introduced by the interceptor, an option to enable synchronous payload 
-delivery was implemented. 
-In synchronous mode, the interceptor sends the payload to the backend application and waits for 
-a response before proceeding with the next authentication process.
-The exact overhead introduced by the interceptor is discussed in Section~\ref{sec:overhead}.
+The interceptor does not wait for a response from the monitoring tool and proceeds with the 
+authentication flow immediately after dispatching the record. 
+If the transmission fails, whether because the backend is unreachable, the request times out or 
+the record is rejected, the interceptor receives no indication of it and the record is lost 
+without a trace at its point of origin.
 
+To quantify the cost of this design decision, the interceptor also supports a synchronous mode. 
+In this mode it waits for the backend to confirm receipt before the authentication flow continues, 
+which makes the time spent on transmission visible in the overall duration of a login. 
+The mode is not intended for productive use but serves as a reference point against which 
+the asynchronous variant can be compared. 
+The resulting measurements are presented in Section~\ref{sec:overhead}.
 
 \section{Correlation and Detection Layer}\label{sec:impl-processing}
 

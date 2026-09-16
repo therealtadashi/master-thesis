@@ -283,7 +283,12 @@ Table~\ref{tab:rules}.
 \section{Visualization Layer}\label{sec:impl-visualization}
 
 The visualization layer displays the collected, correlated, and detected data through an 
-Angular-based web application.
+Angular based web application. 
+A generic dashboard such as Kibana was not used, since the views required here are specific to 
+the domain of the monitoring tool. 
+They present findings together with the records from which they were derived and follow the 
+relationships that the correlation layer establishes, neither of which can be expressed through 
+generic index queries alone. 
 The main pages implemented for the web application are described below.
 
 The dashboard provides an overview of the most important data within a specified timeframe. 
@@ -305,23 +310,31 @@ The page also provides a table of alerts ordered by severity.
 
 Each row in the alert table is interactive and opens a detailed dialog containing information about 
 the selected alert. 
-Similar to the SP dialog on the dashboard, the alert dialog provides detailed information about the 
-corresponding event. 
-It also contains a button that displays the audit entry and interceptor report associated with the alert.
+This dialog also provides access to the audit entry and the interceptor report associated with the 
+alert. 
+Conversely, both the audit entry and the interceptor report dialogs list all alerts detected for 
+the corresponding event. 
+The relationship established by the correlation layer is therefore navigable in both directions, 
+which allows an operator to examine a finding together with the records it was derived from rather 
+than in isolation.
 
-The audit entry view only displays the information that was available in the corresponding audit file of 
-the Shibboleth IdP. 
-Both the interceptor report and audit entry dialogs display all alerts detected for the corresponding 
-event, thereby establishing a bidirectional relationship between these data types.
+The audit entry view displays only the information that was available in the corresponding audit 
+file of the Shibboleth IdP. 
+Since subjects and client addresses are pseudonymised before leaving the IdP, as described in 
+Section~\ref{sec:impl-aggregation}, the interface presents these values in their hashed form. 
+An operator can therefore recognise that several events originate from the same subject without 
+learning the identity of that subject.
 
 Each alert can also be acknowledged by an operator and marked as a false positive. 
 Acknowledged alerts and false positives are removed from the default alert view, which only displays 
 active alerts.
 
 The third major page displays the collected interceptor reports in a table. 
-Each row contains the most relevant information from the corresponding interceptor report and indicates 
-whether the report was successfully correlated with an audit entry.
-Each row can be expanded to reveal additional details, including the raw SAML request. 
-Furthermore, a button allows the operator to open the corresponding alert in a detailed dialog.
+Each row contains the most relevant information from the corresponding interceptor report and 
+indicates whether the report was successfully correlated with an audit entry. 
+This makes the state described in Section~\ref{subsec:impl-correlation} visible to the operator, 
+including reports for which no counterpart was found within the retry window. 
+Each row can be expanded to reveal additional details, including the raw SAML request, and a button 
+allows the operator to open the corresponding alert in a detailed dialog.
 
 \end{document}

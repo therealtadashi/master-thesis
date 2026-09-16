@@ -34,6 +34,19 @@ Both the detection rules and the correlation strategies query the registry befor
 they are applied, which is how the withdrawal described in 
 Section~\ref{subsec:detection} is realised in practice. 
 
+The audit log is not the only log file read by the collection layer. 
+As described in Section~\ref{subsec:audit-log}, authentication attempts that do not 
+result in a completed transaction produce no entry there, which applies in particular 
+to failed password validations. 
+The Shibboleth IdP writes these events to separate files, \textit{idp-password-audit.log} 
+and \textit{idp-mfa-audit.log}, which record the outcome of the corresponding 
+authentication flows. 
+Filebeat is configured to read these files in addition to the general audit log, and the 
+Logstash pipeline tags the resulting records with their source so that they remain 
+distinguishable in the backend. 
+Without this second source, the rules that evaluate failed authentication attempts would 
+have no data to operate on. 
+
 A particular difficulty of this mechanism is that a missing field does not manifest 
 itself as an error. 
 If the audit format of a deployment does not include a field that a rule depends on, 
@@ -48,8 +61,11 @@ processed differently.
 Unlike the audit log, which is written continuously and line by line, 
 \textit{relying-party.xml} and the metadata documents change rarely and are read 
 as a whole. 
-Filebeat is therefore configured to transmit the complete file whenever a change 
-is detected, and Logstash forwards it without field level parsing. 
+Filebeat is therefore configured to aggregate the lines of such a file into a single 
+event before transmitting it, and Logstash forwards the result without field level 
+parsing. 
+The number of lines combined in this way is bounded by configuration, which places an 
+upper limit on the size of a document that can be transmitted as a unit. 
 The interpretation of the XML structure takes place in the monitoring tool itself, 
 where the relevant security settings are extracted and stored per SP. 
 
@@ -272,13 +288,27 @@ authentication attempts of the same subject within a defined time window, which 
 across previously stored events. 
 \texttt{SIGNATURE\_WRAPPING\_SUSPECTED} operates on the raw SAML request contained in an 
 interceptor report and examines its structure for duplicate identifiers and for signature 
-elements referencing an identifier that occurs more than once.
+elements referencing an identifier that occurs more than once. 
 
 The remaining rules follow one of these patterns or compare an observed event against the 
 configuration declared for the SP involved, as described for \texttt{MFA\_BYPASS} in 
 Section~\ref{sec:why-not-siem}. 
 Their assignment to documented vulnerabilities and attack classes is given in 
-Table~\ref{tab:rules}.
+Table~\ref{tab:rules}. 
+
+A further difficulty arose with the comparison between configuration and runtime event. 
+The authentication flows permitted for a service provider are listed in 
+\textit{relying-party.xml} without a namespace prefix, whereas the audit log records the 
+flow that was actually used with one. 
+The same flow therefore appears as \texttt{MFA} in the configuration and as 
+\texttt{authn/MFA} in the audit entry. 
+A direct string comparison between the two never matches, and the rule would consequently 
+never report a finding. 
+The comparison is therefore performed token by token, accepting both notations, and is 
+encapsulated in a helper shared by the rules that evaluate authentication flows. 
+As with the two cases described in Section~\ref{sec:impl-aggregation}, the failure mode 
+here would have been silent, since neither an exception nor a log entry would have 
+indicated that the comparison was ineffective. 
 
 \section{Visualization Layer}\label{sec:impl-visualization}
 

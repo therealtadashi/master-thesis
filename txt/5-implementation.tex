@@ -51,7 +51,7 @@ as a whole.
 Filebeat is therefore configured to transmit the complete file whenever a change 
 is detected, and Logstash forwards it without field level parsing. 
 The interpretation of the XML structure takes place in the monitoring tool itself, 
-where the relevant security settings are extracted and stored per service provider. 
+where the relevant security settings are extracted and stored per SP. 
 
 Unlike the log shippers, the interceptor is a custom component developed as part of 
 this work. 
@@ -126,7 +126,159 @@ The resulting measurements are presented in Section~\ref{sec:overhead}.
 
 \section{Correlation and Detection Layer}\label{sec:impl-processing}
 
-- ElasticSearch stores all the collected data from the data collection layer
+This section describes the main technical components of the backend application, 
+following the same structure as Section~\ref{sec:processing}.
+
+\subsection{Storage}\label{subsec:impl-storage}
+
+Elasticsearch serves as the primary data store of the backend application. 
+The choice follows from the data collection layer described in 
+Section~\ref{sec:impl-aggregation}, since Filebeat and Logstash write directly into 
+Elasticsearch and no further conversion is required for the data they deliver. 
+
+The application uses separate indices for the different types of data it handles, namely 
+audit entries, metadata, configuration data, and interceptor reports. 
+These indices differ in how they are created. 
+Audit entries are written by Logstash into time based indices that are rotated daily, 
+whereas interceptor reports are stored in a single index maintained by the application 
+itself. 
+Queries that span audit data therefore address an index pattern rather than a concrete 
+index, which restricts the set of Elasticsearch operations available for them.
+
+Elasticsearch does not provide relations between documents. 
+The result of a correlation is therefore stored as a field on the interceptor report, 
+which holds the identifier of the audit entry it was matched with. 
+The strategy that produced the match is stored alongside it, as described in 
+Section~\ref{subsec:correlation}, so that the basis of a correlation remains visible 
+after the fact.
+
+\subsection{Correlation}\label{subsec:impl-correlation}
+
+This section describes how the two challenges of the correlation layer identified in 
+Section~\ref{subsec:correlation} are addressed in the implementation, namely the temporal 
+offset between the arrival of related records and the varying availability of fields 
+in the audit log.
+The interceptor report is static and always contains the fields required for correlation. 
+The constraint therefore lies entirely on the audit side. 
+The audit logging documentation lists all fields that a deployment may 
+record~\cite{AuditLoggingConfiguration}, of which four are usable for establishing a 
+relationship between an audit entry and an interceptor report. 
+
+\begin{itemize}
+    \item \textbf{I}: the inbound message identifier of the SAML request
+    \item \textbf{u}: the username, pseudonymised by Logstash
+    \item \textbf{a}: the client IP address, pseudonymised by Logstash
+    \item \textbf{T}: the timestamp of the event
+\end{itemize}
+
+These fields differ in how precisely they identify a counterpart. 
+The inbound message identifier is unique per request and therefore establishes the relationship 
+unambiguously, since the same value appears in both records. 
+The two pseudonymised identifiers narrow the set of candidates to those belonging to the same 
+subject and origin, but several logins of the same user may share them. 
+The timestamp alone can only indicate temporal proximity. 
+In addition, all strategies restrict candidates to the SP recorded in both records, since 
+an audit entry for a different partner can never be the counterpart of a given report.
+Where the inbound message identifier is not recorded, the relationship can therefore only be 
+approximated. 
+If none of the identifiers is available, the timestamp remains the sole criterion.
+
+The three correlation strategies implement a common interface and are applied in a fixed order 
+of precedence. 
+Each strategy declares the audit fields it depends on and queries the field registry described 
+in Section~\ref{sec:impl-aggregation} before it is applied. 
+Where a required field is not recorded by the deployment, the strategy withdraws and the next 
+one in the chain is attempted.
+
+The first strategy matches the inbound message identifier of the interceptor report against the 
+corresponding audit field. 
+Since this value is unique per request, a match establishes the relationship without ambiguity. 
+The second strategy narrows the candidates by SP, pseudonymised subject and pseudonymised client 
+address, and additionally restricts them to a configurable time window around the event. 
+The third strategy retains only the SP and the time window, and is therefore used where neither 
+the message identifier nor the pseudonymised identifiers are recorded.
+
+Both time window strategies may return more than one candidate. 
+In this case the entry with the smallest temporal distance to the interceptor report is selected. 
+The strategy that produced a match is stored alongside the result, so that the reliability of a 
+given correlation remains apparent afterwards. 
+
+The timestamp used for these windows requires particular attention. 
+The field that Elasticsearch assigns to an audit document by default reflects the point at which 
+Filebeat read the log line, not the point at which the authentication took place. 
+Since Filebeat processes log lines in batches, this value is shared by all entries of a batch and 
+does not preserve their order. 
+The Logstash pipeline therefore derives a dedicated field from the event timestamp recorded by the 
+IdP, and both time window strategies operate on this field. 
+The effect of this distinction on correlation precision is examined in 
+Chapter~\ref{ch:evaluation}.
+
+The temporal offset described in Section~\ref{subsec:correlation} is addressed by repeated 
+attempts. 
+An interceptor report that could not be correlated on arrival is retried periodically, with a 
+minimum age before the first attempt to account for the indexing delay of the log shipping stack. 
+After a defined retry window has elapsed without a match, a separate scheduled sweep marks the 
+report as permanently uncorrelated. 
+This marking is what allows an uncorrelated report to be distinguished from one that is still 
+awaiting its counterpart, and thus what makes the proportion of successfully correlated reports 
+determinable at all.
+
+Two mechanisms prevent an audit entry from being claimed twice. 
+Within a single retry run, entries that have already been assigned are excluded from the candidate 
+set of subsequent reports. 
+Across runs, the application verifies against the stored data whether an audit entry has already 
+been referenced by another report before accepting a match.
+
+\subsection{Detection}\label{subsec:impl-detection}
+
+The detection logic is divided into four engines, following the separation by input type 
+described in Section~\ref{subsec:detection}. 
+The rule engine evaluates login events derived from audit entries, the configuration rule 
+engine evaluates the security settings of a SP, the metadata rule engine evaluates its 
+metadata, and the interceptor rule engine evaluates the reports produced by the interceptor. 
+
+All rules implement a common interface. 
+A rule receives a single object of the type its engine is responsible for and returns either 
+an alert or nothing. 
+Each rule additionally declares which fields it depends on, and the engine queries the field 
+registry described in Section~\ref{sec:impl-aggregation} before evaluating it. 
+Where a required field is not recorded by the deployment, the rule is skipped rather than 
+evaluated on incomplete data. 
+
+The engines are executed by a scheduler at intervals that reflect the rhythm of their input. 
+Login events and interceptor reports arrive continuously and are therefore evaluated 
+frequently, whereas configuration and metadata change rarely and are checked at longer 
+intervals. 
+To avoid evaluating the same login events repeatedly, the application maintains a marker that 
+records the point up to which audit entries have already been processed. 
+Each run evaluates only entries newer than this marker, and the marker is advanced once the run 
+has completed. 
+A grace period is applied before an entry is considered, so that records still being indexed by 
+the log shipping stack are not skipped.
+
+A further mechanism concerns repeated findings. 
+A weakness in a configuration persists until the operator changes it, and evaluating the same 
+configuration every few minutes would otherwise produce a continuous stream of identical alerts. 
+The application therefore stores at most one alert of a given type per subject and day, so that 
+a persistent condition is reported once rather than repeatedly.
+
+The rules differ in the kind of condition they examine. 
+Three examples illustrate this range. 
+\texttt{WEAK\_ENCRYPTION} compares the encryption algorithm recorded for a login against a list 
+of algorithms considered insecure, which is maintained in the application and can be adjusted 
+without changing the rule itself. 
+\texttt{BRUTE\_FORCE} does not evaluate a single event in isolation but counts failed 
+authentication attempts of the same subject within a defined time window, which requires a query 
+across previously stored events. 
+\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} operates on the raw SAML request contained in an 
+interceptor report and examines its structure for duplicate identifiers and for signature 
+elements referencing an identifier that occurs more than once.
+
+The remaining rules follow one of these patterns or compare an observed event against the 
+configuration declared for the SP involved, as described for \texttt{MFA\_BYPASS} in 
+Section~\ref{sec:why-not-siem}. 
+Their assignment to documented vulnerabilities and attack classes is given in 
+Table~\ref{tab:rules}.
 
 \section{Visualization Layer}\label{sec:impl-visualization}
 

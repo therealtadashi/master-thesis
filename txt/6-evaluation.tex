@@ -48,148 +48,156 @@ The implications of this are discussed in Section~\ref{sec:validity}.
 
 \section{Correlation}\label{sec:eval-correlation}
 
-Section~\ref{subsec:impl-correlation} explained the technical details of how the correlation 
-algorithm worked. 
-This Section presents the results of the correlation algorithm and the evaluation of the 
-precision of the said algorithm. 
+Section~\ref{subsec:impl-correlation} described the technical details of the correlation 
+mechanism. 
+This section presents the results of the correlation and evaluates the precision of the 
+individual strategies.
 
-To calculate the precision of the less accurate correlation algorithms there has to be a data set 
-which tells whether the correlation was correct or not. 
-Luckily the correlation via the \texttt{INBOUND\_MESSAGE\_ID} produces a one to one correlation as 
-explained in~\ref{subsec:impl-correlation}. 
-Meaning this reliable correlation algorithm can be used as a ground truth for the subsequent 
-correlation algorithms. 
+To determine the precision of the less reliable strategies, a reference is required that 
+indicates whether a given correlation was correct. 
+The correlation via \texttt{INBOUND\_MESSAGE\_ID} establishes a one-to-one relationship, as 
+explained in Section~\ref{subsec:impl-correlation}, since the identifier is unique per request. 
+Wherever this strategy produced a match, the correct counterpart is therefore known without 
+ambiguity, which allows it to serve as a ground truth for the remaining strategies.
 
-Measurement method looks as follows:
+The measurement method is as follows:
+
 \begin{itemize}
-    \item Collect all interceptor reports for a configurable time period with \texttt{correlated\_by = INBOUND\_MESSAGE\_ID}
-    \item For each report and each window size, execute the exact query of the heuristic strategy and select the same candidate (smallest time interval)
-    \item Compare selected items with known correct audit IDs (Match / Incorrect assignment / No match)
-    \item Additionally, output the time offset between custom interceptor flow reception and the actual audit event time as a distribution
+    \item Collect all interceptor reports of a configurable time period for which 
+          \texttt{correlated\_by = INBOUND\_MESSAGE\_ID}
+    \item For each report and each window size, execute the exact query of the heuristic 
+          strategy and select the same candidate as the productive system would, namely the 
+          one with the smallest temporal distance
+    \item Compare the selected entry against the known correct audit identifier, classifying 
+          the outcome as a match, an incorrect assignment, or no match
+    \item Additionally record the temporal offset between the reception of the interceptor 
+          report and the actual audit event time as a distribution
 \end{itemize}
 
-The underlying data sources are 200 consecutive logins by a test user via the HTTP login harness. 
-In terms of candidate ambiguity, this is the worst-case scenario. 
-All candidates share the same \textit{subjectHash}, \textit{ipHash}, and \textit{SP}. 
-Meaning time is the only distinguishing feature. 
-For worm up purposes an additional three logins are performed before the consecutive 200 logins. 
+The underlying data source is 200 consecutive logins of a single test user via the HTTP login 
+harness, preceded by three warm-up logins that are included in the measurement. 
+In terms of candidate ambiguity this represents the worst case, since all candidates share the 
+same \textit{subjectHash}, \textit{ipHash} and SP, leaving time as the only distinguishing 
+feature.
 
 \subsection{Findings of the Evaluation}\label{subsec:eval-correlation-findings}
 
-Before the evaluation, 3,690 out of 3,690 correlations ran via the hashed identity and time window 
-correlation algorithm, and not a single one via \texttt{INBOUND\_MESSAGE\_ID}. 
-This was caused by the IdP's audit format (\textit{conf/audit.xml}, \textit{shibboleth.AuditFormattingMap}) did 
-not contain \texttt{\%I}. 
-The Logstash pipeline was already mapping \textit{[shib][I]} to \texttt{INBOUND\_MESSAGE\_ID}, but was waiting for 
-a field that was never provided in the configuration. 
-The precondition of the field registry expecting the inbound message id remained permanently unmet. 
-After adding \texttt{\%I} to the audit format, the registry recognized the field, and the strategy activated 
-itself, without a restart of the system. 
-This is direct evidence of dynamic field adaptation. 
+Before the evaluation, 3{,}690 out of 3{,}690 correlations had been established through the 
+hashed identity and time window strategy, and not a single one through 
+\texttt{INBOUND\_MESSAGE\_ID}. 
+The cause was not located in the application but in the audit format of the IdP. 
+The \textit{shibboleth.AuditFormattingMap} in \textit{conf/audit.xml} did not contain 
+\texttt{\%I}. 
+The Logstash pipeline was already mapping \textit{[shib][I]} to the corresponding field, but it 
+was waiting for a value that the configuration never produced. 
+The precondition of the strategy, namely the presence of the inbound message identifier in the 
+field registry, therefore remained permanently unmet. 
+After adding \texttt{\%I} to the audit format, the registry recognised the field and the 
+strategy activated itself during operation, without restarting the system. 
+This is direct evidence of the dynamic field adaptation described in 
+Section~\ref{sec:impl-aggregation}.
 
-The time window strategies were compared against \textit{timestamp} attribute, which is Filebeat's ingest time, 
-which is assigned per batch. 
-Measurement based on benchmark traffic, found out that 2,423 audits were distributed across only 448 different 
-\textit{timestamp} values, averaging 5.4 events per timestamp. 
-Within a batch group, the time interval is identical for all candidates, thus, the chronological order of multiple 
-logins could not be reconstructed. 
+A second finding concerns the timestamp used by the time window strategies. 
+These compared against the \textit{timestamp} attribute, which reflects the ingest time assigned 
+by Filebeat rather than the time of the authentication event. 
+Since Filebeat processes log lines in batches, this value is shared by all entries of a batch. 
+A measurement on benchmark traffic showed that 2{,}423 audit entries were distributed across only 
+448 distinct \textit{timestamp} values, an average of 5.4 events per timestamp. 
+Within such a group the temporal distance is identical for all candidates, so the chronological 
+order of several logins could not be reconstructed.
 
-This was resolved by a new field \textit{event\_time}, which Logstash generates from \texttt{\%T} (IdP event time) 
-using the date filter. 
-Both time window strategies have been using this ever since. 
-\textit{timestamp} remains unchanged as the basis for scheduler markers and the grace period—where the ingest time 
-is factually correct. 
+This was resolved by introducing a dedicated field \textit{event\_time}, which Logstash derives 
+from \texttt{\%T}, the event time recorded by the IdP, using a date filter. 
+Both time window strategies have operated on this field since. 
+The \textit{timestamp} attribute remains the basis for scheduler markers and the indexing grace 
+period, where the ingest time is the factually correct reference.
 
 \subsection{Results of the Evaluation}\label{subsec:eval-correlation-results}
 
-In the case of the temporal resolution introduced by the \textit{timestamp}, the alternative 
-method of \textit{event\_time} resulted in 1.0 events per timestamp. 
-Meaning each event had a unique timestamp, in contrast to the 5.4 events per timestamp caused 
-by using \textit{timestamp}. 
-These are the precision of the heuristic against the exact ground truth. 
+With \textit{event\_time} as the basis, the temporal resolution improves to 1.0 events per 
+timestamp. 
+Each event therefore carries a distinct value, in contrast to the 5.4 events per timestamp 
+observed with the ingest time.
 
-\subsubsection{Precision of the heuristic versus exact ground truth}\label{subsubsec:precision-of-heuristic-vs-ground-truth}
-
-The Tables below~\ref{tab:timestamp-precision, tab:event-time-precision} presents the difference 
-in accuracy of the temporal resolution introduced by \textit{timestamp} and \textit{event\_time}. 
+Table~\ref{tab:timestamp-precision} and Table~\ref{tab:event-time-precision} show the precision 
+of the heuristic strategy against the exact ground truth before and after this change.
 
 \begin{table}[h]
 \centering
-\caption{Before the change (Basis \textit{timestamp}, n = 415)}\label{tab:timestamp-precision}
+\caption{Before the change, based on \textit{timestamp} (n = 415)}\label{tab:timestamp-precision}
 \small
-\begin{tabular}{lllllll}
+\begin{tabular}{lrrrrrr}
 \toprule
 Window & Hits & Mismatch & No Match & Precision & Coverage & Candidates \\
 \midrule
-\pm 2s  & 24 & 373 & 18 & 6,05\% & 95,66\% & 11,79  \\
-\pm 5s  & 27 & 384 & 4  & 6,57\% & 99,04\% & 28,90  \\
-\pm 10s & 29 & 373 & 0  & 6,99\% & 100\%   & 55,47  \\
-\pm 30s & 29 & 373 & 0  & 6,99\% & 100\%   & 138,48 \\
-\pm 60s & 29 & 373 & 0  & 6,99\% & 100\%   & 192,60 \\
+$\pm$2\,s  & 24 & 373 & 18 & 6,05\% & 95,66\% & 11,79  \\
+$\pm$5\,s  & 27 & 384 & 4  & 6,57\% & 99,04\% & 28,90  \\
+$\pm$10\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 55,47  \\
+$\pm$30\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 138,48 \\
+$\pm$60\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 192,60 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[h]
 \centering
-\caption{After the change (Basis \textit{event\_time}, n = 203)}\label{tab:event-time-precision}
+\caption{After the change, based on \textit{event\_time} (n = 203)}\label{tab:event-time-precision}
 \small
-\begin{tabular}{lllllll}
+\begin{tabular}{lrrrrrr}
 \toprule
 Window & Hits & Mismatch & No Match & Precision & Coverage & Candidates \\
 \midrule
-\pm 1s  & 203 & 0 & 0 & 100\% & 100\% & 6,42   \\
-\pm 2s  & 203 & 0 & 0 & 100\% & 100\% & 12,36  \\
-\pm 5s  & 203 & 0 & 0 & 100\% & 100\% & 30,47  \\
-\pm 10s & 203 & 0 & 0 & 100\% & 100\% & 58,12  \\
-\pm 30s & 203 & 0 & 0 & 100\% & 100\% & 144,68 \\
-\pm 60s & 203 & 0 & 0 & 100\% & 100\% & 197,60 \\
+$\pm$1\,s  & 203 & 0 & 0 & 100\% & 100\% & 6,42   \\
+$\pm$2\,s  & 203 & 0 & 0 & 100\% & 100\% & 12,36  \\
+$\pm$5\,s  & 203 & 0 & 0 & 100\% & 100\% & 30,24  \\
+$\pm$10\,s & 203 & 0 & 0 & 100\% & 100\% & 58,12  \\
+$\pm$30\,s & 203 & 0 & 0 & 100\% & 100\% & 144,68 \\
+$\pm$60\,s & 203 & 0 & 0 & 100\% & 100\% & 197,60 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsubsection{Time Offset Between Custom Interceptor Flow Reception and IdP Event Time}\label{subsubsec:time-offset-cif}
-
 \begin{table}[h]
 \centering
-\caption{Time Offset Between Custom Interceptor Flow Reception and IdP Event Time}\label{tab:time-offset}
+\caption{Temporal offset between interceptor report reception and IdP event time (n = 203)}\label{tab:time-offset}
 \small
 \begin{tabular}{lllll}
 \toprule
 min & p50 & p95 & max & Span \\
 \midrule
-\pm -98ms & -32ms & -23ms & +75ms & 173ms \\
+$-98$\,ms & $-32$\,ms & $-23$\,ms & $+75$\,ms & 173\,ms \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The predominantly negative offset is as expected. 
-The Interceptor runs as a \textit{postAuthenticationFlow} in the middle of the profile, and 
-\texttt{\%T} marks its completion.
-The report therefore typically reaches the backend about 30ms before the IdP writes the audit 
-entry. 
+The predominantly negative offset is consistent with the position of the interceptor in the 
+profile flow. 
+It runs as a \textit{postAuthenticationFlow} in the middle of the profile, whereas \texttt{\%T} 
+marks the completion of the transaction. 
+The report therefore typically reaches the backend around 30\,ms before the IdP writes the 
+corresponding audit entry.
 
-\subsubsection{Precision of TIME\_WINDOW under True Candidate Ambiguity (Multi-User)}\label{subsubsec:precision-time-window-multi-user}
+\subsubsection{Precision of TIME\_WINDOW under True Candidate Ambiguity}\label{subsubsec:precision-time-window-multi-user}
 
-The measurement in Table~\ref{tab:event-time-precision} are based on a single test user. 
-In that case, the candidate sets for the hash identity and time window and time window algorithms 
-are identical because a second \textit{usernameHash} never occurs during the observation period. 
-As a result, the time window algorithm is never actually tested, only tracked. 
-To address this, the same measurement methodology was applied to a dataset with multiple test 
+The measurements in Table~\ref{tab:event-time-precision} are based on a single test user. 
+In that case the candidate sets of \texttt{HASH\_AND\_TIME\_WINDOW} and \texttt{TIME\_WINDOW} 
+are identical, since a second \textit{usernameHash} never occurs within the observation period. 
+The weaker strategy is therefore never actually tested, only carried along. 
+To address this, the same measurement methodology was applied to a dataset with several test 
 users active in parallel.
 
-In the expanded data set with three different users, each with 200 logins, launched simultaneously 
-against the same SP with 600 reports in total. 
-The ground truth was cleared before the run to prevent mixing with the single-user data. 
-The results are summerized in Table~\ref{tab:precision-strategies}. 
+The extended dataset comprises three users with 200 logins each, started simultaneously against 
+the same SP, resulting in 600 reports in total. 
+The ground truth was cleared before the run to prevent any mixing with the single user data. 
+The results are summarised in Table~\ref{tab:precision-strategies}.
 
 \begin{table}[h]
 \centering
-\caption{Precision of the Strategies (n=600)}\label{tab:precision-strategies}
+\caption{Precision of the strategies (n = 600)}\label{tab:precision-strategies}
 \small
-\begin{tabular}{lllll}
+\begin{tabular}{lrrr}
 \toprule
-Strategy & Precision (all windows 1-60s) & Coverage & Candidates (\pm 1s) \\
+Strategy & Precision (all windows 1--60\,s) & Coverage & Candidates ($\pm$1\,s) \\
 \midrule
 \texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 100\% & 5,66  \\
 \texttt{TIME\_WINDOW}            & 65\%  & 100\% & 16,26 \\
@@ -197,161 +205,159 @@ Strategy & Precision (all windows 1-60s) & Coverage & Candidates (\pm 1s) \\
 \end{tabular}
 \end{table}
 
-The precision of \texttt{TIME\_WINDOW} is identical across all six measured window sizes 
-at 65\%. 
-This follows directly from the selection rule the smallest time interval wins. 
-Once the correct candidate is within the window, an additional, more distant candidate 
-from a larger window can no longer displace it. 
-Since no match is consistently 0, the \textpm 1s window was sufficient to include the correct 
-candidate, just not always as the closest one.
+The precision of \texttt{TIME\_WINDOW} is identical across all six measured window sizes at 
+65\%. 
+This follows directly from the selection rule, according to which the candidate with the 
+smallest temporal distance is chosen. 
+Once the correct candidate lies within the window, a more distant candidate admitted by a larger 
+window can no longer displace it. 
+Since the number of reports without a match is consistently zero, the $\pm$1\,s window already 
+sufficed to include the correct candidate, only not always as the closest one.
 
 \begin{table}[h]
 \centering
-\caption{By local login density (window = 10 s)}\label{tab:local-density}
+\caption{Precision by local login density, window = 10\,s}\label{tab:local-density}
 \small
-\begin{tabular}{lllll}
+\begin{tabular}{lrrrr}
 \toprule
 Density Bucket & n & Hits & Mismatch & Precision \\
 \midrule
-< 100ms   & 521 & 311 & 210 & 59,69\% \\
-100-300ms & 65  & 65  & 0   & 100\%   \\
-300ms-1s  & 14  & 14  & 0   & 100\%   \\
-> 1s      & 0   & 0   & 0   & -       \\
+< 100\,ms      & 521 & 311 & 210 & 59,69\% \\
+100--300\,ms   & 65  & 65  & 0   & 100\%   \\
+300\,ms--1\,s  & 14  & 14  & 0   & 100\%   \\
+> 1\,s         & 0   & 0   & 0   & ---     \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The accuracy of the \texttt{TIME\_WINDOW} strategy is summerised in~\ref{tab:local-density}. 
-The overall misclassification rate for \texttt{TIME\_WINDOW} is concentrated among logins that 
-are less than 100 ms apart from the next login by the same SP. 
-521 out of 600 reports fall into this category. 
-For intervals greater than 100 ms, the strategy is error-free in the measured dataset. 
+Table~\ref{tab:local-density} shows that the incorrect assignments of \texttt{TIME\_WINDOW} are 
+concentrated entirely among logins that lie less than 100\,ms apart from the next login of the 
+same SP. 
+521 of the 600 reports fall into this category. 
+Above an interval of 100\,ms the strategy is error-free within the measured dataset.
 
-\subsubsection{Precision under Real Browser Traffic Conditions}\label{subsubsec:precision-browser-traffic}
+\subsubsection{Precision under Real Browser Traffic}\label{subsubsec:precision-browser-traffic}
 
-All measurements presented in this section are based on the synthetic HTTP login harness. 
-To verify whether its timing behavior is representative of real-world login processes, the same 
-measurement methodology was applied to a second dataset generated using real Chrome-based logins. 
-These logins were performed using Testcontainers and Selenium instead of a raw HTTP client.
-The resulting data source is 202 logins with only one test user. 
-The results are summerised in Table~\ref{tab:e2e-single-user-results}. 
-THE HTTP-Client row with 203 in the said Table comes from the previous Table~\ref{tab:event-time-precision}. 
+All measurements presented so far are based on the synthetic HTTP login harness. 
+To examine whether its timing behaviour is representative of real login processes, the same 
+measurement methodology was applied to a second dataset generated through Chrome-based logins 
+using Testcontainers and Selenium instead of a raw HTTP client. 
+The data source is 202 logins of a single test user. 
+The results are summarised in Table~\ref{tab:e2e-single-user-results}, where the HTTP client 
+column repeats the values of Table~\ref{tab:event-time-precision}.
 
 \begin{table}[h]
 \centering
-\caption{Results of End-to-End Pipeline Test with One User}\label{tab:e2e-single-user-results}
+\caption{Single user, HTTP client compared to real browser}\label{tab:e2e-single-user-results}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{lrr}
 \toprule
-  & HTTP-Client (n = 203) & Browser (n=202) \\
+  & HTTP client (n = 203) & Browser (n = 202) \\
 \midrule
 Precision (both strategies) & 100\%   & 100\%  \\
-Candidates at \pm 1s        & 6,42    & 1,00   \\
-Candidates at \pm 60s       & 197,60  & 42,61  \\
+Candidates at $\pm$1\,s     & 6,42    & 1,00   \\
+Candidates at $\pm$60\,s    & 197,60  & 42,61  \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[h]
 \centering
-\caption{Local Login Density}\label{tab:e2e-local-density}
+\caption{Local login density under real browser traffic}\label{tab:e2e-local-density}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{lrr}
 \toprule
 Density Bucket & n & Precision \\
 \midrule
-< 100ms   & 0   & -     \\
-100-300ms & 0   & -     \\
-300ms-1s  & 0   & -     \\
-> 1s      & 202 & 100\% \\
+< 100\,ms      & 0   & ---   \\
+100--300\,ms   & 0   & ---   \\
+300\,ms--1\,s  & 0   & ---   \\
+> 1\,s         & 202 & 100\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-All 202 logins from Table~\ref{tab:e2e-local-density} are more than one second apart. 
-The candidate mean at \textpm 1s is 1.00 instead of 6.42. 
-The login density here is thus a good six times lower than with the HTTP client harness. 
-This aligns with the expected additional overhead of real browser interaction (page loading, 
-form handling, Selenium overhead) compared to a script without wait times. 
-\texttt{HASH\_AND\_TIME\_WINDOW} and \texttt{TIME\_WINDOW} yield identical results at this 
-density, with an average of one candidate per window, the additional hash filter has nothing 
-to filter out, for the same reason as in the single-user case in Table~\ref{tab:event-time-precision}.
+All 202 logins lie more than one second apart from their nearest neighbour. 
+The candidate mean at $\pm$1\,s is 1.00 instead of 6.42, which places the login density roughly 
+six times lower than with the HTTP client harness. 
+This is consistent with the additional time required for real browser interaction, comprising 
+page loading, form handling and the overhead introduced by Selenium, compared to a script 
+without waiting times. 
+At this density \texttt{HASH\_AND\_TIME\_WINDOW} and \texttt{TIME\_WINDOW} yield identical 
+results, since with an average of one candidate per window the additional hash filter has 
+nothing left to exclude, for the same reason as in the single user case.
 
-The offset (\textit{receivedAt} - \textit{event\_time}) ranges from -102 to -17 ms (n = 202), 
-which is narrower and consistently negative compared to Table~\ref{tab:time-offset} 
-(-98 to +75 ms). 
-With n = 202 from a single run, there is no reliable trend, but there is also no indication that 
-real logins are more irregular in timing than the synthetic client. 
+The offset between report reception and event time ranges from $-102$ to $-17$\,ms (n = 202), 
+which is narrower and consistently negative compared to the range reported in 
+Table~\ref{tab:time-offset}. 
+With a single run of this size no reliable trend can be established, but there is equally no 
+indication that real logins are temporally more irregular than the synthetic client.
 
-\subsubsection{Precision among Multiple Simultaneous Real Browser Users}\label{subsubsec:precision-multiple-browser-users}
+\subsubsection{Precision among Multiple Simultaneous Browser Users}\label{subsubsec:precision-multiple-browser-users}
 
-What remains open is the combination of the methodology presented in 
-Section~\ref{subsubsec:precision-time-window-multi-user} and 
-Section~\ref{subsubsec:precision-browser-traffic}. 
-The same measurement methodology was therefore applied, with multiple test users running 
+What remains open is the combination of the two preceding measurements, namely several users and 
+real browser traffic at the same time. 
+The same measurement methodology was therefore applied with three test users running 
 simultaneously against the same SP. 
-The data source is 202 logins each (200 logins + with the hard-coded warm-up of two logins) 
-across three parallel test users, which results in 606 reports in total. 
-The results are summerised in Table~\ref{tab:precision-coverage-strategies, tab:sum-local-density, tab:comparison-multi-user}. 
+The data source is 202 logins each, comprising 200 measured logins and the hard-coded warm-up of 
+two, resulting in 606 reports in total. 
+The results are summarised in Table~\ref{tab:precision-coverage-strategies}, 
+Table~\ref{tab:sum-local-density} and Table~\ref{tab:comparison-multi-user}.
 
 \begin{table}[h]
 \centering
-\caption{Precision and Coverage of Strategies}\label{tab:precision-coverage-strategies}
+\caption{Precision and coverage of the strategies (n = 606)}\label{tab:precision-coverage-strategies}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{lrr}
 \toprule
-Strategie & Precision (all Windows 1-60s) & Coverage \\
+Strategy & Precision (all windows 1--60\,s) & Coverage \\
 \midrule
-\texttt{HASH\_AND\_TIME\_WINDOW} & 100\%     & 100\% \\
-\texttt{TIME\_WINDOW}            & 89,93\%   & 100\% \\
+\texttt{HASH\_AND\_TIME\_WINDOW} & 100\%   & 100\% \\
+\texttt{TIME\_WINDOW}            & 89,93\% & 100\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[h]
 \centering
-\caption{Local Login Density (Time Window = 10s)}\label{tab:sum-local-density}
+\caption{Local login density, window = 10\,s}\label{tab:sum-local-density}
 \small
-\begin{tabular}{llll}
+\begin{tabular}{lrrr}
 \toprule
 Density Bucket & n & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
 \midrule
-< 100ms   & 138 & 100\% & 55,80\% \\
-100-300ms & 132 & 100\% & 100\%   \\
-300ms-1s  & 138 & 100\% & 100\%   \\
-> 1s      & 138 & 100\% & 100\%   \\
+< 100\,ms      & 138 & 100\% & 55,80\% \\
+100--300\,ms   & 132 & 100\% & 100\%   \\
+300\,ms--1\,s  & 258 & 100\% & 100\%   \\
+> 1\,s         & 78  & 100\% & 100\%   \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[h]
 \centering
-\caption{Comparison with the Synthetic Multi-User Dataset}\label{tab:comparison-multi-user}
+\caption{Comparison with the synthetic multi-user dataset}\label{tab:comparison-multi-user}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{lrr}
 \toprule
-  & Results from Section~\ref{subsubsec:precision-time-window-multi-user} & Real Browser Login \\
+  & Synthetic (n = 600) & Real browser (n = 606) \\
 \midrule
-Precision in < 100ms Bucket              & 59,69\%          & 55,8\%           \\
-Percentage of logins taking < 100ms      & 86,8\% (521/600) & 22,8\% (138/606) \\
-Total precision of \texttt{TIME\_WINDOW} & 86,8\% (521/600) & 22,8\% (138/606) \\
+Precision in the < 100\,ms bucket          & 59,69\%          & 55,80\%          \\
+Share of logins below 100\,ms              & 86,8\% (521/600) & 22,8\% (138/606) \\
+Overall precision of \texttt{TIME\_WINDOW} & 65,00\%          & 89,93\%          \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The precision within the critical < 100ms zone is nearly identical for real and synthetic 
-traffic (\~56-60\%). 
+The precision within the critical sub-100\,ms zone is nearly identical for real and synthetic 
+traffic, at approximately 56 to 60 percent. 
 The weakness measured in Section~\ref{subsubsec:precision-time-window-multi-user} is therefore 
-not an artifact of HTTP client timing, but a reproducible density effect. 
-What differs is how often this zone is actually reached. 
-The artificially timed stress test from Section~\ref{subsubsec:precision-time-window-multi-user} 
-lands within it 87\% of the time, whereas three actual concurrent browser users do so only 23\% 
-of the time. 
-The lower overall precision in Section~\ref{subsubsec:precision-time-window-multi-user} thus 
-accurately describes the stress test but exaggerates its frequency in the measured everyday operation.
-The offset (\texit{receivedAt} - \textit{event\_time}) ranges from -158 to +42 ms (n = 606), which is 
-by far the widest range of all sub-measurements, plausibly due to three parallel browser containers 
-sharing CPU time.
+not an artifact of the HTTP client timing, but a reproducible density effect. 
+What differs is how frequently this zone is reached at all. 
+The artificially dense stress test enters it in 87\% of cases, whereas three genuinely concurrent 
+browser users do so in only 23\%. 
+The lower overall precision of the synthetic dataset therefore describes the stress case 
+correctly, but overstates how often it occurs under the observed user load.
 
 \section{Detection}\label{sec:eval-detection}
 

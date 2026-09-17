@@ -359,6 +359,71 @@ browser users do so in only 23\%.
 The lower overall precision of the synthetic dataset therefore describes the stress case 
 correctly, but overstates how often it occurs under the observed user load.
 
+\subsubsection{Influence of \textit{ipHash}}\label{subsubsec:influence-of-iphash}
+
+It remained unclear whether \textit{ipHash} actually contributed to the separation in the multi-user 
+datasets, or whether \textit{usernameHash} alone accounted for the measured precision the assumption 
+was that there was a shared \textit{ipHash} across all benchmark processes. 
+A control query on the raw data refuted this for the browser path. 
+Each \texttt{BrowserWebDriverContainer} started in parallel is assigned its own Docker Bridge IP. 
+In Section~\ref{subsubsec:precision-multiple-browser-users}, the three test users thus actually had 
+three different \textit{ipHash} values, not a shared one. 
+
+This could be verified directly against the existing ground truth without a new login run. 
+\texttt{CorrelationPrecisionAnalysis} was supplemented with a third, purely analytical strategy that 
+searches only for SP + \textit{ipHash} + \textit{time window} (\textit{usernameHash} omitted). 
+Not a production strategy, but a diagnostic variant to isolate the contribution of \textit{ipHash}. 
+The data source is the same 606 reports from Section~\ref{subsubsec:precision-multiple-browser-users}, 
+reanalyzed using the additional IP_ONLY strategy (hypothetical). 
+
+\begin{table}[h]
+\centering
+\caption{Correlation with \textit{ipHash} (n = 606)}\label{tab:ip-hash-correlation}
+\small
+\begin{tabular}{lrr}
+\toprule
+Strategy & Precision (all windows) & Candidates \\
+\midrule
+\texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 1,00 \\
+\texttt{IP\_ONLY}                & 100\% & 1,00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The comparison across all six window sizes shows no convergence, but rather exact agreement 
+down to the second decimal place. 
+
+\begin{table}[h]
+\centering
+\caption{Candidates with \textit{ipHash} (n = 606)}\label{tab:ip-hash-candidates}
+\small
+\begin{tabular}{lrr}
+\toprule
+Window & \texttt{HASH\_AND\_TIME\_WINDOW} Candidates & \texttt{IP\_ONLY} Candidates \\
+\midrule
+$\pm$1\,s  & 1,00  & 1,00  \\
+$\pm$2\,s  & 2,19  & 2,19  \\
+$\pm$5\,s  & 3,86  & 3,86  \\
+$\pm$10\,s & 7,49  & 7,49  \\
+$\pm$30\,s & 21,67 & 21,67 \\
+$\pm$60\,s & 41,58 & 41,58 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Even when considering local login density, both strategies yield identical results, including 
+in the otherwise critical <100ms bucket (138/138 matches, 100\%). 
+In this dataset, \textit{usernameHash} never once filters out a candidate that \textit{ipHash} 
+would not have already ruled out on its own. 
+Because each browser container had its own stable IP address, every \textit{ipHash} bucket was 
+already valid based on the IP alone.
+
+This shows that \textit{ipHash} distinguishes between separate sources (different devices, networks, 
+or, as here, containers) just as effectively as the full \texttt{HASH\_AND\_TIME\_WINDOW} combination. 
+It does not show what happens when multiple users are behind the same IP, such as corporate NAT or 
+shared Wi-Fi. 
+Because this scenario could not be replicated with the existing test setup (one container per user). 
+
 \section{Detection}\label{sec:eval-detection}
 
 Die drei Testschichten und was jede prüfen kann

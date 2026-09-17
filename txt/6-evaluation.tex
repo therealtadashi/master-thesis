@@ -2,12 +2,303 @@
 
 \begin{document}
 
-\chapter{Evaluation of the System}\label{ch:evaluation}
+\chapter{Evaluation}\label{ch:evaluation}
 
-\section{Test Setup and Baseline}\label{sec:setup}
+This chapter evaluates the proposed monitoring system. 
+It presents the test setup, evaluates the correlation and detection capabilities, 
+measures the performance overhead introduced by the interceptor, and concludes 
+with a discussion of the threats to validity. 
 
-\section{Detection Results}\label{sec:results}
+\section{Test Setup}\label{sec:setup}
+
+To facilitate integration with the Java testing framework, the entire test environment 
+runs in containers. 
+This comprises the Shibboleth IdP, an LDAP directory serving as the user store, the SPs, 
+and the backend application of the monitoring tool.
+
+Two SPs are deployed. 
+The first is used for the detection scenarios and is configured to exhibit the weaknesses 
+that the rules are intended to identify. 
+The second is configured according to current recommendations and serves as a reference for 
+the false positive rate, since any alert raised for a login against this provider is by 
+definition a false positive. 
+
+The evaluation distinguishes three levels of testing. 
+Unit tests examine individual components in isolation, with their dependencies replaced by 
+mocks, so that a test result reflects the behaviour of that component alone. 
+Integration tests run against a real Elasticsearch instance, which additionally covers the 
+persistence layer, the index mappings and the queries that a mock cannot represent. 
+End to end tests exercise the complete pipeline, from a login at the SP through the log 
+shipping stack to the alert produced by the backend. 
+
+Logins are generated in two ways. 
+An HTTP client harness performs the SAML login sequence directly, parsing the forms returned 
+by the IdP and submitting them without rendering the pages. 
+Selenium based tests drive an actual browser through the same sequence. 
+The two differ in the interval between consecutive logins, since the harness proceeds as fast 
+as the server responds whereas a browser adds the time required for page loading and form 
+interaction. 
+This difference is relevant for the correlation measurements in Section~\ref{sec:eval-correlation}, 
+where the temporal density of logins determines how reliably records can be matched.
+
+The environment is not a production deployment. 
+It comprises a single IdP, two SPs and a small number of test accounts, and all traffic is generated 
+for the purpose of measurement. 
+The implications of this are discussed in Section~\ref{sec:validity}.
+
+\section{Correlation}\label{sec:eval-correlation}
+
+Section~\ref{subsec:impl-correlation} explained the technical details of how the correlation 
+algorithm worked. 
+This Section presents the results of the correlation algorithm and the evaluation of the 
+precision of the said algorithm. 
+
+To calculate the precision of the less accurate correlation algorithms there has to be a data set 
+which tells whether the correlation was correct or not. 
+Luckily the correlation via the \texttt{INBOUND\_MESSAGE\_ID} produces a one to one correlation as 
+explained in~\ref{subsec:impl-correlation}. 
+Meaning this reliable correlation algorithm can be used as a ground truth for the subsequent 
+correlation algorithms. 
+
+Measurement method looks as follows:
+\begin{itemize}
+    \item Collect all interceptor reports for a configurable time period with \texttt{correlated\_by = INBOUND\_MESSAGE\_ID}
+    \item For each report and each window size, execute the exact query of the heuristic strategy and select the same candidate (smallest time interval)
+    \item Compare selected items with known correct audit IDs (Match / Incorrect assignment / No match)
+    \item Additionally, output the time offset between custom interceptor flow reception and the actual audit event time as a distribution
+\end{itemize}
+
+The underlying data sources are 200 consecutive logins by a test user via the HTTP login harness. 
+In terms of candidate ambiguity, this is the worst-case scenario. 
+All candidates share the same \textit{subjectHash}, \textit{ipHash}, and \textit{SP}. 
+Meaning time is the only distinguishing feature. 
+For worm up purposes an additional three logins are performed before the consecutive 200 logins. 
+
+\subsection{Findings of the Evaluation}\label{subsec:eval-correlation-findings}
+
+Before the evaluation, 3,690 out of 3,690 correlations ran via the hashed identity and time window 
+correlation algorithm, and not a single one via \texttt{INBOUND\_MESSAGE\_ID}. 
+This was caused by the IdP's audit format (\textit{conf/audit.xml}, \textit{shibboleth.AuditFormattingMap}) did 
+not contain \texttt{\%I}. 
+The Logstash pipeline was already mapping \textit{[shib][I]} to \texttt{INBOUND\_MESSAGE\_ID}, but was waiting for 
+a field that was never provided in the configuration. 
+The precondition of the field registry expecting the inbound message id remained permanently unmet. 
+After adding \texttt{\%I} to the audit format, the registry recognized the field, and the strategy activated 
+itself, without a restart of the system. 
+This is direct evidence of dynamic field adaptation. 
+
+The time window strategies were compared against \textit{timestamp} attribute, which is Filebeat's ingest time, 
+which is assigned per batch. 
+Measurement based on benchmark traffic, found out that 2,423 audits were distributed across only 448 different 
+\textit{timestamp} values, averaging 5.4 events per timestamp. 
+Within a batch group, the time interval is identical for all candidates, thus, the chronological order of multiple 
+logins could not be reconstructed. 
+
+This was resolved by a new field \textit{event\_time}, which Logstash generates from \texttt{\%T} (IdP event time) 
+using the date filter. 
+Both time window strategies have been using this ever since. 
+\textit{timestamp} remains unchanged as the basis for scheduler markers and the grace period—where the ingest time 
+is factually correct. 
+
+\subsection{Results of the Evaluation}\label{subsec:eval-correlation-results}
+
+In the case of the temporal resolution introduced by the \textit{timestamp}, the alternative 
+method of \textit{event\_time} resulted in 1.0 events per timestamp. 
+Meaning each event had a unique timestamp, in contrast to the 5.4 events per timestamp caused 
+by using \textit{timestamp}. 
+
+These are the precision of the heuristic against the exact ground truth.  
+
+\begin{table}[h]
+\centering
+\caption{Before the change (Basis \textit{timestamp}, n = 415)}\label{tab:timestamp-precision}
+\small
+\begin{tabular}{lllllll}
+\toprule
+Window & Hits & Mismatch & No Match & Precision & Coverage & Candidates \\
+\midrule
+\pm 2s  & 24 & 373 & 18 & 6,05\% & 95,66\% & 11,79  \\
+\pm 5s  & 27 & 384 & 4  & 6,57\% & 99,04\% & 28,90  \\
+\pm 10s & 29 & 373 & 0  & 6,99\% & 100\%   & 55,47  \\
+\pm 30s & 29 & 373 & 0  & 6,99\% & 100\%   & 138,48 \\
+\pm 60s & 29 & 373 & 0  & 6,99\% & 100\%   & 192,60 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{After the change (Basis \textit{event\_time}, n = 203)}\label{tab:event-time-precision}
+\small
+\begin{tabular}{lllllll}
+\toprule
+Window & Hits & Mismatch & No Match & Precision & Coverage & Candidates \\
+\midrule
+\pm 1s  & 203 & 0 & 0 & 100\% & 100\% & 6,42   \\
+\pm 2s  & 203 & 0 & 0 & 100\% & 100\% & 12,36  \\
+\pm 5s  & 203 & 0 & 0 & 100\% & 100\% & 30,47  \\
+\pm 10s & 203 & 0 & 0 & 100\% & 100\% & 58,12  \\
+\pm 30s & 203 & 0 & 0 & 100\% & 100\% & 144,68 \\
+\pm 60s & 203 & 0 & 0 & 100\% & 100\% & 197,60 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Time Offset Between Custom Interceptor Flow Reception and IdP Event Time}\label{tab:time-offset}
+\small
+\begin{tabular}{lllll}
+\toprule
+min & p50 & p95 & max & Span \\
+\midrule
+\pm -98ms & -32ms & -23ms & +75ms & 173ms \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The predominantly negative offset is as expected. 
+The Interceptor runs as a \textit{postAuthenticationFlow} in the middle of the profile, and 
+\texttt{\%T} marks its completion.
+The report therefore typically reaches the backend about 30ms before the IdP writes the audit 
+entry. 
+
+The measurement in Table~\ref{tab:event-time-precision} are based on a single test user. 
+In that case, the candidate sets for the hash identity and time window and time window algorithms 
+are identical because a second \textit{usernameHash} never occurs during the observation period. 
+As a result, the time window algorithm is never actually tested, only tracked. 
+To address this, the same measurement methodology was applied to a dataset with multiple test 
+users active in parallel.
+
+In the expanded data set with three different users, each with 200 logins, launched simultaneously 
+against the same SP with 600 reports in total. 
+The ground truth was cleared before the run to prevent mixing with the single-user data. 
+The results are summerized in Table~\ref{tab:precision-strategies}. 
+
+\begin{table}[h]
+\centering
+\caption{Precision of the Strategies (n=600)}\label{tab:precision-strategies}
+\small
+\begin{tabular}{lllll}
+\toprule
+Strategy & Precision (all windows 1-60s) & Coverage & Candidates (\pm 1s) \\
+\midrule
+\texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 100\% & 5,66  \\
+\texttt{TIME\_WINDOW}            & 65\%  & 100\% & 16,26 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The precision of \texttt{TIME\_WINDOW} is identical across all six measured window sizes 
+at 65\%. 
+This follows directly from the selection rule the smallest time interval wins. 
+Once the correct candidate is within the window, an additional, more distant candidate 
+from a larger window can no longer displace it. 
+Since no match is consistently 0, the \textpm 1s window was sufficient to include the correct 
+candidate, just not always as the closest one.
+
+\begin{table}[h]
+\centering
+\caption{By local login density (window = 10 s)}\label{tab:local-density}
+\small
+\begin{tabular}{lllll}
+\toprule
+Density Bucket & n & Hits & Mismatch & Precision \\
+\midrule
+< 100ms   & 521 & 311 & 210 & 59,69\% \\
+100-300ms & 65  & 65  & 0   & 100\%   \\
+300ms-1s  & 14  & 14  & 0   & 100\%   \\
+> 1s      & 0   & 0   & 0   & -       \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The accuracy of the \texttt{TIME\_WINDOW} strategy is summerised in~\ref{tab:local-density}. 
+The overall misclassification rate for \texttt{TIME\_WINDOW} is concentrated among logins that 
+are less than 100 ms apart from the next login by the same SP. 
+521 out of 600 reports fall into this category. 
+For intervals greater than 100 ms, the strategy is error-free in the measured dataset. 
+
+All measurements presented in this section are based on the synthetic HTTP login harness. 
+To verify whether its timing behavior is representative of real-world login processes, the same 
+measurement methodology was applied to a second dataset generated using real Chrome-based logins. 
+These logins were performed using Testcontainers and Selenium instead of a raw HTTP client.
+The resulting data source is 202 logins with only one test user. 
+The results are summerised in Table~\ref{tab:e2e-single-user-results}. 
+THE HTTP-Client row with 203 in the said Table comes from the previous Table~\ref{tab:event-time-precision}. 
+
+\begin{table}[h]
+\centering
+\caption{Results of End-to-End Pipeline Test with One User}\label{tab:e2e-single-user-results}
+\small
+\begin{tabular}{lll}
+\toprule
+  & HTTP-Client (n = 203) & Browser (n=202) \\
+\midrule
+Precision (both strategies) & 100\%   & 100\%  \\
+Candidates at \pm 1s        & 6,42    & 1,00   \\
+Candidates at \pm 60s       & 197,60  & 42,61  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Local Login Density}\label{tab:e2e-local-density}
+\small
+\begin{tabular}{lll}
+\toprule
+Density Bucket & n & Precision \\
+\midrule
+< 100ms   & 0   & -     \\
+100-300ms & 0   & -     \\
+300ms-1s  & 0   & -     \\
+> 1s      & 202 & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All 202 logins from Table~\ref{tab:e2e-local-density} are more than one second apart. 
+The candidate mean at \textpm 1s is 1.00 instead of 6.42. 
+The login density here is thus a good six times lower than with the HTTP client harness. 
+This aligns with the expected additional overhead of real browser interaction (page loading, 
+form handling, Selenium overhead) compared to a script without wait times. 
+\texttt{HASH\_AND\_TIME\_WINDOW} and \texttt{TIME\_WINDOW} yield identical results at this 
+density, with an average of one candidate per window, the additional hash filter has nothing 
+to filter out, for the same reason as in the single-user case in Table~\ref{tab:event-time-precision}.
+
+The offset (\textit{receivedAt} - \textit{event\_time}) ranges from -102 to -17 ms (n = 202), 
+which is narrower and consistently negative compared to Table~\ref{tab:time-offset} 
+(-98 to +75 ms). 
+With n = 202 from a single run, there is no reliable trend, but there is also no indication that 
+real logins are more irregular in timing than the synthetic client. 
+
+\section{Detection}\label{sec:eval-detection}
+
+Die drei Testschichten und was jede prüfen kann
+Abdeckung: dreizehn von dreizehn auf Schicht eins, fünf auf Schicht zwei
+Warum nicht alle auf Schicht zwei
+Der Logstash-Fehler und dass nur Schicht zwei ihn finden konnte
+Die Abdeckungsanalyse gegen den FIM-Survey, mit den nicht adressierten Zeilen
+Falsch-Positiv-Baseline, sobald gemessen
+Ehrlich: Was diese Zahlen belegen und was nicht
 
 \section{Performance Overhead}\label{sec:overhead}
+
+Drei Konfigurationen und was jeder Vergleich beziffert
+Die drei Messquellen: intern, extern, CPU
+Die Auswerteeinheit ist der Lauf, nicht der Login — und warum
+Das Blockdesign gegen die Positionsdrift
+Ergebnis für async und für sync, mit Konfidenzintervallen
+CPU-Ergebnis als unabhängige Bestätigung
+Die zwei Fehler im eigenen Analyseskript
+
+\section{Threats to Validity}\label{sec:validity}
+
+n gleich sechs, ein einzelner Lauf je Messung
+Synthetischer Verkehr, ein Nutzer, ein SP bei den meisten Messungen
+Kein gelabelter Produktivdatensatz, daher keine Erkennungsgüte bestimmbar
+Die Zirkularität: Regeln und Testfälle aus derselben Hand -> nach prof angeblich nicht so schlimm
+Schwellenwerte gesetzt, nicht empirisch bestimmt
 
 \end{document}

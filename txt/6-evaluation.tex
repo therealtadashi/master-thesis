@@ -106,8 +106,12 @@ In the case of the temporal resolution introduced by the \textit{timestamp}, the
 method of \textit{event\_time} resulted in 1.0 events per timestamp. 
 Meaning each event had a unique timestamp, in contrast to the 5.4 events per timestamp caused 
 by using \textit{timestamp}. 
+These are the precision of the heuristic against the exact ground truth. 
 
-These are the precision of the heuristic against the exact ground truth.  
+\subsubsection{Precision of the heuristic versus exact ground truth}\label{subsubsec:precision-of-heuristic-vs-ground-truth}
+
+The Tables below~\ref{tab:timestamp-precision, tab:event-time-precision} presents the difference 
+in accuracy of the temporal resolution introduced by \textit{timestamp} and \textit{event\_time}. 
 
 \begin{table}[h]
 \centering
@@ -144,6 +148,8 @@ Window & Hits & Mismatch & No Match & Precision & Coverage & Candidates \\
 \end{tabular}
 \end{table}
 
+\subsubsection{Time Offset Between Custom Interceptor Flow Reception and IdP Event Time}\label{subsubsec:time-offset-cif}
+
 \begin{table}[h]
 \centering
 \caption{Time Offset Between Custom Interceptor Flow Reception and IdP Event Time}\label{tab:time-offset}
@@ -162,6 +168,8 @@ The Interceptor runs as a \textit{postAuthenticationFlow} in the middle of the p
 \texttt{\%T} marks its completion.
 The report therefore typically reaches the backend about 30ms before the IdP writes the audit 
 entry. 
+
+\subsubsection{Precision of TIME\_WINDOW under True Candidate Ambiguity (Multi-User)}\label{subsubsec:precision-time-window-multi-user}
 
 The measurement in Table~\ref{tab:event-time-precision} are based on a single test user. 
 In that case, the candidate sets for the hash identity and time window and time window algorithms 
@@ -219,6 +227,8 @@ are less than 100 ms apart from the next login by the same SP.
 521 out of 600 reports fall into this category. 
 For intervals greater than 100 ms, the strategy is error-free in the measured dataset. 
 
+\subsubsection{Precision under Real Browser Traffic Conditions}\label{subsubsec:precision-browser-traffic}
+
 All measurements presented in this section are based on the synthetic HTTP login harness. 
 To verify whether its timing behavior is representative of real-world login processes, the same 
 measurement methodology was applied to a second dataset generated using real Chrome-based logins. 
@@ -272,6 +282,76 @@ which is narrower and consistently negative compared to Table~\ref{tab:time-offs
 (-98 to +75 ms). 
 With n = 202 from a single run, there is no reliable trend, but there is also no indication that 
 real logins are more irregular in timing than the synthetic client. 
+
+\subsubsection{Precision among Multiple Simultaneous Real Browser Users}\label{subsubsec:precision-multiple-browser-users}
+
+What remains open is the combination of the methodology presented in 
+Section~\ref{subsubsec:precision-time-window-multi-user} and 
+Section~\ref{subsubsec:precision-browser-traffic}. 
+The same measurement methodology was therefore applied, with multiple test users running 
+simultaneously against the same SP. 
+The data source is 202 logins each (200 logins + with the hard-coded warm-up of two logins) 
+across three parallel test users, which results in 606 reports in total. 
+The results are summerised in Table~\ref{tab:precision-coverage-strategies, tab:sum-local-density, tab:comparison-multi-user}. 
+
+\begin{table}[h]
+\centering
+\caption{Precision and Coverage of Strategies}\label{tab:precision-coverage-strategies}
+\small
+\begin{tabular}{lll}
+\toprule
+Strategie & Precision (all Windows 1-60s) & Coverage \\
+\midrule
+\texttt{HASH\_AND\_TIME\_WINDOW} & 100\%     & 100\% \\
+\texttt{TIME\_WINDOW}            & 89,93\%   & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Local Login Density (Time Window = 10s)}\label{tab:sum-local-density}
+\small
+\begin{tabular}{llll}
+\toprule
+Density Bucket & n & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
+\midrule
+< 100ms   & 138 & 100\% & 55,80\% \\
+100-300ms & 132 & 100\% & 100\%   \\
+300ms-1s  & 138 & 100\% & 100\%   \\
+> 1s      & 138 & 100\% & 100\%   \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Comparison with the Synthetic Multi-User Dataset}\label{tab:comparison-multi-user}
+\small
+\begin{tabular}{lll}
+\toprule
+  & Results from Section~\ref{subsubsec:precision-time-window-multi-user} & Real Browser Login \\
+\midrule
+Precision in < 100ms Bucket              & 59,69\%          & 55,8\%           \\
+Percentage of logins taking < 100ms      & 86,8\% (521/600) & 22,8\% (138/606) \\
+Total precision of \texttt{TIME\_WINDOW} & 86,8\% (521/600) & 22,8\% (138/606) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The precision within the critical < 100ms zone is nearly identical for real and synthetic 
+traffic (\~56-60\%). 
+The weakness measured in Section~\ref{subsubsec:precision-time-window-multi-user} is therefore 
+not an artifact of HTTP client timing, but a reproducible density effect. 
+What differs is how often this zone is actually reached. 
+The artificially timed stress test from Section~\ref{subsubsec:precision-time-window-multi-user} 
+lands within it 87\% of the time, whereas three actual concurrent browser users do so only 23\% 
+of the time. 
+The lower overall precision in Section~\ref{subsubsec:precision-time-window-multi-user} thus 
+accurately describes the stress test but exaggerates its frequency in the measured everyday operation.
+The offset (\texit{receivedAt} - \textit{event\_time}) ranges from -158 to +42 ms (n = 606), which is 
+by far the widest range of all sub-measurements, plausibly due to three parallel browser containers 
+sharing CPU time.
 
 \section{Detection}\label{sec:eval-detection}
 

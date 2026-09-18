@@ -1179,10 +1179,147 @@ Section~\ref{sec:validity}.
 
 \section{Threats to Validity}\label{sec:validity}
 
-n gleich sechs, ein einzelner Lauf je Messung
-Synthetischer Verkehr, ein Nutzer, ein SP bei den meisten Messungen
-Kein gelabelter Produktivdatensatz, daher keine Erkennungsgüte bestimmbar
-Die Zirkularität: Regeln und Testfälle aus derselben Hand -> nach prof angeblich nicht so schlimm
-Schwellenwerte gesetzt, nicht empirisch bestimmt
+The preceding sections reported what the measurements show. 
+This section states what they do not show, and why. 
+The limitations are grouped by their origin, namely the measurement environment, the traffic 
+used, the statistical basis, and the questions that the chosen setup cannot answer at all.
+
+\subsection{Measurement Environment}\label{subsec:validity-environment}
+
+All components run on a single machine. 
+The IdP, the service providers, the backend application, Elasticsearch and the benchmark itself 
+share the same host and compete for the same resources.
+
+The absolute values are therefore not transferable to a productive deployment. 
+A login duration of approximately 320\,ms reflects this particular setup and would differ on 
+separated hosts, under a different network topology or with a different user store. 
+The differences between configurations are transferable to a greater degree, since they were 
+measured in pairs within a single session and the shared conditions cancel out in the comparison.
+
+The backend remained active during all runs, including the \textit{baseline} configuration in 
+which the interceptor is not executed. 
+This was deliberate, so that the background load would be identical across configurations. 
+It also means that the measurements do not reflect a deployment in which no monitoring 
+infrastructure is present at all.
+
+\subsection{Traffic and Scope}\label{subsec:validity-traffic}
+
+Most measurements rest on a single test user, a single service provider and a single 
+authentication flow, namely password-based authentication.
+For the correlation this represents the hardest case with respect to candidate ambiguity, since 
+all records share the same subject, the same address and the same service provider, leaving time 
+as the only distinguishing feature. 
+With respect to temporal regularity it is the easier case, since a synthetic client produces more 
+evenly spaced logins than real users. 
+In a productive network the jitter would be larger and the operational limit derived in 
+Section~\ref{subsec:interpretation-correlation} correspondingly lower. 
+The offset statistic reported there is the figure by which this can be measured again in a 
+different environment.
+
+Several measurements use an HTTP client harness rather than a browser. 
+Sections~\ref{subsubsec:precision-browser-traffic} and 
+\ref{subsubsec:precision-multiple-browser-users} address this by repeating the measurement 
+against real browser traffic, which showed the density effect to be reproducible while occurring 
+considerably less often under realistic timing.
+
+Single sign-on follow-up requests, in which an existing session is reused without a full 
+authentication, were not measured. 
+The interceptor would carry relatively more weight there, since the total latency of such a 
+request is lower.
+
+\subsection{Statistical Basis}\label{subsec:validity-statistics}
+
+The performance evaluation rests on six runs per configuration. 
+Resolving an effect of approximately 20\,ms against a between-run spread of the same magnitude 
+would require roughly twenty runs per configuration. 
+The conclusion that the asynchronous mode introduces no measurable overhead is therefore a 
+statement about the resolution of the experiment as much as about the interceptor itself.
+
+One run is influential for the comparison between \textit{async} and \textit{baseline}, 
+contributing a difference of $-65$\,ms. 
+Excluding it would yield a clearly positive point estimate instead of $-1,6$\,ms. 
+The conclusion that the effect lies below the resolution of the measurement holds in either case, 
+but the point estimate itself should not be over-interpreted.
+
+Six significance tests were performed without correction for multiple testing, namely three 
+comparisons for the latency and three for the processor utilisation. 
+This is of secondary importance at present, since none of the comparisons is significant, but it 
+would need to be accounted for in a repetition with more runs.
+
+The correlation measurements each rest on a single run, with sample sizes between 202 and 606 
+reports. 
+Precision is reported with Wilson score confidence intervals rather than the normal 
+approximation, since the latter yields bounds outside the valid range or an interval of zero 
+width where the observed precision reaches one hundred percent.
+
+\subsection{What the Detection Figures Establish}\label{subsec:validity-detection}
+
+The detection evaluation is subject to a limitation of a different kind, which concerns not the 
+precision of the figures but their meaning.
+Both the rules and the scenarios against which they are verified originate from the same source. 
+A test that confirms a rule to behave as intended for a constructed case establishes the fidelity 
+of the implementation. 
+It does not establish that the rule detects genuine attacks, since the same understanding that 
+produced the rule also produced the case.
+
+This circularity is partially resolved and partially not. 
+The derivation of the rules no longer rests on the author's judgement, since the vulnerabilities 
+and attack classes they address are taken from the survey by Simpson and 
+Groß~\cite{FIMSurvey} and from the OASIS security 
+considerations~\cite{SAMLSecurityConsideration}. 
+Which conditions are worth detecting is therefore determined externally. 
+The verification of the rules, by contrast, remains internal.
+
+Resolving it entirely would require productive traffic in which each login is independently 
+labelled as malicious or benign. 
+No such dataset exists for this work, and it cannot be produced within a test environment, since 
+producing it would require the same judgement that the labelling is meant to verify. 
+A false positive rate expressed as alerts per thousand legitimate logins is consequently not 
+determinable at present, only that the constructed negative cases correctly remain silent.
+
+The false negative classes reported per rule are likewise derived rather than measured. 
+Where a test deliberately carries a negative case, the statement is firm. 
+Where a false negative class was inferred from the code path, it is plausible but not 
+demonstrated by a failing test, since such a test would expose the same gap it describes.
+
+\subsection{Derived but Not Validated}\label{subsec:validity-derived}
+
+Two aspects of the system follow a documented derivation without having been validated 
+empirically.
+The severity levels follow the risk classification of Graves as described in 
+Section~\ref{subsec:severity}. 
+That the rules distinguish correctly between the levels is verified in several tests. 
+Whether the resulting classification prioritises appropriately in operation is not verified, 
+since this would require feedback from operators on alerts actually raised.
+
+The numerical thresholds of several rules are point values chosen as plausible rather than 
+determined by measurement. 
+No sensitivity analysis was performed, meaning that the threshold at which a true positive turns 
+into a false negative is unknown. 
+Since the values were moved into the configuration during this work, such an analysis has become 
+technically possible but remains outstanding.
+
+\subsection{Known Gaps}\label{subsec:validity-gaps}
+
+Three specific gaps are worth stating explicitly rather than leaving to be inferred.
+\texttt{WEAK\_ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
+since establishing one would require a service provider configured to use a weak algorithm.
+
+Eight of the thirteen rules are not covered on layer two. 
+As discussed in Section~\ref{subsec:detection-coverage}, five of them cannot sensibly be 
+triggered through a normal login and three do not depend on a login at all, so that the gap is 
+smaller than the figure alone suggests.
+
+For the correlation, the case in which a shared source address and a missing user identifier 
+coincide was not measured. 
+Section~\ref{subsubsec:precision-nat} covers the shared address with the user identifier present, 
+where the latter carries the entire separation. 
+The combined case reduces methodologically to the density dependence of \texttt{TIME\_WINDOW} 
+established throughout, rather than constituting an unknown of its own.
+
+Finally, the counts of unit test scenarios reported in Section~\ref{subsec:detection-coverage} 
+are lower bounds. 
+The test files were examined selectively rather than in full, so that individual scenarios may 
+exist in addition to those recorded.
 
 \end{document}

@@ -503,82 +503,100 @@ of $-26$\,ms (n = 600), which is of the same order of magnitude as in the other 
 
 \subsection{Interpretation of the Results for Correlation}\label{subsec:interpretation-correlation}
 
+Before turning to precision, the coverage of the correlation is considered, that is the 
+proportion of interceptor reports for which a counterpart was found at all. 
+Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 
+remained without a counterpart after the retry window had elapsed. 
+The value is only determinable because the sweep described in 
+Section~\ref{subsec:impl-correlation} marks expired reports as permanently uncorrelated. 
+Without that distinction, a report still awaiting its audit entry would be indistinguishable 
+from one that will never receive it, and the denominator of the ratio would change with every 
+query rather than remaining fixed.
+
+Coverage is also independent of the strategy that produced a match.  
+In every measurement reported above it remains at 100\% from a window of $\pm$5\,s onwards, 
+including for \texttt{TIME\_WINDOW}, which loses precision but not coverage under high login 
+density. 
+The two properties therefore fail independently of one another. 
+A weaker strategy does not leave reports unassigned, it assigns them to the wrong counterpart.
+
 Window size is not the limiting factor. 
-Accuracy remains at 100\%, even though the average number of candidates increases from 6,4 
-(\textpm 1s) to 197,6 (\textpm 60 s). 
-The only decisive factor is that the time jitter is smaller than the interval between two 
-consecutive logins of the same (subject, IP, SP) combination. 
+Precision remains at 100\% even though the mean number of candidates rises from 6.4 at 
+$\pm$1\,s to 197.6 at $\pm$60\,s. 
+What matters is solely that the temporal jitter is smaller than the interval between two 
+consecutive logins of the same combination of subject, address and SP.
 
-This results in a quantifiable operational limit. 
-With a jitter range of 173 ms and an observed login interval of approximately 330 ms, the 
-limit is about 6 logins per second per (subject, IP, SP) tuple. 
-Beyond this limit, the heuristic can no longer reliably determine the order. 
-The exact strategy is independent of this. 
+This yields a quantifiable operational limit. 
+With a jitter span of 173\,ms and an observed login interval of approximately 330\,ms, the limit 
+lies at about six logins per second per tuple of subject, address and SP. 
+Beyond this point the heuristic can no longer resolve the order reliably, whereas the exact 
+strategy is unaffected by it.
 
-Recommended configuration: \textit{lg.correlation.window-seconds=1}. 
-Coverage and precision remain at 100\%, but 6,4 candidates are checked per report instead of 58,1. 
-A 9 fold reduction in effort, based on evidence rather than a fixed setting. 
+The measurements also support a concrete configuration recommendation, namely 
+\textit{lg.correlation.window-seconds=1}. 
+Coverage and precision remain at 100\%, but 6.4 candidates are examined per report instead of 
+58.1, which reduces the effort by a factor of nine on the basis of evidence rather than a 
+fixed assumption.
 
-Value of the fallback chain. 
-If the unique identifier is missing from the audit log, for example, because it is not logged for 
-data protection reasons, the heuristic provides equivalent results under the measured conditions. 
-The loss of information is therefore not qualitative but quantitative in nature: it only occurs 
-above the specified login density. 
+The fallback chain has a quantifiable value. 
+Where the unique identifier is absent from the audit log, for instance because it is not recorded 
+for data protection reasons, the heuristic delivers equivalent results under the measured 
+conditions. 
+The loss of information is therefore not qualitative but quantitative, and it only takes effect 
+above the login density stated above.
 
-The cost of omitting the hashes has now been quantified, not merely postulated. 
-However, this only applies to the exact strategy compared to \texttt{HASH\_AND\_TIME\_WINDOW}. 
-If both \textit{ipHash} and \textit{usernameHash} are missing, so that \texttt{TIME\_WINDOW} must 
-step in, the picture changes. 
-Section~\ref{subsubsec:precision-browser-traffic} shows a drop in precision from 100\% to 
-65\% with three simultaneously active users, concentrated on logins less than 100 ms apart. 
-For an SP with multiple simultaneously active users, \texttt{TIME\_WINDOW} should therefore clearly 
-be classified as a stopgap solution in the event of missing hashes, not as an equivalent
-alternative, unlike what the single-user measurement in 
-Section~\ref{subsubsec:precision-time-window-multi-user} alone would suggest, where both strategies 
-are indistinguishable. 
+The cost of omitting the hashes is thus quantified rather than merely postulated. 
+This applies, however, only to the comparison between the exact strategy and 
+\texttt{HASH\_AND\_TIME\_WINDOW}. 
+If both \textit{ipHash} and \textit{usernameHash} are missing, so that \texttt{TIME\_WINDOW} has 
+to step in, the picture changes. 
+Section~\ref{subsubsec:precision-time-window-multi-user} shows a drop in precision from 100\% to 
+65\% with three simultaneously active users, concentrated on logins less than 100\,ms apart. 
+For a SP with several concurrent users, \texttt{TIME\_WINDOW} is therefore to be classified as a 
+stopgap for the case of missing hashes rather than as an equivalent alternative, unlike what the 
+single user measurement in Section~\ref{subsec:eval-correlation-results} alone would suggest, 
+where both strategies are indistinguishable.
 
-An initial indication that the operational limit is not reached in practice. 
-Section~\ref{subsubsec:precision-multiple-browser-users} measures login density using real browser 
-traffic instead of the synthetic HTTP client harness. 
-All 202 logins are spaced more than one second apart, well below the limit of ~6 logins/second 
-calculated above. 
-For a single automated browser user, the synthetic worst-case scenario from 
-Section~\ref{subsubsec:precision-time-window-multi-user} is thus significantly denser than real-world 
-timing, but it has not yet been demonstrated whether this also applies to multiple concurrent real users.
+There is a first indication that the operational limit is not reached in practice. 
+Section~\ref{subsubsec:precision-browser-traffic} measures the login density under real browser 
+traffic instead of the synthetic HTTP client harness, and all 202 logins lie more than one second 
+apart, well below the limit of roughly six logins per second calculated above. 
+For a single automated browser user the synthetic worst case of 
+Section~\ref{subsec:eval-correlation-results} is therefore considerably denser than real timing, 
+although this has not yet been shown for several concurrent real users.
 
-It is the density distribution that matters, not just the possibility of a collision. 
-Section~\ref{subsubsec:influence-of-iphash} shows that the weakness of texttt{TIME\_WINDOW} in the <100 ms 
-zone, as measured in Section~\ref{subsubsec:precision-browser-traffic}, is just as pronounced 
-(\~56\% accuracy) with real traffic as it is in the synthetic worst-case scenario. 
-It is not a measurement artifact. 
-What differs is the frequency. 
-Real concurrent users generate this zone noticeably less frequently (23\% of logins) than the artificially 
-dense worst-case scenario from Section~\ref{subsubsec:precision-browser-traffic} (87\%). 
-For operations, this means, the risk is real and has been reproducibly demonstrated, but occurs less 
-frequently under observed user load than the raw figure from 
-Section~\ref{subsubsec:precision-browser-traffic} would suggest. 
+What matters is the distribution of density, not merely the possibility of a collision. 
+Section~\ref{subsubsec:precision-multiple-browser-users} shows that the weakness of 
+\texttt{TIME\_WINDOW} in the sub-100\,ms zone measured in 
+Section~\ref{subsubsec:precision-time-window-multi-user} is just as pronounced under real traffic, 
+at approximately 56\% precision, and is therefore not a measurement artifact. 
+What differs is how often that zone is reached. 
+Real concurrent users produce it noticeably less frequently, in 23\% of logins, than the 
+artificially dense stress case, which reaches it in 87\%. 
+For operation this means that the risk is real and reproducibly demonstrated, but occurs less 
+often under the observed user load than the stress case figure alone would suggest.
 
-The contribution of ipHash depends entirely on whether the source actually disconnects. 
-Section~\ref{subsubsec:influence-of-iphash} shows that, for disconnected sources, \textit{ipHash} alone 
-performs just as well as \textit{ipHash} + \textit{usernameHash} combined (identical sets of candidates 
-in every measured window). 
-Section~\ref{subsubsec:precision-nat} shows the opposite scenario. 
-If multiple users share an IP address, ipHash contributes exactly nothing. 
-\texttt{IP\_ONLY} and \texttt{TIME\_WINDOW} yield identical results in this case. 
-For scenarios where \textit{usernameHash} is missing (such as user IDs not logged for privacy reasons), 
-the nuanced answer is: The heuristic is only as good as its least discriminating available identifier. 
-If both \textit{usernameHash} and a shared IP are missing, only texttt{TIME\_WINDOW} effectively 
-remains, with the density dependence consistently observed in Section~\ref{subsubsec:precision-time-window-multi-user}, 
-Section~\ref{subsubsec:precision-multiple-browser-users} and Section~\ref{subsubsec:precision-nat}.
+The contribution of \textit{ipHash} depends entirely on whether the source actually separates 
+users. 
+Section~\ref{subsubsec:influence-of-iphash} shows that with separate sources \textit{ipHash} alone 
+separates just as well as \textit{ipHash} and \textit{usernameHash} combined, yielding identical 
+candidate sets in every measured window. 
+Section~\ref{subsubsec:precision-nat} shows the counterpart, namely that where several users share 
+one address \textit{ipHash} contributes nothing at all, since \texttt{IP\_ONLY} and 
+\texttt{TIME\_WINDOW} produce identical figures there. 
+For scenarios in which \textit{usernameHash} is unavailable, this is the differentiated answer. 
+The heuristic is only as good as the least discriminating identifier available to it. 
+Where a shared address and a missing user identifier coincide, only \texttt{TIME\_WINDOW} remains, 
+with the density dependence observed consistently throughout.
 
-The production strategy handles the NAT scenario as long as \textit{usernameHash} remains available. 
-This is the most important practical takeaway from Section~\ref{subsubsec:precision-nat}. 
-\texttt{HASH\_AND\_TIME\_WINDOW} maintains 100\% accuracy even though all three test users share the 
-same IP address. 
-\textit{usernameHash} alone is responsible for distinguishing them. 
-Only when the user ID is missing in addition to the shared IP does the correlation become purely a matter 
-of the time window, involving the density dependency already known from Section~\ref{subsubsec:precision-time-window-multi-user} 
-and Section~\ref{subsubsec:precision-multiple-browser-users} rather than a new, NAT-specific risk. 
+The productive strategy withstands the shared address case as long as \textit{usernameHash} 
+remains available. 
+This is the practically most relevant conclusion of Section~\ref{subsubsec:precision-nat}, since 
+\texttt{HASH\_AND\_TIME\_WINDOW} retains 100\% precision although all three test users share one 
+address. 
+Only when the user identifier is absent in addition to the shared address does the correlation 
+become a question of the time window alone, which reduces to the density dependence already 
+established rather than constituting a new risk specific to network address translation.
 
 \section{Detection}\label{sec:eval-detection}
 

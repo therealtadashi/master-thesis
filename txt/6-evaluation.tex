@@ -609,82 +609,573 @@ established rather than constituting a new risk specific to network address tran
 
 \section{Detection}\label{sec:eval-detection}
 
-The three test layers and what each can check
-Coverage: thirteen out of thirteen on layer one, five on layer two
-Why not all of them on layer two
-The Logstash error and the fact that only layer two could detect it
-The coverage analysis against the FIM survey, including the unaddressed lines
-False-positive baseline, as soon as it's measured
-Honestly: What these numbers prove—and what they don't
+This section evaluates the thirteen detection rules described in 
+Section~\ref{subsec:impl-detection}. 
+It first establishes what the reported figures can and cannot show, then presents the test 
+coverage per rule, and finally reports three defects that the evaluation itself uncovered.
+
+\subsection{What the Figures Represent}\label{subsec:detection-semantics}
+
+An important qualification precedes the results. 
+The figures reported here are not the outcome of a sampling study over productive traffic. 
+No labelled dataset of real logins exists against which precision and recall could be computed. 
+What is evaluated instead are test cases, that is scenarios constructed by the developer in which 
+the expected outcome is fixed in advance.
+
+Three terms are used throughout this section. 
+A true positive proof means that a test constructs a scenario in which a rule is supposed to fire 
+and the assertion confirms that it does. 
+A true negative proof means that a test constructs a scenario in which no alert is supposed to be 
+raised and the assertion confirms that none is. 
+A false negative class is not a measured rate but a case derivable from the code in which an 
+actual attack would structurally produce no alert.
+
+The strength of a true negative proof is not uniform, and this distinction turns out to matter. 
+A negative case constructed directly in Java verifies only that the rule remains silent when 
+given a correctly formed input object. 
+It does not verify whether the pipeline preceding the rule, comprising the Logstash parsing and 
+the field mapping, produces such an object correctly in practice. 
+A negative case established through a real login verifies both at once. 
+Section~\ref{subsec:detection-logstash-defect} presents a case in which precisely this difference 
+made a defect visible that had remained invisible otherwise.
+
+This evaluation therefore answers whether the implemented code behaves exactly as intended for 
+the constructed cases. 
+It does not answer how often the system errs in operation. 
+Section~\ref{sec:validity} returns to this distinction.
+
+\subsection{Test Layers}\label{subsec:detection-layers}
+
+The rules are verified on three layers that differ in how much of the system they exercise. 
+Unit tests examine a rule in isolation with its repository replaced by a mock. 
+They verify the detection logic itself and are the fastest to write and to execute.
+
+Layer one tests run the rule against a real Elasticsearch instance provided through 
+Testcontainers. 
+Compared with a unit test, this additionally covers the query as it is actually formulated in the 
+Elasticsearch query language, the index mapping and the serialisation of the stored documents. 
+The rule under test is invoked directly rather than through the scheduler, which decouples the 
+correctness of the detection from the timing of the scheduler.
+
+Layer two tests exercise the complete path. 
+A real browser performs a login against the real IdP, the resulting audit entry passes through 
+Filebeat and Logstash into Elasticsearch, and the test then verifies the alert produced by the 
+backend. 
+This is the only layer on which a defect in the log shipping pipeline can become visible.
+
+\subsection{Coverage per Rule}\label{subsec:detection-coverage}
+
+Table~\ref{tab:detection-coverage} shows which layers each rule is covered on.
+
+\begin{table}[h]
+\centering
+\caption{Test coverage per rule across the three layers}\label{tab:detection-coverage}
+\small
+\begin{tabular}{lccc}
+\toprule
+Alert Type & Unit & Layer 1 & Layer 2 \\
+\midrule
+\texttt{SUSPICIOUS\_USER\_AGENT}        & yes & yes & TP and TN \\
+\texttt{FAILED\_LOGIN}                  & yes & yes & TP and TN \\
+\texttt{BRUTE\_FORCE}                   & yes & yes & TP and TN \\
+\texttt{UNENCRYPTED\_ASSERTION}         & yes & yes & TP and TN \\
+\texttt{WEAK\_ENCRYPTION}               & yes & yes & TN only   \\
+\texttt{BEHAVIOR\_ANOMALY}              & yes & yes & ---       \\
+\texttt{MFA\_BYPASS}                    & yes & yes & ---       \\
+\texttt{ASSERTION\_REPLAY}              & yes & yes & ---       \\
+\texttt{WEAK\_CONFIGURATION}            & yes & yes & ---       \\
+\texttt{MISSING\_MFA}                   & yes & yes & ---       \\
+\texttt{CERTIFICATE\_EXPIRED}           & yes & yes & ---       \\
+\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & yes & yes & ---       \\
+\texttt{REQUEST\_REPLAY}                & yes & yes & ---       \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All thirteen rules are covered by an explicit true positive proof against a real Elasticsearch 
+instance. 
+The counts comprise at least 84 unit scenarios, 18 layer one tests and 5 layer two tests, where 
+the unit figure is a lower bound since the test files were examined selectively rather than in 
+full.
+
+Five rules are additionally covered on layer two. 
+Four of them have both a true positive and a true negative proof, whereas 
+\texttt{WEAK\_ENCRYPTION} has only a true negative proof at present. 
+Establishing a true positive proof for it on layer two would require a service provider 
+configured to use a weak algorithm, which the test environment does not currently provide.
+
+The remaining eight rules are not covered on layer two, for two different reasons. 
+Five of them, namely \texttt{BEHAVIOR\_ANOMALY}, \texttt{MFA\_BYPASS}, 
+\texttt{ASSERTION\_REPLAY}, \texttt{SIGNATURE\_WRAPPING\_SUSPECTED} and 
+\texttt{REQUEST\_REPLAY}, cannot sensibly be triggered through a normal login, since they require 
+a manipulated message or an accumulated history rather than a single successful authentication. 
+The other three, namely \texttt{WEAK\_CONFIGURATION}, \texttt{MISSING\_MFA} and 
+\texttt{CERTIFICATE\_EXPIRED}, do not depend on a login at all. 
+They evaluate configuration and metadata, which the layer one tests already exercise in full, so 
+that layer two would add nothing for them.
+
+\subsection{A Defect Visible Only through the Full Pipeline}\label{subsec:detection-logstash-defect}
+
+The true negative proof for \texttt{UNENCRYPTED\_ASSERTION} on layer two required a service 
+provider whose assertions are actually encrypted, since the existing one transmitted them in 
+plain text. 
+A second provider was therefore registered with \texttt{encryptAssertions=true} and a real login 
+performed against it. 
+The expectation was that no alert would be raised.
+
+The first run contradicted this. 
+For the same login, Elasticsearch contained both \textit{encryption\_algo} with the value 
+\texttt{AES128-GCM} and \textit{encrypted} with the value \texttt{false}, which is an internal 
+contradiction since both fields originate from the same audit line.
+
+The cause lay in the log shipping pipeline rather than in the rule. 
+The audit format logs \texttt{\%XA}, the algorithm, which Logstash maps correctly. 
+It does not log the separate standard token for the encryption state, which Logstash therefore 
+derives from a backward compatibility alias that the audit format never populated. 
+The subsequent processing logic recognises only the literal strings \texttt{true} and 
+\texttt{false}, so that an empty value falls into the same branch as \texttt{false}. 
+The field \textit{encrypted} was consequently set to \texttt{false} for every login, entirely 
+independently of the actual encryption state.
+
+The consequence is not a missed detection but the opposite. 
+For genuinely unencrypted logins the result remained accidentally correct. 
+For encrypted logins the rule would have reported every single one as 
+\texttt{UNENCRYPTED\_ASSERTION}. 
+This is not a rare edge case but a structurally guaranteed false positive rate of one hundred 
+percent across all encrypted traffic, concealed solely by the fact that the test environment had 
+until then contained no service provider with encryption enabled.
+
+The defect was invisible on layer one for a structural reason. 
+The three existing negative scenarios for this rule construct their audit object directly in Java 
+with the encryption state set explicitly and therefore never pass through Logstash at all. 
+A test that bypasses the pipeline cannot, in principle, find a defect located within it. 
+The fix derives the encryption state from the algorithm field, treating a non-empty value as 
+encrypted. 
+
+After restarting Logstash, a login against the same service provider produced documents carrying 
+\textit{encryption\_algo} with the value \texttt{AES128-GCM} and \textit{encrypted} correctly set 
+to \texttt{true}.
+
+\subsection{A Defect Visible Only against Real Persistence}\label{subsec:detection-version-defect}
+
+A second defect illustrates why layer one is not redundant with respect to unit testing.
+During development, the unit test for \texttt{BEHAVIOR\_ANOMALY} passed consistently while the 
+rule did not work in operation. 
+The behaviour profile of a user was written once and never updated thereafter. 
+The cause was a missing version field on the stored document, which caused Elasticsearch to 
+discard every update silently rather than to reject it with an error. 
+
+A mock-based test cannot detect this class of defect. 
+The mocked repository returns success for every save operation, irrespective of whether a real 
+Elasticsearch instance would have accepted the document. 
+The test therefore verified that the rule calls the repository, not that the repository call has 
+any effect. 
+This finding is the reason why layer one was introduced for all thirteen rules rather than only 
+for those where it seemed most obviously necessary. 
+
+\subsection{A Systemic Class of False Negatives}\label{subsec:detection-registry-guard}
+
+Eight of the thirteen rules begin by checking whether the audit field they depend on is present 
+in the field registry, and return without a result if it is not. 
+As a design decision this is sound, since a rule should not guess when the data it requires is 
+absent, as argued in Section~\ref{subsec:detection}.
+
+The consequence, however, is that the detection coverage of the system is bounded from above by 
+the completeness of the audit configuration rather than by the detection logic itself. 
+An operator who shortens the audit format for reasons of data protection or storage reduces the 
+detection surface accordingly, and no alert or warning indicates that this has happened. 
+The rules do not fail in that case, they simply remain silent.
+
+A related case occurred in the development environment of this work. 
+Two rules depend on the service provider configuration, which reaches the backend exclusively 
+through a dedicated ingest path. 
+That path was inactive for an extended period, first because a security configuration no longer 
+permitted the corresponding request and later because the pipeline configuration referenced an 
+outdated address. 
+Both rules therefore evaluated against an index that was no longer being updated, without any 
+indication that their input had become stale.
+
+\subsection{Coverage of the Documented Attack Space}\label{subsec:detection-attack-space}
+
+The figures presented so far describe the relationship between the rules and the tests written 
+for them. 
+They say nothing about the relationship between the rules and the attacks that actually occur, 
+since both the rules and the scenarios originate from the same source.
+
+A partial answer is available through the assignment established in 
+Section~\ref{subsec:detection}, where the rules were related to the vulnerabilities and attack 
+classes documented by Simpson and Groß~\cite{FIMSurvey}. 
+That assignment provides a denominator that was not defined by this work. 
+Of the six cross-protocol issues concerning SAML, the implemented rules address two directly, 
+while a third, namely \texttt{SIGNATURE\_WRAPPING\_SUSPECTED}, addresses the same attack class 
+through a vulnerability that the survey does not list for SAML.
+
+The remaining issues are not addressed, and the reasons are structural rather than a matter of 
+implementation effort. 
+They are discussed in Chapter~\ref{ch:discussion}.
+
+\subsection{Thresholds}\label{subsec:detection-thresholds}
+
+Several rules depend on numerical thresholds, among them the number of failed attempts and the 
+length of the window within which they are counted, the number of logins before a behaviour 
+profile is considered established, and the number of occurrences after which a replay is 
+reported.
+
+None of these values has been subjected to a sensitivity analysis, that is an examination of the 
+threshold at which a true positive turns into a false negative. 
+They were chosen as plausible point values rather than derived from measurement. 
+Since the thresholds were moved into the configuration during this work, such an analysis has 
+become technically possible, but it has not been carried out.
+
+\subsection{Interpretation of the Results}\label{subsec:interpretation-detection}
+
+All thirteen rules behave as intended for the scenarios constructed for them, and all are 
+verified against real persistence rather than against mocks alone. 
+This is a statement about the fidelity of the implementation, and within that scope it is a 
+complete one.
+
+It is not a statement about detection quality in operation. 
+Determining how reliably a rule identifies genuine attacks would require productive traffic in 
+which each login is independently labelled as malicious or benign. 
+Such a dataset does not exist for this work and cannot be produced within a test environment. 
+The circularity of rules and scenarios originating from the same source is therefore not resolved 
+by the figures reported here, although the derivation of the rules themselves, as described in 
+Section~\ref{subsec:detection}, no longer rests on the author's own judgement.
+
+What the evaluation did establish is of a different kind. 
+Three defects became visible that operation itself did not reveal. 
+A missing version field caused every profile update to be discarded silently, a pipeline defect 
+would have reported every encrypted login as unencrypted, and the dependence of two rules on a 
+stale index went unnoticed for months. 
+In all three cases the system continued to run, alerts continued to be produced and the dashboard 
+continued to be populated. 
+The defects became apparent only when the behaviour was measured systematically against an 
+expectation defined in advance.
 
 \section{Performance Overhead}\label{sec:overhead}
 
 This section presents the results of the overhead evaluation of the custom interceptor. 
-The interceptor runs as a \textit{postAuthenticationFlow} within the IdP and therefore 
-lies on the critical path of each authentication process.
+The interceptor runs as a \textit{postAuthenticationFlow} within the IdP and therefore lies on 
+the critical path of each authentication process. 
 The evaluation addresses two questions:
+
 \begin{itemize}
-      \item How much overhead does the interceptor introduce to the end-to-end authentication latency?
-      \item Does the difference between asynchronous and synchronous transmission justify the use of fire-and-forget transmission?
+      \item How much overhead does the interceptor introduce to the end-to-end authentication 
+            latency?
+      \item Does the difference between asynchronous and synchronous transmission justify the 
+            use of fire-and-forget transmission?
 \end{itemize}
 
-To measure the overhead introduced by the interceptor, three different configuration modes 
-are evaluated: \textit{baseline}, \textit{async}, and \textit{sync}.
-In the \textit{baseline} configuration, no \textit{postAuthenticationFlow} is configured for the SP. 
-The custom interceptor is therefore not executed during the authentication process.
-In the \textit{async} configuration, the \textit{postAuthenticationFlow} is enabled for the SP and 
-the custom interceptor is executed. 
-The interceptor transmits the collected data to the monitoring tool without waiting for a response. 
-The transmission therefore follows a fire-and-forget approach.
-The \textit{sync} configuration also executes the custom interceptor for the SP, but the interceptor 
-waits for a response from the monitoring tool before completing its execution. 
+To measure the overhead introduced by the interceptor, three different configuration modes are 
+evaluated: \textit{baseline}, \textit{async}, and \textit{sync}. 
+In the \textit{baseline} configuration, no \textit{postAuthenticationFlow} is configured for the 
+SP. 
+The custom interceptor is therefore not executed during the authentication process. 
+In the \textit{async} configuration, the \textit{postAuthenticationFlow} is enabled for the SP 
+and the custom interceptor is executed. 
+The interceptor transmits the collected data to the monitoring tool without waiting for a 
+response. 
+The transmission therefore follows a fire-and-forget approach. 
+The \textit{sync} configuration also executes the custom interceptor for the SP, but the 
+interceptor waits for a response from the monitoring tool before completing its execution. 
 It therefore verifies whether the transmitted payload was received successfully.
 
-The overhead is evaluated using three measurements.
-First, an \textit{internal} measurement is obtained through the \textit{executionTimeMs} instrumentation 
-within the interceptor. 
-It measures the time required for data collection, hashing, and XML extraction performed by the action. 
-This represents a lower-bound measurement because payload construction and data transmission are excluded. 
-The measured value is included in the generated payload.
-Second, an \textit{external} benchmark is performed by the test class and measures the complete SAML 
-authentication process over HTTP. 
-This measurement includes the effects of the interceptor and the surrounding system and therefore provides 
-an upper-bound estimate of the introduced overhead, although with lower resolution.
-The two measurements complement each other. 
-The internal measurement provides a precise measurement of the interceptor's execution time, while the 
-external measurement captures the overall impact on the authentication process.
-Finally, CPU utilisation is measured to evaluate the additional computational load introduced by the 
-interceptor. 
+Comparing \textit{baseline} against \textit{async} quantifies the cost of the interceptor in its 
+productive configuration. 
+Comparing \textit{async} against \textit{sync} quantifies the cost of the design decision 
+described in Section~\ref{sec:impl-transport}, namely what waiting for a confirmation would cost 
+if the records were transmitted synchronously.
 
-A preliminary run showed three different settings within a single long run. 
-Iteration 0 to 80, showed a JIT warum up section with falling latency. 
-Iteration 80 to 285, had a stable plateau. 
-All subsequent iterations showed a drop in latency. 
-A residual increase persisted starting around iteration 125, which is why the measurement window was 
-chosen conservatively. 
-A warum with 100 iterations and the actual calculation with 100 iterations. 
+\subsection{Measurement Sources}\label{subsec:measurement-sources}
 
-To eliminate position biasy as best as possible a rotating configuration order was implemented. 
-Six runs with a rotating order, so that each configuration occurs exactly twice in each measurement 
-position. 
-Balancing was necessary because a position drift occurs within a session. 
+The overhead is evaluated using three measurements that differ in what they include.
+The \textit{internal} measurement is obtained through the \textit{executionTimeMs} 
+instrumentation within the interceptor. 
+It measures the time required for data collection, hashing, and XML extraction performed by the 
+action. 
+This represents a lower bound, because payload construction and data transmission are excluded. 
+The measured value is included in the generated payload and is therefore available for every 
+login without additional instrumentation.
+
+The \textit{external} measurement records the end-to-end duration of a login as observed by the 
+client. 
+It includes everything the user experiences, from the initial request to the point at which the 
+SP grants access, and therefore covers the interceptor together with all other processing steps 
+of the IdP. 
+This is the measurement that answers whether the overhead is perceptible in practice.
+
+The \textit{CPU} measurement records the processor utilisation of the IdP container during a run 
+via \texttt{docker stats}. 
+It serves as an independent confirmation, since the two latency measurements could in principle 
+fail to detect an effect that manifests itself as additional computation rather than as 
+additional waiting time.
+
+\subsection{Experimental Design}\label{subsec:experimental-design}
+
+The experiment comprises six runs, each executing all three configurations in sequence, which 
+results in eighteen measurements in total. 
+Each run performs one hundred logins per configuration.
+The order of the configurations is rotated between runs so that each configuration occupies each 
+of the three positions exactly twice:
+
+\begin{table}[h]
+\centering
+\caption{Order of configurations across the six runs}\label{tab:config-order}
+\small
+\begin{tabular}{llll}
+\toprule
+Run & Position 1 & Position 2 & Position 3 \\
+\midrule
+1 & baseline & async    & sync     \\
+2 & sync     & async    & baseline \\
+3 & async    & sync     & baseline \\
+4 & sync     & baseline & async    \\
+5 & baseline & sync     & async    \\
+6 & async    & baseline & sync     \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This balancing was necessary because a position drift occurs within a session, which is examined 
+in Section~\ref{subsec:position-drift}. 
+Without rotation, a configuration measured consistently in the last position would appear slower 
+than one measured first, irrespective of its actual cost.
+
 The experimental unit is the run, not the individual login. 
-The 100 logins within a run are pseudo-replicates, and the dominant source of variation is the variation 
-between runs. 
+The one hundred logins within a run share the same JVM state, the same container and the same 
+system load, and are therefore pseudo-replicates rather than independent observations. 
+Treating them as independent would suggest a precision that the experiment does not provide, 
+since the dominant source of variation lies between runs rather than within them. 
+Each run consequently contributes a single value per configuration, namely the median of its one 
+hundred logins, which yields eighteen observations for the analysis.
 
-The internal measurements via \textit{executionTimeMs}, resulted in a total latency of \~320ms, which 
-corresponds to the 0,3\% median of the login duration. 
-Previous individual values of around 2,3 ms were cold-start values (JIT, class loading). 
+Before each measurement run, a single test login verifies that the configuration under test is 
+actually active. 
+The verification queries the monitoring backend and checks whether the login produced an 
+interceptor report, expecting none for \textit{baseline} and one for the other two 
+configurations. 
+This gate was introduced after an earlier series had to be discarded, in which the backend had 
+not been reachable and all three configurations had therefore been measured under effectively 
+identical conditions.
 
+\subsection{Descriptive Results}\label{subsec:descriptive-results}
 
+Table~\ref{tab:latency-percentiles} shows the aggregated latency distribution per configuration 
+across all runs.
 
+\begin{table}[h]
+\centering
+\caption{End-to-end login latency per configuration, aggregated over six runs}\label{tab:latency-percentiles}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Configuration & p50 & p75 & p90 \\
+\midrule
+baseline & 323,9\,ms & 369,5\,ms & 412,3\,ms \\
+async    & 322,3\,ms & 368,7\,ms & 414,2\,ms \\
+sync     & 348,0\,ms & 397,7\,ms & 436,9\,ms \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-The Three Measurement Sources: Internal, External, CPU
-The Evaluation Unit Is the Run, Not the Login—and Why
-The Block Design to Counter Position Drift
-Results for Async and Sync, with Confidence Intervals
-CPU Results as Independent Confirmation
-The Two Errors in My Own Analysis Script
+All distributions are right-skewed, with the mean above the median and a larger spread at the 
+upper percentiles. 
+Percentiles are therefore reported rather than means, and the median is used for the comparisons 
+that follow.
+
+The internal measurement yields a median of 0,90\,ms for the work performed within the 
+interceptor, which corresponds to approximately 0,3\% of the total login duration. 
+Individual values of around 2,3\,ms occurred only at the beginning of a run and are attributable 
+to class loading and just-in-time compilation rather than to steady-state operation.
+
+\subsection{Paired Analysis of the Latency}\label{subsec:paired-latency}
+
+The raw configuration means still contain two known sources of variation, namely the difference 
+between runs and the position drift within a run. 
+Although the design balances both, the values themselves remain affected by them. 
+A linear model with configuration as a factor and run and measurement position as block factors 
+accounts for these effects explicitly before the configuration difference is estimated, which 
+narrows the confidence intervals and permits a fair comparison even where individual runs 
+happened to be slower or faster.
+
+\begin{table}[h]
+\centering
+\caption{Paired comparison of the login latency, residual SD 22,5\,ms, df = 8}\label{tab:paired-latency}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Comparison & Difference & 95\% CI & t & Direction \\
+\midrule
+async $-$ baseline & $-1,6$\,ms  & $[-31,5;\ +28,3]$ & $-0,12$ & 3/6 positive \\
+sync $-$ baseline  & $+24,1$\,ms & $[-5,8;\ +54,0]$  & $+1,86$ & 5/6 positive \\
+sync $-$ async     & $+25,7$\,ms & $[-4,2;\ +55,6]$  & $+1,98$ & 6/6 positive \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+None of the three comparisons is significant at the five percent level, since all confidence 
+intervals include zero. 
+The direction, however, is consistent for \textit{sync} against both other configurations, which 
+is positive in five and six of the six runs respectively.
+
+The direction column is not part of the model but a simple check. 
+For each run the raw paired difference between two configurations measured within that same run 
+is computed, and the number of positive differences is counted. 
+A consistent direction across runs is an indication that the effect is real even where the 
+confidence interval does not exclude zero, whereas an effect that changes sign between runs is 
+more likely to be noise.
+
+\subsection{CPU Utilisation}\label{subsec:cpu-utilisation}
+
+The CPU measurement records the utilisation of the IdP container, where 100\% corresponds to one 
+fully loaded core. 
+Sixteen cores were available and no resource limits were configured. 
+The startup phase preceding each measurement, during which class loading and just-in-time 
+compilation produce peaks of up to 400\%, was excluded on the basis of the start time recorded in 
+the corresponding benchmark file.
+
+\begin{table}[h]
+\centering
+\caption{CPU utilisation of the IdP container per configuration}\label{tab:cpu-aggregated}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Configuration & Mean (SD) & Median & Min & Max \\
+\midrule
+baseline & 40,6 (4,2) & 41,0 & 21,8 & 82,0  \\
+async    & 46,9 (4,0) & 47,5 & 22,8 & 105,0 \\
+sync     & 42,5 (4,1) & 44,2 & 19,2 & 99,1  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Mean, standard deviation and median are computed across the six run values per configuration, 
+whereas minimum and maximum refer to all measurements of that configuration.
+The same block model was applied to the CPU values, once with the run mean and once with the run 
+median as the target variable.
+
+\begin{table}[h]
+\centering
+\caption{Paired comparison of the CPU utilisation, mean-based, residual SD 5,9 percentage points, df = 8}\label{tab:paired-cpu-mean}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Comparison & Difference & 95\% CI & t & Direction \\
+\midrule
+async $-$ baseline & $+5,7$ pp & $[-2,1;\ +13,5]$ & $+1,68$ & 4/6 positive \\
+sync $-$ baseline  & $+1,9$ pp & $[-5,9;\ +9,8]$  & $+0,57$ & 4/6 positive \\
+sync $-$ async     & $-3,8$ pp & $[-11,6;\ +4,0]$ & $-1,12$ & 1/6 positive \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Paired comparison of the CPU utilisation, median-based, residual SD 15,1 percentage points, df = 8}\label{tab:paired-cpu-median}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Comparison & Difference & 95\% CI & t & Direction \\
+\midrule
+async $-$ baseline & $+15,0$ pp & $[-5,1;\ +35,1]$  & $+1,72$ & 4/6 positive \\
+sync $-$ baseline  & $+10,0$ pp & $[-10,1;\ +30,2]$ & $+1,15$ & 4/6 positive \\
+sync $-$ async     & $-5,0$ pp  & $[-25,1;\ +15,1]$ & $-0,57$ & 1/6 positive \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+None of the six comparisons is significant. 
+In both variants \textit{async} rather than \textit{sync} holds the highest point estimate, which 
+is consistent with the nature of the two modes. 
+Synchronous transmission spends time waiting for a response, which lengthens the login without 
+consuming processor time, whereas asynchronous transmission performs the same work in the 
+background and therefore appears in the processor utilisation rather than in the latency.
+
+\subsection{Position Drift as a Methodological Finding}\label{subsec:position-drift}
+
+The measurements also permit an observation about the measurement environment itself.
+
+\begin{table}[h]
+\centering
+\caption{Mean latency by measurement position within a run}\label{tab:position-drift}
+\small
+\begin{tabular}{lr}
+\toprule
+Position within the run & Mean p50 \\
+\midrule
+1 & 323,2\,ms \\
+2 & 326,1\,ms \\
+3 & 346,1\,ms \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The third position lies 22,9\,ms above the first. 
+This magnitude is comparable to the effect the experiment set out to measure, namely the 24,1\,ms 
+difference between \textit{sync} and \textit{baseline}. 
+Had the configurations been measured in a fixed order, the position effect would have been 
+indistinguishable from the configuration effect, and whichever configuration occupied the last 
+position would have appeared slower.
+
+The balanced design prevents this confounding, although the drift still increases the residual 
+variance. 
+The rotation of the measurement order was therefore necessary rather than cosmetic, and this is 
+arguably the most transferable finding of the performance evaluation, since it applies to any 
+comparison of configurations measured within a shared session.
+
+\subsection{Resolution of the Measurement Environment}\label{subsec:measurement-resolution}
+
+The discarded preliminary series, in which the backend had not been reachable, provides an 
+empirical measure of the noise floor. 
+Since all three configurations were effectively identical under that condition, its twelve runs 
+constitute twelve repetitions of the same measurement. 
+They yield a mean of 324,6\,ms with a standard deviation of 18,1\,ms and a span of 51\,ms.
+
+This quantifies, independently of the actual measurement series, which effect sizes the 
+environment is able to resolve at all. 
+It also agrees with the between-run variation observed in the valid series, which lies between 16 
+and 23\,ms.
+
+\subsection{Correction of the Analysis Script}\label{subsec:script-correction}
+
+The figures reported above differ slightly from an earlier version of this analysis. 
+The evaluation script contained two indexing errors, among them a missing final measurement row 
+per run during the computation of the means. 
+Both were corrected, and the values presented here reflect the corrected computation.
+
+The errors are worth reporting because they were not visible in the output. 
+The script produced plausible figures in both cases, and the discrepancy only became apparent 
+when individual values were traced back to the raw measurement files. 
+This mirrors the pattern observed in the correlation evaluation, where a defect likewise 
+manifested itself not as an error but as a result that appeared correct.
+
+\subsection{Interpretation of the Results}\label{subsec:interpretation-overhead}
+
+The asynchronous interceptor introduces no measurable overhead. 
+The point estimate lies at $-1,6$\,ms and the upper bound of the confidence interval at 
+approximately 28\,ms, which is below nine percent of the login duration. 
+The internal measurement reports 0,90\,ms for the work performed within the action. 
+Both sources support the same conclusion, namely that the overhead is not perceptible to users.
+
+That the external benchmark shows no effect is not a weakness of the measurement but a 
+consequence of the magnitudes involved. 
+An effect of one millisecond cannot become visible in a measurement of 320\,ms with a 
+between-run spread of roughly 20\,ms, irrespective of how carefully the experiment is conducted.
+
+The synchronous mode tends to be slower, but this is not statistically established. 
+The point estimate places \textit{sync} between 24 and 26\,ms above the other two configurations, 
+which is plausibly explained by the blocking HTTP round trip to the backend, including the 
+Elasticsearch write and the correlation attempt, within the critical path. 
+The direction is consistent across runs, yet with six runs per configuration the confidence 
+intervals do not exclude zero. 
+This is a clear indication rather than a confirmation.
+
+For the design decision described in Section~\ref{sec:impl-transport}, the argument nevertheless 
+points in the same direction. 
+Even the point estimate for an additional synchronous round trip lies in the low tens of 
+milliseconds rather than in the hundreds. 
+A firmer statistical foundation would require a larger number of runs, which is discussed in 
+Section~\ref{sec:validity}.
 
 \section{Threats to Validity}\label{sec:validity}
 

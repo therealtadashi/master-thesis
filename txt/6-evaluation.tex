@@ -359,30 +359,34 @@ browser users do so in only 23\%.
 The lower overall precision of the synthetic dataset therefore describes the stress case 
 correctly, but overstates how often it occurs under the observed user load.
 
-\subsubsection{Influence of \textit{ipHash}}\label{subsubsec:influence-of-iphash}
+\subsubsection{The Independent Contribution of \textit{ipHash}}\label{subsubsec:influence-of-iphash}
 
-It remained unclear whether \textit{ipHash} actually contributed to the separation in the multi-user 
-datasets, or whether \textit{usernameHash} alone accounted for the measured precision the assumption 
-was that there was a shared \textit{ipHash} across all benchmark processes. 
-A control query on the raw data refuted this for the browser path. 
-Each \texttt{BrowserWebDriverContainer} started in parallel is assigned its own Docker Bridge IP. 
-In Section~\ref{subsubsec:precision-multiple-browser-users}, the three test users thus actually had 
-three different \textit{ipHash} values, not a shared one. 
+It remained unclear whether \textit{ipHash} actually contributed to the separation in the 
+multi-user datasets, or whether \textit{usernameHash} alone accounted for the measured precision. 
+The initial assumption had been that all benchmark processes would share a common 
+\textit{ipHash}. 
+A control query on the raw data refuted this for the browser path, since each 
+\texttt{BrowserWebDriverContainer} started in parallel is assigned its own Docker bridge 
+address. 
+The three test users in Section~\ref{subsubsec:precision-multiple-browser-users} therefore had 
+three distinct \textit{ipHash} values rather than a shared one.
 
-This could be verified directly against the existing ground truth without a new login run. 
-\texttt{CorrelationPrecisionAnalysis} was supplemented with a third, purely analytical strategy that 
-searches only for SP + \textit{ipHash} + \textit{time window} (\textit{usernameHash} omitted). 
-Not a production strategy, but a diagnostic variant to isolate the contribution of \textit{ipHash}. 
-The data source is the same 606 reports from Section~\ref{subsubsec:precision-multiple-browser-users}, 
-reanalyzed using the additional IP_ONLY strategy (hypothetical). 
+This could be verified against the existing ground truth without performing a new login run. 
+\texttt{CorrelationPrecisionAnalysis} was extended by a third, purely analytical strategy that 
+searches by SP, \textit{ipHash} and time window while omitting \textit{usernameHash}. 
+This is not a productive strategy but a diagnostic variant introduced to isolate the 
+contribution of \textit{ipHash}. 
+The data source is the same 606 reports as in 
+Section~\ref{subsubsec:precision-multiple-browser-users}, reanalysed with the additional 
+strategy.
 
 \begin{table}[h]
 \centering
-\caption{Correlation with \textit{ipHash} (n = 606)}\label{tab:ip-hash-correlation}
+\caption{Precision with and without \textit{usernameHash} (n = 606)}\label{tab:ip-hash-correlation}
 \small
 \begin{tabular}{lrr}
 \toprule
-Strategy & Precision (all windows) & Candidates \\
+Strategy & Precision (all windows) & Candidates ($\pm$1\,s) \\
 \midrule
 \texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 1,00 \\
 \texttt{IP\_ONLY}                & 100\% & 1,00 \\
@@ -390,16 +394,16 @@ Strategy & Precision (all windows) & Candidates \\
 \end{tabular}
 \end{table}
 
-The comparison across all six window sizes shows no convergence, but rather exact agreement 
-down to the second decimal place. 
+The comparison across all six window sizes shows not merely a convergence but exact agreement 
+down to the second decimal place, as Table~\ref{tab:ip-hash-candidates} shows.
 
 \begin{table}[h]
 \centering
-\caption{Candidates with \textit{ipHash} (n = 606)}\label{tab:ip-hash-candidates}
+\caption{Mean candidate count per window (n = 606)}\label{tab:ip-hash-candidates}
 \small
 \begin{tabular}{lrr}
 \toprule
-Window & \texttt{HASH\_AND\_TIME\_WINDOW} Candidates & \texttt{IP\_ONLY} Candidates \\
+Window & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{IP\_ONLY} \\
 \midrule
 $\pm$1\,s  & 1,00  & 1,00  \\
 $\pm$2\,s  & 2,19  & 2,19  \\
@@ -411,52 +415,51 @@ $\pm$60\,s & 41,58 & 41,58 \\
 \end{tabular}
 \end{table}
 
-Even when considering local login density, both strategies yield identical results, including 
-in the otherwise critical <100ms bucket (138/138 matches, 100\%). 
-In this dataset, \textit{usernameHash} never once filters out a candidate that \textit{ipHash} 
-would not have already ruled out on its own. 
-Because each browser container had its own stable IP address, every \textit{ipHash} bucket was 
-already valid based on the IP alone.
+Both strategies also coincide when broken down by local login density, including in the 
+otherwise critical bucket below 100\,ms, where both achieve 138 of 138 matches. 
+In this dataset \textit{usernameHash} never once excludes a candidate that \textit{ipHash} had 
+not already ruled out on its own, because every browser container had a stable address of its 
+own and each \textit{ipHash} bucket was therefore already unambiguous.
 
-This shows that \textit{ipHash} distinguishes between separate sources (different devices, networks, 
-or, as here, containers) just as effectively as the full \texttt{HASH\_AND\_TIME\_WINDOW} combination. 
-It does not show what happens when multiple users are behind the same IP, such as corporate NAT or 
-shared Wi-Fi. 
-Because this scenario could not be replicated with the existing test setup (one container per user). 
+This shows that \textit{ipHash} separates distinct sources, whether different devices, networks 
+or, as here, containers, just as effectively as the full combination of both identifiers. 
+It does not show what happens when several users share one address, as is the case behind 
+corporate NAT or on a public wireless network. 
+That scenario could not be produced with the existing test setup, which assigns one container 
+per user, and is examined in the following section.
 
-\subsubsection{Precision among Multiple Users Sharing the same IP Address (NAT Scenario)}\label{subsubsec:precision-nat}
+\subsubsection{Precision among Multiple Users Sharing One Address}\label{subsubsec:precision-nat}
 
-Section~\ref{subsubsec:influence-of-iphash} proved the influence of \textit{ipHash} for different 
-sources. 
-The opposite is the most relevant case in praxis, which is multiple users behind the same IP 
-address. 
-This could be the same company NAT or public WLAN, which could not be reproduced in the test 
-environment. 
-For that a new tool was created, which manages multiple users as parallel threads inside a process 
-instead of separate containers. 
-Because all threads send from the same machine, they share the same source IP. 
-A cardinality aggregation on \textit{ip\_hash.keyword} over the duration of the run confirms exactly 
-one distinct value across all 600 documents, thus, the shared IP is not merely assumed but measured. 
-The data source are three different test users each with 200 logins, that are started from the same 
-process. 
+The preceding section established the contribution of \textit{ipHash} only for separate sources. 
+The opposite case, several users behind a shared address, is at least as relevant in practice 
+and could not be reproduced with the container based setup. 
+A dedicated measurement tool was therefore developed that runs multiple users as parallel 
+threads within a single process rather than in separate containers. 
+Since all threads send from the same machine, they necessarily share a source address, which 
+follows from the architecture rather than from any network configuration.
+
+Before the evaluation, a cardinality aggregation on \textit{ip\_hash} over the period of the run 
+confirmed exactly one distinct value across all 600 documents. 
+The shared address is therefore measured rather than assumed. 
+The data source is three test users with 200 logins each, started from the same process.
 
 \begin{table}[h]
 \centering
-\caption{Procision of Strategies in NAT-Scenario}\label{tab:precision-strategy-nat}
+\caption{Precision of the strategies under a shared address (n = 600)}\label{tab:precision-strategy-nat}
 \small
 \begin{tabular}{lrr}
 \toprule
-Strategy & Precision (All Windows 1-60s) & Coverage \\
+Strategy & Precision (all windows 1--60\,s) & Coverage \\
 \midrule
-\texttt{HASH\_AND\_TIME\_WINDOW} & 100,00\% & 100\% \\
-\texttt{TIME\_WINDOW}            & 73,67\%  & 100\% \\
+\texttt{HASH\_AND\_TIME\_WINDOW} & 100\%   & 100\% \\
+\texttt{TIME\_WINDOW}            & 73,67\% & 100\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[h]
 \centering
-\caption{Procision of Strategies in NAT-Scenario after Local Login Density (Window = 10\,s)}\label{tab:precision-strategy-nat-local-density}
+\caption{Precision by local login density under a shared address, window = 10\,s}\label{tab:precision-strategy-nat-local-density}
 \small
 \begin{tabular}{lrrr}
 \toprule
@@ -464,47 +467,43 @@ Density Bucket & n & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
 \midrule
 < 100\,ms      & 504 & 100\% & 68,65\% \\
 100--300\,ms   & 96  & 100\% & 100\%   \\
-300\,ms--1\,s  & 0   & -     & -       \\
-> 1\,s         & 0   & -     & -       \\
+300\,ms--1\,s  & 0   & ---   & ---     \\
+> 1\,s         & 0   & ---   & ---     \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\texttt{HASH\_AND\_TIME\_WINDOW} remains at 100\% despite the split IP. 
-\textit{usernameHash} accounts for the entire separation on its own, regardless of whether 
-\textit{ipHash} contributes anything. 
-\texttt{IP\_ONLY} was used as a cross-check. 
-The diagnostic strategy from Section~\ref{subsubsec:influence-of-iphash} yields exactly the same 
-numbers here as \texttt{TIME\_WINDOW}, identical for every window size and every density bucket 
-(73.67\% precision, 442 hits, 158 misclassifications). 
-This is no coincidence, but rather the inevitable consequence of a single shared IP. 
-A filter for exactly this one \textit{ipHash} value, the only one in the entire time period does 
-not exclude a single candidate that would not already be within the time window. 
-\textit{ipHash} thus demonstrably contributes nothing to the separation in this dataset. 
-The exact opposite of Section~\ref{subsubsec:influence-of-iphash}, where \texttt{IP\_ONLY} coincided 
-with \texttt{HASH\_AND\_TIME\_WINDOW} because in that case, the IP address alone was sufficient for 
-filtering.
+\texttt{HASH\_AND\_TIME\_WINDOW} remains at 100\% despite the shared address, since 
+\textit{usernameHash} carries the entire separation on its own, irrespective of whether 
+\textit{ipHash} contributes anything.
 
-The precision of \texttt{TIME\_WINDOW} at 73.67\%, the value falls between the result of 
-Section~\ref{subsubsec:precision-time-window-multi-user} (65.00\%, synthetic HTTP harness, single 
-process) and Section~\ref{subsubsec:precision-multiple-browser-users} (89.93\%, real browsers, 
-separate containers). 
-This aligns with the density. 
-504 out of 600 logins (84\%) have intervals under 100 ms, which is close to the 86.8\% in 
-Section~\ref{subsubsec:precision-time-window-multi-user}, and significantly higher than the 
-22.8\% in Section~\ref{subsubsec:precision-multiple-browser-users}. 
-Multiple threads running without wait times from a single process generate traffic density 
-similar to that of the serial HTTP harness from Section~\ref{subsubsec:precision-time-window-multi-user} 
-and Section~\ref{subsubsec:precision-multiple-browser-users}, not the timing of real 
-browser interactions from Section~\ref{subsubsec:precision-browser-traffic} and 
-Section~\ref{subsubsec:precision-multiple-browser-users}. 
-The effect thus stems primarily from the login density, not from the shared IP itself, which is 
-entirely in line with the core message already established in 
+The diagnostic strategy of the preceding section serves as a cross-check and yields exactly the 
+same figures here as \texttt{TIME\_WINDOW}, identical for every window size and every density 
+bucket at 73,67\% precision with 442 matches and 158 incorrect assignments. 
+This is not a coincidence but the necessary consequence of a single shared address. 
+A filter for the only \textit{ipHash} value occurring in the entire period excludes no candidate 
+that would not already fall within the time window. 
+In this dataset \textit{ipHash} therefore demonstrably contributes nothing to the separation, 
+which is the exact counterpart to the preceding section, where \texttt{IP\_ONLY} coincided with 
+\texttt{HASH\_AND\_TIME\_WINDOW} because the address alone already sufficed.
+
+The precision of \texttt{TIME\_WINDOW} at 73,67\% falls between the 65,00\% measured in 
+Section~\ref{subsubsec:precision-time-window-multi-user} and the 89,93\% measured in 
+Section~\ref{subsubsec:precision-multiple-browser-users}, which is consistent with the observed 
+density. 
+504 of 600 logins, or 84\%, lie less than 100\,ms apart, close to the 86,8\% of the synthetic 
+harness and well above the 22,8\% of the browser based measurement. 
+Several threads running without waiting times from a single process therefore generate a density 
+comparable to the serial HTTP harness rather than to real browser interaction. 
+The effect stems primarily from login density and not from the shared address itself, which is 
+consistent with the conclusion already drawn in 
 Section~\ref{subsubsec:precision-multiple-browser-users}.
-Offset is calculated by (\textit{receivedAt} - \textit{event\_time}): min = -50 ms, p50 = -26 ms, 
-p95 = -21 ms, max = 110 ms (n = 600) in the same order of magnitude as the other submeasurements.
+The offset between report reception and event time ranges from $-50$ to $+110$\,ms with a median 
+of $-26$\,ms (n = 600), which is of the same order of magnitude as in the other measurements.
 
 \subsection{Interpretation of the Results for Correlation}\label{subsec:interpretation-correlation}
+
+
 
 \section{Detection}\label{sec:eval-detection}
 

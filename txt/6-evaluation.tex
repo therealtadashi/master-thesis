@@ -120,12 +120,12 @@ Each event therefore carries a distinct value, in contrast to the 5.4 events per
 observed with the ingest time.
 Table~\ref{tab:timestamp-precision} and Table~\ref{tab:event-time-precision} show the precision 
 of the heuristic strategy against the exact ground truth before and after this change. 
-The two are based on separate runs, since the change to \textit{event_time} required the data 
+The two are based on separate runs, since the change to \textit{event\_time} required the data 
 to be collected anew. 
 
 \begin{table}[h]
 \centering
-\caption{Precision of \texttt{HASH_AND_TIME_WINDOW} based on the Filebeat ingest time, single user via HTTP harness (n = 415)}\label{tab:timestamp-precision}
+\caption{Precision of \texttt{HASH\_AND\_TIME\_WINDOW} based on the Filebeat ingest time, single user via HTTP harness (n = 415)}\label{tab:timestamp-precision}
 \small
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -142,7 +142,7 @@ $\pm$60\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 192,60 \\
 
 \begin{table}[h]
 \centering
-\caption{Precision of \texttt{HASH_AND_TIME_WINDOW} based on the IdP event time, single user via HTTP harness (n = 203)}\label{tab:event-time-precision}
+\caption{Precision of \texttt{HASH\_AND\_TIME\_WINDOW} based on the IdP event time, single user via HTTP harness (n = 203)}\label{tab:event-time-precision}
 \small
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -218,7 +218,7 @@ sufficed to include the correct candidate, only not always as the closest one.
 
 \begin{table}[h]
 \centering
-\caption{Precision of \texttt{TIME_WINDOW} by local login density, HTTP harness, window = 10\,s}\label{tab:local-density}
+\caption{Precision of \texttt{TIME\_WINDOW} by local login density, HTTP harness, window = 10\,s}\label{tab:local-density}
 \small
 \begin{tabular}{lrrrr}
 \toprule
@@ -609,23 +609,76 @@ established rather than constituting a new risk specific to network address tran
 
 \section{Detection}\label{sec:eval-detection}
 
-Die drei Testschichten und was jede prüfen kann
-Abdeckung: dreizehn von dreizehn auf Schicht eins, fünf auf Schicht zwei
-Warum nicht alle auf Schicht zwei
-Der Logstash-Fehler und dass nur Schicht zwei ihn finden konnte
-Die Abdeckungsanalyse gegen den FIM-Survey, mit den nicht adressierten Zeilen
-Falsch-Positiv-Baseline, sobald gemessen
-Ehrlich: Was diese Zahlen belegen und was nicht
+The three test layers and what each can check
+Coverage: thirteen out of thirteen on layer one, five on layer two
+Why not all of them on layer two
+The Logstash error and the fact that only layer two could detect it
+The coverage analysis against the FIM survey, including the unaddressed lines
+False-positive baseline, as soon as it's measured
+Honestly: What these numbers prove—and what they don't
 
 \section{Performance Overhead}\label{sec:overhead}
 
-Drei Konfigurationen und was jeder Vergleich beziffert
-Die drei Messquellen: intern, extern, CPU
-Die Auswerteeinheit ist der Lauf, nicht der Login — und warum
-Das Blockdesign gegen die Positionsdrift
-Ergebnis für async und für sync, mit Konfidenzintervallen
-CPU-Ergebnis als unabhängige Bestätigung
-Die zwei Fehler im eigenen Analyseskript
+This section presents the results of the overhead evaluation of the custom interceptor. 
+The interceptor runs as a \textit{postAuthenticationFlow} within the IdP and therefore 
+lies on the critical path of each authentication process.
+The evaluation addresses two questions:
+\begin{itemize}
+      \item How much overhead does the interceptor introduce to the end-to-end authentication latency?
+      \item Does the difference between asynchronous and synchronous transmission justify the use of fire-and-forget transmission?
+\end{itemize}
+
+To measure the overhead introduced by the interceptor, three different configuration modes 
+are evaluated: \textit{baseline}, \textit{async}, and \textit{sync}.
+In the \textit{baseline} configuration, no \textit{postAuthenticationFlow} is configured for the SP. 
+The custom interceptor is therefore not executed during the authentication process.
+In the \textit{async} configuration, the \textit{postAuthenticationFlow} is enabled for the SP and 
+the custom interceptor is executed. 
+The interceptor transmits the collected data to the monitoring tool without waiting for a response. 
+The transmission therefore follows a fire-and-forget approach.
+The \textit{sync} configuration also executes the custom interceptor for the SP, but the interceptor 
+waits for a response from the monitoring tool before completing its execution. 
+It therefore verifies whether the transmitted payload was received successfully.
+
+The overhead is evaluated using three measurements.
+First, an \textit{internal} measurement is obtained through the \textit{executionTimeMs} instrumentation 
+within the interceptor. 
+It measures the time required for data collection, hashing, and XML extraction performed by the action. 
+This represents a lower-bound measurement because payload construction and data transmission are excluded. 
+The measured value is included in the generated payload.
+Second, an \textit{external} benchmark is performed by the test class and measures the complete SAML 
+authentication process over HTTP. 
+This measurement includes the effects of the interceptor and the surrounding system and therefore provides 
+an upper-bound estimate of the introduced overhead, although with lower resolution.
+The two measurements complement each other. 
+The internal measurement provides a precise measurement of the interceptor's execution time, while the 
+external measurement captures the overall impact on the authentication process.
+Finally, CPU utilisation is measured to evaluate the additional computational load introduced by the 
+interceptor. 
+
+A preliminary run showed three different settings within a single long run. 
+Iteration 0 to 80, showed a JIT warum up section with falling latency. 
+Iteration 80 to 285, had a stable plateau. 
+All subsequent iterations showed a drop in latency. 
+A residual increase persisted starting around iteration 125, which is why the measurement window was 
+chosen conservatively. 
+A warum with 100 iterations and the actual calculation with 100 iterations. 
+
+To eliminate position biasy as best as possible a rotating configuration order was implemented. 
+Six runs with a rotating order, so that each configuration occurs exactly twice in each measurement 
+position. 
+Balancing was necessary because a position drift occurs within a session. 
+The experimental unit is the run, not the individual login. 
+The 100 logins within a run are pseudo-replicates, and the dominant source of variation is the variation 
+between runs. 
+
+
+The Three Measurement Sources: Internal, External, CPU
+The Evaluation Unit Is the Run, Not the Login—and Why
+The Block Design to Counter Position Drift
+Results for Async and Sync, with Confidence Intervals
+CPU Results as Independent Confirmation
+The Two Errors in My Own Analysis Script
 
 \section{Threats to Validity}\label{sec:validity}
 

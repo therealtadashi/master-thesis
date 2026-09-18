@@ -424,6 +424,88 @@ It does not show what happens when multiple users are behind the same IP, such a
 shared Wi-Fi. 
 Because this scenario could not be replicated with the existing test setup (one container per user). 
 
+\subsubsection{Precision among Multiple Users Sharing the same IP Address (NAT Scenario)}\label{subsubsec:precision-nat}
+
+Section~\ref{subsubsec:influence-of-iphash} proved the influence of \textit{ipHash} for different 
+sources. 
+The opposite is the most relevant case in praxis, which is multiple users behind the same IP 
+address. 
+This could be the same company NAT or public WLAN, which could not be reproduced in the test 
+environment. 
+For that a new tool was created, which manages multiple users as parallel threads inside a process 
+instead of separate containers. 
+Because all threads send from the same machine, they share the same source IP. 
+A cardinality aggregation on \textit{ip\_hash.keyword} over the duration of the run confirms exactly 
+one distinct value across all 600 documents, thus, the shared IP is not merely assumed but measured. 
+The data source are three different test users each with 200 logins, that are started from the same 
+process. 
+
+\begin{table}[h]
+\centering
+\caption{Procision of Strategies in NAT-Scenario}\label{tab:precision-strategy-nat}
+\small
+\begin{tabular}{lrr}
+\toprule
+Strategy & Precision (All Windows 1-60s) & Coverage \\
+\midrule
+\texttt{HASH\_AND\_TIME\_WINDOW} & 100,00\% & 100\% \\
+\texttt{TIME\_WINDOW}            & 73,67\%  & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Procision of Strategies in NAT-Scenario after Local Login Density (Window = 10\,s)}\label{tab:precision-strategy-nat-local-density}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Density Bucket & n & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
+\midrule
+< 100\,ms      & 504 & 100\% & 68,65\% \\
+100--300\,ms   & 96  & 100\% & 100\%   \\
+300\,ms--1\,s  & 0   & -     & -       \\
+> 1\,s         & 0   & -     & -       \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\texttt{HASH\_AND\_TIME\_WINDOW} remains at 100\% despite the split IP. 
+\textit{usernameHash} accounts for the entire separation on its own, regardless of whether 
+\textit{ipHash} contributes anything. 
+\texttt{IP\_ONLY} was used as a cross-check. 
+The diagnostic strategy from Section~\ref{subsubsec:influence-of-iphash} yields exactly the same 
+numbers here as \texttt{TIME\_WINDOW}, identical for every window size and every density bucket 
+(73.67\% precision, 442 hits, 158 misclassifications). 
+This is no coincidence, but rather the inevitable consequence of a single shared IP. 
+A filter for exactly this one \textit{ipHash} value, the only one in the entire time period does 
+not exclude a single candidate that would not already be within the time window. 
+\textit{ipHash} thus demonstrably contributes nothing to the separation in this dataset. 
+The exact opposite of Section~\ref{subsubsec:influence-of-iphash}, where \texttt{IP\_ONLY} coincided 
+with \texttt{HASH\_AND\_TIME\_WINDOW} because in that case, the IP address alone was sufficient for 
+filtering.
+
+The precision of \texttt{TIME\_WINDOW} at 73.67\%, the value falls between the result of 
+Section~\ref{subsubsec:precision-time-window-multi-user} (65.00\%, synthetic HTTP harness, single 
+process) and Section~\ref{subsubsec:precision-multiple-browser-users} (89.93\%, real browsers, 
+separate containers). 
+This aligns with the density. 
+504 out of 600 logins (84\%) have intervals under 100 ms, which is close to the 86.8\% in 
+Section~\ref{subsubsec:precision-time-window-multi-user}, and significantly higher than the 
+22.8\% in Section~\ref{subsubsec:precision-multiple-browser-users}. 
+Multiple threads running without wait times from a single process generate traffic density 
+similar to that of the serial HTTP harness from Section~\ref{subsubsec:precision-time-window-multi-user} 
+and Section~\ref{subsubsec:precision-multiple-browser-users}, not the timing of real 
+browser interactions from Section~\ref{subsubsec:precision-browser-traffic} and 
+Section~\ref{subsubsec:precision-multiple-browser-users}. 
+The effect thus stems primarily from the login density, not from the shared IP itself, which is 
+entirely in line with the core message already established in 
+Section~\ref{subsubsec:precision-multiple-browser-users}.
+Offset is calculated by (\textit{receivedAt} - \textit{event\_time}): min = -50 ms, p50 = -26 ms, 
+p95 = -21 ms, max = 110 ms (n = 600) in the same order of magnitude as the other submeasurements.
+
+\subsection{Interpretation of the Results for Correlation}\label{subsec:interpretation-correlation}
+
 \section{Detection}\label{sec:eval-detection}
 
 Die drei Testschichten und was jede prüfen kann

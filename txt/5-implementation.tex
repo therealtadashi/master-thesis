@@ -206,13 +206,19 @@ in Section~\ref{sec:impl-aggregation} before it is applied.
 Where a required field is not recorded by the deployment, the strategy withdraws and the next 
 one in the chain is attempted.
 
-The first strategy matches the inbound message identifier of the interceptor report against the 
-corresponding audit field. 
+The first strategy, \texttt{INBOUND\_MESSAGE\_ID}, matches the inbound message identifier of 
+the interceptor report against the corresponding audit field. 
 Since this value is unique per request, a match establishes the relationship without ambiguity. 
-The second strategy narrows the candidates by SP, pseudonymised subject and pseudonymised client 
-address, and additionally restricts them to a configurable time window around the event. 
-The third strategy retains only the SP and the time window, and is therefore used where neither 
-the message identifier nor the pseudonymised identifiers are recorded.
+The second strategy, \texttt{HASH\_AND\_TIME\_WINDOW}, narrows the candidates by SP, pseudonymised 
+subject and pseudonymised client address, and additionally restricts them to a configurable time 
+window around the event. 
+The third strategy, \texttt{TIME\_WINDOW}, retains only the SP and the time window, and is therefore 
+used where neither the message identifier nor the pseudonymised identifiers are recorded. 
+
+The pseudonymised subject appears under two names, since the interceptor report stores it as 
+\textit{subjectHash} whereas the audit entry records it as \textit{usernameHash}. 
+Both hold the same value, derived from the same identifier with the same salt, and the distinction 
+is one of naming within the respective data source rather than of content. 
 
 Both time window strategies may return more than one candidate. 
 In this case the entry with the smallest temporal distance to the interceptor report is selected. 

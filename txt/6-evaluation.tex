@@ -80,7 +80,7 @@ In terms of candidate ambiguity this represents the worst case, since all candid
 same \textit{subjectHash}, \textit{ipHash} and SP, leaving time as the only distinguishing 
 feature.
 
-\subsection{Findings of the Evaluation}\label{subsec:eval-correlation-findings}
+\subsection{Defects Identified during the Evaluation}\label{subsec:eval-correlation-findings}
 
 Before the evaluation, 3{,}690 out of 3{,}690 correlations had been established through the 
 hashed identity and time window strategy, and not a single one through 
@@ -118,13 +118,14 @@ With \textit{event\_time} as the basis, the temporal resolution improves to 1.0 
 timestamp. 
 Each event therefore carries a distinct value, in contrast to the 5.4 events per timestamp 
 observed with the ingest time.
-
 Table~\ref{tab:timestamp-precision} and Table~\ref{tab:event-time-precision} show the precision 
-of the heuristic strategy against the exact ground truth before and after this change.
+of the heuristic strategy against the exact ground truth before and after this change. 
+The two are based on separate runs, since the change to \textit{event_time} required the data 
+to be collected anew. 
 
 \begin{table}[h]
 \centering
-\caption{Before the change, based on \textit{timestamp} (n = 415)}\label{tab:timestamp-precision}
+\caption{Precision of \texttt{HASH_AND_TIME_WINDOW} based on the Filebeat ingest time, single user via HTTP harness (n = 415)}\label{tab:timestamp-precision}
 \small
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -141,7 +142,7 @@ $\pm$60\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 192,60 \\
 
 \begin{table}[h]
 \centering
-\caption{After the change, based on \textit{event\_time} (n = 203)}\label{tab:event-time-precision}
+\caption{Precision of \texttt{HASH_AND_TIME_WINDOW} based on the IdP event time, single user via HTTP harness (n = 203)}\label{tab:event-time-precision}
 \small
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -170,6 +171,7 @@ $-98$\,ms & $-32$\,ms & $-23$\,ms & $+75$\,ms & 173\,ms \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:time-offset} shows the distribution of this offset. 
 The predominantly negative offset is consistent with the position of the interceptor in the 
 profile flow. 
 It runs as a \textit{postAuthenticationFlow} in the middle of the profile, whereas \texttt{\%T} 
@@ -193,7 +195,7 @@ The results are summarised in Table~\ref{tab:precision-strategies}.
 
 \begin{table}[h]
 \centering
-\caption{Precision of the strategies (n = 600)}\label{tab:precision-strategies}
+\caption{Precision of both strategies under three concurrent users via the HTTP harness (n = 600)}\label{tab:precision-strategies}
 \small
 \begin{tabular}{lrrr}
 \toprule
@@ -216,7 +218,7 @@ sufficed to include the correct candidate, only not always as the closest one.
 
 \begin{table}[h]
 \centering
-\caption{Precision by local login density, window = 10\,s}\label{tab:local-density}
+\caption{Precision of \texttt{TIME_WINDOW} by local login density, HTTP harness, window = 10\,s}\label{tab:local-density}
 \small
 \begin{tabular}{lrrrr}
 \toprule
@@ -248,7 +250,7 @@ column repeats the values of Table~\ref{tab:event-time-precision}.
 
 \begin{table}[h]
 \centering
-\caption{Single user, HTTP client compared to real browser}\label{tab:e2e-single-user-results}
+\caption{Single user, HTTP harness compared to real browser logins}\label{tab:e2e-single-user-results}
 \small
 \begin{tabular}{lrr}
 \toprule
@@ -263,7 +265,7 @@ Candidates at $\pm$60\,s    & 197,60  & 42,61  \\
 
 \begin{table}[h]
 \centering
-\caption{Local login density under real browser traffic}\label{tab:e2e-local-density}
+\caption{Local login density under real browser traffic, single user (n = 202)}\label{tab:e2e-local-density}
 \small
 \begin{tabular}{lrr}
 \toprule
@@ -277,6 +279,8 @@ Density Bucket & n & Precision \\
 \end{tabular}
 \end{table}
 
+As Table~\ref{tab:e2e-local-density} shows, all 202 logins lie more than one second apart from 
+their nearest neighbour. 
 All 202 logins lie more than one second apart from their nearest neighbour. 
 The candidate mean at $\pm$1\,s is 1.00 instead of 6.42, which places the login density roughly 
 six times lower than with the HTTP client harness. 
@@ -306,7 +310,7 @@ Table~\ref{tab:sum-local-density} and Table~\ref{tab:comparison-multi-user}.
 
 \begin{table}[h]
 \centering
-\caption{Precision and coverage of the strategies (n = 606)}\label{tab:precision-coverage-strategies}
+\caption{Precision and coverage under three concurrent browser users (n = 606)}\label{tab:precision-coverage-strategies}
 \small
 \begin{tabular}{lrr}
 \toprule
@@ -320,7 +324,7 @@ Strategy & Precision (all windows 1--60\,s) & Coverage \\
 
 \begin{table}[h]
 \centering
-\caption{Local login density, window = 10\,s}\label{tab:sum-local-density}
+\caption{	Precision by local login density under three concurrent browser users, window = 10\,s}\label{tab:sum-local-density}
 \small
 \begin{tabular}{lrrr}
 \toprule
@@ -378,7 +382,8 @@ This is not a productive strategy but a diagnostic variant introduced to isolate
 contribution of \textit{ipHash}. 
 The data source is the same 606 reports as in 
 Section~\ref{subsubsec:precision-multiple-browser-users}, reanalysed with the additional 
-strategy.
+strategy. 
+Table~\ref{tab:ip-hash-correlation} shows the result of this comparison.
 
 \begin{table}[h]
 \centering
@@ -441,11 +446,13 @@ follows from the architecture rather than from any network configuration.
 Before the evaluation, a cardinality aggregation on \textit{ip\_hash} over the period of the run 
 confirmed exactly one distinct value across all 600 documents. 
 The shared address is therefore measured rather than assumed. 
-The data source is three test users with 200 logins each, started from the same process.
+The data source is three test users with 200 logins each, started from the same process. 
+The results are summarised in Table~\ref{tab:precision-strategy-nat} and 
+Table~\ref{tab:precision-strategy-nat-local-density}. 
 
 \begin{table}[h]
 \centering
-\caption{Precision of the strategies under a shared address (n = 600)}\label{tab:precision-strategy-nat}
+\caption{Precision of both strategies with three users sharing one source address (n = 600)}\label{tab:precision-strategy-nat}
 \small
 \begin{tabular}{lrr}
 \toprule
@@ -459,7 +466,7 @@ Strategy & Precision (all windows 1--60\,s) & Coverage \\
 
 \begin{table}[h]
 \centering
-\caption{Precision by local login density under a shared address, window = 10\,s}\label{tab:precision-strategy-nat-local-density}
+\caption{Precision by local login density with a shared source address, window = 10\,s}\label{tab:precision-strategy-nat-local-density}
 \small
 \begin{tabular}{lrrr}
 \toprule
@@ -501,8 +508,10 @@ Section~\ref{subsubsec:precision-multiple-browser-users}.
 The offset between report reception and event time ranges from $-50$ to $+110$\,ms with a median 
 of $-26$\,ms (n = 600), which is of the same order of magnitude as in the other measurements.
 
-\subsection{Interpretation of the Results for Correlation}\label{subsec:interpretation-correlation}
+\subsection{Interpretation of the Results}\label{subsec:interpretation-correlation}
 
+Window size is not the limiting factor. Precision remains at 100\% even though the mean 
+number of candidates rises from 6.4 at $\pm$1,s to 197.6 at $\pm$60,s.
 Before turning to precision, the coverage of the correlation is considered, that is the 
 proportion of interceptor reports for which a counterpart was found at all. 
 Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 

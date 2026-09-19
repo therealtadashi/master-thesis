@@ -57,63 +57,146 @@ to function is not thereby known to function.
 The three defects are instances of exactly that, encountered in the monitoring system rather than 
 in the monitored one, which does not weaken the argument but illustrates its generality.
 
-\section{Limitation of the Study}\label{sec:limitation}
+\section{Limitations of the Approach}\label{sec:limitation}
 
 This section discusses the structural limitations of the proposed monitoring system. 
-Rather than merely listing limitations, it analyses their underlying causes and shows how they result 
-from the position of the monitoring system within the IdP.
-As briefly discussed in Section~\ref{subsec:detection-attack-space}, the system addresses two of the 
-six SAML cross-protocol issues identified in~\cite{FIMSurvey}. 
-This limited coverage is not primarily caused by missing implementations, but by the observation position 
-of the monitoring system, which operates from within the IdP. 
-The remaining issues can be categorised into three groups: a different system level, a different party, 
-and indirect observability. 
+Rather than merely listing them, it analyses their underlying causes and shows how they follow 
+from the position of the monitoring system within the IdP. 
+It is therefore distinct from Section~\ref{sec:validity}, which stated what the measurements of 
+this work do not show. 
+The limitations discussed here would persist irrespective of the effort invested, since they 
+follow from where the observation takes place rather than from how thoroughly it was carried out.
+
+As discussed in Section~\ref{subsec:detection-attack-space}, the system addresses two of the six 
+SAML cross-protocol issues identified by Simpson and Groß~\cite{FIMSurvey}. 
+This limited coverage is not primarily caused by missing implementations but by the observation 
+position of the monitoring system, which operates from within the IdP. 
+The remaining issues fall into three groups, namely those affecting a different system layer, 
+those affecting a different party, and those observable only indirectly.
 
 The first group consists of issues that primarily affect a different system layer. 
-DNS poisoning, for example, affects the network layer below the application layer. 
-The IdP processes the request it receives regardless of how the client resolved the corresponding address. 
-The same applies to DDoS and UI Redressing, which occur outside the application-level observation point 
-of the IdP.
+DNS poisoning, for example, concerns name resolution and therefore a layer beneath the 
+application. 
+The IdP processes the request it receives regardless of how the client resolved the corresponding 
+address. 
+The same applies to DDoS and UI redressing, which occur outside the application level observation 
+point of the IdP.
 
 The second group consists of issues that affect a different party within the federation. 
 \acrfull{csrf}, for example, describes an implementation vulnerability at the SP. 
-The relevant interaction occurs between the browser and the SP and therefore does not pass through the IdP. 
-The same applies to XSS and Session Swapping.
+The relevant interaction occurs between the browser and the SP and therefore does not pass 
+through the IdP. 
+The same applies to XSS and session swapping.
 
-The third group contains issues that can only be observed indirectly from the IdP. 
-A \acrfull{mitm} attack is an example of this category. 
-The attack occurs on the communication path after the message has left the IdP. 
-The monitoring system can therefore observe prerequisites that make such an attack possible, but not the 
-attack itself.
-For example, if an assertion is transmitted without encryption, an attacker could potentially read or modify 
-the message in transit. 
-The monitoring system can detect that the assertion was transmitted without encryption, but it cannot 
-determine from the IdP whether the message was actually intercepted or modified.
+The third group contains issues that can be observed only indirectly from the IdP. 
+A \acrfull{mitm} attack is an example of this category, since it occurs on the communication path 
+after the message has left the IdP. 
+The monitoring system can therefore observe the conditions that make such an attack possible, but 
+not the attack itself. 
+If an assertion is transmitted without encryption, an attacker could read or modify the message 
+in transit. 
+The monitoring system detects that the assertion was transmitted without encryption, yet it 
+cannot determine whether the message was in fact intercepted or altered.
 
 Two cases are considered separately because of their particular relevance.
-The first is the \textit{Bogus Merchant} scenario. 
-This is the only cross-protocol issue identified in the survey that directly concerns Shibboleth, but it is 
-not covered by the monitoring system. 
-The reason is that the malicious SP is a regular federation participant and is registered in the federation 
-metadata as a legitimate SP. 
-From the perspective of the IdP, the SP therefore does not necessarily exhibit an observable property that 
+The first is the bogus merchant scenario, which is the only cross-protocol issue in the survey 
+that concerns Shibboleth directly and is nevertheless not covered by the monitoring system. 
+The reason is that the malicious SP is a regular federation participant, registered in the 
+federation metadata as a legitimate partner. 
+From the perspective of the IdP it therefore need not exhibit any observable property that 
 distinguishes it from other legitimate participants. 
-Monitoring changes to SP configuration and metadata could provide an additional source of information for 
-detecting suspicious changes, but this alone cannot establish that a formally registered SP is malicious.
+Monitoring changes to the configuration and metadata of a SP could provide an additional source of 
+information, since in the absence of a basis for prior trust a change is the only usable signal. 
+Such a mechanism would, however, detect the transition of a provider rather than a provider that 
+was malicious from the outset.
 
 The second case is more fundamental. 
-The \textit{Malicious Provider} scenario describes an IdP that abuses its position within the federation. 
-Since the monitoring system is directly integrated into the IdP, the observer and the potential attacker are 
-located within the same system. 
-An entity that fully controls the IdP can therefore also control the data collection layer of the monitoring 
-system. 
-This limitation follows directly from the observation point and cannot be overcome by adding further 
-detection rules within the same trust domain. 
+The malicious provider scenario describes an IdP that abuses its own position within the 
+federation. 
+Since the monitoring system is integrated into the IdP, the observer and the potential attacker 
+reside within the same system. 
+An entity that fully controls the IdP therefore also controls the collection layer of the 
+monitoring system, including which records are produced and which are not. 
+This limitation follows directly from the observation point and cannot be overcome by adding 
+further detection rules within the same trust domain. 
+It is also not specific to this work. 
+Snodgrass et al. make the same assumption in their threat model, where only services outside the 
+compromised system remain trustworthy once an adversary has gained control of 
+it~\cite{TamperDetection}. 
+Detecting this class of behaviour would require an observation point outside the IdP, for instance 
+at the SPs or at the level of the federation itself.
 
-\section{Implication for Future Research}\label{sec:implication}
+A final limitation connects back to the motivation of this work. 
+The risk classification used for the severity assignment in Section~\ref{subsec:severity} 
+distinguishes five levels, of which the highest describes an adversary able to authenticate as any 
+user at any SP. 
+None of the thirteen rules reaches this level, since it presupposes a compromise of the signing 
+key. 
+An adversary in possession of that key produces formally valid assertions that are 
+indistinguishable from legitimate ones by any of the implemented rules. 
+The Sunburst incident described in Chapter~\ref{ch:introduction} is precisely such a case and 
+would therefore not have been detected by this system. 
+What the system can detect are configuration weaknesses that make an attack of this kind more 
+likely to succeed or harder to notice, which is a narrower claim than the motivation might 
+initially suggest.
 
-Was aus den Grenzen folgt. Die Bogus-Merchant-Zeile über Metadaten-Änderungserkennung teilweise adressierbar. Der outboundMessageFlow für die Felder, die heute nur im Audit-Log stehen. SP-seitige Erkennung als Ergänzung, mit Verweis auf Martín und Beltrán. OIDC analytisch: Gilt die Drei-Quellen-Architektur dort auch, und welche Regeln hätten eine Entsprechung.
+\section{Implications for Future Research}\label{sec:implication}
 
-Und was ohne neue Datengrundlage nicht geht: Erkennungsgüte im Betrieb braucht einen gelabelten Produktivdatensatz, den niemand hat.
+The findings and limitations identified in this study point to several directions for future work 
+in the area of application layer monitoring for federated identity infrastructures. 
+They fall into two categories, namely extensions that would widen the observation point and 
+questions that cannot be answered without a different kind of data.
+
+A primary direction is to extend the detection capabilities beyond the IdP and incorporate 
+observations made at the SP. 
+The approach presented here is inherently limited by its position, as discussed in 
+Section~\ref{sec:limitation}, and several of the uncovered attack classes are located precisely 
+where the IdP has no visibility. 
+Martín and Beltrán have proposed behavioural anomaly detection on the relying party 
+side~\cite{UEBAFederation}, arguing that delegating authentication does not transfer the entire 
+security responsibility. 
+Combining both perspectives would address opposite ends of the same federation. 
+Such an extension would require a suitable and preferably standardised integration mechanism for 
+SPs, which introduces organisational challenges beyond the technical ones, since it 
+presupposes cooperation between parties that are administratively independent.
+
+A second direction concerns the observation point within the IdP itself. 
+The interceptor used in this work is attached to the post-authentication hook and therefore 
+observes the incoming message and the authentication result, but not the outgoing response. 
+As described in Section~\ref{subsec:interceptor}, properties such as the assertion identifier, the 
+encryption actually applied and the final status of a transaction are consequently available only 
+through the audit log. 
+An additional interceptor at the outbound hook would make these properties available from a second, 
+independent source and would thereby extend the discrepancy based detection described in 
+Section~\ref{sec:why-not-siem} to fields for which it is currently not possible.
+
+A third direction addresses the one Shibboleth specific issue that remains uncovered. 
+Monitoring changes to the configuration and metadata of a SP would provide a partial answer to the 
+bogus merchant scenario, since a change is the only observable signal where no basis 
+for prior trust exists. 
+What such a mechanism could establish and what it could not is discussed in 
+Section~\ref{sec:limitation}, and the distinction would need to be stated carefully in any 
+implementation.
+
+A fourth direction is the extension of the approach to \acrfull{oidc}. 
+The present work focuses exclusively on SAML and Shibboleth, so that it remains an open question 
+whether the three source architecture developed here transfers to OIDC based infrastructures. 
+The architecture itself appears protocol independent, since an OIDC provider likewise maintains a 
+registration of its clients, writes records of completed transactions and processes incoming 
+requests at runtime. 
+The detection rules, by contrast, are protocol specific and would not transfer, since conditions 
+such as a missing proof key exchange or an implicit flow have no direct counterpart in the rules 
+developed here. 
+Future work could therefore examine which application level sources exist in an OIDC provider, 
+whether they are complementary in the same sense, and which rules follow from the documented 
+weaknesses of that protocol.
+
+Finally, one question cannot be addressed by extending the system at all. 
+Determining how reliably the rules detect genuine attacks requires productive traffic in which 
+each authentication is independently labelled, as discussed in 
+Section~\ref{subsec:validity-detection}. 
+Producing such a dataset is a research problem in its own right rather than an implementation 
+task, and it would benefit not only this work but any evaluation of detection systems in federated 
+identity infrastructures, where the same constraint applies. 
 
 \end{document}

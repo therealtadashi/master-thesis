@@ -4,40 +4,116 @@
 
 \chapter{Discussion}\label{ch:discussion}
 
+This chapter discusses the limitations encountered during this study and explores potential 
+future implications for research and tool development in the area of application layer 
+monitoring tool for IdPs. 
+
 \section{Interpretation of the Results}\label{sec:interpretation}
+
+The results of this study can be read along the three research questions posed in 
+Chapter~\ref{ch:introduction}. 
+The first question asked which security relevant data can be collected at the application layer 
+of a Shibboleth IdP and through which mechanisms. 
+Three sources proved usable, namely the audit log, the configuration and metadata of the SPs, 
+and the runtime state accessible through an interceptor. 
+The value of this combination does not primarily result from the number of sources but from the 
+positions at which they observe the authentication process. 
+The audit log records the outcome of a completed transaction, the configuration states what was 
+intended for the partner involved, and the interceptor observes the incoming message while it is 
+being processed. 
+Each source therefore holds information that the others cannot provide, and the complementarity 
+follows from their position in the processing sequence rather than from a deliberate division of 
+responsibilities. 
+
+The second question asked how these data can be correlated in order to detect configuration 
+weaknesses and anomalies. 
+The correlation operates reliably within a limit that the evaluation was able to quantify, namely 
+approximately six logins per second for a given combination of subject, address and SP, 
+beyond which the heuristic strategies can no longer resolve the order of events. 
+The thirteen detection rules behave as intended for the scenarios constructed for them, and all 
+are verified against real persistence rather than against mocked repositories alone. 
+This establishes the fidelity of the implementation, though not the detection quality in 
+operation, a distinction developed in Section~\ref{subsec:validity-detection}.
+
+The third question asked what overhead the resulting system imposes. 
+In the asynchronous delivery mode no overhead was measurable, with the work performed inside the 
+interceptor amounting to approximately 0,3\% of the login duration. 
+The synchronous mode tends to be slower by a margin in the low tens of milliseconds. 
+
+Beyond the individual research questions, one observation emerges across all three evaluations. 
+In each of them the measurement uncovered a defect that operation itself had not revealed. 
+A missing version field caused every behaviour profile update to be discarded silently, a 
+pipeline defect would have reported every encrypted login as unencrypted, and a misconfigured 
+audit format left one correlation strategy permanently inactive. 
+In none of these cases did the system fail visibly. 
+It continued to run, alerts continued to be produced, and the dashboard continued to be 
+populated. 
+The defects became apparent only when the behaviour was compared against an expectation defined 
+in advance.
+
+This observation is worth stating separately because it bears on the premise of the work itself. 
+The argument for observing an IdP from within rests on the assumption that a system which appears 
+to function is not thereby known to function. 
+The three defects are instances of exactly that, encountered in the monitoring system rather than 
+in the monitored one, which does not weaken the argument but illustrates its generality.
 
 \section{Limitation of the Study}\label{sec:limitation}
 
-This section explains why the proposed monitoring system has some potential structural 
-difficulties. 
-It demonstrates that the limitations of the approach have been thoroughly considered 
-rather than merely listed.
+This section discusses the structural limitations of the proposed monitoring system. 
+Rather than merely listing limitations, it analyses their underlying causes and shows how they result 
+from the position of the monitoring system within the IdP.
+As briefly discussed in Section~\ref{subsec:detection-attack-space}, the system addresses two of the 
+six SAML cross-protocol issues identified in~\cite{FIMSurvey}. 
+This limited coverage is not primarily caused by missing implementations, but by the observation position 
+of the monitoring system, which operates from within the IdP. 
+The remaining issues can be categorised into three groups: a different system level, a different party, 
+and indirect observability. 
 
-Three Groups of Reasons:
-- Other System Levels: 
-    - Weak DNS and DNS poisoning affect name resolution. 
-    - The same applies to DDoS and UI redressing
-- Other party: 
-    - Vulnerable SP and CSRF occur between the browser and the SP. 
-    - The same applies to XSS and session swapping
-- Only indirectly observable: 
-    - Lack of Binding and MITM. 
-    - The prerequisites are observable, not the event itself
+The first group consists of issues that primarily affect a different system layer. 
+DNS poisoning, for example, affects the network layer below the application layer. 
+The IdP processes the request it receives regardless of how the client resolved the corresponding address. 
+The same applies to DDoS and UI Redressing, which occur outside the application-level observation point 
+of the IdP.
 
-Two special cases should be highlighted:
-- No Trust Infrastructure and Bogus Merchant is the only Shibboleth-related entry in the 
-survey and remains open. 
-    - The malicious SP is registered normally and is formally legitimate.
-- A malicious provider is structurally undetectable. 
-    - Since the system runs within the IdP, the observer and the potential attacker are 
-    one and the same. 
-    - This limitation applies to every IdP-side system.
+The second group consists of issues that affect a different party within the federation. 
+\acrfull{csrf}, for example, describes an implementation vulnerability at the SP. 
+The relevant interaction occurs between the browser and the SP and therefore does not pass through the IdP. 
+The same applies to XSS and Session Swapping.
 
-And now, the connection to motivation: 
-- None of the thirteen rules reaches R5 presented in Graves.
-- The Sunburst case from the beginning, specifically, would not be detectable 
-with this system.
+The third group contains issues that can only be observed indirectly from the IdP. 
+A \acrfull{mitm} attack is an example of this category. 
+The attack occurs on the communication path after the message has left the IdP. 
+The monitoring system can therefore observe prerequisites that make such an attack possible, but not the 
+attack itself.
+For example, if an assertion is transmitted without encryption, an attacker could potentially read or modify 
+the message in transit. 
+The monitoring system can detect that the assertion was transmitted without encryption, but it cannot 
+determine from the IdP whether the message was actually intercepted or modified.
+
+Two cases are considered separately because of their particular relevance.
+The first is the \textit{Bogus Merchant} scenario. 
+This is the only cross-protocol issue identified in the survey that directly concerns Shibboleth, but it is 
+not covered by the monitoring system. 
+The reason is that the malicious SP is a regular federation participant and is registered in the federation 
+metadata as a legitimate SP. 
+From the perspective of the IdP, the SP therefore does not necessarily exhibit an observable property that 
+distinguishes it from other legitimate participants. 
+Monitoring changes to SP configuration and metadata could provide an additional source of information for 
+detecting suspicious changes, but this alone cannot establish that a formally registered SP is malicious.
+
+The second case is more fundamental. 
+The \textit{Malicious Provider} scenario describes an IdP that abuses its position within the federation. 
+Since the monitoring system is directly integrated into the IdP, the observer and the potential attacker are 
+located within the same system. 
+An entity that fully controls the IdP can therefore also control the data collection layer of the monitoring 
+system. 
+This limitation follows directly from the observation point and cannot be overcome by adding further 
+detection rules within the same trust domain. 
 
 \section{Implication for Future Research}\label{sec:implication}
+
+Was aus den Grenzen folgt. Die Bogus-Merchant-Zeile über Metadaten-Änderungserkennung teilweise adressierbar. Der outboundMessageFlow für die Felder, die heute nur im Audit-Log stehen. SP-seitige Erkennung als Ergänzung, mit Verweis auf Martín und Beltrán. OIDC analytisch: Gilt die Drei-Quellen-Architektur dort auch, und welche Regeln hätten eine Entsprechung.
+
+Und was ohne neue Datengrundlage nicht geht: Erkennungsgüte im Betrieb braucht einen gelabelten Produktivdatensatz, den niemand hat.
 
 \end{document}

@@ -42,9 +42,12 @@ The synchronous mode tends to be slower by a margin in the low tens of milliseco
 
 Beyond the individual research questions, one observation emerges across all three evaluations. 
 In each of them the measurement uncovered a defect that operation itself had not revealed. 
-A missing version field caused every behaviour profile update to be discarded silently, a 
-pipeline defect would have reported every encrypted login as unencrypted, and a misconfigured 
-audit format left one correlation strategy permanently inactive. 
+In the correlation evaluation, a missing token in the audit format had left the exact strategy 
+permanently inactive. 
+In the detection evaluation, a defect in the log shipping pipeline would have reported every 
+encrypted login as unencrypted. 
+In the performance evaluation, two indexing errors in the analysis script had produced plausible 
+but incorrect figures. 
 In none of these cases did the system fail visibly. 
 It continued to run, alerts continued to be produced, and the dashboard continued to be 
 populated. 

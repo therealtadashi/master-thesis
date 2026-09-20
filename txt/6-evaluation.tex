@@ -282,7 +282,7 @@ Density Bucket & n & Precision \\
 As Table~\ref{tab:e2e-local-density} shows, all 202 logins lie more than one second apart from 
 their nearest neighbour. 
 All 202 logins lie more than one second apart from their nearest neighbour. 
-The candidate mean at $\pm$1\,s is 1.00 instead of 6.42, which places the login density roughly 
+The candidate mean at $\pm$1\,s is 1,00 instead of 6,42, which places the login density roughly 
 six times lower than with the HTTP client harness. 
 This is consistent with the additional time required for real browser interaction, comprising 
 page loading, form handling and the overhead introduced by Selenium, compared to a script 
@@ -510,8 +510,6 @@ of $-26$\,ms (n = 600), which is of the same order of magnitude as in the other 
 
 \subsection{Interpretation of the Results}\label{subsec:interpretation-correlation}
 
-Window size is not the limiting factor. Precision remains at 100\% even though the mean 
-number of candidates rises from 6.4 at $\pm$1,s to 197.6 at $\pm$60,s.
 Before turning to precision, the coverage of the correlation is considered, that is the 
 proportion of interceptor reports for which a counterpart was found at all. 
 Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 
@@ -530,8 +528,8 @@ The two properties therefore fail independently of one another.
 A weaker strategy does not leave reports unassigned, it assigns them to the wrong counterpart.
 
 Window size is not the limiting factor. 
-Precision remains at 100\% even though the mean number of candidates rises from 6.4 at 
-$\pm$1\,s to 197.6 at $\pm$60\,s. 
+Precision remains at 100\% even though the mean number of candidates rises from 6,4 at 
+$\pm$1\,s to 197,6 at $\pm$60\,s. 
 What matters is solely that the temporal jitter is smaller than the interval between two 
 consecutive logins of the same combination of subject, address and SP.
 
@@ -543,8 +541,8 @@ strategy is unaffected by it.
 
 The measurements also support a concrete configuration recommendation, namely 
 \textit{lg.correlation.window-seconds=1}. 
-Coverage and precision remain at 100\%, but 6.4 candidates are examined per report instead of 
-58.1, which reduces the effort by a factor of nine on the basis of evidence rather than a 
+Coverage and precision remain at 100\%, but 6,4 candidates are examined per report instead of 
+58,1, which reduces the effort by a factor of nine on the basis of evidence rather than a 
 fixed assumption.
 
 The fallback chain has a quantifiable value. 

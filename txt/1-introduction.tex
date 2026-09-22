@@ -20,11 +20,11 @@ This attack method is called credential stuffing.
 Verizon reports that credential abuse was the leading initial attack vector in 22\% of the 12,195 confirmed 
 data breaches in 2025~\cite{VerizonDataBreach}.
 
-To reduce the number of places where credentials are created and stored, the \acrfull{fim} was developed.
+To reduce the number of places where credentials are created and stored, the \gls{fim} was developed.
 FIM allows users to authenticate on multiple SPs using the same credentials, which 
-are provided by an \acrfull{idp}. 
+are provided by an \gls{idp}. 
 FIM consolidates authentication behind a single trusted authority called the IdP.
-When a user attempts to gain access on the \acrfull{sp} in FIM, the user's browser is redirected 
+When a user attempts to gain access on the \gls{sp} in FIM, the user's browser is redirected 
 to the IdP.
 The user authenticates with the IdP and the IdP communicates with the SP to guarantee that the user is 
 who they say they are.
@@ -47,7 +47,7 @@ After gaining initial access, the attackers obtained the trusted SAML signing ce
 forge authentication assertions, granting unauthorised access to all connected services without triggering 
 a single failed login~\cite{FireEyeSSC,MicrosoftBlogSSC}.
 Beyond targeted attacks, the SAML protocol itself is susceptible to well-documented vulnerabilities, 
-such as \acrfull{xsw}~\cite{VulnerSAMLCloud, BreakingSAML}, Response Injection, Assertion Artifact Leakage 
+such as \gls{xsw}~\cite{VulnerSAMLCloud, BreakingSAML}, Response Injection, Assertion Artifact Leakage 
 and IdP Spoofing~\cite{SecAnalysisSSO}.
 These vulnerabilities enable attackers to forge or manipulate security claims accepted by the SP as 
 authoritative once the signature has been validated.
@@ -82,13 +82,13 @@ Three research questions guide this work:
 
 The remainder of this thesis is structured as follows. 
 \begin{itemize}
-    \item Chapter~\ref{ch:background} introduces the technical foundations of FIM, SAML and the Shibboleth IdP. 
-    \item Chapter~\ref{ch:related-work} positions this work within existing research on application-layer intrusion detection and delimits it from network- and host-based monitoring systems. 
-    \item Chapter~\ref{ch:system-design} presents the architecture of the proposed system, and 
-    \item Chapter~\ref{ch:implementation} describes its implementation devided in layers. 
-    \item Chapter~\ref{ch:evaluation} evaluates the system with respect to the three research questions above. 
-    \item Chapter~\ref{ch:discussion} discusses the interpretation of the results and the limitation of the study. 
-    \item Chapter~\ref{ch:conclusion} summarises the findings and outlines directions for future work.
+    \item Chapter~\ref{ch:background} introduces the technical foundations of FIM, SAML and the Shibboleth IdP.
+    \item Chapter~\ref{ch:related-work} positions this work within existing research on application layer intrusion detection and delimits it from network and host based monitoring systems.
+    \item Chapter~\ref{ch:system-design} presents the architecture of the proposed system.
+    \item Chapter~\ref{ch:implementation} describes its implementation, divided by layer.
+    \item Chapter~\ref{ch:evaluation} evaluates the system with respect to the three research questions.
+    \item Chapter~\ref{ch:discussion} interprets the results and discusses the limitations of the approach.
+    \item Chapter~\ref{ch:conclusion} summarises the findings.
 \end{itemize}
 
 \end{document}

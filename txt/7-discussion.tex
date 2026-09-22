@@ -38,7 +38,8 @@ operation, a distinction developed in Section~\ref{subsec:validity-detection}.
 The third question asked what overhead the resulting system imposes. 
 In the asynchronous delivery mode no overhead was measurable, with the work performed inside the 
 interceptor amounting to approximately 0,3\% of the login duration. 
-The synchronous mode tends to be slower by a margin in the low tens of milliseconds. 
+The synchronous mode tends to be slower by a margin in the low tens of milliseconds, although 
+with six runs per configuration this could not be established with statistical confidence.
 
 Beyond the individual research questions, one observation emerges across all three evaluations. 
 In each of them the measurement uncovered a defect that operation itself had not revealed. 
@@ -57,8 +58,9 @@ in advance.
 This observation is worth stating separately because it bears on the premise of the work itself. 
 The argument for observing an IdP from within rests on the assumption that a system which appears 
 to function is not thereby known to function. 
-The three defects are instances of exactly that, encountered in the monitoring system rather than 
-in the monitored one, which does not weaken the argument but illustrates its generality.
+The three defects are instances of exactly that. 
+They arose in the configuration, the pipeline and the analysis tooling of this work rather than 
+in an attack scenario, which does not weaken the argument but illustrates its generality.
 
 \section{Limitations of the Approach}\label{sec:limitation}
 
@@ -86,13 +88,13 @@ The same applies to DDoS and UI redressing, which occur outside the application 
 point of the IdP.
 
 The second group consists of issues that affect a different party within the federation. 
-\acrfull{csrf}, for example, describes an implementation vulnerability at the SP. 
+\gls{csrf}, for example, describes an implementation vulnerability at the SP. 
 The relevant interaction occurs between the browser and the SP and therefore does not pass 
 through the IdP. 
 The same applies to XSS and session swapping.
 
 The third group contains issues that can be observed only indirectly from the IdP. 
-A \acrfull{mitm} attack is an example of this category, since it occurs on the communication path 
+A \gls{mitm} attack is an example of this category, since it occurs on the communication path 
 after the message has left the IdP. 
 The monitoring system can therefore observe the conditions that make such an attack possible, but 
 not the attack itself. 
@@ -181,7 +183,7 @@ What such a mechanism could establish and what it could not is discussed in
 Section~\ref{sec:limitation}, and the distinction would need to be stated carefully in any 
 implementation.
 
-A fourth direction is the extension of the approach to \acrfull{oidc}. 
+A fourth direction is the extension of the approach to \gls{oidc}. 
 The present work focuses exclusively on SAML and Shibboleth, so that it remains an open question 
 whether the three source architecture developed here transfers to OIDC based infrastructures. 
 The architecture itself appears protocol independent, since an OIDC provider likewise maintains a 

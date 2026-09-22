@@ -350,7 +350,7 @@ Injected events would not only produce false findings but could also interfere w
 ones, since a fabricated record may be matched against a real audit entry.
 
 The transmitted data must therefore be authenticated before the monitoring tool accepts it. 
-In this work, this is achieved using a \acrfull{hmac}. 
+In this work, this is achieved using a \gls{hmac}. 
 The collection components and the monitoring tool share a secret key that is used to generate and verify a 
 message authentication code for each transmitted message.
 
@@ -472,34 +472,10 @@ result.
 Which rules are active in a given deployment is thus determined by what that deployment logs. 
 
 Which conditions the rules examine is a separate question from how they are evaluated. 
-The catalogue of thirteen rules used in this work was not assembled from experience but derived 
-from three complementary frameworks.
-The FIM survey by Simpson and Groß identifies eleven vulnerabilities and fourteen attack classes 
-based on a systematic literature review~\cite{FIMSurvey}. 
-These are grouped into cross protocol issues. 
-Such an issue exists where the same weakness is exploited by the same attack class, results in 
-the same CIA consequence, and is documented for at least two different protocols. 
-Six of the fourteen issues concern SAML, and one concerns Shibboleth directly. 
-The survey is therefore not merely a catalogue of weaknesses and attacks, but records which 
-weakness has been exploited by which attack in practice.
-
-The OASIS SAML Security and Privacy Considerations serve a different purpose. 
-Rather than describing what has occurred, they specify normatively what a deployment is expected 
-to do~\cite{SAMLSecurityConsideration}.
-
-The third framework is STRIDE, a scheme for classifying threats according to their mode of 
-operation~\cite{ThreatModeling}. 
-It distinguishes between spoofing, tampering, repudiation, information disclosure, denial of 
-service, and elevation of privilege. 
-Graves applies this framework in his threat analysis of Shibboleth~\cite{ShibbolethGIAC}. 
-Whereas the survey and OASIS answer whether a rule corresponds to a documented weakness, STRIDE 
-characterises the kind of impact a successful attack would have.
-
-The survey and OASIS also differ in the kind of evidence they provide. 
-The survey documents that an attack has occurred in practice, while OASIS states what a deployment 
-should do to prevent it. 
-Where both apply, as with the replay rules, a rule rests on empirical and normative grounds alike. 
-Table~\ref{tab:rules} shows the resulting assignment for the thirteen rules.
+The catalogue of thirteen rules was derived from the three frameworks introduced in 
+Section~\ref{sec:rules}, namely the survey by Simpson and Groß, the OASIS security 
+considerations and the STRIDE classification. 
+Table~\ref{tab:rules} shows the resulting assignment for each rule.
 
 \begin{table}[h]
 \centering

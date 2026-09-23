@@ -4,7 +4,7 @@
 
 \chapter{Background}\label{ch:background}
 
-This chapter explains key concepts and terminalogy relevant to this thesis.
+This chapter explains key concepts and terminology relevant to this thesis.
 It establishes the theoretical and technical foundation necessary for understanding the development of 
 the proposed monitoring tool.
 The contents are structured as follows: Section~\ref{sec:fim} introduces the concept of Federated Identity 
@@ -20,12 +20,11 @@ federated authentication.
 As already mentioned in the introduction, FIM allows users to access all their resources they 
 need by using a single digital identity. 
 It provides \gls{sso} functionalities across all applications of an organization. 
-Through the properties granted by incorporating SSO into the federation, it eliminated the need 
-to create, remember and manage multiple usernames and passwords for users and the organization. 
+Through the properties granted by incorporating SSO into the federation, eliminates to create, 
+remember and manage multiple usernames and passwords for users and the organization. 
 By centralising identity management, the number of systems holding credentials is 
 reduced. 
-Fewer accounts and identity management systems means fewer vectors to attack and credential of a 
-user to steal~\cite{NIST80063C}. 
+Fewer accounts and identity management systems mean systems holding credentials~\cite{NIST80063C}. 
 It also eases the identity management by centralizing it on a server. 
 This centralisation introduces new risks. 
 FIM relies on a foundation of trust between organizations and this trust is heavily reliant on 
@@ -72,101 +71,6 @@ it can be reached, and the certificates by which its statements can be verified.
 Trust within a federation rests on these metadata being current and correctly exchanged~\cite{SAMLMetadata}. 
 Whether the two configurations remain consistent with one another, however, is not something the 
 protocol itself verifies.
-
-\section{Shibboleth}\label{sec:shibboleth}
-
-Shibboleth is a free and open-source web single sign-on software suite that 
-implements SAML and other standards for FIM. 
-It is widely used in federated authentication environments and places particular 
-emphasis on privacy and decentralized identity management. 
-The Shibboleth Consortium provides separate software components for the IdP and 
-SP, enabling organizations to participate in federated identity infrastructures~\cite{Shibboleth}.
-
-For the scope of this thesis, the Shibboleth IdP is of particular relevance, as it 
-is responsible for authenticating users and issuing SAML assertions to participating 
-SPs. 
-The IdP is implemented as a Java-based web application and is typically deployed 
-using a Java servlet container such as Apache Tomcat. 
-User identities and associated attributes are commonly managed through an external 
-directory service, such as a Lightweight Directory Access Protocol (LDAP) server, 
-which provides the IdP with the information required for authentication and 
-attribute release.
-It builds on the OpenSAML library for the construction and validation of SAML messages, which is relevant 
-because vulnerabilities reported for OpenSAML apply to Shibboleth deployments 
-as well~\cite{ShibbolethGIAC}.
-
-\subsection{Profile Flows and Interception Points}\label{subsec:profile-flows}
-
-The IdP processes each request as a workflow built on Spring Web Flow. 
-Every top-level flow implements one of the supported protocol interfaces, referred to as profiles, such 
-as SAML 2 SP-initiated SSO. 
-Within a top-level flow, reusable subflows carry out recurring tasks such as 
-authentication~\cite{ProfileHandling}.
-
-To allow deployers to extend this behaviour without copying or editing the internal flow definitions, 
-the IdP provides a set of defined hooks. 
-A subflow attached to such a hook is called an interceptor, and three hooks exist: 
-\begin{enumerate}
-    \item inbound message processing
-    \item post-authentication processing and
-    \item outbound message processing
-\end{enumerate}
-The first and third are available in any profile flow, whereas the second applies only to profiles that 
-actually authenticate a user~\cite{ProfileHandling}.
-An interceptor is registered as a bean and enabled by adding its flow identifier to the corresponding list 
-property of a profile configuration in \texttt{conf/relying-party.xml}. 
-No modification of the IdP source code is required.
-
-The choice of hook determines what an interceptor can observe. 
-An inbound interceptor sees the incoming message context but not the outcome of authentication, 
-since that has not yet taken place. 
-An outbound interceptor sees the state of the tree produced by the profile execution, including the 
-outgoing message. 
-The post-authentication hook runs in the middle of processing, after the user has been authenticated but 
-before the outgoing message is constructed. 
-It can therefore observe both the incoming request and the authentication result, but not the response that 
-is issued afterwards.
-
-\subsection{The Context Tree}\label{subsec:context-tree}
-
-The root of the context tree for any profile flow is the \texttt{ProfileRequestContext}. 
-It carries the state of a request through the sequence of steps and is the object an interceptor receives. 
-Attached to it are child contexts holding the inbound and outbound messages, the identity of the relying 
-party and whether that identity could be verified, and, once authentication has completed, the authenticated 
-subject~\cite{ProfileHandling}.
-
-\subsection{Audit Logging}\label{subsec:audit-logging}
-
-The IdP writes one line per completed transaction to \texttt{idp-audit.log}. 
-The set of fields is not fixed but defined by the deployer in \texttt{conf/audit.xml}, so the 
-information available in the log depends on the configuration of the individual 
-deployment. 
-Authentication attempts that do not result in a completed transaction, in particular failed password 
-validations, produce no entry in this log~\cite{AuditLoggingConfiguration}. 
-
-\subsection{Configuration}\label{subsec:config}
-
-Three configuration files are relevant in the following. 
-\texttt{relying-party.xml} holds the per-partner configuration described in Section~\ref{sec:fim}, 
-including which profiles are enabled and which security settings apply~\cite{RelyingPartyConfiguration}. 
-\texttt{metadata-providers.xml} declares where the \acrshort{idp} obtains metadata for 
-its partners~\cite{MetadataConfiguration}. 
-\texttt{attribute-filter.xml} governs which attributes are released to which 
-relying party~\cite{AttributeFilterConfiguration}.
-
-\section{SAML}\label{sec:saml}
-
-The \gls{saml} is an XML-based standard developed by the organization for the Advancement of 
-Structured Information Standards (OASIS) for the exchange of authentication, authorization, and other 
-security-related information between different parties.
-SAML is a fundamental component of FIM and is widely used to enable SSO across organizational and 
-security boundaries~\cite{SAMLOverview}. 
-The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
-SAML 1.1 had already gained widespread adoption in federated identity environments~\cite{SAML1Standard}. 
-However, several competing approaches existed at the time, including the Identity Federation Framework 
-(ID-FF) developed by the Liberty Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
-SAML 2.0 consolidated several of these approaches into a common standard and introduced additional 
-capabilities, particularly with regard to federation, interoperability, and privacy. 
 
 \subsection{SAML Assertions}\label{subsec:assertions}
 
@@ -342,5 +246,99 @@ supported bindings, or cryptographic keys used during SAML message processing.
 SAML metadata can itself be protected using digital signatures, allowing an entity to verify the integrity 
 and origin of the metadata before using it for configuration or trust decisions.
 
+\section{Shibboleth}\label{sec:shibboleth}
+
+Shibboleth is a free and open-source web single sign-on software suite that 
+implements SAML and other standards for FIM. 
+It is widely used in federated authentication environments and places particular 
+emphasis on privacy and decentralized identity management. 
+The Shibboleth Consortium provides separate software components for the IdP and 
+SP, enabling organizations to participate in federated identity infrastructures~\cite{Shibboleth}.
+
+For the scope of this thesis, the Shibboleth IdP is of particular relevance, as it 
+is responsible for authenticating users and issuing SAML assertions to participating 
+SPs. 
+The IdP is implemented as a Java-based web application and is typically deployed 
+using a Java servlet container such as Apache Tomcat. 
+User identities and associated attributes are commonly managed through an external 
+directory service, such as a Lightweight Directory Access Protocol (LDAP) server, 
+which provides the IdP with the information required for authentication and 
+attribute release.
+It builds on the OpenSAML library for the construction and validation of SAML messages, which is relevant 
+because vulnerabilities reported for OpenSAML apply to Shibboleth deployments 
+as well~\cite{ShibbolethGIAC}.
+
+\subsection{Profile Flows and Interception Points}\label{subsec:profile-flows}
+
+The IdP processes each request as a workflow built on Spring Web Flow. 
+Every top-level flow implements one of the supported protocol interfaces, referred to as profiles, such 
+as SAML 2 SP-initiated SSO. 
+Within a top-level flow, reusable subflows carry out recurring tasks such as 
+authentication~\cite{ProfileHandling}.
+
+To allow developers to extend this behaviour without copying or editing the internal flow definitions, 
+the IdP provides a set of defined hooks. 
+A subflow attached to such a hook is called an interceptor, and three hooks exist: 
+\begin{enumerate}
+    \item inbound message processing
+    \item post-authentication processing and
+    \item outbound message processing
+\end{enumerate}
+The first and third are available in any profile flow, whereas the second applies only to profiles that 
+actually authenticate a user~\cite{ProfileHandling}.
+An interceptor is registered as a bean and enabled by adding its flow identifier to the corresponding list 
+property of a profile configuration in \texttt{conf/relying-party.xml}. 
+No modification of the IdP source code is required.
+
+The choice of hook determines what an interceptor can observe. 
+An inbound interceptor sees the incoming message context but not the outcome of authentication, 
+since that has not yet taken place. 
+An outbound interceptor sees the state of the tree produced by the profile execution, including the 
+outgoing message. 
+The post-authentication hook runs in the middle of processing, after the user has been authenticated but 
+before the outgoing message is constructed. 
+It can therefore observe both the incoming request and the authentication result, but not the response that 
+is issued afterwards.
+
+\subsection{The Context Tree}\label{subsec:context-tree}
+
+The root of the context tree for any profile flow is the \texttt{ProfileRequestContext}. 
+It carries the state of a request through the sequence of steps and is the object an interceptor receives. 
+Attached to it are child contexts holding the inbound and outbound messages, the identity of the relying 
+party and whether that identity could be verified, and, once authentication has completed, the authenticated 
+subject~\cite{ProfileHandling}.
+
+\subsection{Audit Logging}\label{subsec:audit-logging}
+
+The IdP writes one line per completed transaction to \texttt{idp-audit.log}. 
+The set of fields is not fixed but defined by the deployer in \texttt{conf/audit.xml}, so the 
+information available in the log depends on the configuration of the individual 
+deployment. 
+Authentication attempts that do not result in a completed transaction, in particular failed password 
+validations, produce no entry in this log~\cite{AuditLoggingConfiguration}. 
+
+\subsection{Configuration}\label{subsec:config}
+
+Three configuration files are relevant in the following. 
+\texttt{relying-party.xml} holds the per-partner configuration described in Section~\ref{sec:fim}, 
+including which profiles are enabled and which security settings apply~\cite{RelyingPartyConfiguration}. 
+\texttt{metadata-providers.xml} declares where the \acrshort{idp} obtains metadata for 
+its partners~\cite{MetadataConfiguration}. 
+\texttt{attribute-filter.xml} governs which attributes are released to which 
+relying party~\cite{AttributeFilterConfiguration}.
+
+\section{SAML}\label{sec:saml}
+
+The \gls{saml} is an XML-based standard developed by the organization for the Advancement of 
+Structured Information Standards (OASIS) for the exchange of authentication, authorization, and other 
+security-related information between different parties.
+SAML is a fundamental component of FIM and is widely used to enable SSO across organizational and 
+security boundaries~\cite{SAMLOverview}. 
+The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
+SAML 1.1 had already gained widespread adoption in federated identity environments~\cite{SAML1Standard}. 
+However, several competing approaches existed at the time, including the Identity Federation Framework 
+(ID-FF) developed by the Liberty Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
+SAML 2.0 consolidated several of these approaches into a common standard and introduced additional 
+capabilities, particularly with regard to federation, interoperability, and privacy. 
 
 \end{document}

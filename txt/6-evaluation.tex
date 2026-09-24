@@ -55,7 +55,7 @@ individual strategies.
 
 To determine the precision of the less reliable strategies, a reference is required that 
 indicates whether a given correlation was correct. 
-The correlation via \texttt{INBOUND\_MESSAGE\_ID} establishes a one-to-one relationship, as 
+The correlation via \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} establishes a one-to-one relationship, as 
 explained in Section~\ref{subsec:impl-correlation}, since the identifier is unique per request. 
 Wherever this strategy produced a match, the correct counterpart is therefore known without 
 ambiguity, which allows it to serve as a ground truth for the remaining strategies.
@@ -64,7 +64,7 @@ The measurement method is as follows:
 
 \begin{itemize}
     \item Collect all interceptor reports of a configurable time period for which 
-          \texttt{correlated\_by = INBOUND\_MESSAGE\_ID}
+          \texttt{correlated\_\allowbreak{}by = INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}
     \item For each report and each window size, execute the exact query of the heuristic 
           strategy and select the same candidate as the productive system would, namely the 
           one with the smallest temporal distance
@@ -84,9 +84,9 @@ feature.
 
 Before the evaluation, 3{,}690 out of 3{,}690 correlations had been established through the 
 hashed identity and time window strategy, and not a single one through 
-\texttt{INBOUND\_MESSAGE\_ID}. 
+\texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}. 
 The cause was not located in the application but in the audit format of the IdP. 
-The \textit{shibboleth.AuditFormattingMap} in \textit{conf/audit.xml} did not contain 
+The \textit{shibboleth.\allowbreak{}Audit\allowbreak{}Formatting\allowbreak{}Map} in \textit{conf/audit.xml} did not contain 
 \texttt{\%I}. 
 The Logstash pipeline was already mapping \textit{[shib][I]} to the corresponding field, but it 
 was waiting for a value that the configuration never produced. 
@@ -174,7 +174,7 @@ $-98$\,ms & $-32$\,ms & $-23$\,ms & $+75$\,ms & 173\,ms \\
 Table~\ref{tab:time-offset} shows the distribution of this offset. 
 The predominantly negative offset is consistent with the position of the interceptor in the 
 profile flow. 
-It runs as a \textit{postAuthenticationFlow} in the middle of the profile, whereas \texttt{\%T} 
+It runs as a \textit{post\allowbreak{}Authentication\allowbreak{}Flow} in the middle of the profile, whereas \texttt{\%T} 
 marks the completion of the transaction. 
 The report therefore typically reaches the backend around 30\,ms before the IdP writes the 
 corresponding audit entry.
@@ -182,8 +182,9 @@ corresponding audit entry.
 \subsubsection{Precision of TIME\_WINDOW under True Candidate Ambiguity}\label{subsubsec:precision-time-window-multi-user}
 
 The measurements in Table~\ref{tab:event-time-precision} are based on a single test user. 
-In that case the candidate sets of \texttt{HASH\_AND\_TIME\_WINDOW} and \texttt{TIME\_WINDOW} 
-are identical, since a second \textit{usernameHash} never occurs within the observation period. 
+In that case the candidate sets of \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} 
+and \texttt{TIME\_\allowbreak{}WINDOW} are identical, since a second \textit{usernameHash} never 
+occurs within the observation period. 
 The weaker strategy is therefore never actually tested, only carried along. 
 To address this, the same measurement methodology was applied to a dataset with several test 
 users active in parallel.
@@ -232,8 +233,8 @@ Density Bucket & n & Hits & Mismatch & Precision \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:local-density} shows that the incorrect assignments of \texttt{TIME\_WINDOW} are 
-concentrated entirely among logins that lie less than 100\,ms apart from the next login of the 
+Table~\ref{tab:local-density} shows that the incorrect assignments of \texttt{TIME\_\allowbreak{}WINDOW} 
+are concentrated entirely among logins that lie less than 100\,ms apart from the next login of the 
 same SP. 
 521 of the 600 reports fall into this category. 
 Above an interval of 100\,ms the strategy is error-free within the measured dataset.
@@ -287,9 +288,10 @@ six times lower than with the HTTP client harness.
 This is consistent with the additional time required for real browser interaction, comprising 
 page loading, form handling and the overhead introduced by Selenium, compared to a script 
 without waiting times. 
-At this density \texttt{HASH\_AND\_TIME\_WINDOW} and \texttt{TIME\_WINDOW} yield identical 
-results, since with an average of one candidate per window the additional hash filter has 
-nothing left to exclude, for the same reason as in the single user case.
+At this density \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} and 
+\texttt{TIME\_\allowbreak{}WINDOW} yield identical results, since with an average of one candidate 
+per window the additional hash filter has nothing left to exclude, for the same reason as in 
+the single user case.
 
 The offset between report reception and event time ranges from $-102$ to $-17$\,ms (n = 202), 
 which is narrower and consistently negative compared to the range reported in 
@@ -376,8 +378,9 @@ The three test users in Section~\ref{subsubsec:precision-multiple-browser-users}
 three distinct \textit{ipHash} values rather than a shared one.
 
 This could be verified against the existing ground truth without performing a new login run. 
-\texttt{CorrelationPrecisionAnalysis} was extended by a third, purely analytical strategy that 
-searches by SP, \textit{ipHash} and time window while omitting \textit{usernameHash}. 
+\texttt{Correlation\allowbreak{}Precision\allowbreak{}Analysis} was extended by a third, purely 
+analytical strategy that searches by SP, \textit{ipHash} and time window while 
+omitting \textit{usernameHash}. 
 This is not a productive strategy but a diagnostic variant introduced to isolate the 
 contribution of \textit{ipHash}. 
 The data source is the same 606 reports as in 
@@ -480,21 +483,21 @@ Density Bucket & n & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
 \end{tabular}
 \end{table}
 
-\texttt{HASH\_AND\_TIME\_WINDOW} remains at 100\% despite the shared address, since 
-\textit{usernameHash} carries the entire separation on its own, irrespective of whether 
-\textit{ipHash} contributes anything.
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} remains at 100\% 
+despite the shared address, since \textit{usernameHash} carries the entire separation on 
+its own, irrespective of whether \textit{ipHash} contributes anything.
 
 The diagnostic strategy of the preceding section serves as a cross-check and yields exactly the 
-same figures here as \texttt{TIME\_WINDOW}, identical for every window size and every density 
+same figures here as \texttt{TIME\_\allowbreak{}WINDOW}, identical for every window size and every density 
 bucket at 73,67\% precision with 442 matches and 158 incorrect assignments. 
 This is not a coincidence but the necessary consequence of a single shared address. 
 A filter for the only \textit{ipHash} value occurring in the entire period excludes no candidate 
 that would not already fall within the time window. 
 In this dataset \textit{ipHash} therefore demonstrably contributes nothing to the separation, 
-which is the exact counterpart to the preceding section, where \texttt{IP\_ONLY} coincided with 
-\texttt{HASH\_AND\_TIME\_WINDOW} because the address alone already sufficed.
+which is the exact counterpart to the preceding section, where \texttt{IP\_\allowbreak{}ONLY} coincided with 
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} because the address alone already sufficed.
 
-The precision of \texttt{TIME\_WINDOW} at 73,67\% falls between the 65,00\% measured in 
+The precision of \texttt{TIME\_\allowbreak{}WINDOW} at 73,67\% falls between the 65,00\% measured in 
 Section~\ref{subsubsec:precision-time-window-multi-user} and the 89,93\% measured in 
 Section~\ref{subsubsec:precision-multiple-browser-users}, which is consistent with the observed 
 density. 
@@ -522,7 +525,7 @@ query rather than remaining fixed.
 
 Coverage is also independent of the strategy that produced a match.  
 In every measurement reported above it remains at 100\% from a window of $\pm$5\,s onwards, 
-including for \texttt{TIME\_WINDOW}, which loses precision but not coverage under high login 
+including for \texttt{TIME\_\allowbreak{}WINDOW}, which loses precision but not coverage under high login 
 density. 
 The two properties therefore fail independently of one another. 
 A weaker strategy does not leave reports unassigned, it assigns them to the wrong counterpart.
@@ -540,7 +543,7 @@ Beyond this point the heuristic can no longer resolve the order reliably, wherea
 strategy is unaffected by it.
 
 The measurements also support a concrete configuration recommendation, namely 
-\textit{lg.correlation.window-seconds=1}. 
+\textit{lg.correlation.\allowbreak{}window-seconds=1}. 
 Coverage and precision remain at 100\%, but 6,4 candidates are examined per report instead of 
 58,1, which reduces the effort by a factor of nine on the basis of evidence rather than a 
 fixed assumption.
@@ -554,15 +557,15 @@ above the login density stated above.
 
 The cost of omitting the hashes is thus quantified rather than merely postulated. 
 This applies, however, only to the comparison between the exact strategy and 
-\texttt{HASH\_AND\_TIME\_WINDOW}. 
-If both \textit{ipHash} and \textit{usernameHash} are missing, so that \texttt{TIME\_WINDOW} has 
-to step in, the picture changes. 
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}. 
+If both \textit{ipHash} and \textit{usernameHash} are missing, so that \texttt{TIME\_\allowbreak{}WINDOW} 
+has to step in, the picture changes. 
 Section~\ref{subsubsec:precision-time-window-multi-user} shows a drop in precision from 100\% to 
 65\% with three simultaneously active users, concentrated on logins less than 100\,ms apart. 
-For a SP with several concurrent users, \texttt{TIME\_WINDOW} is therefore to be classified as a 
-stopgap for the case of missing hashes rather than as an equivalent alternative, unlike what the 
-single user measurement in Section~\ref{subsec:eval-correlation-results} alone would suggest, 
-where both strategies are indistinguishable.
+For a SP with several concurrent users, \texttt{TIME\_\allowbreak{}WINDOW} is therefore to be 
+classified as a stopgap for the case of missing hashes rather than as an equivalent alternative, 
+unlike what the single user measurement in Section~\ref{subsec:eval-correlation-results} alone 
+would suggest, where both strategies are indistinguishable.
 
 There is a first indication that the operational limit is not reached in practice. 
 Section~\ref{subsubsec:precision-browser-traffic} measures the login density under real browser 
@@ -574,7 +577,7 @@ although this has not yet been shown for several concurrent real users.
 
 What matters is the distribution of density, not merely the possibility of a collision. 
 Section~\ref{subsubsec:precision-multiple-browser-users} shows that the weakness of 
-\texttt{TIME\_WINDOW} in the sub-100\,ms zone measured in 
+\texttt{TIME\_\allowbreak{}WINDOW} in the sub-100\,ms zone measured in 
 Section~\ref{subsubsec:precision-time-window-multi-user} is just as pronounced under real traffic, 
 at approximately 56\% precision, and is therefore not a measurement artifact. 
 What differs is how often that zone is reached. 
@@ -590,17 +593,17 @@ separates just as well as \textit{ipHash} and \textit{usernameHash} combined, yi
 candidate sets in every measured window. 
 Section~\ref{subsubsec:precision-nat} shows the counterpart, namely that where several users share 
 one address \textit{ipHash} contributes nothing at all, since \texttt{IP\_ONLY} and 
-\texttt{TIME\_WINDOW} produce identical figures there. 
+\texttt{TIME\_\allowbreak{}WINDOW} produce identical figures there. 
 For scenarios in which \textit{usernameHash} is unavailable, this is the differentiated answer. 
 The heuristic is only as good as the least discriminating identifier available to it. 
-Where a shared address and a missing user identifier coincide, only \texttt{TIME\_WINDOW} remains, 
-with the density dependence observed consistently throughout.
+Where a shared address and a missing user identifier coincide, only \texttt{TIME\_\allowbreak{}WINDOW} 
+remains, with the density dependence observed consistently throughout.
 
 The productive strategy withstands the shared address case as long as \textit{usernameHash} 
 remains available. 
 This is the practically most relevant conclusion of Section~\ref{subsubsec:precision-nat}, since 
-\texttt{HASH\_AND\_TIME\_WINDOW} retains 100\% precision although all three test users share one 
-address. 
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} retains 100\% precision 
+although all three test users share one address. 
 Only when the user identifier is absent in addition to the shared address does the correlation 
 become a question of the time window alone, which reduces to the density dependence already 
 established rather than constituting a new risk specific to network address translation.
@@ -703,18 +706,18 @@ Establishing a true positive proof for it on layer two would require a SP
 configured to use a weak algorithm, which the test environment does not currently provide.
 
 The remaining eight rules are not covered on layer two, for two different reasons. 
-Five of them, namely \texttt{BEHAVIOR\_ANOMALY}, \texttt{MFA\_BYPASS}, 
-\texttt{ASSERTION\_REPLAY}, \texttt{SIGNATURE\_WRAPPING\_SUSPECTED} and 
-\texttt{REQUEST\_REPLAY}, cannot sensibly be triggered through a normal login, since they require 
+Five of them, namely \texttt{BEHAVIOR\_\allowbreak{}ANOMALY}, \texttt{MFA\_\allowbreak{}BYPASS}, 
+\texttt{ASSERTION\_\allowbreak{}REPLAY}, \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} and 
+\texttt{REQUEST\_\allowbreak{}REPLAY}, cannot sensibly be triggered through a normal login, since they require 
 a manipulated message or an accumulated history rather than a single successful authentication. 
-The other three, namely \texttt{WEAK\_CONFIGURATION}, \texttt{MISSING\_MFA} and 
-\texttt{CERTIFICATE\_EXPIRED}, do not depend on a login at all. 
+The other three, namely \texttt{WEAK\_\allowbreak{}CONFIGURATION}, \texttt{MISSING\_\allowbreak{}MFA} and 
+\texttt{CERTIFICATE\_\allowbreak{}EXPIRED}, do not depend on a login at all. 
 They evaluate configuration and metadata, which the layer one tests already exercise in full, so 
 that layer two would add nothing for them.
 
 \subsection{A Defect Visible Only through the Full Pipeline}\label{subsec:detection-logstash-defect}
 
-The true negative proof for \texttt{UNENCRYPTED\_ASSERTION} on layer two required a service 
+The true negative proof for \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} on layer two required a service 
 provider whose assertions are actually encrypted, since the existing one transmitted them in 
 plain text. 
 A second provider was therefore registered with \texttt{encryptAssertions=true} and a real login 
@@ -738,7 +741,7 @@ independently of the actual encryption state.
 The consequence is not a missed detection but the opposite. 
 For genuinely unencrypted logins the result remained accidentally correct. 
 For encrypted logins the rule would have reported every single one as 
-\texttt{UNENCRYPTED\_ASSERTION}. 
+\texttt{UNENCRYPTED\_\allowbreak{}ASSERTION}. 
 This is not a rare edge case but a structurally guaranteed false positive rate of one hundred 
 percent across all encrypted traffic, concealed solely by the fact that the test environment had 
 until then contained no SP with encryption enabled.
@@ -757,8 +760,8 @@ to \texttt{true}.
 \subsection{A Defect Visible Only against Real Persistence}\label{subsec:detection-version-defect}
 
 A second defect illustrates why layer one is not redundant with respect to unit testing.
-During development, the unit test for \texttt{BEHAVIOR\_ANOMALY} passed consistently while the 
-rule did not work in operation. 
+During development, the unit test for \texttt{BEHAVIOR\_\allowbreak{}ANOMALY} passed consistently 
+while the rule did not work in operation. 
 The behaviour profile of a user was written once and never updated thereafter. 
 The cause was a missing version field on the stored document, which caused Elasticsearch to 
 discard every update silently rather than to reject it with an error. 
@@ -805,8 +808,8 @@ Section~\ref{subsec:detection}, where the rules were related to the vulnerabilit
 classes documented by Simpson and Groß~\cite{FIMSurvey}. 
 That assignment provides a denominator that was not defined by this work. 
 Of the six cross-protocol issues concerning SAML, the implemented rules address two directly, 
-while a third, namely \texttt{SIGNATURE\_WRAPPING\_SUSPECTED}, addresses the same attack class 
-through a vulnerability that the survey does not list for SAML.
+while a third, namely \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED}, addresses 
+the same attack class through a vulnerability that the survey does not list for SAML.
 
 The remaining issues are not addressed, and the reasons are structural rather than a matter of 
 implementation effort. 
@@ -853,8 +856,8 @@ expectation defined in advance.
 \section{Performance Overhead}\label{sec:overhead}
 
 This section presents the results of the overhead evaluation of the custom interceptor. 
-The interceptor runs as a \textit{postAuthenticationFlow} within the IdP and therefore lies on 
-the critical path of each authentication process. 
+The interceptor runs as a \textit{post\allowbreak{}Authentication\allowbreak{}Flow} within the IdP 
+and therefore lies on the critical path of each authentication process. 
 The evaluation addresses two questions:
 
 \begin{itemize}
@@ -866,11 +869,11 @@ The evaluation addresses two questions:
 
 To measure the overhead introduced by the interceptor, three different configuration modes are 
 evaluated: \textit{baseline}, \textit{async}, and \textit{sync}. 
-In the \textit{baseline} configuration, no \textit{postAuthenticationFlow} is configured for the 
-SP. 
+In the \textit{baseline} configuration, no \textit{post\allowbreak{}Authentication\allowbreak{}Flow} 
+is configured for the SP. 
 The custom interceptor is therefore not executed during the authentication process. 
-In the \textit{async} configuration, the \textit{postAuthenticationFlow} is enabled for the SP 
-and the custom interceptor is executed. 
+In the \textit{async} configuration, the \textit{post\allowbreak{}Authentication\allowbreak{}Flow} is 
+enabled for the SP and the custom interceptor is executed. 
 The interceptor transmits the collected data to the monitoring tool without waiting for a 
 response. 
 The transmission therefore follows a fire-and-forget approach. 
@@ -1300,7 +1303,7 @@ technically possible but remains outstanding.
 \subsection{Known Gaps}\label{subsec:validity-gaps}
 
 Three specific gaps are worth stating explicitly rather than leaving to be inferred.
-\texttt{WEAK\_ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
+\texttt{WEAK\_\allowbreak{}ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
 since establishing one would require a SP configured to use a weak algorithm.
 
 Eight of the thirteen rules are not covered on layer two. 
@@ -1312,7 +1315,7 @@ For the correlation, the case in which a shared source address and a missing use
 coincide was not measured. 
 Section~\ref{subsubsec:precision-nat} covers the shared address with the user identifier present, 
 where the latter carries the entire separation. 
-The combined case reduces methodologically to the density dependence of \texttt{TIME\_WINDOW} 
+The combined case reduces methodologically to the density dependence of \texttt{TIME\_\allowbreak{}WINDOW} 
 established throughout, rather than constituting an unknown of its own.
 
 Finally, the counts of unit test scenarios reported in Section~\ref{subsec:detection-coverage} 

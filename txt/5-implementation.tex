@@ -76,16 +76,16 @@ It is registered as a Spring bean within the Shibboleth IdP and activated throug
 The interceptor therefore integrates into the IdP without any modification of its 
 source code, which is how the third requirement of Section~\ref{sec:requirements} is met. 
 
-The interceptor extends the \texttt{AbstractProfileAction} API of the Shibboleth IdP and 
-operates on the \texttt{ProfileRequestContext}, which represents the current state of the 
+The interceptor extends the \texttt{Abstract\allowbreak{}Profile\allowbreak{}Action} API of the Shibboleth IdP and 
+operates on the \texttt{Profile\allowbreak{}Request\allowbreak{}Context}, which represents the current state of the 
 profile execution~\cite{AbstractProfileAction, ProfileRequestContext}. 
 From this context it accesses the child contexts that carry the information relevant to 
 the monitoring purpose. 
-The \texttt{RelyingPartyContext} identifies the SP for which the authentication is 
-performed, the \texttt{SubjectContext} provides the authenticated subject, and the 
-\texttt{InboundMessageContext} gives access to the raw SAML request as it was 
+The \texttt{Relying\allowbreak{}Party\allowbreak{}Context} identifies the SP for which the authentication is 
+performed, the \texttt{Subject\allowbreak{}Context} provides the authenticated subject, and the 
+\texttt{Inbound\allowbreak{}Message\allowbreak{}Context} gives access to the raw SAML request as it was 
 received~\cite{RelyingPartyContext, SubjectContext, InOutOperationContext}. 
-Further contexts, among them the \texttt{AuthenticationContext} and the 
+Further contexts, among them the \texttt{Authentication\allowbreak{}Context} and the 
 \texttt{SessionContext}, supply information about the authentication flow that was used 
 and the session state at the time of the request~\cite{AuthenticationContext, SessionContext}. 
 
@@ -206,14 +206,14 @@ in Section~\ref{sec:impl-aggregation} before it is applied.
 Where a required field is not recorded by the deployment, the strategy withdraws and the next 
 one in the chain is attempted.
 
-The first strategy, \texttt{INBOUND\_MESSAGE\_ID}, matches the inbound message identifier of 
-the interceptor report against the corresponding audit field. 
+The first strategy, \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}, matches the inbound 
+message identifier of the interceptor report against the corresponding audit field. 
 Since this value is unique per request, a match establishes the relationship without ambiguity. 
-The second strategy, \texttt{HASH\_AND\_TIME\_WINDOW}, narrows the candidates by SP, pseudonymised 
-subject and pseudonymised client address, and additionally restricts them to a configurable time 
-window around the event. 
-The third strategy, \texttt{TIME\_WINDOW}, retains only the SP and the time window, and is therefore 
-used where neither the message identifier nor the pseudonymised identifiers are recorded. 
+The second strategy, \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}, narrows 
+the candidates by SP, pseudonymised subject and pseudonymised client address, and additionally restricts 
+them to a configurable time window around the event. 
+The third strategy, \texttt{TIME\_\allowbreak{}WINDOW}, retains only the SP and the time window, and is 
+therefore used where neither the message identifier nor the pseudonymised identifiers are recorded. 
 
 The pseudonymised subject appears under two names, since the interceptor report stores it as 
 \textit{subjectHash} whereas the audit entry records it as \textit{usernameHash}. 
@@ -286,18 +286,18 @@ a persistent condition is reported once rather than repeatedly.
 
 The rules differ in the kind of condition they examine. 
 Three examples illustrate this range. 
-\texttt{WEAK\_ENCRYPTION} compares the encryption algorithm recorded for a login against a list 
-of algorithms considered insecure, which is maintained in the application and can be adjusted 
-without changing the rule itself. 
-\texttt{BRUTE\_FORCE} does not evaluate a single event in isolation but counts failed 
+\texttt{WEAK\_\allowbreak{}ENCRYPTION} compares the encryption algorithm recorded for a login 
+against a list of algorithms considered insecure, which is maintained in the application and 
+can be adjusted without changing the rule itself. 
+\texttt{BRUTE\_\allowbreak{}FORCE} does not evaluate a single event in isolation but counts failed 
 authentication attempts of the same subject within a defined time window, which requires a query 
 across previously stored events. 
-\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} operates on the raw SAML request contained in an 
-interceptor report and examines its structure for duplicate identifiers and for signature 
-elements referencing an identifier that occurs more than once. 
+\texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} operates on the raw SAML request 
+contained in an interceptor report and examines its structure for duplicate identifiers and for 
+signature elements referencing an identifier that occurs more than once. 
 
 The remaining rules follow one of these patterns or compare an observed event against the 
-configuration declared for the SP involved, as described for \texttt{MFA\_BYPASS} in 
+configuration declared for the SP involved, as described for \texttt{MFA\_\allowbreak{}BYPASS} in 
 Section~\ref{sec:why-not-siem}. 
 Their assignment to documented vulnerabilities and attack classes is given in 
 Table~\ref{tab:rules}. 

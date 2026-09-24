@@ -228,8 +228,8 @@ points without requiring modifications to the underlying profile
 flow~\cite{ProfileHandling, ProfileInterceptConfiguration}.
 
 Inbound interceptors are executed during the processing of an incoming request. 
-At this point, the inbound \texttt{MessageContext} tree is generally populated and, where 
-applicable, contains a \texttt{RelyingPartyContext} as well as contexts required for operations 
+At this point, the inbound \texttt{Message\allowbreak{}Context} tree is generally populated and, where 
+applicable, contains a \texttt{Relying\allowbreak{}Party\allowbreak{}Context} as well as contexts required for operations 
 such as transport or message authentication~\cite{ProfileHandling}.
 
 Consequently, an inbound interceptor can observe information associated with the received message 
@@ -262,7 +262,7 @@ indirectly through the processing context.
 Outbound interceptors run shortly before the final stage of profile processing that produces the 
 response to the client. 
 Their input therefore represents the state produced by the preceding profile execution and typically 
-contains a populated outbound \texttt{MessageContext}. 
+contains a populated outbound \texttt{Message\allowbreak{}Context}. 
 The message may not yet be in its final form, since operations such as signing can still occur 
 afterwards~\cite{ProfileHandling}.
 
@@ -485,19 +485,19 @@ Table~\ref{tab:rules} shows the resulting assignment for each rule.
 \toprule
 Rule & Vulnerability & Attack Class & STRIDE & Source \\
 \midrule
-WEAK\_ENCRYPTION                                     & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey,BSITR02102,SAMLSecurityConsideration} \\
-UNENCRYPTED\_\linebreak ASSERTION                    & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey,ShibbolethGIAC} \\
-WEAK\_\linebreak CONFIGURATION                       & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey} \\
-MISSING\_MFA                                         & Weak User Credentials      & Enables Brute Force      & S, E    & \cite{FIMSurvey} \\
-MFA\_BYPASS                                          & Weak User Credentials      & Enables Brute Force      & S, E    & \cite{FIMSurvey} \\
-BRUTE\_FORCE                                         & Weak User Credentials      & Brute Force              & S, E    & \cite{FIMSurvey} \\
-FAILED\_LOGIN                                        & Weak User Credentials      & Indicator, not an attack & S       & \cite{OWASPA09} \\
-ASSERTION\_REPLAY                                    & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
-REQUEST\_REPLAY                                      & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
-SIGNATURE\_\linebreak WRAPPING\_\linebreak SUSPECTED & Message Formatting         & Message Modification     & S, T, E & \cite{BreakingSAML,ShibbolethGIAC} \\
-CERTIFICATE\_\linebreak EXPIRED                      & None                       & None                     & S       & \cite{SAMLSecurityConsideration} \\
-SUSPICIOUS\_\linebreak USER\_AGENT                   & None                       & None                     & ---     & --- \\
-BEHAVIOUR\_\linebreak ANOMALY                        & Multiple                   & Detection method         & S       & --- \\
+\texttt{WEAK\_\allowbreak{}ENCRYPTION}                            & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey,BSITR02102,SAMLSecurityConsideration} \\
+\texttt{UNENCRYPTED\_\allowbreak{}ASSERTION}                      & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey,ShibbolethGIAC} \\
+\texttt{WEAK\_\allowbreak{}CONFIGURATION}                         & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey} \\
+\texttt{MISSING\_\allowbreak{}MFA}                                & Weak User Credentials      & Enables Brute Force      & S, E    & \cite{FIMSurvey} \\
+\texttt{MFA\_\allowbreak{}BYPASS}                                 & Weak User Credentials      & Enables Brute Force      & S, E    & \cite{FIMSurvey} \\
+\texttt{BRUTE\_\allowbreak{}FORCE}                                & Weak User Credentials      & Brute Force              & S, E    & \cite{FIMSurvey} \\
+\texttt{FAILED\_\allowbreak{}LOGIN}                               & Weak User Credentials      & Indicator, not an attack & S       & \cite{OWASPA09} \\
+\texttt{ASSERTION\_\allowbreak{}REPLAY}                           & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
+\texttt{REQUEST\_\allowbreak{}REPLAY}                             & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
+\texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} & Message Formatting         & Message Modification     & S, T, E & \cite{BreakingSAML,ShibbolethGIAC} \\
+\texttt{CERTIFICATE\_\allowbreak{}EXPIRED}                        & None                       & None                     & S       & \cite{SAMLSecurityConsideration} \\
+\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}        & None                       & None                     & ---     & --- \\
+\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}                          & Multiple                   & Detection method         & S       & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -508,16 +508,16 @@ documented weakness of the protocol in the survey.
 Both replay rules address it directly. 
 Furthermore, several rules form pairs in which the same weakness is captured twice, once as a 
 configuration state and once as an event that has occurred. 
-MISSING\_MFA examines whether a SP requires multi factor authentication at all, whereas 
-MFA\_BYPASS examines whether an actual login circumvented that requirement. 
+\texttt{MISSING\_\allowbreak{}MFA} examines whether a SP requires multi factor authentication at all, whereas 
+\texttt{MFA\_\allowbreak{}BYPASS} examines whether an actual login circumvented that requirement. 
 This distinction is a direct consequence of the three source architecture described in 
 Section~\ref{sec:data-aggregation}: the configuration states what is intended, and the audit log 
 records what took place.
 
 Two rules cannot be assigned to any of the three frameworks. 
-SUSPICIOUS\_USER\_AGENT identifies an indicator for which no documented relation to a specific attack 
+\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} identifies an indicator for which no documented relation to a specific attack 
 class could be established. 
-BEHAVIOUR\_ANOMALY is a detection method rather than an attack class, since it may reveal several 
+\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} is a detection method rather than an attack class, since it may reveal several 
 different attacks indirectly without corresponding to any one of them. 
 Both rules are retained in the catalogue, and the absence of a derivation is stated here rather 
 than omitted.

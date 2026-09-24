@@ -13,7 +13,7 @@ Finally, storage, correlation and rule-based detection.
 
 The emphasis lies on the collection layer. 
 The remaining layers follow established practice, whereas the question of which data can be obtained 
-from within an identity provider, and by which mechanisms, is specific to this work. 
+from within an IdP, and by which mechanisms, is specific to this work. 
 Design decisions are stated together with the alternatives that were considered and rejected.
 
 \section{Requirements for the System}\label{sec:requirements}
@@ -49,7 +49,7 @@ These considerations result in five requirements:
 \begin{enumerate}
     \item Two independent sources: the declared configuration and the observed event.
     \item Detection and reporting without automated intervention.
-    \item Realisation as a plugin, without modification of the identity provider.
+    \item Realisation as a plugin, without modification of the IdP.
     \item Storage outside the monitored system, with authenticated transport and pseudonymisation at the source.
     \item Detection rules derived from documented attack classes and normative requirements.
 \end{enumerate}
@@ -137,7 +137,7 @@ log are not fixed.
 The audit format is configured per profile in \textit{conf/audit.xml}, where each field is 
 represented by a formatting token, and the set of available tokens can be extended within the 
 IdP~\cite{AuditLoggingConfiguration}. 
-Which information a given deployment records is therefore determined by its administrator and 
+Which information a given deployment records is therefore determined by its operator and 
 may differ between installations. 
 
 This property has direct implications for the monitoring system developed in this work. 
@@ -161,10 +161,10 @@ A SAML entity can support one or more roles, which are represented by role descr
 the metadata. 
 For SPs, the relevant role is represented by the \texttt{md:SPSSODescriptor} element. 
 This descriptor contains information required by the IdP to communicate with the SP, including 
-the supported SAML protocol families specified by the \texttt{protocolSupportEnumeration} 
+the supported SAML protocol families specified by the \texttt{protocol\allowbreak{}Support\allowbreak{}Enumeration} 
 attribute, cryptographic keys, supported name identifier formats, and the endpoints provided 
 by the SP~\cite{MetadataForSP}.
-A central component of an SP's metadata is the \texttt{md:AssertionConsumerService} element. 
+A central component of an SP's metadata is the \texttt{md:Assertion\allowbreak{}Consumer\allowbreak{}Service} element. 
 It specifies an endpoint to which the IdP can send SAML responses and assertions on behalf 
 of the SP. 
 By explicitly enumerating these endpoints in the metadata, the IdP can determine the locations 
@@ -447,7 +447,7 @@ Section~\ref{sec:rules}, to the documented weakness or requirement it is based o
 
 The rules do not all operate on the same kind of input. 
 Four input types occur in this system: login events derived from the audit log, the configuration 
-of a service provider, its metadata, and the reports produced by the interceptor. 
+of a SP, its metadata, and the reports produced by the interceptor. 
 These differ not only in structure but also in the rhythm at which they appear. 
 Login events occur continuously during operation, whereas a configuration or a metadata document 
 changes rarely and may remain unchanged for long periods of time.
@@ -508,7 +508,7 @@ documented weakness of the protocol in the survey.
 Both replay rules address it directly. 
 Furthermore, several rules form pairs in which the same weakness is captured twice, once as a 
 configuration state and once as an event that has occurred. 
-MISSING\_MFA examines whether a service provider requires multi factor authentication at all, whereas 
+MISSING\_MFA examines whether a SP requires multi factor authentication at all, whereas 
 MFA\_BYPASS examines whether an actual login circumvented that requirement. 
 This distinction is a direct consequence of the three source architecture described in 
 Section~\ref{sec:data-aggregation}: the configuration states what is intended, and the audit log 
@@ -526,8 +526,8 @@ than omitted.
 
 Each alert detected by the detection layer described in Section~\ref{sec:processing} is assigned 
 a severity level.
-The severity levels used in this work are based on Graves' risk classification, which ranges from 
-R1 to R5 according to the impact of a successful attack. 
+The severity levels used in this work are based on the risk classification proposed by Graves, 
+which ranges from R1 to R5 according to the impact of a successful attack. 
 The specific definitions of the risk categories are as follows~\cite{ShibbolethGIAC}:
 
 \begin{itemize}

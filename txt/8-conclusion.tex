@@ -6,7 +6,7 @@
 
 This thesis presented an application layer monitoring tool for the Shibboleth IdP that detects 
 documented vulnerabilities, configuration weaknesses and anomalous authentication behaviour by 
-combining three separate sources of information from within the identity provider. 
+combining three separate sources of information from within the IdP. 
 The collected data is transmitted to an external backend, where it is stored, correlated and 
 evaluated against a catalogue of thirteen detection rules.
 
@@ -41,13 +41,13 @@ continued to be populated.
 The defects became apparent only when the behaviour was compared against an expectation defined in 
 advance. 
 That a system appears to function is therefore not evidence that it does, which is the same 
-argument that motivates observing an identity provider from within in the first place.
+argument that motivates observing an IdP from within in the first place.
 
 The study also identified limitations that follow from the observation point rather than from the 
 effort invested. 
 Several federation level attack scenarios occur at a different system layer, involve a different 
 party, or are observable only through their preconditions. 
-One case is more fundamental, since a malicious identity provider cannot be detected by a system 
+One case is more fundamental, since a malicious IdP cannot be detected by a system 
 running inside it, where observer and adversary coincide. 
 The severity classification makes a further boundary explicit, as none of the thirteen rules 
 reaches the highest risk level, which presupposes a compromise of the signing key. 
@@ -57,7 +57,7 @@ carry out and harder to notice are within its reach.
 
 What this thesis contributes is therefore not a new architecture for collecting and correlating 
 security events, since that is established practice. 
-It is the demonstration that an identity provider holds security relevant information which no 
+It is the demonstration that an IdP holds security relevant information which no 
 log consuming system can obtain, an analysis of which properties are observable from which 
 position, and an implementation that makes this information available at a cost that can be 
 stated in numbers rather than assumed.

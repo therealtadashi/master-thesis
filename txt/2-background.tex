@@ -8,7 +8,7 @@ This chapter explains key concepts and terminology relevant to this thesis.
 It establishes the theoretical and technical foundation necessary for understanding the development of 
 the proposed monitoring tool.
 The contents are structured as follows: Section~\ref{sec:fim} introduces the concept of Federated Identity 
-Management and describes the roles of the Identity Provider and Service Provider, including their interaction 
+Management and describes the roles of the IdP and SP, including their interaction 
 during the authentication process. 
 Section~\ref{sec:shibboleth} introduces Shibboleth as an open-source implementation of SAML, with a 
 particular focus on the Shibboleth IdP, which is highly relevant to this thesis. 
@@ -20,11 +20,10 @@ federated authentication.
 As already mentioned in the introduction, FIM allows users to access all their resources they 
 need by using a single digital identity. 
 It provides \gls{sso} functionalities across all applications of an organization. 
-Through the properties granted by incorporating SSO into the federation, eliminates to create, 
-remember and manage multiple usernames and passwords for users and the organization. 
-By centralising identity management, the number of systems holding credentials is 
-reduced. 
-Fewer accounts and identity management systems mean systems holding credentials~\cite{NIST80063C}. 
+By incorporating SSO into the federation, the need to create, remember and manage multiple 
+usernames and passwords for users and the organisation is eliminated. 
+Centralising identity management also reduces the number of systems holding credentials. 
+Fewer accounts and identity management systems mean fewer systems holding credentials~\cite{NIST80063C}. 
 It also eases the identity management by centralizing it on a server. 
 This centralisation introduces new risks. 
 FIM relies on a foundation of trust between organizations and this trust is heavily reliant on 
@@ -66,11 +65,25 @@ it will accept.
 
 Both sides therefore hold configuration that describes the same relationship, and both are 
 maintained independently. 
-What binds them together is the metadata each party publishes about itself: the endpoints at which 
-it can be reached, and the certificates by which its statements can be verified. 
+What binds them together is the metadata each party publishes about itself. 
+This includes the endpoints at which it can be reached, and the certificates by which its statements can be verified. 
 Trust within a federation rests on these metadata being current and correctly exchanged~\cite{SAMLMetadata}. 
 Whether the two configurations remain consistent with one another, however, is not something the 
 protocol itself verifies.
+
+\section{SAML}\label{sec:saml}
+
+The \gls{saml} is an XML-based standard developed by the organization for the Advancement of 
+Structured Information Standards (OASIS) for the exchange of authentication, authorization, and other 
+security-related information between different parties.
+SAML is a fundamental component of FIM and is widely used to enable SSO across organizational and 
+security boundaries~\cite{SAMLOverview}. 
+The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
+SAML 1.1 had already gained widespread adoption in federated identity environments~\cite{SAML1Standard}. 
+However, several competing approaches existed at the time, including the Identity Federation Framework 
+(ID-FF) developed by the Liberty Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
+SAML 2.0 consolidated several of these approaches into a common standard and introduced additional 
+capabilities, particularly with regard to federation, interoperability, and privacy. 
 
 \subsection{SAML Assertions}\label{subsec:assertions}
 
@@ -113,15 +126,16 @@ messages.
 XML Encryption provides confidentiality for sensitive information contained in SAML messages. 
 Instead of transmitting the original XML content in plaintext, the protected content is replaced by 
 an \texttt{EncryptedData} element containing the resulting ciphertext~\cite{W3CXMLENC}. 
-XML Encryption therefore enables selective and persistent confidentiality of individual elements within 
+The encryption therefore enables selective and persistent confidentiality of individual elements within 
 an XML document. 
 This allows, for example, sensitive attributes contained in a SAML assertion to be encrypted without 
 requiring the entire message to be encrypted.
 
 Although XML Signature and XML Encryption provide important security mechanisms, their use and 
 configuration depend on the respective SAML profile, deployment, and implementation. 
-SAML is therefore not a security protocol in itself, but a framework whose optional features can be 
-composed in different ways, and the resulting security properties follow from the composition chosen. 
+Therefore, SAML is not a security protocol in itself, but rather a framework whose optional features 
+can be combined in various ways. 
+The resulting security properties depend on the chosen combination. 
 Hartl and Derek make this explicit by deriving eight protocol variants from the optional features 
 of a single use case and analysing each separately~\cite{FormalSecAnalysisSAML}. 
 Consequently, the security properties of a SAML-based system cannot be derived solely from the existence 
@@ -311,7 +325,7 @@ subject~\cite{ProfileHandling}.
 \subsection{Audit Logging}\label{subsec:audit-logging}
 
 The IdP writes one line per completed transaction to \texttt{idp-audit.log}. 
-The set of fields is not fixed but defined by the deployer in \texttt{conf/audit.xml}, so the 
+The set of fields is not fixed but defined by the operator in \texttt{conf/audit.xml}, so the 
 information available in the log depends on the configuration of the individual 
 deployment. 
 Authentication attempts that do not result in a completed transaction, in particular failed password 
@@ -326,19 +340,5 @@ including which profiles are enabled and which security settings apply~\cite{Rel
 its partners~\cite{MetadataConfiguration}. 
 \texttt{attribute-filter.xml} governs which attributes are released to which 
 relying party~\cite{AttributeFilterConfiguration}.
-
-\section{SAML}\label{sec:saml}
-
-The \gls{saml} is an XML-based standard developed by the organization for the Advancement of 
-Structured Information Standards (OASIS) for the exchange of authentication, authorization, and other 
-security-related information between different parties.
-SAML is a fundamental component of FIM and is widely used to enable SSO across organizational and 
-security boundaries~\cite{SAMLOverview}. 
-The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
-SAML 1.1 had already gained widespread adoption in federated identity environments~\cite{SAML1Standard}. 
-However, several competing approaches existed at the time, including the Identity Federation Framework 
-(ID-FF) developed by the Liberty Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
-SAML 2.0 consolidated several of these approaches into a common standard and introduced additional 
-capabilities, particularly with regard to federation, interoperability, and privacy. 
 
 \end{document}

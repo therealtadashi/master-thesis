@@ -699,7 +699,7 @@ full.
 Five rules are additionally covered on layer two. 
 Four of them have both a true positive and a true negative proof, whereas 
 \texttt{WEAK\_ENCRYPTION} has only a true negative proof at present. 
-Establishing a true positive proof for it on layer two would require a service provider 
+Establishing a true positive proof for it on layer two would require a SP 
 configured to use a weak algorithm, which the test environment does not currently provide.
 
 The remaining eight rules are not covered on layer two, for two different reasons. 
@@ -741,7 +741,7 @@ For encrypted logins the rule would have reported every single one as
 \texttt{UNENCRYPTED\_ASSERTION}. 
 This is not a rare edge case but a structurally guaranteed false positive rate of one hundred 
 percent across all encrypted traffic, concealed solely by the fact that the test environment had 
-until then contained no service provider with encryption enabled.
+until then contained no SP with encryption enabled.
 
 The defect was invisible on layer one for a structural reason. 
 The three existing negative scenarios for this rule construct their audit object directly in Java 
@@ -750,7 +750,7 @@ A test that bypasses the pipeline cannot, in principle, find a defect located wi
 The fix derives the encryption state from the algorithm field, treating a non-empty value as 
 encrypted. 
 
-After restarting Logstash, a login against the same service provider produced documents carrying 
+After restarting Logstash, a login against the same SP produced documents carrying 
 \textit{encryption\_algo} with the value \texttt{AES128-GCM} and \textit{encrypted} correctly set 
 to \texttt{true}.
 
@@ -785,7 +785,7 @@ detection surface accordingly, and no alert or warning indicates that this has h
 The rules do not fail in that case, they simply remain silent.
 
 A related case occurred in the development environment of this work. 
-Two rules depend on the service provider configuration, which reaches the backend exclusively 
+Two rules depend on the SP configuration, which reaches the backend exclusively 
 through a dedicated ingest path. 
 That path was inactive for an extended period, first because a security configuration no longer 
 permitted the corresponding request and later because the pipeline configuration referenced an 
@@ -1185,7 +1185,7 @@ used, the statistical basis, and the questions that the chosen setup cannot answ
 \subsection{Measurement Environment}\label{subsec:validity-environment}
 
 All components run on a single machine. 
-The IdP, the service providers, the backend application, Elasticsearch and the benchmark itself 
+The IdP, the SPs, the backend application, Elasticsearch and the benchmark itself 
 share the same host and compete for the same resources.
 
 The absolute values are therefore not transferable to a productive deployment. 
@@ -1202,10 +1202,10 @@ infrastructure is present at all.
 
 \subsection{Traffic and Scope}\label{subsec:validity-traffic}
 
-Most measurements rest on a single test user, a single service provider and a single 
+Most measurements rest on a single test user, a single SP and a single 
 authentication flow, namely password-based authentication.
 For the correlation this represents the hardest case with respect to candidate ambiguity, since 
-all records share the same subject, the same address and the same service provider, leaving time 
+all records share the same subject, the same address and the same SP, leaving time 
 as the only distinguishing feature. 
 With respect to temporal regularity it is the easier case, since a synthetic client produces more 
 evenly spaced logins than real users. 
@@ -1301,7 +1301,7 @@ technically possible but remains outstanding.
 
 Three specific gaps are worth stating explicitly rather than leaving to be inferred.
 \texttt{WEAK\_ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
-since establishing one would require a service provider configured to use a weak algorithm.
+since establishing one would require a SP configured to use a weak algorithm.
 
 Eight of the thirteen rules are not covered on layer two. 
 As discussed in Section~\ref{subsec:detection-coverage}, five of them cannot sensibly be 

@@ -282,7 +282,6 @@ Density Bucket & n & Precision \\
 
 As Table~\ref{tab:e2e-local-density} shows, all 202 logins lie more than one second apart from 
 their nearest neighbour. 
-All 202 logins lie more than one second apart from their nearest neighbour. 
 The candidate mean at $\pm$1\,s is 1,00 instead of 6,42, which places the login density roughly 
 six times lower than with the HTTP client harness. 
 This is consistent with the additional time required for real browser interaction, comprising 
@@ -372,7 +371,7 @@ multi-user datasets, or whether \textit{usernameHash} alone accounted for the me
 The initial assumption had been that all benchmark processes would share a common 
 \textit{ipHash}. 
 A control query on the raw data refuted this for the browser path, since each 
-\texttt{BrowserWebDriverContainer} started in parallel is assigned its own Docker bridge 
+\texttt{Browser\allowbreak{}Web\allowbreak{}Driver\allowbreak{}Container} started in parallel is assigned its own Docker bridge 
 address. 
 The three test users in Section~\ref{subsubsec:precision-multiple-browser-users} therefore had 
 three distinct \textit{ipHash} values rather than a shared one.
@@ -916,8 +915,9 @@ additional waiting time.
 The experiment comprises six runs, each executing all three configurations in sequence, which 
 results in eighteen measurements in total. 
 Each run performs one hundred logins per configuration.
-The order of the configurations is rotated between runs so that each configuration occupies each 
-of the three positions exactly twice:
+The order of the configurations is rotated between runs, ensuring that each configuration occupies 
+each of the three positions twice. 
+This is illustrated in Table~\ref{tab:config-order}. 
 
 \begin{table}[h]
 \centering

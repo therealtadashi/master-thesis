@@ -16,7 +16,10 @@ uses log shippers to collect and parse log entries and static configuration
 files, as well as a custom interceptor that operates within the Shibboleth IdP. 
 The log shipping stack consists of Filebeat for reading the source files and 
 Logstash for preprocessing and transmitting the collected data. 
-Both components are deployed on the IdP side. 
+Both components run as separate containers on the same host as the IdP and access its log files 
+and configuration through mounted directories. 
+This placement is what allows them to share the pseudonymisation salt and the message 
+authentication secret with the interceptor, as described in Section~\ref{sec:impl-transport}.
 
 A key aspect of the implementation is the handling of audit log entries. 
 Instead of parsing the audit log according to a fixed format, Logstash processes 
@@ -68,6 +71,10 @@ The number of lines combined in this way is bounded by configuration, which plac
 upper limit on the size of a document that can be transmitted as a unit. 
 The interpretation of the XML structure takes place in the monitoring tool itself, 
 where the relevant security settings are extracted and stored per SP. 
+Filebeat monitors these files and transmits them only when their content has changed. 
+The backend therefore does not receive the same configuration repeatedly, but only when a 
+deployment has actually been modified, which is also what makes the detection rules operating on 
+configuration meaningful at all. 
 
 Unlike the log shippers, the interceptor is a custom component developed as part of 
 this work. 
@@ -204,7 +211,7 @@ of precedence.
 Each strategy declares the audit fields it depends on and queries the field registry described 
 in Section~\ref{sec:impl-aggregation} before it is applied. 
 Where a required field is not recorded by the deployment, the strategy withdraws and the next 
-one in the chain is attempted.
+one in the chain is attempted. 
 
 The first strategy, \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}, matches the inbound 
 message identifier of the interceptor report against the corresponding audit field. 
@@ -311,7 +318,8 @@ The same flow therefore appears as \texttt{MFA} in the configuration and as
 A direct string comparison between the two never matches, and the rule would consequently 
 never report a finding. 
 The comparison is therefore performed token by token, accepting both notations, and is 
-encapsulated in a helper shared by the rules that evaluate authentication flows. 
+implemented in a shared comparison function that accepts both notations and is used by 
+all rules evaluating authentication flows. 
 As with the two cases described in Section~\ref{sec:impl-aggregation}, the failure mode 
 here would have been silent, since neither an exception nor a log entry would have 
 indicated that the comparison was ineffective. 

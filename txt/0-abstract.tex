@@ -4,5 +4,44 @@
 
 \chapter*{\myAbstractTitle}
 
+In a federated identity infrastructure, a single identity provider authenticates users on behalf 
+of many service providers and thereby becomes the trust anchor of the entire federation. 
+A compromised or misconfigured provider does not affect one application but undermines the 
+security of every service relying on it. 
+Despite this exposure, systematic security monitoring at the application layer of such providers 
+remains largely absent, and existing approaches in this domain focus on operational availability 
+rather than on security.
+
+This thesis presents a monitoring system that observes a Shibboleth identity provider from within 
+its own application layer. 
+The system draws on three sources that differ in what they can observe, namely the audit log 
+written at the end of a transaction, the configuration and metadata declared for each service 
+provider, and the runtime state accessible through an interceptor executing inside the 
+authentication flow. 
+Records from these sources are pseudonymised at their origin, transmitted to a backend located 
+outside the trust boundary of the provider, correlated with one another and evaluated against a 
+catalogue of thirteen detection rules. 
+The rules are not assembled from experience but derived from vulnerabilities and attack classes 
+documented in a systematic survey of federated identity security and from the normative 
+requirements of the SAML security considerations.
+
+The evaluation addresses three questions, namely which data can be collected, how reliably it can 
+be correlated, and what the resulting system costs. 
+The correlation reaches a coverage of 99,9\% and remains free of incorrect assignments up to a 
+quantified login density, beyond which the heuristic strategies can no longer resolve the order of 
+events. 
+All thirteen rules were verified against a real search index and five additionally through the 
+complete pipeline from a browser login to the resulting alert. 
+In the productive transmission mode, no overhead was measurable in the end-to-end login latency, 
+with the work performed inside the interceptor amounting to approximately 0,3\% of the duration of 
+a login.
+
+The work also identifies the boundaries of the chosen observation point. 
+Attack classes located at a different system layer, involving a different party, or observable 
+only through their preconditions remain outside its reach, and a provider abusing its own position 
+cannot be detected by a system executing inside it. 
+Beyond these results, the evaluation uncovered three defects in the monitoring infrastructure that 
+operation itself had not revealed, which illustrates the premise underlying the work, namely that 
+a system appearing to function is not thereby known to function.
 
 \end{document}

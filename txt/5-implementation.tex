@@ -194,6 +194,20 @@ relationship between an audit entry and an interceptor report.
     \item \textbf{T}: the timestamp of the event
 \end{itemize}
 
+The audit format provides further identifiers that are unique per transaction. 
+The \texttt{InResponseTo} value of the response echoes the identifier of the inbound request, 
+and a strategy built on it would establish the same one-to-one relationship as the inbound message 
+identifier already does, with no difference in outcome. 
+The assertion identifier and the outbound message identifier are unique as well, but they are 
+created after the post-authentication hook has run, which executes before the outgoing message 
+content is constructed~\cite{ProfileHandling}, and are extracted at later points of the audit 
+pipeline~\cite{AuditLoggingConfiguration}. 
+Which identifiers can be used for correlation is thus determined by the observation point rather than 
+by the audit format alone. 
+The remaining fields, among them the entity identifier of the SP, the authentication flow and the 
+released attributes, are identical across many logins of the same partner and narrow the candidate set 
+no further than the SP already does. 
+
 These fields differ in how precisely they identify a counterpart. 
 The inbound message identifier is unique per request and therefore establishes the relationship 
 unambiguously, since the same value appears in both records. 

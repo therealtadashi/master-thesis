@@ -85,6 +85,9 @@ feature.
 Before the evaluation, 3{,}690 out of 3{,}690 correlations had been established through the 
 hashed identity and time window strategy, and not a single one through 
 \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}. 
+The figure comprises all interceptor reports that had accumulated in the test environment up 
+to that point, across the development and benchmark runs performed before the correlation 
+evaluation began. 
 The cause was not located in the application but in the audit format of the IdP. 
 The \textit{shibboleth.\allowbreak{}Audit\allowbreak{}Formatting\allowbreak{}Map} in \textit{conf/audit.xml} did not contain 
 \texttt{\%I}. 
@@ -122,6 +125,10 @@ Table~\ref{tab:timestamp-precision} and Table~\ref{tab:event-time-precision} sho
 of the heuristic strategy against the exact ground truth before and after this change. 
 The two are based on separate runs, since the change to \textit{event\_time} required the data 
 to be collected anew. 
+
+Both measurements were performed with a single test user against a single SP, which means that 
+all candidate records share the same subject, the same address and the same partner. 
+Cases in which these assumptions do not hold are examined in the following sections. 
 
 \begin{table}[h]
 \centering
@@ -192,7 +199,8 @@ users active in parallel.
 The extended dataset comprises three users with 200 logins each, started simultaneously against 
 the same SP, resulting in 600 reports in total. 
 The ground truth was cleared before the run to prevent any mixing with the single user data. 
-The results are summarised in Table~\ref{tab:precision-strategies}.
+The results are summarised in Table~\ref{tab:precision-strategies}. 
+The measurement covers six window sizes, namely $\pm$1, $\pm$2, $\pm$5, $\pm$10, $\pm$30 and $\pm$60 seconds. 
 
 \begin{table}[h]
 \centering
@@ -245,7 +253,8 @@ All measurements presented so far are based on the synthetic HTTP login harness.
 To examine whether its timing behaviour is representative of real login processes, the same 
 measurement methodology was applied to a second dataset generated through Chrome-based logins 
 using Testcontainers and Selenium instead of a raw HTTP client. 
-The data source is 202 logins of a single test user. 
+The data source is 202 logins of a single test user, comprising 200 measured logins and the 
+hard-coded warm-up of two. 
 The results are summarised in Table~\ref{tab:e2e-single-user-results}, where the HTTP client 
 column repeats the values of Table~\ref{tab:event-time-precision}.
 
@@ -325,7 +334,7 @@ Strategy & Precision (all windows 1--60\,s) & Coverage \\
 
 \begin{table}[h]
 \centering
-\caption{	Precision by local login density under three concurrent browser users, window = 10\,s}\label{tab:sum-local-density}
+\caption{Precision by local login density under three concurrent browser users, window = 10\,s}\label{tab:sum-local-density}
 \small
 \begin{tabular}{lrrr}
 \toprule
@@ -354,8 +363,8 @@ Overall precision of \texttt{TIME\_WINDOW} & 65,00\%          & 89,93\%         
 \end{tabular}
 \end{table}
 
-The precision within the critical sub-100\,ms zone is nearly identical for real and synthetic 
-traffic, at approximately 56 to 60 percent. 
+The precision of \texttt{TIME\_WINDOW} within the critical sub-100\,ms zone is nearly identical 
+for real and synthetic traffic, at approximately 56 to 60 percent. 
 The weakness measured in Section~\ref{subsubsec:precision-time-window-multi-user} is therefore 
 not an artifact of the HTTP client timing, but a reproducible density effect. 
 What differs is how frequently this zone is reached at all. 
@@ -389,14 +398,14 @@ Table~\ref{tab:ip-hash-correlation} shows the result of this comparison.
 
 \begin{table}[h]
 \centering
-\caption{Precision with and without \textit{usernameHash} (n = 606)}\label{tab:ip-hash-correlation}
+\caption{Precision of \texttt{HASH\_AND\_TIME\_WINDOW} with and without the \textit{usernameHash} (n = 606)}\label{tab:ip-hash-correlation}
 \small
 \begin{tabular}{lrr}
 \toprule
 Strategy & Precision (all windows) & Candidates ($\pm$1\,s) \\
 \midrule
 \texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 1,00 \\
-\texttt{IP\_ONLY}                & 100\% & 1,00 \\
+Without \textit{usernameHash}    & 100\% & 1,00 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -410,7 +419,7 @@ down to the second decimal place, as Table~\ref{tab:ip-hash-candidates} shows.
 \small
 \begin{tabular}{lrr}
 \toprule
-Window & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{IP\_ONLY} \\
+Window & \texttt{HASH\_AND\_TIME\_WINDOW} & Without \textit{usernameHash} \\
 \midrule
 $\pm$1\,s  & 1,00  & 1,00  \\
 $\pm$2\,s  & 2,19  & 2,19  \\
@@ -516,6 +525,7 @@ Before turning to precision, the coverage of the correlation is considered, that
 proportion of interceptor reports for which a counterpart was found at all. 
 Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 
 remained without a counterpart after the retry window had elapsed. 
+The figure comprising all reports received by the backend during the evaluation runs. 
 The value is only determinable because the sweep described in 
 Section~\ref{subsec:impl-correlation} marks expired reports as permanently uncorrelated. 
 Without that distinction, a report still awaiting its audit entry would be indistinguishable 
@@ -591,8 +601,8 @@ Section~\ref{subsubsec:influence-of-iphash} shows that with separate sources \te
 separates just as well as \textit{ipHash} and \textit{usernameHash} combined, yielding identical 
 candidate sets in every measured window. 
 Section~\ref{subsubsec:precision-nat} shows the counterpart, namely that where several users share 
-one address \textit{ipHash} contributes nothing at all, since \texttt{IP\_ONLY} and 
-\texttt{TIME\_\allowbreak{}WINDOW} produce identical figures there. 
+one address \textit{ipHash} contributes nothing at all, since \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} 
+without \textit{usernameHash} and \texttt{TIME\_\allowbreak{}WINDOW} produce identical figures there. 
 For scenarios in which \textit{usernameHash} is unavailable, this is the differentiated answer. 
 The heuristic is only as good as the least discriminating identifier available to it. 
 Where a shared address and a missing user identifier coincide, only \texttt{TIME\_\allowbreak{}WINDOW} 
@@ -641,7 +651,8 @@ made a defect visible that had remained invisible otherwise.
 
 This evaluation therefore answers whether the implemented code behaves exactly as intended for 
 the constructed cases. 
-It does not answer how often the system errs in operation. 
+It does not answer how often the system errs in operation, since that would require a comparison 
+against traffic whose correct classification is known independently of the rules themselves. 
 Section~\ref{sec:validity} returns to this distinction.
 
 \subsection{Test Layers}\label{subsec:detection-layers}
@@ -1033,7 +1044,8 @@ fully loaded core.
 Sixteen cores were available and no resource limits were configured. 
 The startup phase preceding each measurement, during which class loading and just-in-time 
 compilation produce peaks of up to 400\%, was excluded on the basis of the start time recorded in 
-the corresponding benchmark file.
+the corresponding benchmark file. 
+Table~\ref{tab:cpu-aggregated} shows the aggregated utilisation per configuration. 
 
 \begin{table}[h]
 \centering
@@ -1052,8 +1064,9 @@ sync     & 42,5 (4,1) & 44,2 & 19,2 & 99,1  \\
 
 Mean, standard deviation and median are computed across the six run values per configuration, 
 whereas minimum and maximum refer to all measurements of that configuration.
-The same block model was applied to the CPU values, once with the run mean and once with the run 
-median as the target variable.
+The same block model was applied to the CPU values, once with the run mean and once with the 
+run median as the target variable. 
+Tables~\ref{tab:paired-cpu-mean} and~\ref{tab:paired-cpu-median} show the results of both variants. 
 
 \begin{table}[h]
 \centering
@@ -1187,9 +1200,14 @@ used, the statistical basis, and the questions that the chosen setup cannot answ
 
 \subsection{Measurement Environment}\label{subsec:validity-environment}
 
-All components run on a single machine. 
-The IdP, the SPs, the backend application, Elasticsearch and the benchmark itself 
-share the same host and compete for the same resources.
+The design described in Chapter~\ref{ch:system-design} places the monitoring backend outside 
+the trust boundary of the IdP, which in a productive deployment would imply separate hosts under 
+separate administrative control. 
+The test environment does not realise this separation physically. 
+All components run in containers on a single machine, which reproduces the logical separation 
+of the components but not the security property derived from it. 
+The measurements are therefore valid with respect to latency and correlation behaviour, but 
+the environment does not demonstrate the trust boundary itself. 
 
 The absolute values are therefore not transferable to a productive deployment. 
 A login duration of approximately 320\,ms reflects this particular setup and would differ on 
@@ -1302,7 +1320,7 @@ technically possible but remains outstanding.
 
 \subsection{Known Gaps}\label{subsec:validity-gaps}
 
-Three specific gaps are worth stating explicitly rather than leaving to be inferred.
+Four specific gaps are worth stating explicitly rather than leaving to be inferred.
 \texttt{WEAK\_\allowbreak{}ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
 since establishing one would require a SP configured to use a weak algorithm.
 

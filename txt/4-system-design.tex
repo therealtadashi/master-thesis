@@ -118,12 +118,18 @@ regarding data privacy and terms of use~\cite{LoggingConfiguration}.
 
 The amount of information recorded in the diagnostic logs depends on the configured logging 
 level, which determines the severity of messages that are written. 
-The \textit{idp-warn.log} file is a filtered view of \textit{idp-process.log} and contains 
-only messages logged at the \texttt{WARN} level or higher.
+The \textit{idp-warn.log} file is a filtered view of \textit{idp-process.log} and contains only 
+messages logged at the \texttt{WARN} level or higher. 
+These files are written for a human reader. 
+A line consists of a timestamp, a severity, the originating class and a free-form message whose 
+content depends on the code location that produced it, so that lines of different origin share 
+no common structure. 
 
-In contrast to the diagnostic logs, the audit log is intended to be machine readable. 
+The audit log differs from the diagnostic logs in that its structure is defined rather than 
+free-form. 
 It records one entry per completed transaction, written once the IdP has finished processing 
-the request. 
+the request, with a fixed sequence of fields that allows every line to be decomposed in the 
+same way. 
 This has two consequences for the information it can provide. 
 On the one hand, the entry reflects the final outcome of a transaction, including properties 
 that are only determined at the end of processing, such as the encryption applied to the 

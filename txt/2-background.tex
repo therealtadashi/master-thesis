@@ -4,32 +4,33 @@
 
 \chapter{Background}\label{ch:background}
 
-This chapter explains key concepts and terminology relevant to this thesis.
-It establishes the theoretical and technical foundation necessary for understanding the development of 
-the proposed monitoring tool.
-The contents are structured as follows: Section~\ref{sec:fim} introduces the concept of Federated Identity 
-Management and describes the roles of the IdP and SP, including their interaction 
-during the authentication process. 
-Section~\ref{sec:shibboleth} introduces Shibboleth as an open-source implementation of SAML, with a 
-particular focus on the Shibboleth IdP, which is highly relevant to this thesis. 
-Finally, Section~\ref{sec:saml} provides an overview of the SAML framework and its role in 
-federated authentication.
+This chapter explains the key concepts and terminology relevant to this thesis and establishes 
+the technical foundation required for the design of the proposed monitoring tool. 
+It is limited to the aspects on which the later chapters build, and consequently covers neither 
+the full range of the SAML specification nor the complete configuration surface of the 
+Shibboleth IdP.
 
 \section{Technical Foundation of Federated Identity Management}\label{sec:fim}
 
-As already mentioned in the introduction, FIM allows users to access all their resources they 
-need by using a single digital identity. 
-It provides \gls{sso} functionalities across all applications of an organization. 
-By incorporating SSO into the federation, the need to create, remember and manage multiple 
-usernames and passwords for users and the organisation is eliminated. 
-Centralising identity management also reduces the number of systems holding credentials. 
-Fewer accounts and identity management systems mean fewer systems holding credentials~\cite{NIST80063C}. 
-It also eases the identity management by centralizing it on a server. 
-This centralisation introduces new risks. 
-FIM relies on a foundation of trust between organizations and this trust is heavily reliant on 
+As introduced in Chapter~\ref{ch:introduction}, FIM allows users to access the resources they 
+need with a single digital identity and provides \gls{sso} functionality across the applications 
+of an organisation. 
+The immediate benefit is convenience, since users no longer need to create and remember a 
+separate set of credentials for every service. 
+The more consequential benefit lies elsewhere. 
+Because credentials exist in one place rather than in every participating service, the number of 
+systems that store and verify them is reduced, and measures such as multi-factor authentication 
+can be enforced consistently at that one place instead of being implemented separately by each 
+service~\cite{NIST80063C}. 
+Administration follows the same pattern, since accounts are created, modified and revoked 
+centrally rather than in each service individually.
+
+This centralisation introduces a new risk in return. 
+FIM rests on a relationship of trust between organisations, and that trust depends entirely on 
 the security of the IdP. 
-The centralization by incorporating an IdP means it creates a single point of trust, 
-or in different words, it concentrates the risk onto a single server~\cite{IdPSinglePointOfTrust}. 
+Concentrating credentials in one place also concentrates the consequences of a compromise, since 
+an attacker who gains control of the IdP gains access to every service that relies on 
+it~\cite{IdPSinglePointOfTrust}.
 
 A compromise of a primary IdP could potentially grant broad unauthorised access across the 
 entire federation. 
@@ -73,15 +74,14 @@ protocol itself verifies.
 
 \section{SAML}\label{sec:saml}
 
-The \gls{saml} is an XML-based standard developed by the organization for the Advancement of 
-Structured Information Standards (OASIS) for the exchange of authentication, authorization, and other 
-security-related information between different parties.
+The \gls{saml} is an XML-based standard developed by the \gls{oasis} for the exchange of authentication, 
+authorization, and other security-related information between different parties.
 SAML is a fundamental component of FIM and is widely used to enable SSO across organizational and 
 security boundaries~\cite{SAMLOverview}. 
 The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
 SAML 1.1 had already gained widespread adoption in federated identity environments~\cite{SAML1Standard}. 
-However, several competing approaches existed at the time, including the Identity Federation Framework 
-(ID-FF) developed by the Liberty Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
+However, several competing approaches existed at the time, including the \gls{idff} developed by the Liberty 
+Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
 SAML 2.0 consolidated several of these approaches into a common standard and introduced additional 
 capabilities, particularly with regard to federation, interoperability, and privacy. 
 
@@ -243,9 +243,9 @@ For an IdP, the \texttt{IDPSSODescriptor} describes information relevant to its 
 Similarly, an SP can be described using an \texttt{SPSSODescriptor}. 
 These descriptors contain information such as supported SAML protocols, communication endpoints, 
 supported bindings, and cryptographic keys. 
-For example, an SP metadata document can specify its Assertion Consumer Service (ACS) endpoint and the 
-bindings supported for receiving SAML responses, while an IdP can specify its SSO Service endpoints and 
-the corresponding supported bindings.
+For example, an SP metadata document can specify its \gls{acs} endpoint and the bindings supported 
+for receiving SAML responses, while an IdP can specify its SSO Service endpoints and the corresponding 
+supported bindings.
 
 Cryptographic information contained in metadata is particularly important for the security of SAML 
 communication. 
@@ -275,7 +275,7 @@ SPs.
 The IdP is implemented as a Java-based web application and is typically deployed 
 using a Java servlet container such as Apache Tomcat. 
 User identities and associated attributes are commonly managed through an external 
-directory service, such as a Lightweight Directory Access Protocol (LDAP) server, 
+directory service, such as a \gls{ldap} server, 
 which provides the IdP with the information required for authentication and 
 attribute release.
 It builds on the OpenSAML library for the construction and validation of SAML messages, which is relevant 
@@ -284,11 +284,14 @@ as well~\cite{ShibbolethGIAC}.
 
 \subsection{Profile Flows and Interception Points}\label{subsec:profile-flows}
 
-The IdP processes each request as a workflow built on Spring Web Flow. 
-Every top-level flow implements one of the supported protocol interfaces, referred to as profiles, such 
-as SAML 2 SP-initiated SSO. 
-Within a top-level flow, reusable subflows carry out recurring tasks such as 
-authentication~\cite{ProfileHandling}.
+The IdP processes each request as a workflow built on Spring Web Flow, a framework in which a 
+sequence of processing steps is described declaratively rather than in program code. 
+A flow consists of states that are traversed in order, and a state may delegate to a subflow, 
+that is a self-contained flow which performs a defined task and returns control to its caller. 
+Every top-level flow of the IdP implements one of the supported protocol interfaces, referred to 
+as profiles, such as SAML 2 SP-initiated \gls{sso}. 
+Recurring tasks within such a profile, among them the authentication of the user, are carried out 
+by subflows~\cite{ProfileHandling}. 
 
 To allow developers to extend this behaviour without copying or editing the internal flow definitions, 
 the IdP provides a set of defined hooks. 
@@ -316,11 +319,20 @@ is issued afterwards.
 
 \subsection{The Context Tree}\label{subsec:context-tree}
 
-The root of the context tree for any profile flow is the \texttt{ProfileRequestContext}. 
-It carries the state of a request through the sequence of steps and is the object an interceptor receives. 
-Attached to it are child contexts holding the inbound and outbound messages, the identity of the relying 
-party and whether that identity could be verified, and, once authentication has completed, the authenticated 
-subject~\cite{ProfileHandling}.
+While a flow describes the sequence of processing steps, the state of the request being processed 
+is held separately in a structure referred to as the context tree. 
+Its root is the \texttt{ProfileRequestContext}, which is created when a request arrives and 
+accompanies it through the entire profile execution. 
+Attached to this root are child contexts, each holding one aspect of the request, so that the 
+state grows as processing advances rather than being assembled in a single object at the outset.
+
+Three of these child contexts are relevant in the following. 
+The \texttt{InboundMessageContext} holds the message as it was received, the 
+\texttt{RelyingPartyContext} identifies the SP the request originates from and records whether 
+that identity could be verified, and the \texttt{SubjectContext} holds the authenticated subject 
+once authentication has completed~\cite{ProfileHandling}. 
+The last of these illustrates the incremental nature of the structure, since it does not exist 
+before the user has been authenticated.
 
 \subsection{Audit Logging}\label{subsec:audit-logging}
 

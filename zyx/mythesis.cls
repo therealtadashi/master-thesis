@@ -58,6 +58,7 @@
 \ifoot[\normalfont\texttt{\color{gray}{\gitshort}}]{\normalfont\texttt{\color{gray}{\gitshort}}}
 }{}
 
+\setcounter{secnumdepth}{3}
 
 % Store config values into title and author of the document
 \title{\myTitle}

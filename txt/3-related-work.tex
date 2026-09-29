@@ -24,7 +24,7 @@ Somorovsky et al. examined fourteen SAML frameworks and found critical XSW vulne
 eleven of them~\cite{BreakingSAML}. 
 Their analysis is confined to the processing of assertions at the SP, and it does not consider 
 what information is available at the IdP during or after such an attack. 
-Mainka et al. extended this line of work to cloud environments and reported that a majority of 
+Kaur and Bansal extended this line of work to cloud environments and reported that a majority of 
 the analysed SaaS providers were vulnerable to at least one of eight identified attack 
 vectors~\cite{VulnerSAMLCloud}.
 
@@ -118,6 +118,25 @@ points within the application.
 Developers must identify suitable locations where suspicious behaviour can be detected and 
 implement the corresponding detection logic~\cite{BlackWatch}. 
 
+A domain-specific precedent is provided by Suvanto's AAIEye, a monitoring system for Shibboleth- 
+and SAML 2.0-based federations~\cite{MonitoringAAI}. 
+Motivated by the lack of effective monitoring solutions for authentication and authorisation 
+infrastructures, AAIEye deploys probes alongside the monitored IdP and SP components. 
+These probes collect two categories of information that closely resemble the sources used in this 
+work: runtime authentication events and federation metadata.
+
+However, the evaluation applied to this data differs fundamentally. 
+The usage statistics probe records an authentication event only as a data point for a login count, 
+without assessing whether the event itself is suspicious. 
+The metadata probe verifies only the currency of a metadata file, through a checksum comparison 
+against a reference copy, not its security-relevant content such as certificate validity or endpoint 
+configuration. 
+Suvanto notes that problems in federation operation are often caused by configuration mistakes or 
+changes that cannot currently be easily detected~\cite{MonitoringAAI}. 
+This is precisely the gap addressed in this work. 
+The same categories of data that AAIEye already collects for operational purposes are evaluated 
+here for their security semantics instead. 
+
 A complementary perspective is provided by Martín and Beltrán, who propose 
 behavioural anomaly detection at the SP rather than the IdP~\cite{UEBAFederation}. 
 Their argument is that delegating authentication to an IdP does not transfer the entire security 
@@ -174,7 +193,7 @@ file-system access.
 
 Cryptographic approaches provide a stronger solution to this problem. 
 Schneier and Kelsey, as well as Snodgrass et al., describe mechanisms that make tampering with 
-stored logs cryptographically detectable~\cite{TamperDetection,CryptoSupportSecureLogs}. 
+stored logs cryptographically detectable~\cite{CryptoSupportSecureLogs, TamperDetection}. 
 However, these approaches require changes to the logging or storage architecture and may depend 
 on external trusted components. 
 Snodgrass et al. report an overhead of up to 16 percent for their approach~\cite{TamperDetection}.

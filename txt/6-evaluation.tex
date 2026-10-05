@@ -77,7 +77,7 @@ The measurement method is as follows:
 The underlying data source is 200 consecutive logins of a single test user via the HTTP login 
 harness, preceded by three warm-up logins that are included in the measurement. 
 In terms of candidate ambiguity this represents the worst case, since all candidates share the 
-same \textit{subjectHash}, \textit{ipHash} and SP, leaving time as the only distinguishing 
+same \textit{usernameHash}, \textit{ipHash} and SP, leaving time as the only distinguishing 
 feature.
 
 \subsection{Defects Identified during the Evaluation}\label{subsec:eval-correlation-findings}
@@ -525,7 +525,7 @@ Before turning to precision, the coverage of the correlation is considered, that
 proportion of interceptor reports for which a counterpart was found at all. 
 Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 
 remained without a counterpart after the retry window had elapsed. 
-The figure comprising all reports received by the backend during the evaluation runs. 
+The figure compromises all reports received by the backend during the evaluation runs. 
 The value is only determinable because the sweep described in 
 Section~\ref{subsec:impl-correlation} marks expired reports as permanently uncorrelated. 
 Without that distinction, a report still awaiting its audit entry would be indistinguishable 

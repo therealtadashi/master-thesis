@@ -8,7 +8,7 @@ This thesis presented an application layer monitoring tool for the Shibboleth Id
 documented vulnerabilities, configuration weaknesses and anomalous authentication behaviour by 
 combining three separate sources of information from within the IdP. 
 The collected data is transmitted to an external backend, where it is stored, correlated and 
-evaluated against a catalogue of thirteen detection rules.
+evaluated against a catalogue of fifteen detection rules.
 
 The three sources proved complementary, and the reason is more specific than their number. 
 The audit log records the outcome of a completed transaction, the configuration states what was 
@@ -21,16 +21,29 @@ since a login without multi factor authentication is unremarkable until it is re
 provider that requires it.
 
 The detection rules are derived rather than assembled from experience. 
-Eleven of the thirteen rules can be traced to vulnerabilities and attack classes documented in the 
-literature or to normative requirements for SAML deployments, and the two that cannot are named as 
-such. 
-All thirteen are verified against a real Elasticsearch instance, and five additionally through the 
-complete pipeline from a browser login to the resulting alert.
+Thirteen of the fifteen rules can be traced to vulnerabilities and attack classes documented in the 
+literature, to normative requirements for SAML deployments or, for the two rules that compare 
+independently produced records, to the log integrity argument. 
+The two rules that cannot be traced are named as such. 
+All fifteen are verified against a real Elasticsearch instance, and six additionally through the 
+complete pipeline from a browser login to the resulting alert. 
 
-The interceptor introduced no measurable overhead in the asynchronous transmission mode, with the 
-work performed inside it amounting to approximately 0,3\% of the login duration. 
+In the asynchronous transmission mode, the two interceptors introduced no measurable latency overhead. 
+The difference to a deployment without interceptors is $+6.2$\,ms with an upper bound of 17\,ms for 
+the 95\% confidence interval, and the work performed inside the interceptors amounts to about 
+0.13\% of the login duration. 
+The price of asynchronous transmission is a higher processor load of about seven percentage points 
+of one core, while blocking transmission would add about 60\,ms to each login. 
 The approach can therefore be integrated into the authentication workflow of a central 
-authentication service without a perceptible effect on the logins it observes.
+authentication service without a perceptible effect on the logins it observes, provided that the 
+records are transmitted asynchronously.
+
+The comparison of two independently produced records of the same event serves as a check of log 
+integrity without changing the logging chain. 
+For 200 legitimate logins the consistency check between interceptor report and audit entry raised 
+no alert, and it reported exactly the modified field of a deliberately manipulated audit entry. 
+The check shows that two records disagree, but not which of them was altered, and it cannot see the 
+fields inside an encrypted assertion.
 
 A recurring observation across the evaluation deserves mention, since it bears on the premise of 
 the work. 
@@ -49,7 +62,7 @@ Several federation level attack scenarios occur at a different system layer, inv
 party, or are observable only through their preconditions. 
 One case is more fundamental, since a malicious IdP cannot be detected by a system 
 running inside it, where observer and adversary coincide. 
-The severity classification makes a further boundary explicit, as none of the thirteen rules 
+The severity classification makes a further boundary explicit, as none of the fifteen rules 
 reaches the highest risk level, which presupposes a compromise of the signing key. 
 The Sunburst incident that motivated this work would consequently not have been detected by the 
 system presented here, although the configuration weaknesses that make such an attack easier to 

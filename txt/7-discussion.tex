@@ -29,16 +29,23 @@ weaknesses and anomalies.
 The correlation operates reliably within a limit that the evaluation was able to quantify, namely 
 approximately six logins per second for a given combination of subject, address and SP, 
 beyond which the heuristic strategies can no longer resolve the order of events. 
-The thirteen detection rules behave as intended for the scenarios constructed for them, and all 
+The fifteen detection rules behave as intended for the scenarios constructed for them, and all 
 are verified against real persistence rather than against mocked repositories alone. 
 This establishes the fidelity of the implementation, though not the detection quality in 
 operation, a distinction developed in Section~\ref{subsec:validity-detection}.
 
 The third question asked what overhead the resulting system imposes. 
-In the asynchronous delivery mode no overhead was measurable, with the work performed inside the 
-interceptor amounting to approximately 0,3\% of the login duration. 
-The synchronous mode tends to be slower by a margin in the low tens of milliseconds, although 
-with six runs per configuration this could not be established with statistical confidence.
+In the asynchronous delivery mode, the end-to-end login latency did not differ measurably from a 
+deployment without interceptors. 
+The point estimate is $+6.2$\,ms, and the upper bound of the 95\% confidence interval is 17\,ms, 
+which is below five percent of the median login duration. 
+The work performed inside the two interceptors amounts to about 0.45\,ms, or 0.13\% of the login 
+duration, as a lower bound that excludes the transmission. 
+The asynchronous transmission is not free of cost, however. 
+It moves the work into background threads, and the processor utilisation of the IdP container 
+rises by about seven percentage points of one core. 
+Blocking transmission, in contrast, adds about 60\,ms to every login, roughly 27 to 30\,ms for each 
+of the two transmissions, and this difference is consistent across all 18 runs.
 
 Beyond the individual research questions, one observation emerges across all three evaluations. 
 In each of them the measurement uncovered a defect that operation itself had not revealed. 
@@ -134,8 +141,7 @@ A final limitation connects back to the motivation of this work.
 The risk classification used for the severity assignment in Section~\ref{subsec:severity} 
 distinguishes five levels, of which the highest describes an adversary able to authenticate as any 
 user at any SP. 
-None of the thirteen rules reaches this level, since it presupposes a compromise of the signing 
-key. 
+None of the fifteen rules reaches this level, since it presupposes a compromise of the signing key. 
 An adversary in possession of that key produces formally valid assertions that are 
 indistinguishable from legitimate ones by any of the implemented rules. 
 The Sunburst incident described in Chapter~\ref{ch:introduction} is precisely such a case and 

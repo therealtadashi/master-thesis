@@ -478,14 +478,15 @@ result.
 Which rules are active in a given deployment is thus determined by what that deployment logs. 
 
 Which conditions the rules examine is a separate question from how they are evaluated. 
-The catalogue of thirteen rules was derived from the three frameworks introduced in 
+The catalogue of fifteen rules was derived from the three frameworks introduced in 
 Section~\ref{sec:rules}, namely the survey by Simpson and Groß, the OASIS security 
-considerations and the STRIDE classification. 
+considerations and the STRIDE classification, and, for the two rules that compare independently 
+produced records, from the log integrity argument of Section~\ref{sec:why-not-siem}. 
 Table~\ref{tab:rules} shows the resulting assignment for each rule.
 
 \begin{table}[h]
 \centering
-\caption{Assignment of the 13 Detection Rules to Documented Vulnerabilities and Attack Classes}\label{tab:rules}
+\caption{Assignment of the 15 Detection Rules to Documented Vulnerabilities and Attack Classes}\label{tab:rules}
 \small
 \begin{tabular}{p{3.3cm}p{2.7cm}p{2.4cm}p{1.1cm}l}
 \toprule
@@ -502,6 +503,8 @@ Rule & Vulnerability & Attack Class & STRIDE & Source \\
 \texttt{REQUEST\_\allowbreak{}REPLAY}                             & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
 \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} & Message Formatting         & Message Modification     & S, T, E & \cite{BreakingSAML,ShibbolethGIAC} \\
 \texttt{CERTIFICATE\_\allowbreak{}EXPIRED}                        & None                       & None                     & S       & \cite{SAMLSecurityConsideration} \\
+\texttt{CORRELATION\_\allowbreak{}DISCREPANCY}                    & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
+\texttt{FIELD\_\allowbreak{}MISMATCH}                             & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}        & None                       & None                     & ---     & --- \\
 \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}                          & Multiple                   & Detection method         & S       & --- \\
 \bottomrule

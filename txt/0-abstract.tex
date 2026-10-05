@@ -20,7 +20,7 @@ provider, and the runtime state accessible through an interceptor executing insi
 authentication flow. 
 Records from these sources are pseudonymised at their origin, transmitted to a backend located 
 outside the trust boundary of the provider, correlated with one another and evaluated against a 
-catalogue of thirteen detection rules. 
+catalogue of fifteen detection rules. 
 The rules are not assembled from experience but derived from vulnerabilities and attack classes 
 documented in a systematic survey of federated identity security and from the normative 
 requirements of the SAML security considerations.
@@ -30,11 +30,13 @@ be correlated, and what the resulting system costs.
 The correlation reaches a coverage of 99,9\% and remains free of incorrect assignments up to a 
 quantified login density, beyond which the heuristic strategies can no longer resolve the order of 
 events. 
-All thirteen rules were verified against a real search index and five additionally through the 
+All fifteen rules were verified against a real search index and six additionally through the 
 complete pipeline from a browser login to the resulting alert. 
-In the productive transmission mode, no overhead was measurable in the end-to-end login latency, 
-with the work performed inside the interceptor amounting to approximately 0,3\% of the duration of 
-a login.
+In the asynchronous transmission mode, the end-to-end login latency did not differ measurably from 
+a deployment without interceptors, with an upper bound of 17\,ms for the 95\% confidence interval, 
+below five percent of the median login duration. 
+The processor load of the IdP increased by about seven percentage points of one core, whereas 
+blocking transmission added about 60\,ms to each login. 
 
 The work also identifies the boundaries of the chosen observation point. 
 Attack classes located at a different system layer, involving a different party, or observable 

@@ -619,7 +619,7 @@ established rather than constituting a new risk specific to network address tran
 
 \section{Detection}\label{sec:eval-detection}
 
-This section evaluates the thirteen detection rules described in 
+This section evaluates the fifteen detection rules described in 
 Section~\ref{subsec:impl-detection}. 
 It first establishes what the reported figures can and cannot show, then presents the test 
 coverage per rule, and finally reports three defects that the evaluation itself uncovered.
@@ -686,26 +686,28 @@ Table~\ref{tab:detection-coverage} shows which layers each rule is covered on.
 \toprule
 Alert Type & Unit & Layer 1 & Layer 2 \\
 \midrule
-\texttt{SUSPICIOUS\_USER\_AGENT}        & yes & yes & TP and TN \\
-\texttt{FAILED\_LOGIN}                  & yes & yes & TP and TN \\
-\texttt{BRUTE\_FORCE}                   & yes & yes & TP and TN \\
-\texttt{UNENCRYPTED\_ASSERTION}         & yes & yes & TP and TN \\
-\texttt{WEAK\_ENCRYPTION}               & yes & yes & TN only   \\
-\texttt{BEHAVIOR\_ANOMALY}              & yes & yes & ---       \\
-\texttt{MFA\_BYPASS}                    & yes & yes & ---       \\
-\texttt{ASSERTION\_REPLAY}              & yes & yes & ---       \\
-\texttt{WEAK\_CONFIGURATION}            & yes & yes & ---       \\
-\texttt{MISSING\_MFA}                   & yes & yes & ---       \\
-\texttt{CERTIFICATE\_EXPIRED}           & yes & yes & ---       \\
-\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & yes & yes & ---       \\
-\texttt{REQUEST\_REPLAY}                & yes & yes & ---       \\
+\texttt{SUSPICIOUS\_USER\_AGENT}        & yes & yes & TP, TN  \\
+\texttt{FAILED\_LOGIN}                  & yes & yes & TP, TN  \\
+\texttt{BRUTE\_FORCE}                   & yes & yes & TP, TN  \\
+\texttt{UNENCRYPTED\_ASSERTION}         & yes & yes & TP, TN  \\
+\texttt{WEAK\_ENCRYPTION}               & yes & yes & TN only \\
+\texttt{FIELD\_MISMATCH}                & yes & yes & TN, TP  \\
+\texttt{CORRELATION\_DISCREPANCY}       & yes & yes & ---     \\
+\texttt{BEHAVIOR\_ANOMALY}              & yes & yes & ---     \\
+\texttt{MFA\_BYPASS}                    & yes & yes & ---     \\
+\texttt{ASSERTION\_REPLAY}              & yes & yes & ---     \\
+\texttt{WEAK\_CONFIGURATION}            & yes & yes & ---     \\
+\texttt{MISSING\_MFA}                   & yes & yes & ---     \\
+\texttt{CERTIFICATE\_EXPIRED}           & yes & yes & ---     \\
+\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & yes & yes & ---     \\
+\texttt{REQUEST\_REPLAY}                & yes & yes & ---     \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-All thirteen rules are covered by an explicit true positive proof against a real Elasticsearch 
+All fifteen rules are covered by an explicit true positive proof against a real Elasticsearch 
 instance. 
-The counts comprise at least 84 unit scenarios, 18 layer one tests and 5 layer two tests, where 
+The counts comprise at least 84 unit scenarios, 18 layer one tests and 6 layer two tests, where 
 the unit figure is a lower bound since the test files were examined selectively rather than in 
 full.
 
@@ -781,12 +783,12 @@ The mocked repository returns success for every save operation, irrespective of 
 Elasticsearch instance would have accepted the document. 
 The test therefore verified that the rule calls the repository, not that the repository call has 
 any effect. 
-This finding is the reason why layer one was introduced for all thirteen rules rather than only 
-for those where it seemed most obviously necessary. 
+This finding is the reason why layer one was introduced for all rules rather than only for those 
+where it seemed most obviously necessary. 
 
 \subsection{A Systemic Class of False Negatives}\label{subsec:detection-registry-guard}
 
-Eight of the thirteen rules begin by checking whether the audit field they depend on is present 
+Eight of the fifteen rules begin by checking whether the audit field they depend on is present 
 in the field registry, and return without a result if it is not. 
 As a design decision this is sound, since a rule should not guess when the data it requires is 
 absent, as argued in Section~\ref{subsec:detection}.
@@ -840,7 +842,7 @@ become technically possible, but it has not been carried out.
 
 \subsection{Interpretation of the Results}\label{subsec:interpretation-detection}
 
-All thirteen rules behave as intended for the scenarios constructed for them, and all are 
+All fifteen rules behave as intended for the scenarios constructed for them, and all are 
 verified against real persistence rather than against mocks alone. 
 This is a statement about the fidelity of the implementation, and within that scope it is a 
 complete one.
@@ -1324,10 +1326,11 @@ Four specific gaps are worth stating explicitly rather than leaving to be inferr
 \texttt{WEAK\_\allowbreak{}ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
 since establishing one would require a SP configured to use a weak algorithm.
 
-Eight of the thirteen rules are not covered on layer two. 
+Nine of the fifteen rules are not covered on layer two. 
 As discussed in Section~\ref{subsec:detection-coverage}, five of them cannot sensibly be 
-triggered through a normal login and three do not depend on a login at all, so that the gap is 
-smaller than the figure alone suggests.
+triggered through a normal login, three do not depend on a login at all, and the discrepancy rule 
+raises its alert only after the retry window of fifteen minutes, which the end to end tests do not 
+wait for, so that the gap is smaller than the figure alone suggests.
 
 For the correlation, the case in which a shared source address and a missing user identifier 
 coincide was not measured. 

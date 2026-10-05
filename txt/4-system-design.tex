@@ -298,7 +298,7 @@ When the assertion is encrypted, the encryption has already taken place when the
 runs, so that the assertion identifier, the authentication context and the name identifier are no 
 longer readable, and the IdP cannot read them afterwards, since only the SP holds the private key. 
 Reading them before the encryption would require an intervention in the profile flow itself, which 
-the second requirement from Section~\ref{sec:requirements} excludes. 
+the third requirement from Section~\ref{sec:requirements} excludes. 
 For encrypted assertions only the response level fields and the encryption state are therefore 
 available to the interceptors, whereas the audit log records all of them, since the IdP extracts 
 them at an earlier point of the processing sequence. 
@@ -650,7 +650,17 @@ Section~\ref{sec:rules}.
 The cost of this decision is that the system detects only conditions that were anticipated when 
 the rules were formulated. 
 Attack patterns that do not correspond to any defined rule remain unnoticed, whereas a statistical 
-approach could in principle identify previously unknown deviations.
+approach could in principle identify previously unknown deviations. 
+
+A further decision concerns the number of interceptors. 
+In principle, a single outbound interceptor could replace the post authentication interceptor, 
+since the outbound point also has access to the incoming message and the authentication result. 
+The system nevertheless collects at both points. 
+The post authentication report is created as soon as authentication has succeeded and does not 
+depend on the later construction of the response, so that it exists even if the profile fails 
+before the outbound point is reached. 
+The cost of this decision is a second transmission per login, which doubles the number of 
+blocking calls in the synchronous mode, as reflected in Section~\ref{sec:overhead}.
 
 Two further decisions have already been discussed in the context in which they arise. 
 The choice of the interception points, described in Section~\ref{subsec:interceptor}, 

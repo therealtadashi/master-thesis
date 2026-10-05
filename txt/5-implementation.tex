@@ -202,6 +202,11 @@ The assertion identifier and the outbound message identifier are unique as well,
 created after the post-authentication hook has run, which executes before the outgoing message 
 content is constructed~\cite{ProfileHandling}, and are extracted at later points of the audit 
 pipeline~\cite{AuditLoggingConfiguration}. 
+They are therefore not available to the interceptor at the post authentication hook. 
+The outbound interceptor described in Section~\ref{subsec:impl-outbound} reads the outbound message 
+identifier and, for assertions that are not encrypted, the assertion identifier, and the audit 
+format of the deployment records the outbound message identifier as well, so that these fields 
+serve the comparison of the two records rather than the correlation. 
 Which identifiers can be used for correlation is thus determined by the observation point rather than 
 by the audit format alone. 
 The remaining fields, among them the entity identifier of the SP, the authentication flow and the 

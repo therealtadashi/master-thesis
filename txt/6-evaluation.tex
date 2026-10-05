@@ -674,6 +674,15 @@ Filebeat and Logstash into Elasticsearch, and the test then verifies the alert p
 backend. 
 This is the only layer on which a defect in the log shipping pipeline can become visible.
 
+Two of the layer two tests are false positive runs. 
+Each performs 100 consecutive logins of three rotating users through the browser and examines the 
+alerts that arose in the observed period. 
+Against the clean SP the assertion is that no alert of any type was raised, and against the 
+weakly configured provider the assertion is that no \texttt{FIELD\_MISMATCH} alert was raised, since 
+the alerts of the other rules are expected there. 
+Both runs wait about 100 seconds after the last login, so that alerts that arise only after the 
+retry window of the correlation, such as the discrepancy alert, are not covered by them.
+
 \subsection{Coverage per Rule}\label{subsec:detection-coverage}
 
 Table~\ref{tab:detection-coverage} shows which layers each rule is covered on.
@@ -705,11 +714,12 @@ Alert Type & Unit & Layer 1 & Layer 2 \\
 \end{tabular}
 \end{table}
 
-All fifteen rules are covered by an explicit true positive proof against a real Elasticsearch 
-instance. 
-The counts comprise at least 84 unit scenarios, 18 layer one tests and 6 layer two tests, where 
-the unit figure is a lower bound since the test files were examined selectively rather than in 
-full.
+All fifteen rules are covered by an explicit true positive proof against a real Elasticsearch instance. 
+The counts comprise 118 unit tests for the fifteen rules, 21 layer one tests and seven layer two 
+tests, counted as annotated test methods. 
+The unit tests of the four rule engines, 19 further tests, are not included. 
+Of the layer two tests, four are true positive tests for individual rules, one is a baseline with a 
+single clean login for five rule types, and two are the false positive runs.
 
 Six rules are additionally covered on layer two. 
 Four of them, namely \texttt{SUSPICIOUS\_USER\_AGENT}, \texttt{FAILED\_LOGIN}, \texttt{BRUTE\_FORCE} 
@@ -720,7 +730,7 @@ positive proof is the manual manipulation described in Section~\ref{subsec:detec
 Because the clean run asserts that no alert of any kind occurred, it also serves as a true negative 
 proof for the remaining rules, insofar as they can raise an alert within the observation period.
 
-The remaining eight rules are not covered on layer two, for two different reasons. 
+The remaining nine rules are not covered on layer two, for three different reasons. 
 Five of them, namely \texttt{BEHAVIOR\_\allowbreak{}ANOMALY}, \texttt{MFA\_\allowbreak{}BYPASS}, 
 \texttt{ASSERTION\_\allowbreak{}REPLAY}, \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} and 
 \texttt{REQUEST\_\allowbreak{}REPLAY}, cannot sensibly be triggered through a normal login, since they require 
@@ -729,6 +739,8 @@ The other three, namely \texttt{WEAK\_\allowbreak{}CONFIGURATION}, \texttt{MISSI
 \texttt{CERTIFICATE\_\allowbreak{}EXPIRED}, do not depend on a login at all. 
 They evaluate configuration and metadata, which the layer one tests already exercise in full, so 
 that layer two would add nothing for them.
+The ninth, \texttt{CORRELATION\_DISCREPANCY}, raises its alert only after the retry window of 
+fifteen minutes, which the end to end tests do not wait for.
 
 \subsection{A Defect Visible Only through the Full Pipeline}\label{subsec:detection-logstash-defect}
 

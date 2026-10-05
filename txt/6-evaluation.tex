@@ -711,11 +711,14 @@ The counts comprise at least 84 unit scenarios, 18 layer one tests and 6 layer t
 the unit figure is a lower bound since the test files were examined selectively rather than in 
 full.
 
-Five rules are additionally covered on layer two. 
-Four of them have both a true positive and a true negative proof, whereas 
-\texttt{WEAK\_ENCRYPTION} has only a true negative proof at present. 
-Establishing a true positive proof for it on layer two would require a SP 
-configured to use a weak algorithm, which the test environment does not currently provide.
+Six rules are additionally covered on layer two. 
+Four of them, namely \texttt{SUSPICIOUS\_USER\_AGENT}, \texttt{FAILED\_LOGIN}, \texttt{BRUTE\_FORCE} 
+and \texttt{UNENCRYPTED\_ASSERTION}, have both a true positive and a true negative proof. 
+\texttt{WEAK\_ENCRYPTION} has only a true negative proof at present, and \texttt{FIELD\_MISMATCH} has 
+an automated true negative proof in the 200 logins of the false positive runs, whereas its true 
+positive proof is the manual manipulation described in Section~\ref{subsec:detection-consistency}. 
+Because the clean run asserts that no alert of any kind occurred, it also serves as a true negative 
+proof for the remaining rules, insofar as they can raise an alert within the observation period.
 
 The remaining eight rules are not covered on layer two, for two different reasons. 
 Five of them, namely \texttt{BEHAVIOR\_\allowbreak{}ANOMALY}, \texttt{MFA\_\allowbreak{}BYPASS}, 
@@ -788,8 +791,9 @@ where it seemed most obviously necessary.
 
 \subsection{A Systemic Class of False Negatives}\label{subsec:detection-registry-guard}
 
-Eight of the fifteen rules begin by checking whether the audit field they depend on is present 
-in the field registry, and return without a result if it is not. 
+Seven of the fifteen rules begin by checking whether the audit field they depend on is present in 
+the field registry, and return without a result if it is not, and the consistency check skips each 
+field that the registry does not contain. 
 As a design decision this is sound, since a rule should not guess when the data it requires is 
 absent, as argued in Section~\ref{subsec:detection}.
 
@@ -1295,8 +1299,16 @@ Resolving it entirely would require productive traffic in which each login is in
 labelled as malicious or benign. 
 No such dataset exists for this work, and it cannot be produced within a test environment, since 
 producing it would require the same judgement that the labelling is meant to verify. 
-A false positive rate expressed as alerts per thousand legitimate logins is consequently not 
-determinable at present, only that the constructed negative cases correctly remain silent.
+
+A partial measurement is nevertheless available. 
+In 100 consecutive logins of three users against the clean SP, no alert of any type was raised, 
+which bounds the proportion of legitimate logins that trigger an alert in this scenario to at most 
+3.7 percent (95 percent Wilson interval). 
+The measurement covers only a SP whose configuration is free of the weaknesses the rules are designed 
+to detect, it uses a single browser, and it does not reach alerts that arise only after the retry 
+window of fifteen minutes. 
+It says nothing about the behaviour against configurations that are legitimate but unusual, which is 
+the harder case in a production deployment. 
 
 The false negative classes reported per rule are likewise derived rather than measured. 
 Where a test deliberately carries a negative case, the statement is firm. 
@@ -1326,11 +1338,10 @@ Four specific gaps are worth stating explicitly rather than leaving to be inferr
 \texttt{WEAK\_\allowbreak{}ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
 since establishing one would require a SP configured to use a weak algorithm.
 
-Nine of the fifteen rules are not covered on layer two. 
-As discussed in Section~\ref{subsec:detection-coverage}, five of them cannot sensibly be 
-triggered through a normal login, three do not depend on a login at all, and the discrepancy rule 
-raises its alert only after the retry window of fifteen minutes, which the end to end tests do not 
-wait for, so that the gap is smaller than the figure alone suggests.
+Nine of the fifteen rules are not covered by an explicit proof on layer two. 
+As discussed in Section~\ref{subsec:detection-coverage}, five of them cannot sensibly be triggered 
+through a normal login, three do not depend on a login at all, and the discrepancy rule raises 
+its alert only after the retry window of fifteen minutes, which the end to end tests do not wait for. 
 
 For the correlation, the case in which a shared source address and a missing user identifier 
 coincide was not measured. 

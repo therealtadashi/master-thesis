@@ -260,10 +260,10 @@ at this stage.
 The interceptor can also modify the context before the outgoing response is constructed, including 
 changes to the authenticated identity or attributes~\cite{ProfileHandling}. 
 
-This makes the post-authentication interception point particularly suitable for the monitoring system 
-developed in this work, as it provides access to authentication-related information that is not yet 
-available at the inbound stage while still allowing the resulting SAML response to be observed 
-indirectly through the processing context.
+This makes the post authentication interception point particularly suitable for the monitoring 
+system developed in this work, as it provides access to authentication related information that is 
+not yet available at the inbound stage, and it does so before the profile constructs the outgoing 
+message.
 
 Outbound interceptors run shortly before the final stage of profile processing that produces the 
 response to the client. 
@@ -278,22 +278,33 @@ Interceptors can inspect or modify the outbound context and may also terminate p
 For the monitoring system, this interception point is useful for observing the result of the 
 authentication workflow and properties of the response that is about to be issued by the IdP.
 
-The monitoring system uses the post-authentication interception point. 
-This choice determines what the collection mechanism can observe. 
+The monitoring system uses two interception points, the post authentication point and the 
+outbound point. 
 An inbound interceptor would see the incoming message but not the outcome of authentication, 
 since that has not yet taken place. 
-An outbound interceptor would see the response about to be issued, but the request that caused 
-it is no longer the object of processing at that stage. 
-The post-authentication point is the only one at which both the incoming message and the 
-authentication result are available in the same context.
+The post authentication point is the earliest point at which both the incoming message and the 
+authentication result are available in the same context, and it serves as the main collection point. 
+The outbound point still has access to both, since its input is the entire state of the tree that 
+the profile execution has produced~\cite{ProfileHandling}, and it additionally holds the response 
+that is about to be issued. 
+At the post authentication point, in contrast, the outgoing response does not exist yet. 
+The outbound interceptor therefore complements the main collection point with the fields that only 
+the response carries.
 
-What remains outside its view is the outgoing response, including the assertion identifier, 
-the encryption actually applied and the final status of the transaction. 
-These properties are recorded in the audit log, which is written after the transaction 
-has completed. 
-The complementarity of the two sources described in Section~\ref{subsec:audit-log} therefore 
-follows from their position in the processing sequence rather than from a deliberate 
-division of responsibilities.
+What remains outside the view of the post authentication point is the outgoing response, including 
+the response identifier, the final status of the transaction and the encryption actually applied. 
+The outbound interceptor makes these properties observable, with one limit. 
+When the assertion is encrypted, the encryption has already taken place when the outbound hook 
+runs, so that the assertion identifier, the authentication context and the name identifier are no 
+longer readable, and the IdP cannot read them afterwards, since only the SP holds the private key. 
+Reading them before the encryption would require an intervention in the profile flow itself, which 
+the second requirement from Section~\ref{sec:requirements} excludes. 
+For encrypted assertions only the response level fields and the encryption state are therefore 
+available to the interceptors, whereas the audit log records all of them, since the IdP extracts 
+them at an earlier point of the processing sequence. 
+The complementarity of the sources described in Section~\ref{subsec:audit-log} therefore follows 
+from their position in the processing sequence rather than from a deliberate division of 
+responsibilities.
 
 \section{Transport Layer and Trust Boundary}\label{sec:trust}
 
@@ -642,9 +653,8 @@ Attack patterns that do not correspond to any defined rule remain unnoticed, whe
 approach could in principle identify previously unknown deviations.
 
 Two further decisions have already been discussed in the context in which they arise. 
-The choice of the post authentication interception point, described in 
-Section~\ref{subsec:interceptor}, determines which information the collection mechanism can 
-observe and which remains outside its view. 
+The choice of the interception points, described in Section~\ref{subsec:interceptor}, 
+determines which information the collection mechanism can observe and which remains outside its view. 
 The decision to transmit records asynchronously, described in Section~\ref{sec:trust}, prioritises 
 non interference with the monitored service over a guarantee of delivery.
 

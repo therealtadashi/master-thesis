@@ -171,14 +171,15 @@ SPs, which introduces organisational challenges beyond the technical ones, since
 presupposes cooperation between parties that are administratively independent.
 
 A second direction concerns the observation point within the IdP itself. 
-The interceptor used in this work is attached to the post-authentication hook and therefore 
-observes the incoming message and the authentication result, but not the outgoing response. 
-As described in Section~\ref{subsec:interceptor}, properties such as the assertion identifier, the 
-encryption actually applied and the final status of a transaction are consequently available only 
-through the audit log. 
-An additional interceptor at the outbound hook would make these properties available from a second, 
-independent source and would thereby extend the discrepancy based detection described in 
-Section~\ref{sec:why-not-siem} to fields for which it is currently not possible.
+The outbound interceptor added in this work makes the response level fields available from a second, 
+independent source, and it enables the comparison with the audit entry described in 
+Section~\ref{subsec:detection-consistency}. 
+What it cannot provide are the assertion internal fields of encrypted assertions, since the 
+encryption has already taken place at that hook. 
+An observation point before the encryption would close this gap, but the interception points that 
+Shibboleth offers to developers do not include one, and an intervention in the profile flow would 
+conflict with the second requirement from Section~\ref{sec:requirements}. 
+Whether the audit extraction points of the IdP could serve this purpose is a question for future work.
 
 A third direction addresses the one Shibboleth specific issue that remains uncovered. 
 Monitoring changes to the configuration and metadata of a SP would provide a partial answer to the 

@@ -210,13 +210,13 @@ namely audit entries, metadata, configuration data and the reports of the two
 interceptors. 
 These indices differ in how they are created. 
 Audit entries are written by Logstash into time based indices that are rotated daily, 
-whereas interceptor reports and outbound reports are stored in a single index each, maintained 
+whereas post authentication reports and outbound reports are stored in a single index each, maintained 
 by the application itself. 
 Queries that span audit data therefore address an index pattern rather than a concrete 
 index, which restricts the set of Elasticsearch operations available for them.
 
 Elasticsearch does not provide relations between documents. 
-The result of a correlation is therefore stored as a field on the interceptor report, 
+The result of a correlation is therefore stored as a field on the post authentication report, 
 which holds the identifier of the audit entry it was matched with. 
 The strategy that produced the match is stored alongside it, as described in 
 Section~\ref{subsec:correlation}, so that the basis of a correlation remains visible 
@@ -228,11 +228,11 @@ This section describes how the two challenges of the correlation layer identifie
 Section~\ref{subsec:correlation} are addressed in the implementation, namely the temporal 
 offset between the arrival of related records and the varying availability of fields 
 in the audit log.
-The interceptor report is static and always contains the fields required for correlation. 
+The post authentication report is static and always contains the fields required for correlation. 
 The constraint therefore lies entirely on the audit side. 
 The audit logging documentation lists all fields that a deployment may 
 record~\cite{AuditLoggingConfiguration}, of which four are usable for establishing a 
-relationship between an audit entry and an interceptor report. 
+relationship between an audit entry and a post authentication report. 
 
 \begin{itemize}
     \item \textbf{I}: the inbound message identifier of the SAML request
@@ -280,7 +280,7 @@ Where a required field is not recorded by the deployment, the strategy withdraws
 one in the chain is attempted. 
 
 The first strategy, \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}, matches the inbound 
-message identifier of the interceptor report against the corresponding audit field. 
+message identifier of the post authentication report against the corresponding audit field. 
 Since this value is unique per request, a match establishes the relationship without ambiguity. 
 The second strategy, \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}, narrows 
 the candidates by SP, pseudonymised subject and pseudonymised client address, and additionally restricts 
@@ -288,13 +288,13 @@ them to a configurable time window around the event.
 The third strategy, \texttt{TIME\_\allowbreak{}WINDOW}, retains only the SP and the time window, and is 
 therefore used where neither the message identifier nor the pseudonymised identifiers are recorded. 
 
-The pseudonymised subject appears under two names, since the interceptor report stores it as 
+The pseudonymised subject appears under two names, since the post authentication report stores it as 
 \textit{subjectHash} whereas the audit entry records it as \textit{usernameHash}. 
 Both hold the same value, derived from the same identifier with the same salt, and the distinction 
 is one of naming within the respective data source rather than of content. 
 
 Both time window strategies may return more than one candidate. 
-In this case the entry with the smallest temporal distance to the interceptor report is selected. 
+In this case the entry with the smallest temporal distance to the post authentication report is selected. 
 The strategy that produced a match is stored alongside the result, so that the reliability of a 
 given correlation remains apparent afterwards. 
 
@@ -310,7 +310,7 @@ Chapter~\ref{ch:evaluation}.
 
 The temporal offset described in Section~\ref{subsec:correlation} is addressed by repeated 
 attempts. 
-An interceptor report that could not be correlated on arrival is retried periodically, with a 
+A post authentication report that could not be correlated on arrival is retried periodically, with a 
 minimum age before the first attempt to account for the indexing delay of the log shipping stack. 
 After a defined retry window has elapsed without a match, a separate scheduled sweep marks the 
 report as permanently uncorrelated. 
@@ -341,7 +341,7 @@ Where a required field is not recorded by the deployment, the rule is skipped ra
 evaluated on incomplete data. 
 
 The engines are executed by a scheduler at intervals that reflect the rhythm of their input. 
-Login events and interceptor reports arrive continuously and are therefore evaluated 
+Login events and post authentication reports arrive continuously and are therefore evaluated 
 frequently, whereas configuration and metadata change rarely and are checked at longer 
 intervals. 
 To avoid evaluating the same login events repeatedly, the application maintains a marker that 
@@ -366,7 +366,7 @@ can be adjusted without changing the rule itself.
 authentication attempts of the same subject within a defined time window, which requires a query 
 across previously stored events. 
 \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} operates on the raw SAML request 
-contained in an interceptor report and examines its structure for duplicate identifiers and for 
+contained in a post authentication report and examines its structure for duplicate identifiers and for 
 signature elements referencing an identifier that occurs more than once. 
 
 The remaining rules follow one of these patterns or compare an observed event against the 
@@ -442,9 +442,9 @@ The page also provides a table of alerts ordered by severity.
 
 Each row in the alert table is interactive and opens a detailed dialog containing information about 
 the selected alert. 
-This dialog also provides access to the audit entry and the interceptor report associated with the 
+This dialog also provides access to the audit entry and the post authentication report associated with the 
 alert. 
-Conversely, both the audit entry and the interceptor report dialogs list all alerts detected for 
+Conversely, both the audit entry and the post authentication report dialogs list all alerts detected for 
 the corresponding event. 
 The relationship established by the correlation layer is therefore navigable in both directions, 
 which allows an operator to examine a finding together with the records it was derived from rather 
@@ -461,8 +461,8 @@ Each alert can also be acknowledged by an operator and marked as a false positiv
 Acknowledged alerts and false positives are removed from the default alert view, which only displays 
 active alerts.
 
-The third major page displays the collected interceptor reports in a table. 
-Each row contains the most relevant information from the corresponding interceptor report and 
+The third major page displays the collected post authentication reports in a table. 
+Each row contains the most relevant information from the corresponding post authentication report and 
 indicates whether the report was successfully correlated with an audit entry. 
 This makes the state described in Section~\ref{subsec:impl-correlation} visible to the operator, 
 including reports for which no counterpart was found within the retry window. 

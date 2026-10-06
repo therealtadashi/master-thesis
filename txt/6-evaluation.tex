@@ -63,7 +63,7 @@ ambiguity, which allows it to serve as a ground truth for the remaining strategi
 The measurement method is as follows:
 
 \begin{itemize}
-    \item Collect all interceptor reports of a configurable time period for which 
+    \item Collect all post authentication reports of a configurable time period for which 
           \texttt{correlated\_\allowbreak{}by = INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}
     \item For each report and each window size, execute the exact query of the heuristic 
           strategy and select the same candidate as the productive system would, namely the 
@@ -85,7 +85,7 @@ feature.
 Before the evaluation, 3{,}690 out of 3{,}690 correlations had been established through the 
 hashed identity and time window strategy, and not a single one through 
 \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}. 
-The figure comprises all interceptor reports that had accumulated in the test environment up 
+The figure comprises all post authentication reports that had accumulated in the test environment up 
 to that point, across the development and benchmark runs performed before the correlation 
 evaluation began. 
 The cause was not located in the application but in the audit format of the IdP. 
@@ -167,7 +167,7 @@ $\pm$60\,s & 203 & 0 & 0 & 100\% & 100\% & 197,60 \\
 
 \begin{table}[h]
 \centering
-\caption{Temporal offset between interceptor report reception and IdP event time (n = 203)}\label{tab:time-offset}
+\caption{Temporal offset between post authentication report reception and IdP event time (n = 203)}\label{tab:time-offset}
 \small
 \begin{tabular}{lllll}
 \toprule
@@ -522,7 +522,7 @@ of $-26$\,ms (n = 600), which is of the same order of magnitude as in the other 
 \subsection{Coverage and Operating Limits of the Correlation}\label{subsec:interpretation-correlation}
 
 Before turning to precision, the coverage of the correlation is considered, that is the 
-proportion of interceptor reports for which a counterpart was found at all. 
+proportion of post authentication reports for which a counterpart was found at all. 
 Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 
 remained without a counterpart after the retry window had elapsed. 
 The figure contains all reports received by the backend during the evaluation runs. 
@@ -540,7 +540,7 @@ The two properties therefore fail independently of one another.
 A weaker strategy does not leave reports unassigned, it assigns them to the wrong counterpart.
 
 The performance series provides a further, larger dataset for the operation of the correlation. 
-Over a period of about five hours, it generated 7{,}236 interceptor reports with both interceptors 
+Over a period of about five hours, it generated 7{,}236 post authentication reports with both interceptors 
 active, in bursts of 200 logins at a peak rate of roughly three logins per second, in the 
 asynchronous as well as in the synchronous transmission mode. 
 For every report, the corresponding outbound report existed as well, and the baseline runs 
@@ -558,7 +558,7 @@ For every entry it raised one \texttt{UNENCRYPTED\_ASSERTION} alert, since the b
 the deliberately weakly configured SP, and one \texttt{SUSPICIOUS\_USER\_AGENT} alert, since the 
 benchmark client is not a browser, in addition to four configuration alerts. 
 Every audit entry was therefore evaluated by the rule engine. 
-The 7{,}236 interceptor reports correspond to the audit entries of the asynchronous and synchronous 
+The 7{,}236 post authentication reports correspond to the audit entries of the asynchronous and synchronous 
 runs, whereas the remaining 3{,}618 entries stem from the baseline runs, in which the interceptors 
 are not active. 
 None of the alerts was a \texttt{FIELD\_MISMATCH} or \texttt{CORRELATION\_DISCREPANCY} alert. 
@@ -929,6 +929,11 @@ Finally, the check establishes that the records disagree and not which of them w
 An attacker who controls the application process can manipulate the report as well, as discussed 
 in Section~\ref{sec:limitation}.
 
+The check is triggered by the correlation of the post authentication report. 
+Events that only the outbound interceptor observes, such as an error response that the IdP issues 
+before authentication, are therefore not compared with their audit entries, although the outbound 
+report and the audit entry would suffice for such a comparison.
+
 \subsection{Coverage of the Documented Attack Space}\label{subsec:detection-attack-space}
 
 The figures presented so far describe the relationship between the rules and the tests written 
@@ -1095,7 +1100,7 @@ hundred logins, which yields 54 observations for the analysis, 18 per configurat
  
 Before each measurement, a single test login verifies that the intended configuration is in effect. 
 The verification queries the monitoring backend and checks whether the login produced an 
-interceptor report and an outbound report, expecting none of them for \textit{baseline} and one of 
+post authentication report and an outbound report, expecting none of them for \textit{baseline} and one of 
 each for the other two configurations. 
 This gate was introduced after an earlier series had to be discarded, in which the backend had 
 not been reachable and all three configurations had therefore been measured under effectively 

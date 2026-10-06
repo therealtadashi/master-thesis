@@ -539,6 +539,33 @@ density.
 The two properties therefore fail independently of one another. 
 A weaker strategy does not leave reports unassigned, it assigns them to the wrong counterpart.
 
+The performance series provides a further, larger dataset for the operation of the correlation. 
+Over a period of about five hours, it generated 7{,}236 interceptor reports with both interceptors 
+active, in bursts of 200 logins at a peak rate of roughly three logins per second, in the 
+asynchronous as well as in the synchronous transmission mode. 
+For every report, the corresponding outbound report existed as well, and the baseline runs 
+produced neither of the two, which confirms that the configurations differed as intended. 
+Every report was correlated with its audit entry through the inbound message identifier, and none 
+expired without a counterpart. 
+The coverage was therefore 100\,\% in this period, with a lower bound of 99.95\,\% for the 95 
+percent Wilson interval. 
+The load is synthetic, since it stems from a single user and a single SP, and it does not reach 
+the density at which the heuristic strategies lose precision. 
+The exact strategy, however, remained unaffected by it, as expected from its construction.
+ 
+During the same period the detection layer raised 21{,}712 alerts for 10{,}854 audit entries. 
+For every entry it raised one \texttt{UNENCRYPTED\_ASSERTION} alert, since the benchmark addresses 
+the deliberately weakly configured SP, and one \texttt{SUSPICIOUS\_USER\_AGENT} alert, since the 
+benchmark client is not a browser, in addition to four configuration alerts. 
+Every audit entry was therefore evaluated by the rule engine. 
+The 7{,}236 interceptor reports correspond to the audit entries of the asynchronous and synchronous 
+runs, whereas the remaining 3{,}618 entries stem from the baseline runs, in which the interceptors 
+are not active. 
+None of the alerts was a \texttt{FIELD\_MISMATCH} or \texttt{CORRELATION\_DISCREPANCY} alert. 
+The discrepancy rule raises an alert exactly for reports that expire without a counterpart, and 
+the consistency check raises one for every pair that disagrees, so that neither rule produced a 
+false alarm under this load, while the alerting itself remained operational throughout.
+
 Window size is not the limiting factor. 
 Precision remains at 100\% even though the mean number of candidates rises from 6,4 at 
 $\pm$1\,s to 197,6 at $\pm$60\,s. 
@@ -824,6 +851,83 @@ outdated address.
 Both rules therefore evaluated against an index that was no longer being updated, without any 
 indication that their input had become stale.
 
+\subsection{Consistency between Interceptor Report and Audit Entry}\label{subsec:detection-consistency}
+ 
+The consistency check described in Section~\ref{subsec:detection} compares an interceptor report 
+with the audit entry it was correlated with. 
+It runs after the correlation and compares the fields that both records contain and that the 
+audit format of the deployment records. 
+For every login these are the status, the identifier of the request answered by the response, the 
+identifier and the issue time of the outbound message and the encryption state. 
+Where the assertion is not encrypted, the identifier of the assertion, the authentication instant, 
+the authentication context, the name identifier format and the pseudonymised name identifier are 
+compared as well. 
+Values that the audit log writes in an abbreviated form are mapped to the notation of the report 
+before the comparison.
+ 
+The evaluation addresses two questions. 
+The first is whether the check remains silent for legitimate logins. 
+To examine this, 100 consecutive logins of three rotating test users were performed through a real 
+browser against each of two SPs, namely the deliberately clean provider with encrypted assertions 
+and the weakly configured provider without encryption described in Section~\ref{sec:setup}. 
+The IdP transmitted its records in the asynchronous mode. 
+Every login ran through the complete pipeline, from the browser to the comparison in the backend. 
+Table~\ref{tab:consistency-fp} summarises the result.
+ 
+\begin{table}[h]
+\centering
+\caption{Result of the consistency check for legitimate logins (upper bound: 95 percent Wilson interval)}\label{tab:consistency-fp}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+SP & Logins & Fields compared & Checks passed & Mismatches & Upper bound \\
+\midrule
+Clean SP & 100 & 5  & 100 & 0 & 3.7\,\% \\
+Weak SP & 100 & 10 & 100 & 0 & 3.7\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+ 
+In all 200 logins the report was correlated with its audit entry through the inbound message 
+identifier, no report expired without a counterpart, and the check passed. 
+No \texttt{FIELD\_MISMATCH} alert was raised. 
+The number of compared fields is taken from the log of the check, which lists the fields of every 
+comparison. 
+It is five for the clean provider and ten for the weak one in each of the 100 logins. 
+With no deviation in 100 comparisons per provider, the upper bound of the 95 percent Wilson 
+interval for the false positive rate of the check is 3.7 percent for each provider and 1.9 percent 
+for both together. 
+The two runs differ in the fields that can be compared. 
+For encrypted assertions the assertion internal fields are not observable at the point where the 
+outbound interceptor sees the response, so that only the response level fields and the encryption 
+state take part. 
+The run against the weak provider additionally covers the assertion internal fields, including the 
+pseudonymised name identifier, and with them the mapping of the values that the audit format 
+abbreviates. 
+Earlier runs in the synchronous transmission mode produced the same result. 
+The performance series described in Section~\ref{sec:overhead} adds 7{,}236 further pairs of 
+records, for which no \texttt{FIELD\_MISMATCH} alert was raised either 
+(Section~\ref{subsec:interpretation-correlation}).
+ 
+The second question is whether the check reports a discrepancy that actually exists. 
+For this purpose a login against the clean provider was performed while the backend was stopped. 
+After the audit entry had reached Elasticsearch, one of its fields, the identifier of the request 
+answered by the response, was replaced by a different value, and the backend was started again. 
+At its next correlation run the backend matched the report to the audit entry through the unchanged 
+inbound message identifier, within two seconds of the start. 
+The check then raised a \texttt{FIELD\_MISMATCH} alert of high severity that names exactly this 
+field, and no other field of the pair was reported.
+ 
+This demonstrates that the mechanism detects a contradiction between two independently produced 
+records of the same event. 
+It does not provide a detection rate, since it rests on a single manipulation of a single field. 
+The modification was applied to the stored audit entry and not to the log file on the IdP. 
+Because the report is produced independently of that file, the check would react in the same way 
+to a modification of the file before it is shipped, but this case was not demonstrated separately. 
+Finally, the check establishes that the records disagree and not which of them was altered. 
+An attacker who controls the application process can manipulate the report as well, as discussed 
+in Section~\ref{sec:limitation}.
+
 \subsection{Coverage of the Documented Attack Space}\label{subsec:detection-attack-space}
 
 The figures presented so far describe the relationship between the rules and the tests written 
@@ -882,75 +986,77 @@ The defects became apparent only when the behaviour was measured systematically 
 expectation defined in advance.
 
 \section{Performance Overhead}\label{sec:overhead}
-
-This section presents the results of the overhead evaluation of the custom interceptor. 
-The interceptor runs as a \textit{post\allowbreak{}Authentication\allowbreak{}Flow} within the IdP 
-and therefore lies on the critical path of each authentication process. 
+ 
+This section presents the results of the overhead evaluation of the two interceptors. 
+Both run inside the IdP and therefore lie on the critical path of each authentication process, 
+the first as a \textit{post\allowbreak{}Authentication\allowbreak{}Flow} and the second as an 
+\textit{outbound\allowbreak{}Interceptor\allowbreak{}Flow}. 
 The evaluation addresses two questions:
-
+ 
 \begin{itemize}
-      \item How much overhead does the interceptor introduce to the end-to-end authentication 
-            latency?
+      \item How much overhead do the interceptors introduce to the end to end authentication 
+            latency and to the processor load of the IdP?
       \item Does the difference between asynchronous and synchronous transmission justify the 
-            use of fire-and-forget transmission?
+            use of fire and forget transmission?
 \end{itemize}
-
-To measure the overhead introduced by the interceptor, three different configuration modes are 
-evaluated: \textit{baseline}, \textit{async}, and \textit{sync}. 
-In the \textit{baseline} configuration, no \textit{post\allowbreak{}Authentication\allowbreak{}Flow} 
-is configured for the SP. 
-The custom interceptor is therefore not executed during the authentication process. 
-In the \textit{async} configuration, the \textit{post\allowbreak{}Authentication\allowbreak{}Flow} is 
-enabled for the SP and the custom interceptor is executed. 
-The interceptor transmits the collected data to the monitoring tool without waiting for a 
-response. 
-The transmission therefore follows a fire-and-forget approach. 
-The \textit{sync} configuration also executes the custom interceptor for the SP, but the 
-interceptor waits for a response from the monitoring tool before completing its execution. 
-It therefore verifies whether the transmitted payload was received successfully.
-
-Comparing \textit{baseline} against \textit{async} quantifies the cost of the interceptor in its 
+ 
+Three configurations are compared, namely \textit{baseline}, \textit{async} and \textit{sync}. 
+In the \textit{baseline} configuration, neither of the two interceptor flows is configured for the 
+SP, so that no interceptor is executed during the authentication process. 
+In the \textit{async} configuration, both flows are enabled, and each interceptor transmits its 
+data to the monitoring tool without waiting for a response, in the fire and forget manner. 
+In the \textit{sync} configuration, both flows are enabled as well, but each interceptor waits for 
+the response of the monitoring tool before it completes, so that a login contains two blocking 
+transmissions.
+ 
+Comparing \textit{baseline} against \textit{async} quantifies the cost of the interceptors in their 
 productive configuration. 
 Comparing \textit{async} against \textit{sync} quantifies the cost of the design decision 
 described in Section~\ref{sec:impl-transport}, namely what waiting for a confirmation would cost 
 if the records were transmitted synchronously.
-
+ 
 \subsection{Measurement Sources}\label{subsec:measurement-sources}
-
-The overhead is evaluated using three measurements that differ in what they include.
+ 
+The overhead is evaluated using three measurements that differ in what they include. 
 The \textit{internal} measurement is obtained through the \textit{executionTimeMs} 
-instrumentation within the interceptor. 
-It measures the time required for data collection, hashing, and XML extraction performed by the 
-action. 
+instrumentation within each of the two interceptors. 
+It measures the time required for data collection, hashing and the extraction of fields performed 
+by the action. 
 This represents a lower bound, because payload construction and data transmission are excluded. 
-The measured value is included in the generated payload and is therefore available for every 
-login without additional instrumentation.
-
-The \textit{external} measurement records the end-to-end duration of a login as observed by the 
+The measured value is part of the payload and is therefore available for every login without 
+additional instrumentation.
+ 
+The \textit{external} measurement records the end to end duration of a login as observed by the 
 client. 
 It includes everything the user experiences, from the initial request to the point at which the 
-SP grants access, and therefore covers the interceptor together with all other processing steps 
+SP grants access, and therefore covers the interceptors together with all other processing steps 
 of the IdP. 
 This is the measurement that answers whether the overhead is perceptible in practice.
-
+ 
 The \textit{CPU} measurement records the processor utilisation of the IdP container during a run 
-via \texttt{docker stats}. 
+via \texttt{docker stats}, sampled once per second. 
 It serves as an independent confirmation, since the two latency measurements could in principle 
 fail to detect an effect that manifests itself as additional computation rather than as 
 additional waiting time.
-
+ 
 \subsection{Experimental Design}\label{subsec:experimental-design}
-
-The experiment comprises six runs, each executing all three configurations in sequence, which 
-results in eighteen measurements in total. 
-Each run performs one hundred logins per configuration.
-The order of the configurations is rotated between runs, ensuring that each configuration occupies 
-each of the three positions twice. 
-This is illustrated in Table~\ref{tab:config-order}. 
-
+ 
+The experiment comprises 18 runs, each executing all three configurations in sequence, which 
+results in 54 measurements in total. 
+Each measurement consists of one hundred logins whose latency is recorded, preceded by one hundred 
+warm-up logins whose values are discarded. 
+Every login is performed through the HTTP login harness described in Section~\ref{sec:setup} with 
+a fresh client and an empty cookie store, so that each login passes through the full 
+authentication path and no existing session is reused.
+ 
+The order of the configurations is rotated between runs. 
+Six different orders are used, and the series repeats them three times, so that each configuration 
+occupies each of the three positions six times. 
+Table~\ref{tab:config-order} shows the six orders, which apply to runs 1 to 6, 7 to 12 and 13 to 18.
+ 
 \begin{table}[h]
 \centering
-\caption{Order of configurations across the six runs}\label{tab:config-order}
+\caption{Order of configurations in runs 1 to 6, repeated in runs 7 to 12 and 13 to 18}\label{tab:config-order}
 \small
 \begin{tabular}{llll}
 \toprule
@@ -965,167 +1071,175 @@ Run & Position 1 & Position 2 & Position 3 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
+ 
 This balancing was necessary because a position drift occurs within a session, which is examined 
 in Section~\ref{subsec:position-drift}. 
 Without rotation, a configuration measured consistently in the last position would appear slower 
-than one measured first, irrespective of its actual cost.
-
+than one measured first, regardless of its actual cost. 
+ 
+Before each measurement the IdP container is recreated with the configuration under test. 
+The monitoring backend runs during all measurements, including the baseline, so that the 
+environment is identical, and a pause of four minutes follows each measurement so that the backend 
+can process the records that were generated. 
+The series took about five hours.
+ 
 The experimental unit is the run, not the individual login. 
 The one hundred logins within a run share the same JVM state, the same container and the same 
 system load, and are therefore pseudo-replicates rather than independent observations. 
 Treating them as independent would suggest a precision that the experiment does not provide, 
 since the dominant source of variation lies between runs rather than within them. 
 Each run consequently contributes a single value per configuration, namely the median of its one 
-hundred logins, which yields eighteen observations for the analysis.
-
-Before each measurement run, a single test login verifies that the configuration under test is 
+hundred logins, which yields 54 observations for the analysis, 18 per configuration.
+ 
+Before each measurement, a single test login verifies that the configuration under test is 
 actually active. 
 The verification queries the monitoring backend and checks whether the login produced an 
-interceptor report, expecting none for \textit{baseline} and one for the other two 
-configurations. 
+interceptor report and an outbound report, expecting none of them for \textit{baseline} and one of 
+each for the other two configurations. 
 This gate was introduced after an earlier series had to be discarded, in which the backend had 
 not been reachable and all three configurations had therefore been measured under effectively 
 identical conditions.
-
+ 
 \subsection{Descriptive Results}\label{subsec:descriptive-results}
-
-Table~\ref{tab:latency-percentiles} shows the aggregated latency distribution per configuration 
-across all runs.
+ 
+Table~\ref{tab:latency-percentiles} shows the aggregated latency distribution per configuration, 
+as the mean of the percentiles of the 18 runs.
+All distributions are right skewed, with the mean above the median and a larger spread at the 
+upper percentiles. 
+Percentiles are therefore reported rather than means, and the median is used for the comparisons 
+that follow. 
+The standard deviation of the run medians lies between 14.9 and 19.2\,ms, depending on the 
+configuration. 
+ 
+The internal measurement yields a median of 0.415\,ms for the post authentication interceptor, 
+with a 95th percentile of 1.16\,ms and a 99th percentile of 1.83\,ms, and a median of 0.039\,ms 
+for the outbound interceptor, with 0.14\,ms and 0.30\,ms. 
+The values were determined from all reports stored by the backend. 
+The two medians add up to about 0.45\,ms, which corresponds to approximately 0.13\,\% of the 
+median login duration of the baseline. 
+Both figures are lower bounds, since payload construction and transmission are not included. 
 
 \begin{table}[h]
 \centering
-\caption{End-to-end login latency per configuration, aggregated over six runs}\label{tab:latency-percentiles}
+\caption{End to end login latency per configuration, mean of the run percentiles over 18 runs}\label{tab:latency-percentiles}
 \small
 \begin{tabular}{lrrr}
 \toprule
 Configuration & p50 & p75 & p90 \\
 \midrule
-baseline & 323,9\,ms & 369,5\,ms & 412,3\,ms \\
-async    & 322,3\,ms & 368,7\,ms & 414,2\,ms \\
-sync     & 348,0\,ms & 397,7\,ms & 436,9\,ms \\
+baseline & 356.5\,ms & 390.5\,ms & 425.1\,ms \\
+async    & 362.7\,ms & 400.5\,ms & 433.2\,ms \\
+sync     & 416.1\,ms & 465.3\,ms & 517.1\,ms \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-All distributions are right-skewed, with the mean above the median and a larger spread at the 
-upper percentiles. 
-Percentiles are therefore reported rather than means, and the median is used for the comparisons 
-that follow.
-
-The internal measurement yields a median of 0,90\,ms for the work performed within the 
-interceptor, which corresponds to approximately 0,3\% of the total login duration. 
-Individual values of around 2,3\,ms occurred only at the beginning of a run and are attributable 
-to class loading and just-in-time compilation rather than to steady-state operation.
-
+ 
 \subsection{Paired Analysis of the Latency}\label{subsec:paired-latency}
-
+ 
 The raw configuration means still contain two known sources of variation, namely the difference 
 between runs and the position drift within a run. 
 Although the design balances both, the values themselves remain affected by them. 
 A linear model with configuration as a factor and run and measurement position as block factors 
 accounts for these effects explicitly before the configuration difference is estimated, which 
 narrows the confidence intervals and permits a fair comparison even where individual runs 
-happened to be slower or faster.
-
+happened to be slower or faster. 
+The model has 22 parameters and is fitted to 54 observations, which leaves 32 degrees of freedom.
+ 
 \begin{table}[h]
 \centering
-\caption{Paired comparison of the login latency, residual SD 22,5\,ms, df = 8}\label{tab:paired-latency}
+\caption{Paired comparison of the login latency, residual SD 16.0\,ms, df = 32}\label{tab:paired-latency}
 \small
 \begin{tabular}{lrrrr}
 \toprule
 Comparison & Difference & 95\% CI & t & Direction \\
 \midrule
-async $-$ baseline & $-1,6$\,ms  & $[-31,5;\ +28,3]$ & $-0,12$ & 3/6 positive \\
-sync $-$ baseline  & $+24,1$\,ms & $[-5,8;\ +54,0]$  & $+1,86$ & 5/6 positive \\
-sync $-$ async     & $+25,7$\,ms & $[-4,2;\ +55,6]$  & $+1,98$ & 6/6 positive \\
+async $-$ baseline & $+6.2$\,ms  & $[-4.7;\ +17.1]$  & $+1.16$  & 12/18 positive \\
+sync $-$ baseline  & $+59.6$\,ms & $[+48.7;\ +70.4]$ & $+11.17$ & 18/18 positive \\
+sync $-$ async     & $+53.4$\,ms & $[+42.5;\ +64.2]$ & $+10.01$ & 18/18 positive \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-None of the three comparisons is significant at the five percent level, since all confidence 
-intervals include zero. 
-The direction, however, is consistent for \textit{sync} against both other configurations, which 
-is positive in five and six of the six runs respectively.
-
+ 
+The two comparisons that involve the synchronous configuration are significant at the five 
+percent level, whereas the comparison between the asynchronous configuration and the baseline is 
+not, since its confidence interval includes zero. 
+The direction is consistent for the synchronous configuration against both other configurations, 
+which is positive in all 18 runs.
+ 
 The direction column is not part of the model but a simple check. 
 For each run the raw paired difference between two configurations measured within that same run 
 is computed, and the number of positive differences is counted. 
-A consistent direction across runs is an indication that the effect is real even where the 
-confidence interval does not exclude zero, whereas an effect that changes sign between runs is 
-more likely to be noise.
-
+A consistent direction across runs is an indication that the effect is real, whereas an effect 
+that changes sign between runs is more likely to be noise.
+ 
 \subsection{CPU Utilisation}\label{subsec:cpu-utilisation}
-
-The CPU measurement records the utilisation of the IdP container, where 100\% corresponds to one 
+ 
+The CPU measurement records the utilisation of the IdP container, where 100\,\% corresponds to one 
 fully loaded core. 
 Sixteen cores were available and no resource limits were configured. 
-The startup phase preceding each measurement, during which class loading and just-in-time 
-compilation produce peaks of up to 400\%, was excluded on the basis of the start time recorded in 
+The startup phase preceding each measurement, during which class loading and just in time 
+compilation produce peaks of up to 400\,\%, was excluded on the basis of the start time recorded in 
 the corresponding benchmark file. 
-Table~\ref{tab:cpu-aggregated} shows the aggregated utilisation per configuration. 
-
+Table~\ref{tab:cpu-aggregated} shows the aggregated utilisation per configuration.
+ 
 \begin{table}[h]
 \centering
-\caption{CPU utilisation of the IdP container per configuration}\label{tab:cpu-aggregated}
+\caption{CPU utilisation of the IdP container per configuration in percent of one core}\label{tab:cpu-aggregated}
 \small
 \begin{tabular}{lrrrr}
 \toprule
 Configuration & Mean (SD) & Median & Min & Max \\
 \midrule
-baseline & 40,6 (4,2) & 41,0 & 21,8 & 82,0  \\
-async    & 46,9 (4,0) & 47,5 & 22,8 & 105,0 \\
-sync     & 42,5 (4,1) & 44,2 & 19,2 & 99,1  \\
+baseline & 34.9 (2.7) & 32.7 & 16.3 & 95.7  \\
+async    & 41.9 (3.3) & 39.6 & 15.2 & 123.4 \\
+sync     & 39.2 (3.5) & 35.3 & 14.6 & 126.7 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-Mean, standard deviation and median are computed across the six run values per configuration, 
-whereas minimum and maximum refer to all measurements of that configuration.
-The same block model was applied to the CPU values, once with the run mean and once with the 
-run median as the target variable. 
-Tables~\ref{tab:paired-cpu-mean} and~\ref{tab:paired-cpu-median} show the results of both variants. 
-
+ 
+Mean and standard deviation refer to the 18 run means per configuration, the median to the 18 run 
+medians, whereas minimum and maximum refer to all samples of that configuration. 
+The comparison between configurations uses the median of each run, since the samples contain 
+peaks of up to 127\,\% that distort a mean. 
+The same block model as for the latency was applied.
+ 
 \begin{table}[h]
 \centering
-\caption{Paired comparison of the CPU utilisation, mean-based, residual SD 5,9 percentage points, df = 8}\label{tab:paired-cpu-mean}
+\caption{Paired comparison of the CPU utilisation, median based, residual SD 4.4 percentage points, df = 32}\label{tab:paired-cpu-median}
 \small
 \begin{tabular}{lrrrr}
 \toprule
 Comparison & Difference & 95\% CI & t & Direction \\
 \midrule
-async $-$ baseline & $+5,7$ pp & $[-2,1;\ +13,5]$ & $+1,68$ & 4/6 positive \\
-sync $-$ baseline  & $+1,9$ pp & $[-5,9;\ +9,8]$  & $+0,57$ & 4/6 positive \\
-sync $-$ async     & $-3,8$ pp & $[-11,6;\ +4,0]$ & $-1,12$ & 1/6 positive \\
+async $-$ baseline & $+6.9$ pp & $[+4.0;\ +9.9]$ & $+4.72$ & 16/18 positive \\
+sync $-$ baseline  & $+2.4$ pp & $[-0.6;\ +5.4]$ & $+1.64$ & 13/18 positive \\
+sync $-$ async     & $-4.5$ pp & $[-7.5;\ -1.5]$ & $-3.08$ & 5/18 positive  \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\begin{table}[h]
-\centering
-\caption{Paired comparison of the CPU utilisation, median-based, residual SD 15,1 percentage points, df = 8}\label{tab:paired-cpu-median}
-\small
-\begin{tabular}{lrrrr}
-\toprule
-Comparison & Difference & 95\% CI & t & Direction \\
-\midrule
-async $-$ baseline & $+15,0$ pp & $[-5,1;\ +35,1]$  & $+1,72$ & 4/6 positive \\
-sync $-$ baseline  & $+10,0$ pp & $[-10,1;\ +30,2]$ & $+1,15$ & 4/6 positive \\
-sync $-$ async     & $-5,0$ pp  & $[-25,1;\ +15,1]$ & $-0,57$ & 1/6 positive \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-None of the six comparisons is significant. 
-In both variants \textit{async} rather than \textit{sync} holds the highest point estimate, which 
-is consistent with the nature of the two modes. 
-Synchronous transmission spends time waiting for a response, which lengthens the login without 
-consuming processor time, whereas asynchronous transmission performs the same work in the 
-background and therefore appears in the processor utilisation rather than in the latency.
-
+ 
+Table~\ref{tab:paired-cpu-median} shows the result. 
+The asynchronous configuration uses significantly more processor time than the baseline, and the 
+synchronous configuration uses significantly less than the asynchronous one. 
+The difference between the synchronous configuration and the baseline is not significant.
+ 
 \subsection{Position Drift as a Methodological Finding}\label{subsec:position-drift}
-
-The measurements also permit an observation about the measurement environment itself.
+ 
+The measurements also permit an observation about the measurement environment itself as shown in 
+Table~\ref{tab:position-drift}. 
+The second position lies 8.5\,ms and the third 10.3\,ms above the first. 
+Each configuration occupies each position six times, so that the means are directly comparable. 
+The drift exceeds the point estimate of the asynchronous overhead of 6.2\,ms. 
+Had the configurations been measured in a fixed order, the position effect would therefore have 
+been indistinguishable from that overhead, and whichever configuration occupied the last position 
+would have appeared slower. 
+Against the effect of the synchronous mode of 59.6\,ms, the drift is small.
+ 
+The balanced design prevents this confounding, although the drift still increases the residual 
+variance. 
+The rotation of the measurement order was therefore necessary rather than cosmetic, and this is 
+arguably the most transferable finding of the performance evaluation, since it applies to any 
+comparison of configurations measured within a shared session.
 
 \begin{table}[h]
 \centering
@@ -1135,79 +1249,89 @@ The measurements also permit an observation about the measurement environment it
 \toprule
 Position within the run & Mean p50 \\
 \midrule
-1 & 323,2\,ms \\
-2 & 326,1\,ms \\
-3 & 346,1\,ms \\
+1 & 372.2\,ms \\
+2 & 380.7\,ms \\
+3 & 382.5\,ms \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-The third position lies 22,9\,ms above the first. 
-This magnitude is comparable to the effect the experiment set out to measure, namely the 24,1\,ms 
-difference between \textit{sync} and \textit{baseline}. 
-Had the configurations been measured in a fixed order, the position effect would have been 
-indistinguishable from the configuration effect, and whichever configuration occupied the last 
-position would have appeared slower.
-
-The balanced design prevents this confounding, although the drift still increases the residual 
-variance. 
-The rotation of the measurement order was therefore necessary rather than cosmetic, and this is 
-arguably the most transferable finding of the performance evaluation, since it applies to any 
-comparison of configurations measured within a shared session.
-
+ 
 \subsection{Resolution of the Measurement Environment}\label{subsec:measurement-resolution}
-
+ 
 The discarded preliminary series, in which the backend had not been reachable, provides an 
 empirical measure of the noise floor. 
 Since all three configurations were effectively identical under that condition, its twelve runs 
 constitute twelve repetitions of the same measurement. 
-They yield a mean of 324,6\,ms with a standard deviation of 18,1\,ms and a span of 51\,ms.
-
+They yield a mean of 324.6\,ms with a standard deviation of 18.1\,ms and a span of 51\,ms.
+ 
 This quantifies, independently of the actual measurement series, which effect sizes the 
 environment is able to resolve at all. 
-It also agrees with the between-run variation observed in the valid series, which lies between 16 
-and 23\,ms.
-
+It also agrees with the between run variation observed in the valid series, in which the standard 
+deviation of the run medians lies between 15 and 19\,ms. 
+With 18 runs per configuration, the confidence intervals of the latency contrasts have a half 
+width of about 11\,ms. 
+Differences of this size or larger therefore become significant, whereas smaller ones cannot be 
+distinguished from noise.
+ 
 \subsection{Correction of the Analysis Script}\label{subsec:script-correction}
-
-The figures reported above differ slightly from an earlier version of this analysis. 
-The evaluation script contained two indexing errors, among them a missing final measurement row 
-per run during the computation of the means. 
-Both were corrected, and the values presented here reflect the corrected computation.
-
+ 
+The analysis script of an earlier series of this experiment contained two indexing errors, among 
+them a missing final measurement row per run during the computation of the means. 
+Both were corrected before the present series was evaluated.
+ 
 The errors are worth reporting because they were not visible in the output. 
 The script produced plausible figures in both cases, and the discrepancy only became apparent 
 when individual values were traced back to the raw measurement files. 
 This mirrors the pattern observed in the correlation evaluation, where a defect likewise 
-manifested itself not as an error but as a result that appeared correct.
-
+manifested itself not as an error but as a result that appeared correct. 
+A further off by one error, which would have omitted the last run in four functions of the script, 
+was found by inspection before the present series was analysed. 
+The analysis scripts now check that the number of values matches the number of runs and stop 
+otherwise.
+ 
 \subsection{Interpretation of the Results}\label{subsec:interpretation-overhead}
+ 
+The asynchronous interceptors introduce no latency overhead that the experiment can distinguish 
+from zero. 
+The point estimate is $+6.2$\,ms, which is 1.7 percent of the median login duration of the 
+baseline, and the upper bound of the 95 percent confidence interval is 17.1\,ms, or 4.8 percent. 
+In twelve of the 18 runs the asynchronous configuration was slower than the baseline, which is a 
+weak tendency but not an established effect. 
+The internal measurement attributes about 0.45\,ms to the work performed within the two 
+interceptors, so that a difference of several milliseconds would have to originate elsewhere, for 
+instance in the threads that perform the transmission. 
+The claim is therefore a bounded one. 
+Differences of about 11\,ms and more would have been detected, and the overhead of the 
+asynchronous mode lies below roughly five percent of the login duration.
+ 
+The asynchronous mode is not free of cost, however. 
+It increases the processor utilisation of the IdP container by 6.9 percentage points of one core, 
+which is about 21 percent relative to the baseline and 0.4 percent of the capacity of the 16 
+available cores. 
+This is consistent with the nature of the two modes. 
+Asynchronous transmission moves the work into background threads, where it appears in the 
+processor utilisation rather than in the latency, whereas synchronous transmission spends the same 
+time waiting for a response. 
+The synchronous configuration consequently lies between the other two. 
+It is 2.4 percentage points above the baseline, which is not established, and 4.5 percentage 
+points below the asynchronous configuration, which is.
 
-The asynchronous interceptor introduces no measurable overhead. 
-The point estimate lies at $-1,6$\,ms and the upper bound of the confidence interval at 
-approximately 28\,ms, which is below nine percent of the login duration. 
-The internal measurement reports 0,90\,ms for the work performed within the action. 
-Both sources support the same conclusion, namely that the overhead is not perceptible to users.
-
-That the external benchmark shows no effect is not a weakness of the measurement but a 
-consequence of the magnitudes involved. 
-An effect of one millisecond cannot become visible in a measurement of 320\,ms with a 
-between-run spread of roughly 20\,ms, irrespective of how carefully the experiment is conducted.
-
-The synchronous mode tends to be slower, but this is not statistically established. 
-The point estimate places \textit{sync} between 24 and 26\,ms above the other two configurations, 
-which is plausibly explained by the blocking HTTP round trip to the backend, including the 
-Elasticsearch write and the correlation attempt, within the critical path. 
-The direction is consistent across runs, yet with six runs per configuration the confidence 
-intervals do not exclude zero. 
-This is a clear indication rather than a confirmation.
-
-For the design decision described in Section~\ref{sec:impl-transport}, the argument nevertheless 
-points in the same direction. 
-Even the point estimate for an additional synchronous round trip lies in the low tens of 
-milliseconds rather than in the hundreds. 
-A firmer statistical foundation would require a larger number of runs, which is discussed in 
-Section~\ref{sec:validity}.
+The synchronous mode adds 59.6\,ms to every login, which is 16.7 percent, and the difference is 
+established in all 18 runs. 
+Since the configuration contains two blocking transmissions, this corresponds to roughly 27 to 
+30\,ms for each transmission, assuming that both cost the same. 
+An earlier series with six runs per configuration and only the first interceptor had measured 
+about 25\,ms for the blocking mode, without statistical confirmation, which agrees with this 
+cost per transmission.
+ 
+For the design decision described in Section~\ref{sec:impl-transport}, the measurement therefore 
+supports the asynchronous mode with a statistically established difference. 
+Blocking transmission would add about 60\,ms to every login, whereas the asynchronous mode stays 
+below the resolution of the experiment in latency and pays with a moderate increase in processor 
+load. 
+The results apply to the test environment and to the limits discussed in 
+Section~\ref{sec:validity}, namely a single host, an HTTP client instead of a browser and a 
+single SP.
 
 \section{Threats to Validity}\label{sec:validity}
 
@@ -1239,6 +1363,18 @@ This was deliberate, so that the background load would be identical across confi
 It also means that the measurements do not reflect a deployment in which no monitoring 
 infrastructure is present at all.
 
+The design described in Chapter~\ref{ch:system-design} places the monitoring backend outside the 
+trust boundary of the IdP, which in a productive deployment would imply separate hosts under 
+separate administrative control. 
+The test environment does not realise this separation physically. 
+All components run in containers on a single machine, which reproduces the logical separation of 
+the components but not the security property derived from it. 
+The measurements are therefore valid with respect to latency and correlation behaviour, but the 
+environment does not demonstrate the trust boundary itself.
+The alerts raised during the performance series originate from the audit log and therefore 
+occurred in the same number in all three configurations, including the baseline, so that the load 
+on the backend did not differ between them.
+
 \subsection{Traffic and Scope}\label{subsec:validity-traffic}
 
 Most measurements rest on a single test user, a single SP and a single 
@@ -1266,22 +1402,19 @@ request is lower.
 
 \subsection{Statistical Basis}\label{subsec:validity-statistics}
 
-The performance evaluation rests on six runs per configuration. 
-Resolving an effect of approximately 20\,ms against a between-run spread of the same magnitude 
-would require roughly twenty runs per configuration. 
-The conclusion that the asynchronous mode introduces no measurable overhead is therefore a 
-statement about the resolution of the experiment as much as about the interceptor itself.
-
-One run is influential for the comparison between \textit{async} and \textit{baseline}, 
-contributing a difference of $-65$\,ms. 
-Excluding it would yield a clearly positive point estimate instead of $-1,6$\,ms. 
-The conclusion that the effect lies below the resolution of the measurement holds in either case, 
-but the point estimate itself should not be over-interpreted.
-
+The performance evaluation rests on 18 runs per configuration, which yield 54 observations. 
+The 95 percent confidence intervals of the latency contrasts have a half width of about 11\,ms, so 
+that differences of this size or larger are established. 
+The conclusion that the asynchronous mode introduces no measurable latency overhead is therefore a 
+statement about an upper bound of about 17\,ms, or five percent of the median login duration, and 
+not about the absence of any effect.
+ 
 Six significance tests were performed without correction for multiple testing, namely three 
 comparisons for the latency and three for the processor utilisation. 
-This is of secondary importance at present, since none of the comparisons is significant, but it 
-would need to be accounted for in a repetition with more runs.
+The four significant results remain significant under a Bonferroni correction for six tests, whose 
+threshold is 0.0083, with the weakest being the processor comparison between the synchronous and 
+the asynchronous configuration, for which $p \approx 0.004$. 
+The two comparisons that are not significant are unaffected.
 
 The correlation measurements each rest on a single run, with sample sizes between 202 and 606 
 reports. 
@@ -1326,6 +1459,23 @@ The false negative classes reported per rule are likewise derived rather than me
 Where a test deliberately carries a negative case, the statement is firm. 
 Where a false negative class was inferred from the code path, it is plausible but not 
 demonstrated by a failing test, since such a test would expose the same gap it describes.
+
+The consistency check rests on a map that mirrors the abbreviations of the audit format of the 
+IdP, for instance the notation of the status or of the authentication context. 
+The backend holds a copy of the default map, which is not synchronised with the audit 
+configuration of the IdP. 
+Should an operator change the map there, the check would report deviations for values that are in 
+fact consistent. 
+The demonstration of the check rests on a single manipulation of a single field. 
+It shows that the mechanism works but provides no detection rate.
+ 
+In the development environment, one report whose audit entry had reached Elasticsearch within 
+six seconds of the login was nevertheless not correlated within the retry window and caused a 
+discrepancy alert, although the counterpart existed. 
+The cause was not identified. 
+The case occurred once and did not recur in the 7{,}236 reports of the performance series. 
+It shows that a discrepancy alert cannot distinguish a missing counterpart from a counterpart 
+that the correlation failed to find.
 
 \subsection{Derived but Not Validated}\label{subsec:validity-derived}
 

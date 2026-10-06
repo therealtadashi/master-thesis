@@ -138,11 +138,11 @@ Cases in which these assumptions do not hold are examined in the following secti
 \toprule
 Window & Hits & Mismatch & No Match & Precision & Coverage & Candidates \\
 \midrule
-$\pm$2\,s  & 24 & 373 & 18 & 6,05\% & 95,66\% & 11,79  \\
-$\pm$5\,s  & 27 & 384 & 4  & 6,57\% & 99,04\% & 28,90  \\
-$\pm$10\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 55,47  \\
-$\pm$30\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 138,48 \\
-$\pm$60\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 192,60 \\
+$\pm$2\,s  & 24 & 373 & 18 & 6.05\% & 95.66\% & 11.79  \\
+$\pm$5\,s  & 27 & 384 & 4  & 6.57\% & 99.04\% & 28.90  \\
+$\pm$10\,s & 29 & 386 & 0  & 6.99\% & 100\%   & 55.47  \\
+$\pm$30\,s & 29 & 386 & 0  & 6.99\% & 100\%   & 138.48 \\
+$\pm$60\,s & 29 & 386 & 0  & 6.99\% & 100\%   & 192.60 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -155,12 +155,12 @@ $\pm$60\,s & 29 & 386 & 0  & 6,99\% & 100\%   & 192,60 \\
 \toprule
 Window & Hits & Mismatch & No Match & Precision & Coverage & Candidates \\
 \midrule
-$\pm$1\,s  & 203 & 0 & 0 & 100\% & 100\% & 6,42   \\
-$\pm$2\,s  & 203 & 0 & 0 & 100\% & 100\% & 12,36  \\
-$\pm$5\,s  & 203 & 0 & 0 & 100\% & 100\% & 30,24  \\
-$\pm$10\,s & 203 & 0 & 0 & 100\% & 100\% & 58,12  \\
-$\pm$30\,s & 203 & 0 & 0 & 100\% & 100\% & 144,68 \\
-$\pm$60\,s & 203 & 0 & 0 & 100\% & 100\% & 197,60 \\
+$\pm$1\,s  & 203 & 0 & 0 & 100\% & 100\% & 6.42   \\
+$\pm$2\,s  & 203 & 0 & 0 & 100\% & 100\% & 12.36  \\
+$\pm$5\,s  & 203 & 0 & 0 & 100\% & 100\% & 30.24  \\
+$\pm$10\,s & 203 & 0 & 0 & 100\% & 100\% & 58.12  \\
+$\pm$30\,s & 203 & 0 & 0 & 100\% & 100\% & 144.68 \\
+$\pm$60\,s & 203 & 0 & 0 & 100\% & 100\% & 197.60 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -210,8 +210,8 @@ The measurement covers six window sizes, namely $\pm$1, $\pm$2, $\pm$5, $\pm$10,
 \toprule
 Strategy & Precision (all windows 1--60\,s) & Coverage & Candidates ($\pm$1\,s) \\
 \midrule
-\texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 100\% & 5,66  \\
-\texttt{TIME\_WINDOW}            & 65\%  & 100\% & 16,26 \\
+\texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 100\% & 5.66  \\
+\texttt{TIME\_WINDOW}            & 65\%  & 100\% & 16.26 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -233,7 +233,7 @@ sufficed to include the correct candidate, only not always as the closest one.
 \toprule
 Density Bucket & n & Hits & Mismatch & Precision \\
 \midrule
-< 100\,ms      & 521 & 311 & 210 & 59,69\% \\
+< 100\,ms      & 521 & 311 & 210 & 59.69\% \\
 100--300\,ms   & 65  & 65  & 0   & 100\%   \\
 300\,ms--1\,s  & 14  & 14  & 0   & 100\%   \\
 > 1\,s         & 0   & 0   & 0   & ---     \\
@@ -267,8 +267,8 @@ column repeats the values of Table~\ref{tab:event-time-precision}.
   & HTTP client (n = 203) & Browser (n = 202) \\
 \midrule
 Precision (both strategies) & 100\%   & 100\%  \\
-Candidates at $\pm$1\,s     & 6,42    & 1,00   \\
-Candidates at $\pm$60\,s    & 197,60  & 42,61  \\
+Candidates at $\pm$1\,s     & 6.42    & 1.00   \\
+Candidates at $\pm$60\,s    & 197.60  & 42.61  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -291,7 +291,7 @@ Density Bucket & n & Precision \\
 
 As Table~\ref{tab:e2e-local-density} shows, all 202 logins lie more than one second apart from 
 their nearest neighbour. 
-The candidate mean at $\pm$1\,s is 1,00 instead of 6,42, which places the login density roughly 
+The candidate mean at $\pm$1\,s is 1.00 instead of 6.42, which places the login density roughly 
 six times lower than with the HTTP client harness. 
 This is consistent with the additional time required for real browser interaction, comprising 
 page loading, form handling and the overhead introduced by Selenium, compared to a script 
@@ -327,7 +327,7 @@ Table~\ref{tab:sum-local-density} and Table~\ref{tab:comparison-multi-user}.
 Strategy & Precision (all windows 1--60\,s) & Coverage \\
 \midrule
 \texttt{HASH\_AND\_TIME\_WINDOW} & 100\%   & 100\% \\
-\texttt{TIME\_WINDOW}            & 89,93\% & 100\% \\
+\texttt{TIME\_WINDOW}            & 89.93\% & 100\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -340,7 +340,7 @@ Strategy & Precision (all windows 1--60\,s) & Coverage \\
 \toprule
 Density Bucket & n & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
 \midrule
-< 100\,ms      & 138 & 100\% & 55,80\% \\
+< 100\,ms      & 138 & 100\% & 55.80\% \\
 100--300\,ms   & 132 & 100\% & 100\%   \\
 300\,ms--1\,s  & 258 & 100\% & 100\%   \\
 > 1\,s         & 78  & 100\% & 100\%   \\
@@ -356,9 +356,9 @@ Density Bucket & n & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
 \toprule
   & Synthetic (n = 600) & Real browser (n = 606) \\
 \midrule
-Precision in the < 100\,ms bucket          & 59,69\%          & 55,80\%          \\
-Share of logins below 100\,ms              & 86,8\% (521/600) & 22,8\% (138/606) \\
-Overall precision of \texttt{TIME\_WINDOW} & 65,00\%          & 89,93\%          \\
+Precision in the < 100\,ms bucket          & 59.69\%          & 55.80\%          \\
+Share of logins below 100\,ms              & 86.8\% (521/600) & 22.8\% (138/606) \\
+Overall precision of \texttt{TIME\_WINDOW} & 65.00\%          & 89.93\%          \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -404,8 +404,8 @@ Table~\ref{tab:ip-hash-correlation} shows the result of this comparison.
 \toprule
 Strategy & Precision (all windows) & Candidates ($\pm$1\,s) \\
 \midrule
-\texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 1,00 \\
-Without \textit{usernameHash}    & 100\% & 1,00 \\
+\texttt{HASH\_AND\_TIME\_WINDOW} & 100\% & 1.00 \\
+Without \textit{usernameHash}    & 100\% & 1.00 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -421,12 +421,12 @@ down to the second decimal place, as Table~\ref{tab:ip-hash-candidates} shows.
 \toprule
 Window & \texttt{HASH\_AND\_TIME\_WINDOW} & Without \textit{usernameHash} \\
 \midrule
-$\pm$1\,s  & 1,00  & 1,00  \\
-$\pm$2\,s  & 2,19  & 2,19  \\
-$\pm$5\,s  & 3,86  & 3,86  \\
-$\pm$10\,s & 7,49  & 7,49  \\
-$\pm$30\,s & 21,67 & 21,67 \\
-$\pm$60\,s & 41,58 & 41,58 \\
+$\pm$1\,s  & 1.00  & 1.00  \\
+$\pm$2\,s  & 2.19  & 2.19  \\
+$\pm$5\,s  & 3.86  & 3.86  \\
+$\pm$10\,s & 7.49  & 7.49  \\
+$\pm$30\,s & 21.67 & 21.67 \\
+$\pm$60\,s & 41.58 & 41.58 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -470,7 +470,7 @@ Table~\ref{tab:precision-strategy-nat-local-density}.
 Strategy & Precision (all windows 1--60\,s) & Coverage \\
 \midrule
 \texttt{HASH\_AND\_TIME\_WINDOW} & 100\%   & 100\% \\
-\texttt{TIME\_WINDOW}            & 73,67\% & 100\% \\
+\texttt{TIME\_WINDOW}            & 73.67\% & 100\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -483,7 +483,7 @@ Strategy & Precision (all windows 1--60\,s) & Coverage \\
 \toprule
 Density Bucket & n & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
 \midrule
-< 100\,ms      & 504 & 100\% & 68,65\% \\
+< 100\,ms      & 504 & 100\% & 68.65\% \\
 100--300\,ms   & 96  & 100\% & 100\%   \\
 300\,ms--1\,s  & 0   & ---   & ---     \\
 > 1\,s         & 0   & ---   & ---     \\
@@ -497,7 +497,7 @@ its own, irrespective of whether \textit{ipHash} contributes anything.
 
 The diagnostic strategy of the preceding section serves as a cross-check and yields exactly the 
 same figures here as \texttt{TIME\_\allowbreak{}WINDOW}, identical for every window size and every density 
-bucket at 73,67\% precision with 442 matches and 158 incorrect assignments. 
+bucket at 73.67\% precision with 442 matches and 158 incorrect assignments. 
 This is not a coincidence but the necessary consequence of a single shared address. 
 A filter for the only \textit{ipHash} value occurring in the entire period excludes no candidate 
 that would not already fall within the time window. 
@@ -505,12 +505,12 @@ In this dataset \textit{ipHash} therefore demonstrably contributes nothing to th
 which is the exact counterpart to the preceding section, where \texttt{IP\_\allowbreak{}ONLY} coincided with 
 \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} because the address alone already sufficed.
 
-The precision of \texttt{TIME\_\allowbreak{}WINDOW} at 73,67\% falls between the 65,00\% measured in 
-Section~\ref{subsubsec:precision-time-window-multi-user} and the 89,93\% measured in 
+The precision of \texttt{TIME\_\allowbreak{}WINDOW} at 73.67\% falls between the 65.00\% measured in 
+Section~\ref{subsubsec:precision-time-window-multi-user} and the 89.93\% measured in 
 Section~\ref{subsubsec:precision-multiple-browser-users}, which is consistent with the observed 
 density. 
-504 of 600 logins, or 84\%, lie less than 100\,ms apart, close to the 86,8\% of the synthetic 
-harness and well above the 22,8\% of the browser based measurement. 
+504 of 600 logins, or 84\%, lie less than 100\,ms apart, close to the 86.8\% of the synthetic 
+harness and well above the 22.8\% of the browser based measurement. 
 Several threads running without waiting times from a single process therefore generate a density 
 comparable to the serial HTTP harness rather than to real browser interaction. 
 The effect stems primarily from login density and not from the shared address itself, which is 
@@ -567,8 +567,8 @@ the consistency check raises one for every pair that disagrees, so that neither 
 false alarm under this load, while the alerting itself remained operational throughout.
 
 Window size is not the limiting factor. 
-Precision remains at 100\% even though the mean number of candidates rises from 6,4 at 
-$\pm$1\,s to 197,6 at $\pm$60\,s. 
+Precision remains at 100\% even though the mean number of candidates rises from 6.4 at 
+$\pm$1\,s to 197.6 at $\pm$60\,s. 
 What matters is solely that the temporal jitter is smaller than the interval between two 
 consecutive logins of the same combination of subject, address and SP.
 
@@ -580,8 +580,8 @@ strategy is unaffected by it.
 
 The measurements also support a concrete configuration recommendation, namely 
 \textit{lg.correlation.\allowbreak{}window-seconds=1}. 
-Coverage and precision remain at 100\%, but 6,4 candidates are examined per report instead of 
-58,1, which reduces the effort by a factor of nine on the basis of evidence rather than a 
+Coverage and precision remain at 100\%, but 6.4 candidates are examined per report instead of 
+58.1, which reduces the effort by a factor of nine on the basis of evidence rather than a 
 fixed assumption.
 
 The fallback chain has a quantifiable value. 

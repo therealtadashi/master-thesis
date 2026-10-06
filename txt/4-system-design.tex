@@ -428,9 +428,9 @@ The corresponding records can therefore not always be correlated upon arrival.
 Instead, they are stored until the required information from the other source becomes available.
 
 This introduces the first challenge for the correlation process. 
-Data collected by the custom interceptor within the Shibboleth IdP is transmitted immediately 
-after the collection process has completed, so the corresponding report reaches the monitoring 
-tool shortly after the authentication event has been processed. 
+Data collected by the post authentication interceptor within the Shibboleth IdP is transmitted 
+immediately after the collection process has completed, so the corresponding post authentication 
+report reaches the monitoring tool shortly after the authentication event has been processed. 
 The audit entry follows a different path. 
 Audit logs are collected by log shippers that operate periodically, and the corresponding entry 
 therefore reaches the monitoring tool later than the post authentication report. 
@@ -679,7 +679,7 @@ as up to 16 percent~\cite{TamperDetection}.
 
 The proposed system therefore does not provide cryptographic proof of log integrity. 
 Instead, it detects potential inconsistencies by comparing audit log entries with information 
-independently collected by the custom interceptor. 
+independently collected by the interceptors. 
 This avoids modifying the existing logging infrastructure while still providing a second 
 observation of the same authentication event. 
 The cost is that an inconsistency indicates a discrepancy between two sources without establishing 

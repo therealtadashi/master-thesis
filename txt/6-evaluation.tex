@@ -851,10 +851,11 @@ outdated address.
 Both rules therefore evaluated against an index that was no longer being updated, without any 
 indication that their input had become stale.
 
-\subsection{Consistency between Interceptor Report and Audit Entry}\label{subsec:detection-consistency}
+\subsection{Consistency between Outbound Report and Audit Entry}\label{subsec:detection-consistency}
  
-The consistency check described in Section~\ref{subsec:detection} compares an interceptor report 
-with the audit entry it was correlated with. 
+The consistency check described in Section~\ref{subsec:detection} compares the outbound report of a 
+login with the audit entry that the post authentication report of the same login was correlated 
+with. 
 It runs after the correlation and compares the fields that both records contain and that the 
 audit format of the deployment records. 
 For every login these are the status, the identifier of the request answered by the response, the 
@@ -862,8 +863,8 @@ identifier and the issue time of the outbound message and the encryption state.
 Where the assertion is not encrypted, the identifier of the assertion, the authentication instant, 
 the authentication context, the name identifier format and the pseudonymised name identifier are 
 compared as well. 
-Values that the audit log writes in an abbreviated form are mapped to the notation of the report 
-before the comparison.
+Values that the audit log writes in an abbreviated form are mapped to the notation of the outbound 
+report before the comparison.
  
 The evaluation addresses two questions. 
 The first is whether the check remains silent for legitimate logins. 
@@ -888,8 +889,8 @@ Weak SP & 100 & 10 & 100 & 0 & 3.7\,\% \\
 \end{tabular}
 \end{table}
  
-In all 200 logins the report was correlated with its audit entry through the inbound message 
-identifier, no report expired without a counterpart, and the check passed. 
+In all 200 logins the post authentication report was correlated with its audit entry through the 
+inbound message identifier, no report expired without a counterpart, and the check passed. 
 No \texttt{FIELD\_MISMATCH} alert was raised. 
 The number of compared fields is taken from the log of the check, which lists the fields of every 
 comparison. 
@@ -1336,9 +1337,6 @@ The synchronous mode adds 59.6\,ms to every login, which is 16.7 percent, and th
 established in all 18 runs. 
 Since the configuration contains two blocking transmissions, this corresponds to roughly 27 to 
 30\,ms for each transmission, assuming that both cost the same. 
-An earlier series with six runs per configuration and only the first interceptor had measured 
-about 25\,ms for the blocking mode, without statistical confirmation, which agrees with this 
-cost per transmission.
  
 For the design decision described in Section~\ref{sec:impl-transport}, the measurement therefore 
 supports the asynchronous mode with a statistically established difference. 

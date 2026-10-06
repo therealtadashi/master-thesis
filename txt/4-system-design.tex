@@ -68,7 +68,7 @@ originating from different sources but describing the same authentication event 
 The detection layer evaluates the resulting data against the rule catalogue in order to identify 
 configuration weaknesses and anomalies in the authentication process. 
 Finally, the presentation layer makes the detected findings accessible to the operator through a frontend 
-web application.
+web application. 
 Figure~\ref{fig:deployment} illustrates the UML deployment diagram of the proposed system. 
 
 \begin{figure}[ht]
@@ -77,6 +77,18 @@ Figure~\ref{fig:deployment} illustrates the UML deployment diagram of the propos
     \caption{UML-Deployment-Diagram of the Shibboleth Identity Provider Monitoring Tool}
     \label{fig:deployment}
 \end{figure}
+
+Two terms recur throughout this work. 
+An audit entry denotes a record that the IdP writes to its audit log and that reaches the 
+monitoring tool through the log shipping stack. 
+A report denotes a record that an interceptor produces within the IdP and transmits directly to the 
+monitoring tool. 
+Since two interceptors are used, their reports are called the post authentication report and the 
+outbound report where they have to be distinguished, and the term interceptor report covers both. 
+Only the post authentication report is correlated with audit entries, whereas the outbound report is 
+linked to it by the request identifier. 
+A report and an audit entry may describe the same authentication event, which makes the 
+correlation described in Section~\ref{subsec:correlation} possible.
 
 \section{Data Aggregation Layer}\label{sec:data-aggregation}
 
@@ -439,8 +451,8 @@ available in an audit record is not fixed, and the correlation must adapt to the
 are actually present.
 
 This creates an asymmetric correlation problem. 
-The data collected by the custom interceptor is static by design and always contains the same 
-set of fields. 
+The data collected by the post authentication interceptor is static by design and always 
+contains the same set of fields. 
 The audit data, in contrast, is dynamic and may lack information required by a particular 
 correlation strategy. 
 The static interceptor report, which arrives first, therefore has to be matched against a 

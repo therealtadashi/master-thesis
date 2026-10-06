@@ -171,9 +171,9 @@ test environment, at the cost of accepting unauthenticated records in that case.
 A production deployment is therefore expected to configure the secret on both sides. 
 
 The monitoring tool provides a separate endpoint for each type of collected data. 
-An interceptor report, an audit entry and a configuration document differ in structure and in the 
-processing they require, so that separating them at the interface avoids having to determine the 
-type of a record before it can be handled.
+A post authentication report, an outbound report, an audit entry and a configuration document 
+differ in structure and in the processing they require, so that separating them at the interface 
+avoids having to determine the type of a record before it can be handled. 
 
 As mentioned in Section~\ref{sec:trust}, the interceptor sends the payload asynchronously. 
 The interceptor does not wait for a response from the monitoring tool and proceeds with the 

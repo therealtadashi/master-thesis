@@ -206,8 +206,8 @@ architectural separation between the records.
 A log file may remain accessible to an attacker with file-system access for an extended period, 
 whereas a record generated within the application process itself exists only for the duration of 
 the corresponding processing before it is transmitted away. 
-This does not make the interceptor report immutable: an attacker controlling the JVM process 
-could also manipulate it. 
+This does not make a record produced inside the application process immutable: an attacker 
+controlling the JVM process could also manipulate it. 
 Its purpose is instead to provide a second, independently generated observation of the same 
 event.
 

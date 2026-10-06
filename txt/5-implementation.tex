@@ -13,7 +13,9 @@ each system layer and describing its technical implementation.
 
 As described in Section~\ref{sec:data-aggregation}, the data aggregation layer 
 uses log shippers to collect and parse log entries and static configuration 
-files, as well as a custom interceptor that operates within the Shibboleth IdP. 
+files, as well as two custom interceptors that operate within the Shibboleth IdP, 
+the post authentication interceptor and the outbound interceptor, which are named 
+after the hook at which they run. 
 The log shipping stack consists of Filebeat for reading the source files and 
 Logstash for preprocessing and transmitting the collected data. 
 Both components run as separate containers on the same host as the IdP and access its log files 
@@ -80,12 +82,13 @@ Unlike the log shippers, the interceptor is a custom component developed as part
 this work. 
 It is registered as a Spring bean within the Shibboleth IdP and activated through the 
 \texttt{postAuthenticationFlows} property of the corresponding profile configuration. 
-The interceptor therefore integrates into the IdP without any modification of its 
-source code, which is how the third requirement of Section~\ref{sec:requirements} is met. 
+The post authentication interceptor therefore integrates into the IdP without any 
+modification of its source code, which is how the third requirement of 
+Section~\ref{sec:requirements} is met. 
 
-The interceptor extends the \texttt{Abstract\allowbreak{}Profile\allowbreak{}Action} API of the Shibboleth IdP and 
-operates on the \texttt{Profile\allowbreak{}Request\allowbreak{}Context}, which represents the current state of the 
-profile execution~\cite{AbstractProfileAction, ProfileRequestContext}. 
+The post authentication interceptor extends the \texttt{Abstract\allowbreak{}Profile\allowbreak{}Action} 
+API of the Shibboleth IdP and operates on the \texttt{Profile\allowbreak{}Request\allowbreak{}Context}, 
+which represents the current state of the profile execution~\cite{AbstractProfileAction, ProfileRequestContext}. 
 From this context it accesses the child contexts that carry the information relevant to 
 the monitoring purpose. 
 The \texttt{Relying\allowbreak{}Party\allowbreak{}Context} identifies the SP for which the authentication is 
@@ -97,10 +100,11 @@ Further contexts, among them the \texttt{Authentication\allowbreak{}Context} and
 and the session state at the time of the request~\cite{AuthenticationContext, SessionContext}. 
 
 The outbound interceptor is implemented as a second action class with its own Spring Web Flow 
-subflow, which is registered next to the first one in the intercept configuration of the IdP. 
+subflow, which is registered next to that of the post authentication interceptor in the intercept 
+configuration of the IdP. 
 It is enabled for a SP in \textit{relying-party.xml} through the \textit{outboundInterceptorFlows} 
 property of the profile configuration, in addition to the \textit{postAuthenticationFlows} 
-property of the first interceptor. 
+property of the post authentication interceptor. 
 The flow contains a single state that calls the action and then proceeds, so that the processing 
 of the profile is not influenced.
  
@@ -112,22 +116,22 @@ assertions.
 If the assertion is not encrypted, it additionally reads the identifier and issue time of the 
 assertion, the authentication instant, the session index, the authentication context class and the 
 format and value of the name identifier, of which the value is pseudonymised before transmission in 
-the same way as the subject and the address in the first report. 
+the same way as the subject and the address in the post authentication report. 
 For encrypted assertions these fields are not collected, since the assertion is only available as 
 ciphertext at this point and the IdP holds no key to decrypt it. 
 The destination attribute of the response is empty at this hook and is therefore not used. 
-The identifier of the original request, which links the outbound report to the first report, is read 
-from the inbound message context, which is still available at this stage.
+The identifier of the original request, which links the outbound report to the post authentication report, 
+is read from the inbound message context, which is still available at this stage.
  
-The outbound report is transmitted by the same mechanism as the first report, including the 
+The outbound report is transmitted by the same mechanism as the post authentication report, including the 
 signature over timestamp and payload and the switch between the asynchronous and the synchronous 
 mode, but to a separate endpoint. 
 The backend stores it in its own index with the request identifier as document identifier, and not 
-as part of the first report. 
+as part of the post authentication report. 
 The separation is necessary because the backend treats a second submission with the same identifier 
 as a resubmission of the request and increments a counter that the replay rule evaluates. 
-During development, registering the first action at both hooks produced reports with a submission 
-count of two and would have triggered that rule for every login.
+During development, registering the action of the post authentication interceptor at both hooks produced 
+reports with a submission count of two and would have triggered that rule for every login.
  
 The audit format of the deployment was extended by three tokens, the identifier of the response, the 
 identifier of the request that it answers and the issue time of the response, so that the response 
@@ -201,8 +205,9 @@ The choice follows from the data collection layer described in
 Section~\ref{sec:impl-aggregation}, since Filebeat and Logstash write directly into 
 Elasticsearch and no further conversion is required for the data they deliver. 
 
-The application uses separate indices for the different types of data it handles, namely 
-audit entries, metadata, configuration data, interceptor reports and outbound reports. 
+The application uses separate indices for the different types of data it handles, 
+namely audit entries, metadata, configuration data and the reports of the two 
+interceptors. 
 These indices differ in how they are created. 
 Audit entries are written by Logstash into time based indices that are rotated daily, 
 whereas interceptor reports and outbound reports are stored in a single index each, maintained 
@@ -245,7 +250,7 @@ created after the post-authentication hook has run, which executes before the ou
 content is constructed~\cite{ProfileHandling}, and are extracted at later points of the audit 
 pipeline~\cite{AuditLoggingConfiguration}. 
 They are therefore not available to the interceptor at the post authentication hook. 
-The outbound interceptor described in Section~\ref{subsec:impl-outbound} reads the outbound message 
+The outbound interceptor described in Section~\ref{sec:impl-aggregation} reads the outbound message 
 identifier and, for assertions that are not encrypted, the assertion identifier, and the audit 
 format of the deployment records the outbound message identifier as well, so that these fields 
 serve the comparison of the two records rather than the correlation. 
@@ -378,9 +383,8 @@ The same flow therefore appears as \texttt{MFA} in the configuration and as
 \texttt{authn/MFA} in the audit entry. 
 A direct string comparison between the two never matches, and the rule would consequently 
 never report a finding. 
-The comparison is therefore performed token by token, accepting both notations, and is 
-implemented in a shared comparison function that accepts both notations and is used by 
-all rules evaluating authentication flows. 
+The comparison is therefore performed token by token and accepts both notations. 
+It is implemented in a shared comparison function that is used by all rules evaluating authentication flows. 
 As with the two cases described in Section~\ref{sec:impl-aggregation}, the failure mode 
 here would have been silent, since neither an exception nor a log entry would have 
 indicated that the comparison was ineffective. 
@@ -394,7 +398,7 @@ Each report is expired exactly once, so that the alert needs no deduplication, w
 it from the alerts of the rule engines, of which at most one per type is stored per day.
  
 When a report is correlated with an audit entry, the service loads the outbound report with the 
-same request identifier and passes both records to the consistency service. 
+same request identifier and passes it together with the audit entry to the consistency service. 
 If no outbound report exists, the check is skipped. 
 Otherwise the service compares the fields listed in Section~\ref{subsec:detection-consistency}. 
 A field is compared only if the interceptor observed a value for it and the field registry shows 

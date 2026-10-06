@@ -40,7 +40,7 @@ records are transmitted asynchronously.
 
 The comparison of two independently produced records of the same event serves as a check of log 
 integrity without changing the logging chain. 
-For 200 legitimate logins the consistency check between interceptor report and audit entry raised 
+For 200 legitimate logins the consistency check between outbound report and audit entry raised 
 no alert, and it reported exactly the modified field of a deliberately manipulated audit entry. 
 The check shows that two records disagree, but not which of them was altered, and it cannot see the 
 fields inside an encrypted assertion.

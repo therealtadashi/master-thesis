@@ -146,6 +146,11 @@ IdP~\cite{AuditLoggingConfiguration}.
 Which information a given deployment records is therefore determined by its operator and 
 may differ between installations. 
 
+The audit format of the deployment was extended by the identifier and the issue time of the 
+response and by the identifier of the request that it answers. 
+These tokens make the response level fields that the outbound interceptor reads comparable with 
+the audit entry, as described in Section~\ref{sec:impl-aggregation}.
+
 This property has direct implications for the monitoring system developed in this work. 
 The system cannot assume the presence of a fixed set of audit fields, since the information 
 required by a particular detection rule may simply not be recorded. 
@@ -155,11 +160,6 @@ The same constraint applies to the correlation between audit entries and interce
 Rather than relying on a fixed set of fields, the correlation must adapt to the information 
 that a given deployment provides, which requires a strategy capable of selecting an appropriate 
 matching approach depending on the fields available for a given audit event.
-
-The audit format of the deployment was extended by the identifier and the issue time of the 
-response and by the identifier of the request that it answers. 
-These tokens make the response level fields that the outbound interceptor reads comparable with 
-the audit entry, as described in Section~\ref{subsec:impl-outbound}.
 
 \subsection{Metadata and Relying Party File}\label{subsec:static-configuration}
 
@@ -540,12 +540,12 @@ Section~\ref{sec:data-aggregation}: the configuration states what is intended, a
 records what took place.
 
 Two of the rules do not examine a single record. 
-They compare two records that were produced independently of each other for the same event, 
-namely the interceptor report and the audit entry. 
-The first, \texttt{CORRELATION\_DISCREPANCY}, reports an interceptor report for which no audit 
-entry arrived within the retry window of the correlation. 
-The second, \texttt{FIELD\_MISMATCH}, compares the fields that both records contain once they have 
-been correlated, and reports every field in which they disagree. 
+They compare records that were produced independently of each other for the same event. 
+The first, \texttt{CORRELATION\_DISCREPANCY}, reports a post authentication report for which no 
+audit entry arrived within the retry window of the correlation. 
+The second, \texttt{FIELD\_MISMATCH}, compares the fields of the outbound report with those of the 
+audit entry that the post authentication report of the same login was correlated with, and reports 
+every field in which they disagree. 
 Both follow the detection point IE6 of AppSensor, the violation of security log integrity, and the 
 argument of Section~\ref{sec:why-not-siem} that two independent records offer an alternative to 
 protecting a log cryptographically.

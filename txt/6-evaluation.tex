@@ -519,13 +519,13 @@ Section~\ref{subsubsec:precision-multiple-browser-users}.
 The offset between report reception and event time ranges from $-50$ to $+110$\,ms with a median 
 of $-26$\,ms (n = 600), which is of the same order of magnitude as in the other measurements.
 
-\subsection{Interpretation of the Results}\label{subsec:interpretation-correlation}
+\subsection{Coverage and Operating Limits of the Correlation}\label{subsec:interpretation-correlation}
 
 Before turning to precision, the coverage of the correlation is considered, that is the 
 proportion of interceptor reports for which a counterpart was found at all. 
 Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 
 remained without a counterpart after the retry window had elapsed. 
-The figure compromises all reports received by the backend during the evaluation runs. 
+The figure contains all reports received by the backend during the evaluation runs. 
 The value is only determinable because the sweep described in 
 Section~\ref{subsec:impl-correlation} marks expired reports as permanently uncorrelated. 
 Without that distinction, a report still awaiting its audit entry would be indistinguishable 
@@ -960,7 +960,7 @@ They were chosen as plausible point values rather than derived from measurement.
 Since the thresholds were moved into the configuration during this work, such an analysis has 
 become technically possible, but it has not been carried out.
 
-\subsection{Interpretation of the Results}\label{subsec:interpretation-detection}
+\subsection{Fidelity of the Rules and Defects Uncovered by Testing}\label{subsec:interpretation-detection}
 
 All fifteen rules behave as intended for the scenarios constructed for them, and all are 
 verified against real persistence rather than against mocks alone. 
@@ -1077,7 +1077,8 @@ in Section~\ref{subsec:position-drift}.
 Without rotation, a configuration measured consistently in the last position would appear slower 
 than one measured first, regardless of its actual cost. 
  
-Before each measurement the IdP container is recreated with the configuration under test. 
+For each measurement the IdP container is recreated with the settings of the configuration that 
+is measured, baseline, async or sync. 
 The monitoring backend runs during all measurements, including the baseline, so that the 
 environment is identical, and a pause of four minutes follows each measurement so that the backend 
 can process the records that were generated. 
@@ -1091,8 +1092,7 @@ since the dominant source of variation lies between runs rather than within them
 Each run consequently contributes a single value per configuration, namely the median of its one 
 hundred logins, which yields 54 observations for the analysis, 18 per configuration.
  
-Before each measurement, a single test login verifies that the configuration under test is 
-actually active. 
+Before each measurement, a single test login verifies that the intended configuration is in effect. 
 The verification queries the monitoring backend and checks whether the login produced an 
 interceptor report and an outbound report, expecting none of them for \textit{baseline} and one of 
 each for the other two configurations. 
@@ -1102,22 +1102,38 @@ identical conditions.
  
 \subsection{Descriptive Results}\label{subsec:descriptive-results}
  
-Table~\ref{tab:latency-percentiles} shows the aggregated latency distribution per configuration, 
-as the mean of the percentiles of the 18 runs.
-All distributions are right skewed, with the mean above the median and a larger spread at the 
-upper percentiles. 
-Percentiles are therefore reported rather than means, and the median is used for the comparisons 
-that follow. 
-The standard deviation of the run medians lies between 14.9 and 19.2\,ms, depending on the 
-configuration. 
- 
-The internal measurement yields a median of 0.415\,ms for the post authentication interceptor, 
-with a 95th percentile of 1.16\,ms and a 99th percentile of 1.83\,ms, and a median of 0.039\,ms 
-for the outbound interceptor, with 0.14\,ms and 0.30\,ms. 
-The values were determined from all reports stored by the backend. 
-The two medians add up to about 0.45\,ms, which corresponds to approximately 0.13\,\% of the 
-median login duration of the baseline. 
-Both figures are lower bounds, since payload construction and transmission are not included. 
+Table~\ref{tab:latency-percentiles} shows how long a login takes in each configuration. 
+The p50 is the median login, that is the duration that half of the logins stay below, and the p75 
+and p90 describe the slower logins, since 25 and 10 percent of the logins take longer than these 
+values. 
+Each run contributes the percentiles of its 100 logins, and the table shows their average over the 
+18 runs.
+
+Compared with the baseline, the median login takes 6.2\,ms or 1.7 percent longer in the 
+asynchronous configuration and 59.6\,ms or 16.7 percent longer in the synchronous configuration. 
+For the synchronous configuration the difference grows towards the slower logins, from 59.6\,ms at 
+the p50 to 92.0\,ms or 21.6 percent at the p90. 
+The asynchronous configuration, in contrast, stays within 6 to 10\,ms of the baseline over the whole 
+distribution. 
+Blocking transmission therefore adds a clearly visible amount to every login, whereas the 
+asynchronous mode stays close to the baseline. 
+Percentiles are reported rather than means, because a few slow logins pull the mean above the 
+median.
+
+These raw differences do not yet show whether they exceed the variation between runs. 
+This variation is described by the standard deviation of the 18 run medians of a configuration, 
+which lies between 14.9 and 19.2\,ms and is therefore larger than the difference between the 
+baseline and the asynchronous configuration. 
+Section~\ref{subsec:paired-latency} tests the differences against this variation.
+
+The interceptors report how long their own work takes. 
+The median is 0.415\,ms for the post authentication interceptor (95th percentile 1.16\,ms, 99th 
+percentile 1.83\,ms) and 0.039\,ms for the outbound interceptor (0.14\,ms and 0.30\,ms), 
+determined from all reports stored by the backend. 
+Together this is about 0.45\,ms, or 0.13 percent of the median login duration of the baseline, and 
+a lower bound, since payload construction and transmission are not included. 
+It is far smaller than the difference of the synchronous configuration, which therefore stems from 
+waiting for the backend and not from the work of the interceptors.
 
 \begin{table}[h]
 \centering
@@ -1289,7 +1305,7 @@ was found by inspection before the present series was analysed.
 The analysis scripts now check that the number of values matches the number of runs and stop 
 otherwise.
  
-\subsection{Interpretation of the Results}\label{subsec:interpretation-overhead}
+\subsection{Latency and Processor Cost of the Interceptors}\label{subsec:interpretation-overhead}
  
 The asynchronous interceptors introduce no latency overhead that the experiment can distinguish 
 from zero. 
@@ -1313,8 +1329,8 @@ Asynchronous transmission moves the work into background threads, where it appea
 processor utilisation rather than in the latency, whereas synchronous transmission spends the same 
 time waiting for a response. 
 The synchronous configuration consequently lies between the other two. 
-It is 2.4 percentage points above the baseline, which is not established, and 4.5 percentage 
-points below the asynchronous configuration, which is.
+Its difference of 2.4 percentage points to the baseline cannot be distinguished from noise, 
+whereas its difference of 4.5 percentage points to the asynchronous configuration is significant.
 
 The synchronous mode adds 59.6\,ms to every login, which is 16.7 percent, and the difference is 
 established in all 18 runs. 
@@ -1352,7 +1368,7 @@ The measurements are therefore valid with respect to latency and correlation beh
 the environment does not demonstrate the trust boundary itself. 
 
 The absolute values are therefore not transferable to a productive deployment. 
-A login duration of approximately 320\,ms reflects this particular setup and would differ on 
+A login duration of approximately 360\,ms reflects this particular setup and would differ on 
 separated hosts, under a different network topology or with a different user store. 
 The differences between configurations are transferable to a greater degree, since they were 
 measured in pairs within a single session and the shared conditions cancel out in the comparison.
@@ -1362,18 +1378,6 @@ which the interceptor is not executed.
 This was deliberate, so that the background load would be identical across configurations. 
 It also means that the measurements do not reflect a deployment in which no monitoring 
 infrastructure is present at all.
-
-The design described in Chapter~\ref{ch:system-design} places the monitoring backend outside the 
-trust boundary of the IdP, which in a productive deployment would imply separate hosts under 
-separate administrative control. 
-The test environment does not realise this separation physically. 
-All components run in containers on a single machine, which reproduces the logical separation of 
-the components but not the security property derived from it. 
-The measurements are therefore valid with respect to latency and correlation behaviour, but the 
-environment does not demonstrate the trust boundary itself.
-The alerts raised during the performance series originate from the audit log and therefore 
-occurred in the same number in all three configurations, including the baseline, so that the load 
-on the backend did not differ between them.
 
 \subsection{Traffic and Scope}\label{subsec:validity-traffic}
 
@@ -1468,14 +1472,11 @@ Should an operator change the map there, the check would report deviations for v
 fact consistent. 
 The demonstration of the check rests on a single manipulation of a single field. 
 It shows that the mechanism works but provides no detection rate.
- 
-In the development environment, one report whose audit entry had reached Elasticsearch within 
-six seconds of the login was nevertheless not correlated within the retry window and caused a 
-discrepancy alert, although the counterpart existed. 
-The cause was not identified. 
-The case occurred once and did not recur in the 7{,}236 reports of the performance series. 
-It shows that a discrepancy alert cannot distinguish a missing counterpart from a counterpart 
-that the correlation failed to find.
+
+A discrepancy alert cannot distinguish a counterpart that never arrives from one that arrives only 
+after the retry window, for instance because of a delay in the log shipping chain. 
+A report that has expired is not correlated again afterwards, so that such a late entry stays 
+unmatched and the alert remains. 
 
 \subsection{Derived but Not Validated}\label{subsec:validity-derived}
 

@@ -701,6 +701,10 @@ approach could in principle identify previously unknown deviations.
 A further decision concerns the number of interceptors. 
 The system collects at two points, since the post authentication point was the basis of the 
 collection and the outbound point was added to make the fields of the response observable. 
+The outbound point turned out to see more events than the post authentication point. 
+For a SP that was configured for encryption without a suitable key, the IdP answered with an error 
+status before authentication began, as the empty subject and authentication fields of the audit 
+entry show, and only the outbound interceptor produced a report.
 In principle, a single outbound interceptor could replace the post authentication interceptor, 
 since the outbound point also has access to the incoming message and the authentication result, and 
 it would halve the number of transmissions per login. 

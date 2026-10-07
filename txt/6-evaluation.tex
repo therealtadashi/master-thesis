@@ -923,7 +923,7 @@ This demonstrates that the mechanism detects a contradiction between two indepen
 records of the same event. 
 It does not provide a detection rate, since it rests on a single manipulation of a single field. 
 The modification was applied to the stored audit entry and not to the log file on the IdP. 
-Because the report is produced independently of that file, the check would react in the same way 
+Because the outbound report is produced independently of that file, the check would react in the same way 
 to a modification of the file before it is shipped, but this case was not demonstrated separately. 
 Finally, the check establishes that the records disagree and not which of them was altered. 
 An attacker who controls the application process can manipulate the report as well, as discussed 

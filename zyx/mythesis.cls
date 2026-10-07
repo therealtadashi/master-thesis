@@ -59,6 +59,7 @@
 }{}
 
 \setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
 
 % Store config values into title and author of the document
 \title{\myTitle}

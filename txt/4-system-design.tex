@@ -387,7 +387,7 @@ Injected events would not only produce false findings but could also interfere w
 ones, since a fabricated record may be matched against a real audit entry.
 
 The transmitted data must therefore be authenticated before the monitoring tool accepts it. 
-In this work, this is achieved using a \gls{hmac}. 
+In this work, this is achieved using a \gls{hmac}~\cite{HMAC}. 
 The collection components and the monitoring tool share a secret key that is used to generate and verify a 
 message authentication code for each transmitted message.
 
@@ -563,7 +563,7 @@ audit entry that the post authentication report of the same login was correlated
 every field in which they disagree. 
 Both follow the detection point IE6 of AppSensor, the violation of security log integrity, and the 
 argument of Section~\ref{sec:why-not-siem} that two independent records offer an alternative to 
-protecting a log cryptographically.
+protecting a log cryptographically~\cite{OWASPAppSensor}.
  
 The comparison establishes that two records disagree but not which of them was altered, since an 
 attacker who controls the application process can alter the report as well. 
@@ -671,7 +671,7 @@ It reports the condition it observes and leaves any reaction to the operator.
 
 The second alternative was to incorporate cryptographic mechanisms for detecting log manipulation, 
 following the approaches of Schneier and Kelsey and of Snodgrass et al. discussed in 
-Section~\ref{sec:why-not-siem}. 
+Section~\ref{sec:why-not-siem}~\cite{CryptoSupportSecureLogs, TamperDetection}. 
 Such mechanisms can provide cryptographic evidence of modifications to stored log data. 
 Their integration would, however, require changes to the existing logging and storage 
 infrastructure and would introduce additional processing overhead, which Snodgrass et al. report 

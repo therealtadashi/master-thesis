@@ -81,7 +81,7 @@ configuration meaningful at all.
 Unlike the log shippers, the interceptor is a custom component developed as part of 
 this work. 
 It is registered as a Spring bean within the Shibboleth IdP and activated through the 
-\texttt{postAuthenticationFlows} property of the corresponding profile configuration. 
+\texttt{postAuthenticationFlows} property of the corresponding profile configuration~\cite{ProfileInterceptConfiguration}. 
 The post authentication interceptor therefore integrates into the IdP without any 
 modification of its source code, which is how the third requirement of 
 Section~\ref{sec:requirements} is met. 
@@ -106,7 +106,7 @@ It is enabled for a SP in \textit{relying-party.xml} through the \textit{outboun
 property of the profile configuration, in addition to the \textit{postAuthenticationFlows} 
 property of the post authentication interceptor. 
 The flow contains a single state that calls the action and then proceeds, so that the processing 
-of the profile is not influenced.
+of the profile is not influenced~\cite{ProfileInterceptConfiguration}.
  
 The action reads the outbound message context. 
 If it does not contain a SAML 2 response, the action returns without effect. 

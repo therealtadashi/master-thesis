@@ -87,21 +87,21 @@ those affecting a different party, and those observable only indirectly.
 
 The first group consists of issues that primarily affect a different system layer. 
 DNS poisoning, for example, concerns name resolution and therefore a layer beneath the 
-application. 
+application~\cite{FIMSurvey}. 
 The IdP processes the request it receives regardless of how the client resolved the corresponding 
 address. 
 The same applies to DDoS and UI redressing, which occur outside the application level observation 
-point of the IdP.
+point of the IdP~\cite{FIMSurvey}.
 
 The second group consists of issues that affect a different party within the federation. 
-\gls{csrf}, for example, describes an implementation vulnerability at the SP. 
+\gls{csrf}, for example, describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
 The relevant interaction occurs between the browser and the SP and therefore does not pass 
 through the IdP. 
-The same applies to XSS and session swapping.
+The same applies to XSS and session swapping~\cite{FIMSurvey}.
 
 The third group contains issues that can be observed only indirectly from the IdP. 
 A \gls{mitm} attack is an example of this category, since it occurs on the communication path 
-after the message has left the IdP. 
+after the message has left the IdP~\cite{FIMSurvey}. 
 The monitoring system can therefore observe the conditions that make such an attack possible, but 
 not the attack itself. 
 If an assertion is transmitted without encryption, an attacker could read or modify the message 
@@ -189,7 +189,7 @@ What such a mechanism could establish and what it could not is discussed in
 Section~\ref{sec:limitation}, and the distinction would need to be stated carefully in any 
 implementation.
 
-A fourth direction is the extension of the approach to \gls{oidc}. 
+A fourth direction is the extension of the approach to \gls{oidc}~\cite{OpenIDConnectCore}. 
 The present work focuses exclusively on SAML and Shibboleth, so that it remains an open question 
 whether the three source architecture developed here transfers to OIDC based infrastructures. 
 The architecture itself appears protocol independent, since an OIDC provider likewise maintains a 
@@ -197,7 +197,7 @@ registration of its clients, writes records of completed transactions and proces
 requests at runtime. 
 The detection rules, by contrast, are protocol specific and would not transfer, since conditions 
 such as a missing proof key exchange or an implicit flow have no direct counterpart in the rules 
-developed here. 
+developed here~\cite{RFC7636}. 
 Future work could therefore examine which application level sources exist in an OIDC provider, 
 whether they are complementary in the same sense, and which rules follow from the documented 
 weaknesses of that protocol.

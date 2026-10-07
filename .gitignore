@@ -306,4 +306,5 @@ Backup of *.doc*
 # Visio autosave temporary files
 *.~vsd*
 
-out
+out/*
+!out/main.pdf

@@ -329,7 +329,8 @@ The detection logic is divided into four engines, following the separation by in
 described in Section~\ref{subsec:detection}. 
 The rule engine evaluates login events derived from audit entries, the configuration rule 
 engine evaluates the security settings of a SP, the metadata rule engine evaluates its 
-metadata, and the interceptor rule engine evaluates the post authentication reports. 
+metadata, and the interceptor rule engine evaluates the post authentication reports produced 
+by the interceptor. 
 
 All rules implement a common interface. 
 A rule receives a single object of the type its engine is responsible for and returns either 

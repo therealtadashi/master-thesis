@@ -477,14 +477,15 @@ The precision achieved by each strategy is examined in Chapter~\ref{ch:evaluatio
 
 Once the data has been collected and stored, it is evaluated against a catalogue of detection 
 rules, where possible. 
-A rule receives a single object as input and either returns a finding or nothing. 
+With two exceptions described below, a rule receives a single object as input and either returns 
+a finding or nothing.
 The conditions are stated explicitly rather than learned from data, which means that every 
 finding can be traced back to the condition that produced it and, through the derivation in 
 Section~\ref{sec:rules}, to the documented weakness or requirement it is based on. 
 
 The rules do not all operate on the same kind of input. 
 Four input types occur in this system: login events derived from the audit log, the configuration 
-of a SP, its metadata, and the reports produced by the interceptor. 
+of a SP, its metadata, and the post authentication reports produced by the interceptor.
 These differ not only in structure but also in the rhythm at which they appear. 
 Login events occur continuously during operation, whereas a configuration or a metadata document 
 changes rarely and may remain unchanged for long periods of time.

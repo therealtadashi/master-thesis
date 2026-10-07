@@ -65,19 +65,15 @@ ambiguity, which allows it to serve as a ground truth for the remaining strategi
 The measurement method is as follows:
 
 \begin{itemize}
-    \item Collect all post authentication reports of a configurable time period for which 
-          \texttt{correlated\_\allowbreak{}by = INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}
-    \item For each report and each window size, execute the exact query of the heuristic 
-          strategy and select the same candidate as the productive system would, namely the 
-          one with the smallest temporal distance
-    \item Compare the selected entry against the known correct audit identifier, classifying 
-          the outcome as a match, an incorrect assignment, or no match
-    \item Additionally record the temporal offset between the reception of the interceptor 
-          report and the actual audit event time as a distribution
+    \item Collect all post authentication reports of a configurable time period for which \texttt{correlated\_\allowbreak{}by = INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}
+    \item For each report and each window size, execute the exact query of the heuristic strategy and select the same candidate as the productive system would, namely the one with the smallest temporal distance
+    \item Compare the selected entry against the known correct audit identifier, classifying the outcome as a match, an incorrect assignment, or no match
+    \item Additionally record the temporal offset between the reception of the post authentication report and the actual audit event time as a distribution
 \end{itemize}
 
-The underlying data source is 200 consecutive logins of a single test user via the HTTP login 
-harness, preceded by three warm-up logins that are included in the measurement. 
+The underlying data source of the measurement after the change to \textit{event\_time} is 200 
+consecutive logins of a single test user via the HTTP login harness, preceded by three warm-up 
+logins that are included in the measurement. 
 In terms of candidate ambiguity this represents the worst case, since all candidates share the 
 same \textit{usernameHash}, \textit{ipHash} and SP, leaving time as the only distinguishing 
 feature.

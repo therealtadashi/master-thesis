@@ -79,27 +79,27 @@ The limitations discussed here would persist irrespective of the effort invested
 follow from where the observation takes place rather than from how thoroughly it was carried out.
 
 As discussed in Section~\ref{subsec:detection-attack-space}, the system addresses two of the six 
-SAML cross-protocol issues identified by Simpson and Groß~\cite{FIMSurvey}. 
+SAML cross-protocol issues identified by Simpson and Groß~\cite{FIMSurvey}, namely unencrypted 
+communications exploited by message modification and lack of binding exploited by replay. 
 This limited coverage is not primarily caused by missing implementations but by the observation 
 position of the monitoring system, which operates from within the IdP. 
-The attack classes that the rules do not address fall into three groups, namely those affecting a 
-different system layer, those affecting a different party, and those observable only indirectly.
+The four remaining issues fall into three groups, namely those affecting a different system layer, 
+those affecting a different party, and those observable only indirectly.
 
-The first group consists of issues that primarily affect a different system layer. 
+The first group consists of an issue that primarily affects a different system layer. 
 DNS poisoning, for example, concerns name resolution and therefore a layer beneath the 
 application~\cite{FIMSurvey}. 
 The IdP processes the request it receives regardless of how the client resolved the corresponding 
 address. 
-The same applies to DDoS and UI redressing, which occur outside the application level observation 
-point of the IdP~\cite{FIMSurvey}.
 
 The second group consists of issues that affect a different party within the federation. 
 \gls{csrf}, for example, describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
 The relevant interaction occurs between the browser and the SP and therefore does not pass 
 through the IdP. 
-The same applies to XSS and session swapping~\cite{FIMSurvey}.
+The same applies to message modification enabled by a lack of binding, whose mitigation lies in 
+the SP checking the credentials it receives~\cite{FIMSurvey}.
 
-The third group contains issues that can be observed only indirectly from the IdP. 
+The third group contains an issue that can be observed only indirectly from the IdP. 
 A \gls{mitm} attack is an example of this category, since it occurs on the communication path 
 after the message has left the IdP~\cite{FIMSurvey}. 
 The monitoring system can therefore observe the conditions that make such an attack possible, but 
@@ -107,7 +107,12 @@ not the attack itself.
 If an assertion is transmitted without encryption, an attacker could read or modify the message 
 in transit. 
 The monitoring system detects that the assertion was transmitted without encryption, yet it 
-cannot determine whether the message was in fact intercepted or altered.
+cannot determine whether the message was in fact intercepted or altered. 
+
+The survey further lists attack classes that are not cross-protocol issues of SAML, among them 
+DDoS, UI redressing, XSS and session swapping~\cite{FIMSurvey}. 
+They lie outside the observation point of the IdP for the same reasons, since they occur at the 
+network level, in the browser or at the SP, and they are therefore not part of the coverage figure. 
 
 Two cases are considered separately because of their particular relevance.
 The first is the bogus merchant scenario, which is the only cross-protocol issue in the survey 

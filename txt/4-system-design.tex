@@ -705,11 +705,13 @@ The outbound point turned out to see more events than the post authentication po
 For a SP that was configured for encryption without a suitable key, the IdP answered with an error 
 status before authentication began, as the empty subject and authentication fields of the audit 
 entry show, and only the outbound interceptor produced a report.
-In principle, a single outbound interceptor could replace the post authentication interceptor, 
-since the outbound point also has access to the incoming message and the authentication result, and 
-it would halve the number of transmissions per login. 
-The cost of the chosen split is a second transmission per login, which doubles the number of 
-blocking calls in the synchronous mode, as reflected in Section~\ref{sec:overhead}.
+In principle, a single outbound interceptor could collect what both collect today and halve the 
+number of transmissions per login, since the contexts that the post authentication interceptor 
+reads are still part of the context tree at the outbound point. 
+The assertion level fields of encrypted assertions would remain unavailable, exactly as they are 
+today. 
+This was not examined beyond the request identifier, which the outbound interceptor already reads 
+from the inbound message context.
 
 Two further decisions have already been discussed in the context in which they arise. 
 The choice of the interception points, described in Section~\ref{subsec:interceptor}, 

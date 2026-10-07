@@ -914,8 +914,8 @@ The second question is whether the check reports a discrepancy that actually exi
 For this purpose a login against the clean provider was performed while the backend was stopped. 
 After the audit entry had reached Elasticsearch, one of its fields, the identifier of the request 
 answered by the response, was replaced by a different value, and the backend was started again. 
-At its next correlation run the backend matched the report to the audit entry through the unchanged 
-inbound message identifier, within two seconds of the start. 
+At its next correlation run the backend matched the post authentication report to the audit entry 
+through the unchanged inbound message identifier, within two seconds of the start. 
 The check then raised a \texttt{FIELD\_MISMATCH} alert of high severity that names exactly this 
 field, and no other field of the pair was reported.
  

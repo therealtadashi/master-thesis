@@ -177,8 +177,7 @@ $-98$\,ms & $-32$\,ms & $-23$\,ms & $+75$\,ms & 173\,ms \\
 \end{table}
 
 Table~\ref{tab:time-offset} shows the distribution of this offset. 
-The predominantly negative offset is consistent with the position of the interceptor in the 
-profile flow. 
+The predominantly negative offset is consistent with the position of the post authentication interceptor in the profile flow. 
 It runs as a \textit{post\allowbreak{}Authentication\allowbreak{}Flow} in the middle of the profile, whereas \texttt{\%T} 
 marks the completion of the transaction. 
 The report therefore typically reaches the backend around 30\,ms before the IdP writes the 
@@ -521,10 +520,6 @@ of $-26$\,ms (n = 600), which is of the same order of magnitude as in the other 
 
 Before turning to precision, the coverage of the correlation is considered, that is the 
 proportion of post authentication reports for which a counterpart was found at all. 
-Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 
-remained without a counterpart after the retry window had elapsed. 
-The figure contains all reports received by the backend during the evaluation runs. 
-The performance series described below is not part of this figure. 
 The value is only determinable because the sweep described in 
 Section~\ref{subsec:impl-correlation} marks expired reports as permanently uncorrelated. 
 Without that distinction, a report still awaiting its audit entry would be indistinguishable 
@@ -538,7 +533,8 @@ density.
 The two properties therefore fail independently of one another. 
 A weaker strategy does not leave reports unassigned, it assigns them to the wrong counterpart.
 
-The performance series provides a further, larger dataset for the operation of the correlation. 
+The coverage is determined on the performance series, the largest dataset and the one generated 
+with the final configuration of the system. 
 Over a period of about five hours, it generated 7{,}236 post authentication reports with both interceptors 
 active, in bursts of 200 logins at a peak rate of roughly three logins per second, in the 
 asynchronous as well as in the synchronous transmission mode. 
@@ -1283,21 +1279,15 @@ Position within the run & Mean p50 \\
  
 \subsection{Resolution of the Measurement Environment}\label{subsec:measurement-resolution}
  
-The discarded preliminary series, in which the backend had not been reachable, provides an 
-empirical measure of the noise floor. 
-Since all three configurations were effectively identical under that condition, its twelve runs 
-constitute twelve repetitions of the same measurement. 
-They yield a mean of 324.6\,ms with a standard deviation of 18.1\,ms and a span of 51\,ms.
- 
-This quantifies, independently of the actual measurement series, which effect sizes the 
-environment is able to resolve at all. 
-It also agrees with the between run variation observed in the valid series, in which the standard 
-deviation of the run medians lies between 15 and 19\,ms. 
-With 18 runs per configuration, the confidence intervals of the latency contrasts have a half 
-width of about 11\,ms. 
-Differences of this size or larger therefore become significant, whereas smaller ones cannot be 
+The valid series itself shows which effect sizes the environment can resolve. 
+The standard deviation of the 18 run medians of a configuration lies between 14.9 and 19.2\,ms, 
+and the residual standard deviation of the block model is 16.0\,ms. 
+The standard error of a contrast between two configurations is therefore about 5.3\,ms, and with 
+18 runs per configuration the confidence intervals of the latency contrasts have a half width of 
+about 11\,ms. 
+Differences of this size or larger become significant, whereas smaller ones cannot be 
 distinguished from noise.
- 
+
 \subsection{Correction of the Analysis Script}\label{subsec:script-correction}
  
 The analysis script of an earlier series of this experiment contained two indexing errors, among 

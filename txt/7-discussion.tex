@@ -87,20 +87,19 @@ The four remaining issues fall into three groups, namely those affecting a diffe
 those affecting a different party, and those observable only indirectly.
 
 The first group consists of an issue that primarily affects a different system layer. 
-DNS poisoning, for example, concerns name resolution and therefore a layer beneath the 
-application~\cite{FIMSurvey}. 
+DNS poisoning concerns name resolution and therefore a layer beneath the application~\cite{FIMSurvey}. 
 The IdP processes the request it receives regardless of how the client resolved the corresponding 
 address. 
 
 The second group consists of issues that affect a different party within the federation. 
-\gls{csrf}, for example, describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
+\gls{csrf}, describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
 The relevant interaction occurs between the browser and the SP and therefore does not pass 
 through the IdP. 
 The same applies to message modification enabled by a lack of binding, whose mitigation lies in 
 the SP checking the credentials it receives~\cite{FIMSurvey}.
 
 The third group contains an issue that can be observed only indirectly from the IdP. 
-A \gls{mitm} attack is an example of this category, since it occurs on the communication path 
+A \gls{mitm} attack is the issue in this category, since it occurs on the communication path 
 after the message has left the IdP~\cite{FIMSurvey}. 
 The monitoring system can therefore observe the conditions that make such an attack possible, but 
 not the attack itself. 

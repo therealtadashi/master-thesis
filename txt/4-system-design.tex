@@ -114,7 +114,7 @@ A counter reports that a number of logins occurred, not which login was affected
 An alert derived from either source could not be attributed to a transaction. 
 
 The remaining three channels form the collection layer of this work. 
-These are the audit log, the configuration files, and the runtime state accessible through an interceptor. 
+These are the audit log, the configuration files, and the runtime state accessible through interceptors. 
 They are described in the following sections. 
 
 \subsection{The Audit Logs}\label{subsec:audit-log}
@@ -158,11 +158,6 @@ IdP~\cite{AuditLoggingConfiguration}.
 Which information a given deployment records is therefore determined by its operator and 
 may differ between installations. 
 
-The audit format of the deployment was extended by the identifier and the issue time of the 
-response and by the identifier of the request that it answers. 
-These tokens make the response level fields that the outbound interceptor reads comparable with 
-the audit entry, as described in Section~\ref{sec:impl-aggregation}.
-
 This property has direct implications for the monitoring system developed in this work. 
 The system cannot assume the presence of a fixed set of audit fields, since the information 
 required by a particular detection rule may simply not be recorded. 
@@ -171,7 +166,12 @@ whether the information a given rule depends on is available at all.
 The same constraint applies to the correlation between audit entries and interceptor records. 
 Rather than relying on a fixed set of fields, the correlation must adapt to the information 
 that a given deployment provides, which requires a strategy capable of selecting an appropriate 
-matching approach depending on the fields available for a given audit event.
+matching approach depending on the fields available for a given audit event. 
+
+The audit format of the deployment was extended by the identifier and the issue time of the 
+response and by the identifier of the request that it answers. 
+These tokens make the response level fields that the outbound interceptor reads comparable with 
+the audit entry, as described in Section~\ref{sec:impl-aggregation}.
 
 \subsection{Metadata and Relying Party File}\label{subsec:static-configuration}
 

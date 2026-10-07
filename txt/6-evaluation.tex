@@ -749,9 +749,9 @@ Of the layer two tests, four are true positive tests for individual rules, one i
 single clean login for five rule types, and two are the false positive runs.
 
 Six rules are additionally covered on layer two. 
-Four of them, namely \texttt{SUSPICIOUS\_USER\_AGENT}, \texttt{FAILED\_LOGIN}, \texttt{BRUTE\_FORCE} 
-and \texttt{UNENCRYPTED\_ASSERTION}, have both a true positive and a true negative proof. 
-\texttt{WEAK\_ENCRYPTION} has only a true negative proof at present, and \texttt{FIELD\_MISMATCH} has 
+Four of them, namely \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}, \texttt{FAILED\_\allowbreak{}LOGIN}, 
+\texttt{BRUTE\_\allowbreak{}FORCE} and \texttt{UNENCRYPTED\_ASSERTION}, have both a true positive and a true negative proof. 
+\texttt{WEAK\_\allowbreak{}ENCRYPTION} has only a true negative proof at present, and \texttt{FIELD\_\allowbreak{}MISMATCH} has 
 an automated true negative proof in the 200 logins of the false positive runs, whereas its true 
 positive proof is the manual manipulation described in Section~\ref{subsec:detection-consistency}. 
 Because the clean run asserts that no alert of any kind occurred, it also serves as a true negative 
@@ -766,7 +766,7 @@ The other three, namely \texttt{WEAK\_\allowbreak{}CONFIGURATION}, \texttt{MISSI
 \texttt{CERTIFICATE\_\allowbreak{}EXPIRED}, do not depend on a login at all. 
 They evaluate configuration and metadata, which the layer one tests already exercise in full, so 
 that layer two would add nothing for them.
-The ninth, \texttt{CORRELATION\_DISCREPANCY}, raises its alert only after the retry window of 
+The ninth, \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}, raises its alert only after the retry window of 
 fifteen minutes, which the end to end tests do not wait for.
 
 \subsection{A Defect Visible Only through the Full Pipeline}\label{subsec:detection-logstash-defect}

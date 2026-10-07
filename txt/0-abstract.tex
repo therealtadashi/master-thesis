@@ -16,7 +16,7 @@ This thesis presents a monitoring system that observes a Shibboleth identity pro
 its own application layer. 
 The system draws on three sources that differ in what they can observe, namely the audit log 
 written at the end of a transaction, the configuration and metadata declared for each service 
-provider, and the runtime state accessible through an interceptor executing inside the 
+provider, and the runtime state accessible through interceptors executing inside the 
 authentication flow. 
 Records from these sources are pseudonymised at their origin, transmitted to a backend located 
 outside the trust boundary of the provider, correlated with one another and evaluated against a 
@@ -30,8 +30,8 @@ be correlated, and what the resulting system costs.
 The correlation reaches a coverage of 99.9\% and remains free of incorrect assignments up to a 
 quantified login density, beyond which the heuristic strategies can no longer resolve the order of 
 events. 
-All fifteen rules were verified against a real search index and six additionally through the 
-complete pipeline from a browser login to the resulting alert. 
+All fifteen rules were verified against a real search index and six additionally through the complete 
+pipeline from a browser login, four of them up to the resulting alert.
 In the asynchronous transmission mode, the end-to-end login latency did not differ measurably from 
 a deployment without interceptors, with an upper bound of 17\,ms for the 95\% confidence interval, 
 below five percent of the median login duration. 
@@ -42,8 +42,8 @@ The work also identifies the boundaries of the chosen observation point.
 Attack classes located at a different system layer, involving a different party, or observable 
 only through their preconditions remain outside its reach, and a provider abusing its own position 
 cannot be detected by a system executing inside it. 
-Beyond these results, the evaluation uncovered three defects in the infrastructure of this work that 
-operation itself had not revealed, which illustrates the premise underlying the work, namely that 
-a system appearing to function is not thereby known to function.
+Beyond these results, each of the three evaluations uncovered a defect in the infrastructure or the 
+tooling of this work that operation itself had not revealed, which illustrates the premise underlying 
+the work, namely that a system appearing to function is not thereby known to function.
 
 \end{document}

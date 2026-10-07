@@ -12,8 +12,8 @@ evaluated against a catalogue of fifteen detection rules.
 
 The three sources proved complementary, and the reason is more specific than their number. 
 The audit log records the outcome of a completed transaction, the configuration states what was 
-intended for the partner involved, and the interceptor observes the incoming message while it is 
-being processed. 
+intended for the partner involved, and the interceptors observe the incoming request and the 
+outgoing response while the transaction is being processed. 
 What each source can see follows from its position in the processing sequence, which is why their 
 combination permits comparisons that no single source supports on its own. 
 The comparison between a declared configuration and an observed event is the clearest example, 
@@ -26,7 +26,7 @@ literature, to normative requirements for SAML deployments or, for the two rules
 independently produced records, to the log integrity argument. 
 The two rules that cannot be traced are named as such. 
 All fifteen are verified against a real Elasticsearch instance, and six additionally through the 
-complete pipeline from a browser login to the resulting alert. 
+complete pipeline, four of them from a browser login up to the resulting alert.
 
 In the asynchronous transmission mode, the two interceptors introduced no measurable latency overhead. 
 The difference to a deployment without interceptors is $+6.2$\,ms with an upper bound of 17\,ms for 

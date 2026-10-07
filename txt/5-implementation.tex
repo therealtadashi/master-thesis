@@ -78,8 +78,7 @@ The backend therefore does not receive the same configuration repeatedly, but on
 deployment has actually been modified, which is also what makes the detection rules operating on 
 configuration meaningful at all. 
 
-Unlike the log shippers, the interceptor is a custom component developed as part of 
-this work. 
+Unlike the log shippers, the interceptor is a custom component developed as part of this work. 
 It is registered as a Spring bean within the Shibboleth IdP and activated through the 
 \texttt{postAuthenticationFlows} property of the corresponding profile configuration~\cite{ProfileInterceptConfiguration}. 
 The post authentication interceptor therefore integrates into the IdP without any 
@@ -175,16 +174,16 @@ A post authentication report, an outbound report, an audit entry and a configura
 differ in structure and in the processing they require, so that separating them at the interface 
 avoids having to determine the type of a record before it can be handled. 
 
-As mentioned in Section~\ref{sec:trust}, the interceptor sends the payload asynchronously. 
-The interceptor does not wait for a response from the monitoring tool and proceeds with the 
-authentication flow immediately after dispatching the record. 
-If the transmission fails, whether because the backend is unreachable, the request times out or 
-the record is rejected, the interceptor receives no indication of it and the record is lost 
-without a trace at its point of origin.
+As mentioned in Section~\ref{sec:trust}, the interceptors send their payload asynchronously. 
+Neither of them waits for a response from the monitoring tool, and each proceeds with the 
+authentication flow immediately after dispatching its record. 
+If a transmission fails, whether because the backend is unreachable, the request times out or 
+the record is rejected, the interceptor concerned receives no indication of it and the record is 
+lost without a trace at its point of origin.
 
-To quantify the cost of this design decision, the interceptor also supports a synchronous mode. 
-In this mode it waits for the backend to confirm receipt before the authentication flow continues, 
-which makes the time spent on transmission visible in the overall duration of a login. 
+To quantify the cost of this design decision, the interceptors also support a synchronous mode. 
+In this mode each of them waits for the backend to confirm receipt before the authentication flow 
+continues, which makes the time spent on transmission visible in the overall duration of a login. 
 The mode is not intended for productive use but serves as a reference point against which 
 the asynchronous variant can be compared. 
 The resulting measurements are presented in Section~\ref{sec:overhead}.
@@ -330,7 +329,7 @@ The detection logic is divided into four engines, following the separation by in
 described in Section~\ref{subsec:detection}. 
 The rule engine evaluates login events derived from audit entries, the configuration rule 
 engine evaluates the security settings of a SP, the metadata rule engine evaluates its 
-metadata, and the interceptor rule engine evaluates the reports produced by the interceptor. 
+metadata, and the interceptor rule engine evaluates the post authentication reports. 
 
 All rules implement a common interface. 
 A rule receives a single object of the type its engine is responsible for and returns either 

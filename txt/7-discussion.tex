@@ -14,12 +14,12 @@ Chapter~\ref{ch:introduction}.
 The first question asked which security relevant data can be collected at the application layer 
 of a Shibboleth IdP and through which mechanisms. 
 Three sources proved usable, namely the audit log, the configuration and metadata of the SPs, 
-and the runtime state accessible through an interceptor. 
+and the runtime state accessible through interceptors. 
 The value of this combination does not primarily result from the number of sources but from the 
 positions at which they observe the authentication process. 
 The audit log records the outcome of a completed transaction, the configuration states what was 
-intended for the partner involved, and the interceptor observes the incoming message while it is 
-being processed. 
+intended for the partner involved, and the interceptors observe the incoming request and the 
+outgoing response while the transaction is being processed. 
 Each source therefore holds information that the others cannot provide, and the complementarity 
 follows from their position in the processing sequence rather than from a deliberate division of 
 responsibilities. 
@@ -64,7 +64,7 @@ in advance.
 This observation is worth stating separately because it bears on the premise of the work itself. 
 The argument for observing an IdP from within rests on the assumption that a system which appears 
 to function is not thereby known to function. 
-The three defects are instances of exactly that. 
+These defects are instances of exactly that. 
 They arose in the configuration, the pipeline and the analysis tooling of this work rather than 
 in an attack scenario, which does not weaken the argument but illustrates its generality.
 
@@ -82,8 +82,8 @@ As discussed in Section~\ref{subsec:detection-attack-space}, the system addresse
 SAML cross-protocol issues identified by Simpson and Groß~\cite{FIMSurvey}. 
 This limited coverage is not primarily caused by missing implementations but by the observation 
 position of the monitoring system, which operates from within the IdP. 
-The remaining issues fall into three groups, namely those affecting a different system layer, 
-those affecting a different party, and those observable only indirectly.
+The attack classes that the rules do not address fall into three groups, namely those affecting a 
+different system layer, those affecting a different party, and those observable only indirectly.
 
 The first group consists of issues that primarily affect a different system layer. 
 DNS poisoning, for example, concerns name resolution and therefore a layer beneath the 

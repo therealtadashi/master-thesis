@@ -84,7 +84,7 @@ monitoring tool through the log shipping stack.
 A report denotes a record that an interceptor produces within the IdP and transmits directly to the 
 monitoring tool. 
 Since two interceptors are used, their reports are called the post authentication report and the 
-outbound report where they have to be distinguished, and the term post authentication report covers both. 
+outbound report where they have to be distinguished. 
 Only the post authentication report is correlated with audit entries, whereas the outbound report is 
 linked to it by the request identifier. 
 A report and an audit entry may describe the same authentication event, which makes the 
@@ -393,14 +393,14 @@ message authentication code for each transmitted message.
 
 The final design decision concerning the transport layer is whether the collection component should wait for 
 the monitoring tool to confirm receiving the data.
-The interceptor executes within the authentication flow of the IdP. 
+The interceptors executes within the authentication flow of the IdP. 
 Any time spent transmitting a record is therefore time added to the login of the user who triggered it. 
 Waiting for a response would make the duration of every authentication dependent on the availability and 
 response time of a component outside the IdP, and a monitoring tool that is slow or temporarily unreachable 
 would delay the service it observes.
 
 The records are consequently transmitted asynchronously. 
-The interceptor dispatches the record and continues processing without awaiting a response.
+Each interceptor dispatches its record and continues processing without awaiting a response. 
 This has a cost. 
 If a transmission fails, the collection component does not learn of it, and the record is lost without 
 any indication at the point where it originated. 
@@ -511,8 +511,10 @@ Which rules are active in a given deployment is thus determined by what that dep
 Which conditions the rules examine is a separate question from how they are evaluated. 
 The catalogue of fifteen rules was derived from the three frameworks introduced in 
 Section~\ref{sec:rules}, namely the survey by Simpson and Groß, the OASIS security 
-considerations and the STRIDE classification, and, for the two rules that compare independently 
-produced records, from the log integrity argument of Section~\ref{sec:why-not-siem}. 
+considerations and the STRIDE classification, for \texttt{FAILED\_\allowbreak{}LOGIN}, which 
+reports an indicator rather than an attack, from the OWASP guidance on security logging, and, 
+for the two rules that compare independently produced records, from the log integrity argument 
+of Section~\ref{sec:why-not-siem}.
 Table~\ref{tab:rules} shows the resulting assignment for each rule.
 
 \begin{table}[h]
@@ -533,7 +535,7 @@ Rule & Vulnerability & Attack Class & STRIDE & Source \\
 \texttt{ASSERTION\_\allowbreak{}REPLAY}                           & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
 \texttt{REQUEST\_\allowbreak{}REPLAY}                             & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
 \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} & Message Formatting         & Message Modification     & S, T, E & \cite{BreakingSAML,ShibbolethGIAC} \\
-\texttt{CERTIFICATE\_\allowbreak{}EXPIRED}                        & None                       & None                     & S       & \cite{SAMLSecurityConsideration} \\
+\texttt{CERTIFICATE\_\allowbreak{}EXPIRED}                        & Normative requirement      & None                     & S       & \cite{SAMLSecurityConsideration} \\
 \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}                    & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
 \texttt{FIELD\_\allowbreak{}MISMATCH}                             & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}        & None                       & None                     & ---     & --- \\

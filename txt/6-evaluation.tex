@@ -6,7 +6,7 @@
 
 This chapter evaluates the proposed monitoring system. 
 It presents the test setup, evaluates the correlation and detection capabilities, 
-measures the performance overhead introduced by the interceptor, and concludes 
+measures the performance overhead introduced by the interceptors, and concludes 
 with a discussion of the threats to validity. 
 
 \section{Test Setup}\label{sec:setup}
@@ -30,6 +30,8 @@ Integration tests run against a real Elasticsearch instance, which additionally 
 persistence layer, the index mappings and the queries that a mock cannot represent. 
 End to end tests exercise the complete pipeline, from a login at the SP through the log 
 shipping stack to the alert produced by the backend. 
+In Section~\ref{subsec:detection-layers} the three levels are referred to as unit tests, layer one 
+tests and layer two tests, respectively. 
 
 Logins are generated in two ways. 
 An HTTP client harness performs the SAML login sequence directly, parsing the forms returned 
@@ -526,6 +528,7 @@ proportion of post authentication reports for which a counterpart was found at a
 Across the measured period, 3{,}762 of 3{,}765 reports were correlated, leaving three that 
 remained without a counterpart after the retry window had elapsed. 
 The figure contains all reports received by the backend during the evaluation runs. 
+The performance series described below is not part of this figure. 
 The value is only determinable because the sweep described in 
 Section~\ref{subsec:impl-correlation} marks expired reports as permanently uncorrelated. 
 Without that distinction, a report still awaiting its audit entry would be indistinguishable 
@@ -576,7 +579,11 @@ This yields a quantifiable operational limit.
 With a jitter span of 173\,ms and an observed login interval of approximately 330\,ms, the limit 
 lies at about six logins per second per tuple of subject, address and SP. 
 Beyond this point the heuristic can no longer resolve the order reliably, whereas the exact 
-strategy is unaffected by it.
+strategy is unaffected by it. 
+The incorrect assignments measured in Table~\ref{tab:local-density} set in below an interval of 
+100\,ms, which corresponds to about ten logins per second. 
+The figure of six logins per second is the more conservative bound, since it follows from the 
+full span of the observed offset rather than from the density at which errors actually occurred. 
 
 The measurements also support a concrete configuration recommendation, namely 
 \textit{lg.correlation.\allowbreak{}window-seconds=1}. 
@@ -722,21 +729,21 @@ Table~\ref{tab:detection-coverage} shows which layers each rule is covered on.
 \toprule
 Alert Type & Unit & Layer 1 & Layer 2 \\
 \midrule
-\texttt{SUSPICIOUS\_USER\_AGENT}        & yes & yes & TP, TN  \\
-\texttt{FAILED\_LOGIN}                  & yes & yes & TP, TN  \\
-\texttt{BRUTE\_FORCE}                   & yes & yes & TP, TN  \\
-\texttt{UNENCRYPTED\_ASSERTION}         & yes & yes & TP, TN  \\
-\texttt{WEAK\_ENCRYPTION}               & yes & yes & TN only \\
-\texttt{FIELD\_MISMATCH}                & yes & yes & TN, TP  \\
-\texttt{CORRELATION\_DISCREPANCY}       & yes & yes & ---     \\
-\texttt{BEHAVIOR\_ANOMALY}              & yes & yes & ---     \\
-\texttt{MFA\_BYPASS}                    & yes & yes & ---     \\
-\texttt{ASSERTION\_REPLAY}              & yes & yes & ---     \\
-\texttt{WEAK\_CONFIGURATION}            & yes & yes & ---     \\
-\texttt{MISSING\_MFA}                   & yes & yes & ---     \\
-\texttt{CERTIFICATE\_EXPIRED}           & yes & yes & ---     \\
-\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & yes & yes & ---     \\
-\texttt{REQUEST\_REPLAY}                & yes & yes & ---     \\
+\texttt{SUSPICIOUS\_USER\_AGENT}        & yes & yes & TP, TN          \\
+\texttt{FAILED\_LOGIN}                  & yes & yes & TP, TN          \\
+\texttt{BRUTE\_FORCE}                   & yes & yes & TP, TN          \\
+\texttt{UNENCRYPTED\_ASSERTION}         & yes & yes & TP, TN          \\
+\texttt{WEAK\_ENCRYPTION}               & yes & yes & TN only         \\
+\texttt{FIELD\_MISMATCH}                & yes & yes & TN, TP (manual) \\
+\texttt{CORRELATION\_DISCREPANCY}       & yes & yes & ---             \\
+\texttt{BEHAVIOUR\_ANOMALY}              & yes & yes & ---             \\
+\texttt{MFA\_BYPASS}                    & yes & yes & ---             \\
+\texttt{ASSERTION\_REPLAY}              & yes & yes & ---             \\
+\texttt{WEAK\_CONFIGURATION}            & yes & yes & ---             \\
+\texttt{MISSING\_MFA}                   & yes & yes & ---             \\
+\texttt{CERTIFICATE\_EXPIRED}           & yes & yes & ---             \\
+\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & yes & yes & ---             \\
+\texttt{REQUEST\_REPLAY}                & yes & yes & ---             \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -758,7 +765,7 @@ Because the clean run asserts that no alert of any kind occurred, it also serves
 proof for the remaining rules, insofar as they can raise an alert within the observation period.
 
 The remaining nine rules are not covered on layer two, for three different reasons. 
-Five of them, namely \texttt{BEHAVIOR\_\allowbreak{}ANOMALY}, \texttt{MFA\_\allowbreak{}BYPASS}, 
+Five of them, namely \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}, \texttt{MFA\_\allowbreak{}BYPASS}, 
 \texttt{ASSERTION\_\allowbreak{}REPLAY}, \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} and 
 \texttt{REQUEST\_\allowbreak{}REPLAY}, cannot sensibly be triggered through a normal login, since they require 
 a manipulated message or an accumulated history rather than a single successful authentication. 
@@ -814,7 +821,7 @@ to \texttt{true}.
 \subsection{A Defect Visible Only against Real Persistence}\label{subsec:detection-version-defect}
 
 A second defect illustrates why layer one is not redundant with respect to unit testing.
-During development, the unit test for \texttt{BEHAVIOR\_\allowbreak{}ANOMALY} passed consistently 
+During development, the unit test for \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} passed consistently 
 while the rule did not work in operation. 
 The behaviour profile of a user was written once and never updated thereafter. 
 The cause was a missing version field on the stored document, which caused Elasticsearch to 
@@ -981,7 +988,7 @@ The circularity of rules and scenarios originating from the same source is there
 by the figures reported here, although the derivation of the rules themselves, as described in 
 Section~\ref{subsec:detection}, no longer rests on the author's own judgement.
 
-What the evaluation did establish is of a different kind. 
+What the evaluation of the rules did establish is of a different kind. 
 Three defects became visible that operation itself did not reveal. 
 A missing version field caused every profile update to be discarded silently, a pipeline defect 
 would have reported every encrypted login as unencrypted, and the dependence of two rules on a 
@@ -1099,7 +1106,7 @@ Each run consequently contributes a single value per configuration, namely the m
 hundred logins, which yields 54 observations for the analysis, 18 per configuration.
  
 Before each measurement, a single test login verifies that the intended configuration is in effect. 
-The verification queries the monitoring backend and checks whether the login produced an 
+The verification queries the monitoring backend and checks whether the login produced a 
 post authentication report and an outbound report, expecting none of them for \textit{baseline} and one of 
 each for the other two configurations. 
 This gate was introduced after an earlier series had to be discarded, in which the backend had 
@@ -1377,7 +1384,7 @@ The differences between configurations are transferable to a greater degree, sin
 measured in pairs within a single session and the shared conditions cancel out in the comparison.
 
 The backend remained active during all runs, including the \textit{baseline} configuration in 
-which the interceptor is not executed. 
+which the interceptors is not executed. 
 This was deliberate, so that the background load would be identical across configurations. 
 It also means that the measurements do not reflect a deployment in which no monitoring 
 infrastructure is present at all.
@@ -1500,7 +1507,7 @@ technically possible but remains outstanding.
 
 \subsection{Known Gaps}\label{subsec:validity-gaps}
 
-Four specific gaps are worth stating explicitly rather than leaving to be inferred.
+Three specific gaps are worth stating explicitly rather than leaving to be inferred.
 \texttt{WEAK\_\allowbreak{}ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
 since establishing one would require a SP configured to use a weak algorithm.
 

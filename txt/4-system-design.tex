@@ -59,7 +59,7 @@ These considerations result in five requirements:
 The proposed system comprises four layers. 
 The data collection layer gathers security-relevant information from within the Shibboleth IdP, 
 drawing on three sources: the audit log written by the IdP, its static configuration and metadata files, 
-and a custom interceptor that is attached at two points of the profile processing and executes inside the IdP itself. 
+and two custom interceptors that is attached at two points of the profile processing and executes inside the IdP itself. 
 Because the monitoring backend resides outside the trust boundary of the IdP, sensitive attributes such 
 as usernames and IP addresses are pseudonymised before transmission. 
 The transport layer then transfers the collected records to the backend application over an authenticated channel. 
@@ -85,8 +85,9 @@ A report represents a record that an interceptor produces within the IdP and tra
 monitoring tool. 
 Since two interceptors are used, their reports are called the post authentication report and the 
 outbound report where they have to be distinguished. 
-Only the post authentication report is correlated with audit entries, whereas the outbound report is 
-linked to it by the request identifier. 
+Only the post authentication report is correlated with audit entries. 
+The outbound report is not correlated with them directly but is linked to the post authentication 
+report by the request identifier. 
 A report and an audit entry may describe the same authentication event, which makes the 
 correlation described in Section~\ref{subsec:correlation} possible.
 
@@ -512,11 +513,13 @@ Which rules are active in a given deployment is thus determined by what that dep
 Which conditions the rules examine is a separate question from how they are evaluated. 
 The catalogue of fifteen rules was derived from the three frameworks introduced in 
 Section~\ref{sec:rules}, namely the survey by Simpson and Groß, the OASIS security 
-considerations and the STRIDE classification, for \texttt{FAILED\_\allowbreak{}LOGIN}, which 
-reports an indicator rather than an attack, from the OWASP guidance on security logging, and, 
-for the two rules that compare independently produced records, from the log integrity argument 
-of Section~\ref{sec:why-not-siem}.
-Table~\ref{tab:rules} shows the resulting assignment for each rule.
+considerations and the STRIDE classification. 
+Two rules follow a different source. 
+\texttt{FAILED\_\allowbreak{}LOGIN} reports an indicator rather than an attack and is based on 
+the OWASP guidance on security logging. 
+The two rules that compare independently produced records are based on the log integrity 
+argument of Section~\ref{sec:why-not-siem}. 
+Table~\ref{tab:rules} shows the resulting assignment for each rule. 
 
 \begin{table}[h]
 \centering
@@ -707,14 +710,14 @@ collection and the outbound point was added to make the fields of the response o
 The outbound point turned out to see more events than the post authentication point. 
 For a SP that was configured for encryption without a suitable key, the IdP answered with an error 
 status before authentication began, as the empty subject and authentication fields of the audit 
-entry show, and only the outbound interceptor produced a report.
-In principle, a single outbound interceptor could collect what both collect today and halve the 
-number of transmissions per login, since the contexts that the post authentication interceptor 
-reads are still part of the context tree at the outbound point. 
-The assertion level fields of encrypted assertions would remain unavailable, exactly as they are 
-today. 
+entry show, and only the outbound interceptor produced a report. 
+In principle, a single outbound interceptor could collect the data of both interceptors and halve 
+the number of transmissions per login, since the contexts read by the post authentication 
+interceptor are still part of the context tree at the outbound point. 
+The assertion level fields of encrypted assertions would remain unavailable, as they are with the 
+two interceptors used here. 
 This was not examined beyond the request identifier, which the outbound interceptor already reads 
-from the inbound message context.
+from the inbound message context. 
 
 Two further decisions have already been discussed in the context in which they arise. 
 The choice of the interception points, described in Section~\ref{subsec:interceptor}, 

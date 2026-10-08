@@ -29,8 +29,8 @@ This centralisation introduces a new risk in return.
 FIM rests on a relationship of trust between organisations, and that trust depends entirely on 
 the security of the IdP. 
 Concentrating credentials in one place also concentrates the consequences of a compromise, since 
-an attacker who gains control of the IdP gains access to every service that relies on 
-it~\cite{IdPSinglePointOfTrust}.
+an attacker who gains control of the IdP can potentially authenticate as any of its users at the 
+services that rely on it~\cite{IdPSinglePointOfTrust}. 
 
 A compromise of a primary IdP could potentially grant broad unauthorised access across the 
 entire federation. 
@@ -343,6 +343,15 @@ deployment.
 Authentication attempts that do not result in a completed transaction, in particular failed password 
 validations, produce no entry in this log~\cite{AuditLoggingConfiguration}. 
 
+The format of a log line is defined per profile in the \textit{shibboleth.AuditFormattingMap} of 
+\texttt{conf/audit.xml}. 
+A format consists of formatting tokens, each of which is replaced by a value from the context tree 
+of the transaction when the line is written, for instance the time of the event, the identifier of 
+the inbound message or the address of the client. 
+Some values are written in an abbreviated form, which the IdP derives from a replacement map 
+(\textit{shibboleth.AuditFieldReplacementMap}), and further tokens can be added by the 
+operator~\cite{AuditLoggingConfiguration}.
+
 \subsection{Configuration}\label{subsec:config}
 
 Three configuration files are relevant in the following. 
@@ -352,5 +361,10 @@ including which profiles are enabled and which security settings apply~\cite{Rel
 its partners~\cite{MetadataConfiguration}. 
 \texttt{attribute-filter.xml} governs which attributes are released to which 
 relying party~\cite{AttributeFilterConfiguration}.
+
+The settings of \texttt{relying-party.xml} apply to all partners by default and can be overridden 
+for a single partner, so that one partner is configured differently from the others. 
+They include the authentication flows permitted for a partner and whether responses and assertions 
+are signed or encrypted~\cite{RelyingPartyConfiguration}. 
 
 \end{document}

@@ -6,7 +6,7 @@
 
 In a federated identity infrastructure, a single identity provider authenticates users on behalf 
 of many service providers and thereby becomes the trust anchor of the entire federation. 
-A compromised or misconfigured provider does not affect one application but undermines the 
+A compromised or misconfigured provider does not affect one application but can undermine the 
 security of every service relying on it. 
 Despite this exposure, systematic security monitoring at the application layer of such providers 
 remains largely absent, and existing approaches in this domain focus on operational availability 
@@ -27,9 +27,12 @@ considerations.
 
 The evaluation addresses three questions, namely which data can be collected, how reliably it can 
 be correlated, and what the resulting system costs. 
-The correlation reaches a coverage of 100\,\% over 7{,}236 reports and remains free of incorrect 
-assignments up to a quantified login density, beyond which the heuristic strategies can no longer 
-resolve the order of events. 
+The correlation reaches a coverage of 100\,\% over 7{,}236 reports. 
+Where the audit log records the identifier of the request, it assigns every report unambiguously, 
+independent of the login density. 
+The heuristic strategies that take over where the identifier is missing remain free of incorrect 
+assignments up to a quantified login density, beyond which they can no longer resolve the order 
+of events. 
 All fifteen rules were verified against a real search index and six additionally through the complete 
 pipeline from a browser login, four of them up to the resulting alert.
 In the asynchronous transmission mode, the end-to-end login latency did not differ measurably from 

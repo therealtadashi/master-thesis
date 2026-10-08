@@ -15,18 +15,18 @@ This dominant method of password-based authentication, which is responsible for 
 users online, poses a significant risk to companies and other large organisations. 
 One way in which malicious attackers take advantage of this vulnerable authentication method is by using 
 large databases of leaked user credentials (often including email addresses and corresponding passwords) 
-to authenticate at Service Providers (SPs) as the affected user. 
+to authenticate at \glspl{sp} as the affected user. 
 This attack method is called credential stuffing. 
 Verizon reports that credential abuse was the leading initial attack vector in 22\% of the 12{,}195 confirmed 
 data breaches in the 2025 report~\cite{VerizonDataBreach}. 
 
-To reduce the number of places where credentials are created and stored, the \gls{fim} was developed.
+To reduce the number of places where credentials are created and stored, \gls{fim} was developed. 
 FIM allows users to authenticate on multiple SPs using the same credentials, which 
 are provided by an \gls{idp}. 
 FIM consolidates authentication behind a single trusted authority called the IdP.
-When a user attempts to gain access on the \gls{sp} in FIM, the user's browser is redirected 
+When a user attempts to gain access on the SP in FIM, the user's browser is redirected 
 to the IdP.
-The user authenticates with the IdP, which then communicates with the SP to verify the user's identity. 
+The user authenticates with the IdP, which then confirms the user's identity to the SP. 
 
 Shibboleth, developed by Internet2, is one of the most widely deployed open-source implementations of 
 this model in the research and education sector~\cite{Shibboleth}. 
@@ -40,7 +40,7 @@ where a single IdP serves dozens of SPs simultaneously.
 This architectural property introduces a critical consequence: the IdP becomes a single point of trust 
 for the entire federation~\cite{IdPSinglePointOfTrust}. 
 A compromised, misconfigured or vulnerable IdP does not affect one application.
-It undermines the security of every relying SP.
+It can undermine the security of every relying SP. 
 A notable example of this vulnerability is the Sunburst supply chain attack. 
 After gaining initial access, the attackers obtained the trusted SAML signing certificate and used it to 
 forge authentication assertions, granting unauthorised access to all connected services without triggering 
@@ -62,14 +62,17 @@ a lower level of attention~\cite{FIMSurvey}.
 Formal analyses of SAML likewise remain scarce despite its deployment across government, enterprise and 
 education~\cite{FormalSecAnalysisSAML}. 
 
-This thesis addresses this gap by proposing a security-oriented monitoring system that operates directly 
-within the Shibboleth application layer. 
-Analogous to a network Looking Glass, which provides transparency into the internal routing state 
-of a network node, the proposed system acts as a Security Looking Glass for the Shibboleth IdP. 
-It makes application-layer security parameters and authentication workflows visible that are otherwise 
-inaccessible from outside the application. 
-Rather than testing the deployment actively, the system observes it, and thereby provides federation 
-operators with a continuous view of the security posture of their authentication infrastructure.
+This thesis addresses this gap by proposing a security-oriented monitoring system that operates 
+directly within the Shibboleth application layer. 
+It makes application-layer security parameters and authentication workflows visible that are 
+otherwise inaccessible from outside the application. 
+Rather than testing the deployment actively, the system observes it passively, in the way that 
+passive observation has been applied to the eduroam infrastructure~\cite{EAPeduroam}, and thereby 
+provides federation operators with a continuous view of the security posture of their 
+authentication infrastructure. 
+The title of this thesis refers to this idea of a view into an otherwise opaque infrastructure. 
+The system is not a looking glass in the sense of the network tools of the same name, which offer 
+queries on a device, but a monitoring system for the operator of the IdP.
 
 Three research questions guide this work:
 \begin{itemize}

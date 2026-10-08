@@ -26,11 +26,10 @@ are provided by an \gls{idp}.
 FIM consolidates authentication behind a single trusted authority called the IdP.
 When a user attempts to gain access on the \gls{sp} in FIM, the user's browser is redirected 
 to the IdP.
-The user authenticates with the IdP and the IdP communicates with the SP to guarantee that the user is 
-who they say they are.
+The user authenticates with the IdP, which then communicates with the SP to verify the user's identity. 
 
 Shibboleth, developed by Internet2, is one of the most widely deployed open-source implementations of 
-this model in the research and education (R\&E) sector~\cite{Shibboleth}. 
+this model in the research and education sector~\cite{Shibboleth}. 
 Under this model, a user authenticates with their organisation's IdP once.
 The IdP then issues cryptographically signed SAML assertions that SPs accept 
 as proof of identity.

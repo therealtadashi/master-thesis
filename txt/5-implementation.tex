@@ -178,8 +178,8 @@ As mentioned in Section~\ref{sec:trust}, the interceptors send their payload asy
 Neither of them waits for a response from the monitoring tool, and each proceeds with the 
 authentication flow immediately after dispatching its record. 
 If a transmission fails, whether because the backend is unreachable, the request times out or 
-the record is rejected, the interceptor concerned receives no indication of it and the record is 
-lost without a trace at its point of origin.
+the record is rejected, the interceptor receives no indication of it and the record is lost 
+without a trace at its point of origin.
 
 To quantify the cost of this design decision, the interceptors also support a synchronous mode. 
 In this mode each of them waits for the backend to confirm receipt before the authentication flow 
@@ -209,8 +209,8 @@ namely audit entries, metadata, configuration data and the reports of the two
 interceptors. 
 These indices differ in how they are created. 
 Audit entries are written by Logstash into time based indices that are rotated daily, 
-whereas post authentication reports and outbound reports are stored in a single index each, maintained 
-by the application itself. 
+whereas post authentication reports and outbound reports are stored in a single index each, 
+maintained by the application itself. 
 Queries that span audit data therefore address an index pattern rather than a concrete 
 index, which restricts the set of Elasticsearch operations available for them.
 

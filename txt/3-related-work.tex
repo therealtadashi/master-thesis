@@ -95,8 +95,12 @@ This limited level of self-protection is intentional and follows from the passiv
 principle of this work. 
 The proposed system follows the principle of passive observation, in which security-relevant 
 events are made observable without interfering with the operation of the monitored system. 
-Rieckers applies a similar principle to the passive observation of a 
-federation infrastructure~\cite{EAPeduroam}, which is adopted by this work. 
+Rieckers applies the principle of passive observation to network traffic, capturing the RADIUS and 
+EAP-TLS traffic of the eduroam infrastructure to analyse the TLS parameters that clients 
+offer~\cite{EAPeduroam}. 
+In captured traffic, information that exists only inside the application, such as the structure 
+of a SAML assertion or the configuration of a SP, is not visible. 
+This work adopts the principle and applies it inside the Shibboleth IdP itself. 
 Extending the system with automatic response mechanisms would contradict this passive 
 observation principle. 
 Furthermore, erroneous automated responses could negatively affect the availability or operation 

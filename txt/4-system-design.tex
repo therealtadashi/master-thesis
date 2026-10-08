@@ -59,7 +59,7 @@ These considerations result in five requirements:
 The proposed system comprises four layers. 
 The data collection layer gathers security-relevant information from within the Shibboleth IdP, 
 drawing on three sources: the audit log written by the IdP, its static configuration and metadata files, 
-and two custom interceptors that is attached at two points of the profile processing and executes inside the IdP itself. 
+and two custom interceptors that are attached at two points of the profile processing and execute inside the IdP itself. 
 Because the monitoring backend resides outside the trust boundary of the IdP, sensitive attributes such 
 as usernames and IP addresses are pseudonymised before transmission. 
 The transport layer then transfers the collected records to the backend application over an authenticated channel. 

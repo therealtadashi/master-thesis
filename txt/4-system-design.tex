@@ -85,9 +85,6 @@ A report represents a record that an interceptor produces within the IdP and tra
 monitoring tool. 
 Since two interceptors are used, their reports are called the post authentication report and the 
 outbound report where they have to be distinguished. 
-Only the post authentication report is correlated with audit entries. 
-The outbound report is not correlated with them directly but is linked to the post authentication 
-report by the request identifier. 
 A report and an audit entry may describe the same authentication event, which makes the 
 correlation described in Section~\ref{subsec:correlation} possible.
 
@@ -511,15 +508,15 @@ result.
 Which rules are active in a given deployment is thus determined by what that deployment logs. 
 
 Which conditions the rules examine is a separate question from how they are evaluated. 
-The catalogue of fifteen rules was derived from the three frameworks introduced in 
-Section~\ref{sec:rules}, namely the survey by Simpson and Groß, the OASIS security 
-considerations and the STRIDE classification. 
-Two rules follow a different source. 
-\texttt{FAILED\_\allowbreak{}LOGIN} reports an indicator rather than an attack and is based on 
-the OWASP guidance on security logging. 
-The two rules that compare independently produced records are based on the log integrity 
-argument of Section~\ref{sec:why-not-siem}. 
-Table~\ref{tab:rules} shows the resulting assignment for each rule. 
+Thirteen of the fifteen rules can be traced to documented sources. 
+Ten of them were derived from the three frameworks introduced in Section~\ref{sec:rules}, namely 
+the survey by Simpson and Groß, the OASIS security considerations and the STRIDE classification. 
+\texttt{FAILED\_\allowbreak{}LOGIN} reports an indicator rather than an attack and follows the 
+OWASP guidance on security logging. 
+The two rules that compare independently produced records follow the log integrity argument of 
+Section~\ref{sec:why-not-siem}. 
+The remaining two rules cannot be traced and are discussed after Table~\ref{tab:rules}, 
+which shows the resulting assignment for each rule.
 
 \begin{table}[h]
 \centering
@@ -543,7 +540,7 @@ Rule & Vulnerability & Attack Class & STRIDE & Source \\
 \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}                    & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
 \texttt{FIELD\_\allowbreak{}MISMATCH}                             & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}        & None                       & None                     & ---     & --- \\
-\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}                          & Multiple                   & Detection method         & S       & --- \\
+\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}                          & None                       & Detection method         & S       & --- \\
 \bottomrule
 \end{tabular}
 \end{table}

@@ -21,8 +21,7 @@ Verizon reports that credential abuse was the leading initial attack vector in 2
 data breaches in the 2025 report~\cite{VerizonDataBreach}. 
 
 To reduce the number of places where credentials are created and stored, \gls{fim} was developed. 
-FIM allows users to authenticate on multiple SPs using the same credentials, which 
-are provided by an \gls{idp}. 
+FIM lets users access several SPs with a single set of credentials that is managed by an \gls{idp}. 
 FIM consolidates authentication behind a single trusted authority called the IdP.
 When a user attempts to gain access on the SP in FIM, the user's browser is redirected 
 to the IdP.
@@ -44,13 +43,19 @@ A notable example is the Sunburst supply chain attack~\cite{FireEyeSSC}.
 As Hartl and Derek note, after the initial compromise the attackers obtained the 
 trusted certificate used for signing SAML assertions and used it to access all 
 services within the targeted enterprise~\cite{FormalSecAnalysisSAML}. 
-Since such forged tokens are signed with the organisation's own trusted certificate, 
+Since tokens forged with this certificate carry the organisation's own trusted signature, 
 the resulting anomalies may go unnoticed~\cite{MicrosoftBlogSSC}. 
-Beyond targeted attacks, the SAML protocol itself is susceptible to well-documented vulnerabilities, 
-such as \gls{xsw}~\cite{VulnerSAMLCloud, BreakingSAML}, Response Injection, Assertion Artifact Leakage 
-and IdP Spoofing~\cite{SecAnalysisSSO}.
-These vulnerabilities enable attackers to forge or manipulate security claims accepted by the SP as 
-authoritative once the signature has been validated.
+Beyond targeted attacks, SAML deployments are exposed to weaknesses in the protocol and in its 
+implementations. 
+Somorovsky et al. found \gls{xsw} vulnerabilities in eleven of fourteen SAML frameworks, including 
+Shibboleth, which allow an attacker to inject forged claims that the SP accepts once the signature 
+has been validated~\cite{BreakingSAML}, and the attack has since been reproduced in other 
+OpenSAML-based setups~\cite{VulnerSAMLCloud}. 
+In a formal analysis of Shibboleth, Sommer identified three further attacks, namely Response 
+Injection, Leaked Assertion Artifact and IdP Spoofing, which let an attacker log a victim into an 
+account controlled by the attacker or reuse a leaked artifact to log in as the victim. 
+The Shibboleth developers attribute the first of these to the SAML standard itself rather than to 
+the implementation~\cite{SecAnalysisSSO}.
 
 Despite this elevated risk profile, systematic security monitoring at the application layer of Shibboleth 
 IdP deployments remains largely absent. 

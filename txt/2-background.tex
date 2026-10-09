@@ -109,8 +109,8 @@ including any validity interval and applicable \texttt{OneTimeUse} condition.
 
 To protect the integrity and authenticity of SAML assertions, XML signatures can be used to 
 cryptographically bind the assertion to its issuer. 
-The XML Signature standard specifies the syntax and processing rules for generating, representing 
-and verifying XML-based digital signatures~\cite{BreakingSAML}. 
+The W3C XML Signature standard defines how signatures over XML data are created, encoded and 
+verified~\cite{W3CXMLSIG}. 
 A signature is defined by the \texttt{Signature} element and can be applied to an entire SAML assertion 
 or to selected parts of an XML document~\cite{SAMLAssertions,BreakingSAML}. 
 
@@ -118,8 +118,8 @@ Depending on the location of the signature relative to the signed data, XML sign
 into three types~\cite{W3CXMLSIG}. 
 An enveloped signature is contained within the XML element that it signs. 
 In contrast, an enveloping signature contains the signed data within the signature itself. 
-A detached signature is neither contained within nor a parent of the signed data and references the signed 
-content externally~\cite{BreakingSAML}. 
+A detached signature is kept apart from the signed data, which it neither contains nor is contained 
+in, and refers to that data by reference~\cite{W3CXMLSIG}. 
 In the context of SAML, enveloped signatures are commonly used to sign SAML assertions and protocol 
 messages.
 

@@ -43,9 +43,9 @@ The audit log is not the only log file read by the collection layer.
 As described in Section~\ref{subsec:audit-log}, authentication attempts that do not 
 result in a completed transaction produce no entry there, which applies in particular 
 to failed password validations. 
-The Shibboleth IdP writes these events to separate files, \textit{idp-password-audit.log} 
-and \textit{idp-mfa-audit.log}, which record the outcome of the corresponding 
-authentication flows. 
+In the deployment used in this work, this authentication auditing is enabled and its records are 
+routed to separate files, \textit{idp-password-audit.log} and \textit{idp-mfa-audit.log}, which 
+record the outcome of the corresponding authentication flows. 
 Filebeat is configured to read these files in addition to the general audit log, and the 
 Logstash pipeline tags the resulting records with their source so that they remain 
 distinguishable in the backend. 

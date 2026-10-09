@@ -99,19 +99,21 @@ The same applies to message modification enabled by a lack of binding, whose mit
 the SP checking the credentials it receives~\cite{FIMSurvey}.
 
 The third group contains an issue that can be observed only indirectly from the IdP. 
-A \gls{mitm} attack is the issue in this category, since it occurs on the communication path 
-after the message has left the IdP~\cite{FIMSurvey}. 
-The monitoring system can therefore observe the conditions that make such an attack possible, but 
-not the attack itself. 
-If an assertion is transmitted without encryption, an attacker could read or modify the message 
-in transit. 
-The monitoring system detects that the assertion was transmitted without encryption, yet it 
-cannot determine whether the message was in fact intercepted or altered. 
+A \gls{mitm} attack is the issue in this category. 
+It exploits a lack of binding, where a token is not tied to the SP for which it was issued, and the 
+survey names binding the token to its intended SP as the countermeasure~\cite{FIMSurvey}. 
+The attack itself takes place on the communication path after the message has left the IdP. 
+The IdP can at most observe whether an outgoing assertion is restricted to its intended recipient, 
+but not whether the SP enforces this restriction or whether a message was intercepted, and none of 
+the implemented rules currently examines this condition.
 
-The survey further lists attack classes that are not cross-protocol issues of SAML, among them 
-DDoS, UI redressing, XSS and session swapping~\cite{FIMSurvey}. 
-They lie outside the observation point of the IdP for the same reasons, since they occur at the 
-network level, in the browser or at the SP, and they are therefore not part of the coverage figure. 
+The survey further lists attack classes that do not form cross-protocol issues and are therefore not 
+part of the coverage figure. 
+DDoS, XSS and session swapping occur at the network level, in the browser or at the SP and lie outside 
+the observation point of the IdP for the same reasons~\cite{FIMSurvey}. 
+Two further attack classes, UI redressing and ACS spoofing, were reported only for SAML and exploit a 
+vulnerable IdP~\cite{FIMSurvey}. 
+They concern the IdP directly but are not addressed by the current rules. 
 
 Two cases are considered separately because of their particular relevance.
 The first is the bogus merchant scenario, which is the only cross-protocol issue in the survey 

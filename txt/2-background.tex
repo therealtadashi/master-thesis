@@ -19,9 +19,14 @@ The immediate benefit is convenience, since users no longer need to create and r
 separate set of credentials for every service. 
 The more consequential benefit lies elsewhere. 
 Because credentials exist in one place rather than in every participating service, the number of 
-systems that store and verify them is reduced, and measures such as multi-factor authentication 
-can be enforced consistently at that one place instead of being implemented separately by each 
-service~\cite{NIST80063C}. 
+systems that store and verify them is reduced, since the RP neither verifies the user's 
+authenticators itself nor needs to issue its own~\cite{NIST80063C}. 
+The strength of authentication is consequently also determined in one place. 
+An RP can require a minimum authentication assurance level, which the IdP fulfils and reports in 
+the assertion~\cite{NIST80063C}, and from the second level upwards this requires two distinct 
+authentication factors~\cite{NIST80063B}. 
+Concentrating authentication at one well-managed site also focuses administrative effort and makes 
+multi-factor authentication more acceptable to users, who encounter it less often~\cite{ShibbolethGIAC}.
 Administration follows the same pattern, since accounts are created, modified and revoked 
 centrally rather than in each service individually.
 
@@ -339,8 +344,11 @@ The IdP writes one line per completed transaction to \texttt{idp-audit.log}.
 The set of fields is not fixed but defined by the operator in \texttt{conf/audit.xml}, so the 
 information available in the log depends on the configuration of the individual 
 deployment. 
-Authentication attempts that do not result in a completed transaction, in particular failed password 
-validations, produce no entry in this log~\cite{AuditLoggingConfiguration}. 
+In the default configuration, authentication attempts that do not result in a completed transaction, 
+in particular failed password validations, produce no entry in this log. 
+The IdP can additionally record every authentication attempt, but this feature is disabled by default, 
+and when enabled its records enter the same audit stream unless they are routed to a separate 
+destination~\cite{AuditLoggingConfiguration}. 
 
 The format of a log line is defined per profile in the \textit{shibboleth.AuditFormattingMap} of 
 \texttt{conf/audit.xml}. 

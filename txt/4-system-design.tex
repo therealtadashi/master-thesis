@@ -565,7 +565,11 @@ audit entry that the post authentication report of the same login was correlated
 every field in which they disagree. 
 Both follow the detection point IE6 of AppSensor, the violation of security log integrity, and the 
 argument of Section~\ref{sec:why-not-siem} that two independent records offer an alternative to 
-protecting a log cryptographically~\cite{OWASPAppSensor}.
+protecting a log cryptographically~\cite{OWASPAppSensor}. 
+In addition, input that is written to the audit log without neutralisation can corrupt individual 
+fields of an entry or split it into several lines, which the comparison with an independently 
+produced record reveals as a field mismatch or, if the entry can no longer be correlated, as a 
+discrepancy~\cite{CWE117}. 
  
 The comparison establishes that two records disagree but not which of them was altered, since an 
 attacker who controls the application process can alter the report as well. 
@@ -589,7 +593,10 @@ than omitted.
 Each alert detected by the detection layer described in Section~\ref{sec:processing} is assigned 
 a severity level.
 The severity levels used in this work are based on the high-level risk categories proposed by 
-Graves, which ranges from R1 to R5 according to the impact of a successful attack. 
+Graves, which range from R1 to R5. 
+Although Graves does not state an explicit ordering, he identifies the theft or abuse of the 
+signing keys underlying R5 as the worst case. 
+This work treats the categories as increasing in severity. 
 The specific definitions of the risk categories are as follows~\cite{ShibbolethGIAC}:
 
 \begin{itemize}

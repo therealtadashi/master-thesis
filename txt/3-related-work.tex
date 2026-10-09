@@ -24,9 +24,9 @@ Somorovsky et al. examined fourteen SAML frameworks and found critical XSW vulne
 eleven of them~\cite{BreakingSAML}. 
 Their analysis is confined to the processing of assertions at the SP, and it does not consider 
 what information is available at the IdP during or after such an attack. 
-Kaur and Bansal extended this line of work to cloud environments by reproducing an XSW attack 
-in their own OpenSAML-based SSO setup and rated its severity with CVSS before and after a 
-mitigation~\cite{VulnerSAMLCloud}. 
+Kaur and Bansal transferred this line of work to a cloud setting by reproducing an XSW attack in their 
+own OpenSAML-based SSO environment and rating its severity with CVSS, which fell from 6.2 to 2.7 once 
+a mitigation was applied~\cite{VulnerSAMLCloud}. 
 
 A second line of work approaches the problem formally. 
 Sommer analyses the Shibboleth implementation with respect to authentication, session integrity 
@@ -179,15 +179,24 @@ relationship between configuration and individual runtime events.
 Security configuration assessment evaluates system configurations against defined policies, 
 while file integrity monitoring detects changes to monitored files. 
 Neither mechanism directly establishes whether a particular runtime event is consistent with the 
-configuration state that was active when the event occurred.
+configuration state that was active when the event occurred. 
 
 A further concern arises when considering the integrity of the log sources themselves. 
-Graves demonstrates that log entries can be tampered with in a Shibboleth deployment and therefore 
-recommends keeping Apache logs separate, since logs produced by Tomcat and the IdP itself can 
-potentially be modified by an attacker with sufficient system access~\cite{ShibbolethGIAC}. 
-OWASP A09 likewise identifies insufficient protection against log tampering as a security concern 
-and refers to CWE-117, which describes the insertion, modification, or forgery of log entries to 
-mislead subsequent analysis~\cite{OWASPA09,CWE117}. 
+Graves discusses this concern for Shibboleth under the STRIDE category of repudiation. 
+Prompted by unusual entries reported on the Shibboleth mailing list, he concludes that log entries 
+can be injected that lead the administrator astray, and suggests keeping the Apache logs, which 
+contain the actual browser requests, separate from the Tomcat and IdP logs, which may themselves 
+be subverted~\cite{ShibbolethGIAC}. 
+CWE-117 describes the underlying mechanism: input that is written to a log without neutralisation 
+allows an attacker to insert forged entries and thereby mislead subsequent analysis~\cite{CWE117}. 
+An attacker who has gained access to the system can go further and alter entries that have already 
+been written. 
+OWASP A09 lists insufficient protection of logs against tampering as a weakness and recommends audit 
+trails with integrity controls to prevent tampering or deletion~\cite{OWASPA09}. 
+AppSensor dedicates a detection point to this issue (IE6), which involves modifying an existing 
+log entry~\cite{OWASPAppSensor}. 
+Snodgrass et al. assume such an attacker in their threat model, who after a successful penetration 
+has access to the database, the operating system and the hardware~\cite{TamperDetection}. 
 
 This makes the correlation of independent event sources more than a technical convenience. 
 It provides an additional means of identifying inconsistencies between records of the same event. 

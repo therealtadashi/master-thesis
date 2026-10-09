@@ -41,11 +41,12 @@ The point estimate is $+6.2$\,ms, and the upper bound of the 95\% confidence int
 which is below five percent of the median login duration. 
 The work performed inside the two interceptors amounts to about 0.45\,ms, or 0.13\% of the login 
 duration, as a lower bound that excludes the transmission. 
-The asynchronous transmission is not free of cost, however. 
-It moves the work into background threads, and the processor utilisation of the IdP container 
-rises by about seven percentage points of one core. 
-Blocking transmission, in contrast, adds about 60\,ms to every login, roughly 27 to 30\,ms for each 
-of the two transmissions, and this difference is consistent across all 18 runs.
+The processor utilisation of the IdP container rises by about seven percentage points of one core, 
+which corresponds to roughly 30\,ms of additional processor time per login. 
+Blocking transmission adds about 60\,ms to every login, roughly 27 to 30\,ms for each of the two 
+transmissions, and it does not save processor time: its lower utilisation results from the lower 
+throughput. 
+This difference is consistent across all 18 runs.
 
 Beyond the individual research questions, one observation emerges across all three evaluations. 
 In each of them the measurement uncovered a defect that operation itself had not revealed. 
@@ -130,7 +131,7 @@ The reason is that the malicious SP is a regular federation participant, registe
 federation metadata as a legitimate partner. 
 From the perspective of the IdP it therefore need not exhibit any observable property that 
 distinguishes it from other legitimate participants. 
-Monitoring changes to the configuration and metadata of a SP could provide an additional source of 
+Monitoring changes to the configuration and metadata of an SP could provide an additional source of 
 information, since in the absence of a basis for prior trust a change is the only usable signal. 
 Such a mechanism would, however, detect the transition of a provider rather than a provider that 
 was malicious from the outset.
@@ -196,7 +197,7 @@ conflict with the third requirement from Section~\ref{sec:requirements}.
 Whether the audit extraction points of the IdP could serve this purpose is a question for future work.
 
 A third direction addresses the one Shibboleth specific issue that remains uncovered. 
-Monitoring changes to the configuration and metadata of a SP would provide a partial answer to the 
+Monitoring changes to the configuration and metadata of an SP would provide a partial answer to the 
 bogus merchant scenario, since a change is the only observable signal where no basis 
 for prior trust exists. 
 What such a mechanism could establish and what it could not is discussed in 

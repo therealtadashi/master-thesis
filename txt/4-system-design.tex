@@ -220,7 +220,7 @@ SP involved.
 Two settings are relevant in the context of this work. 
 The first concerns encryption. 
 A deployment may disable the encryption of assertions for a particular partner, for instance where 
-a SP does not support it, which means that assertions for that partner are transmitted 
+an SP does not support it, which means that assertions for that partner are transmitted 
 in plain text. 
 The second concerns authentication. 
 A deployment may specify which authentication flows are permitted for a partner, and thereby 
@@ -306,7 +306,7 @@ At the post authentication point, in contrast, the outgoing response does not ex
 The outbound interceptor therefore complements the main collection point with the fields that only 
 the response carries.
 The outbound point is also reached by responses that the IdP issues without authenticating the 
-user, for instance an error response for a SP whose configuration cannot be fulfilled, which the 
+user, for instance an error response for an SP whose configuration cannot be fulfilled, which the 
 post authentication point never sees.
 
 What remains outside the view of the post authentication point is the outgoing response, including 
@@ -482,7 +482,7 @@ Section~\ref{sec:rules}, to the documented weakness or requirement it is based o
 
 The rules do not all operate on the same kind of input. 
 Four input types occur in this system: login events derived from the audit log, the configuration 
-of a SP, its metadata, and the post authentication reports produced by the interceptor.
+of an SP, its metadata, and the post authentication reports produced by the interceptor.
 These differ not only in structure but also in the rhythm at which they appear. 
 Login events occur continuously during operation, whereas a configuration or a metadata document 
 changes rarely and may remain unchanged for long periods of time.
@@ -550,7 +550,7 @@ documented weakness of the protocol in the survey.
 Both replay rules address it directly. 
 Furthermore, several rules form pairs in which the same weakness is captured twice, once as a 
 configuration state and once as an event that has occurred. 
-\texttt{MISSING\_\allowbreak{}MFA} examines whether a SP requires multi factor authentication at all, whereas 
+\texttt{MISSING\_\allowbreak{}MFA} examines whether an SP requires multi factor authentication at all, whereas 
 \texttt{MFA\_\allowbreak{}BYPASS} examines whether an actual login circumvented that requirement. 
 This distinction is a direct consequence of the three source architecture described in 
 Section~\ref{sec:data-aggregation}: the configuration states what is intended, and the audit log 
@@ -618,11 +618,42 @@ that enables an attack or evidence that the corresponding event has already occu
 A detected attack is therefore assigned a higher severity than a vulnerability that merely enables 
 the attack. 
 
+This classification describes the potential impact of an attack from an attacker's perspective 
+and serves as an orientation rather than as a formula. 
+The severity is therefore assigned per rule, as listed in Table~\ref{tab:severity}, and it is 
+raised or lowered only where the impact of a rule depends on its context. 
+The two multi factor rules are critical if the SP is on the list of providers that must use multi 
+factor authentication, and \texttt{MFA\_\allowbreak{}BYPASS} also if the configured flow requires 
+it in every case, and medium otherwise. 
+\texttt{WEAK\_\allowbreak{}ENCRYPTION} takes the severity from the algorithm policy, 
+\texttt{CERTIFICATE\_\allowbreak{}EXPIRED} from the expiry status of the certificate, and 
+\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} is rated high if at least two independent reasons apply 
+and medium otherwise.
+
 The discrepancy rule is classified as medium, since a missing counterpart can also result from 
 operational causes such as a delayed log shipping chain. 
 The mismatch rule is classified as high, since a contradiction between two records of the same 
 event points either to a manipulation or to a defect in the collection, and both undermine the 
 basis on which the other rules operate.
+
+\begin{table}[h]
+\centering
+\caption{Severity assigned by each rule}\label{tab:severity}
+\small
+\begin{tabular}{ll}
+\toprule
+Severity & Rules \\
+\midrule
+Critical & \texttt{UNENCRYPTED\_ASSERTION}, \texttt{WEAK\_CONFIGURATION}, \texttt{ASSERTION\_REPLAY}, \\
+         & \texttt{SIGNATURE\_WRAPPING\_SUSPECTED} \\
+High     & \texttt{BRUTE\_FORCE}, \texttt{REQUEST\_REPLAY}, \texttt{FIELD\_MISMATCH} \\
+Medium   & \texttt{CORRELATION\_DISCREPANCY} \\
+Low      & \texttt{FAILED\_LOGIN}, \texttt{SUSPICIOUS\_USER\_AGENT} \\
+Context  & \texttt{MISSING\_MFA}, \texttt{MFA\_BYPASS}, \texttt{WEAK\_ENCRYPTION}, \\
+         & \texttt{CERTIFICATE\_EXPIRED}, \texttt{BEHAVIOUR\_ANOMALY} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Visualisation Layer}\label{sec:visualisation}
 
@@ -711,7 +742,7 @@ A further decision concerns the number of interceptors.
 The system collects at two points, since the post authentication point was the basis of the 
 collection and the outbound point was added to make the fields of the response observable. 
 The outbound point turned out to see more events than the post authentication point. 
-For a SP that was configured for encryption without a suitable key, the IdP answered with an error 
+For an SP that was configured for encryption without a suitable key, the IdP answered with an error 
 status before authentication began, as the empty subject and authentication fields of the audit 
 entry show, and only the outbound interceptor produced a report. 
 In principle, a single outbound interceptor could collect the data of both interceptors and halve 

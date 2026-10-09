@@ -101,7 +101,7 @@ and the session state at the time of the request~\cite{AuthenticationContext, Se
 The outbound interceptor is implemented as a second action class with its own Spring Web Flow 
 subflow, which is registered next to that of the post authentication interceptor in the intercept 
 configuration of the IdP. 
-It is enabled for a SP in \textit{relying-party.xml} through the \textit{outboundInterceptorFlows} 
+It is enabled for an SP in \textit{relying-party.xml} through the \textit{outboundInterceptorFlows} 
 property of the profile configuration, in addition to the \textit{postAuthenticationFlows} 
 property of the post authentication interceptor. 
 The flow contains a single state that calls the action and then proceeds, so that the processing 
@@ -190,7 +190,8 @@ The resulting measurements are presented in Section~\ref{sec:overhead}.
 
 The synchronous mode applies to both interceptors and is selected by the same environment 
 variable, so that a login in that mode contains two blocking transmissions. 
-Both endpoints accept only requests that carry a valid signature.
+Where a secret is configured, both interceptor endpoints accept only requests that 
+carry a valid signature. 
 
 \section{Correlation and Detection Layer}\label{sec:impl-processing}
 
@@ -376,7 +377,7 @@ Their assignment to documented vulnerabilities and attack classes is given in
 Table~\ref{tab:rules}. 
 
 A further difficulty arose with the comparison between configuration and runtime event. 
-The authentication flows permitted for a SP are listed in 
+The authentication flows permitted for an SP are listed in 
 \textit{relying-party.xml} without a namespace prefix, whereas the audit log records the 
 flow that was actually used with one. 
 The same flow therefore appears as \texttt{MFA} in the configuration and as 

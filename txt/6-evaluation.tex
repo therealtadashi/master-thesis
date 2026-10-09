@@ -597,7 +597,7 @@ If both \textit{ipHash} and \textit{usernameHash} are missing, so that \texttt{T
 has to step in, the picture changes. 
 Section~\ref{subsubsec:precision-time-window-multi-user} shows a drop in precision from 100\% to 
 65\% with three simultaneously active users, concentrated on logins less than 100\,ms apart. 
-For a SP with several concurrent users, \texttt{TIME\_\allowbreak{}WINDOW} is therefore to be 
+For an SP with several concurrent users, \texttt{TIME\_\allowbreak{}WINDOW} is therefore to be 
 classified as a stopgap for the case of missing hashes rather than as an equivalent alternative, 
 unlike what the single user measurement in Section~\ref{subsec:eval-correlation-results} alone 
 would suggest, where both strategies are indistinguishable.
@@ -1449,7 +1449,7 @@ A partial measurement is nevertheless available.
 In 100 consecutive logins of three users against the clean SP, no alert of any type was raised, 
 which bounds the proportion of legitimate logins that trigger an alert in this scenario to at most 
 3.7 percent (95 percent Wilson interval). 
-The measurement covers only a SP whose configuration is free of the weaknesses the rules are designed 
+The measurement covers only an SP whose configuration is free of the weaknesses the rules are designed 
 to detect, it uses a single browser, and it does not reach alerts that arise only after the retry 
 window of fifteen minutes. 
 It says nothing about the behaviour against configurations that are legitimate but unusual, which is 
@@ -1495,7 +1495,7 @@ technically possible but remains outstanding.
 
 Three specific gaps are worth stating explicitly rather than leaving to be inferred.
 \texttt{WEAK\_\allowbreak{}ENCRYPTION} has a true negative proof on layer two but no true positive proof, 
-since establishing one would require a SP configured to use a weak algorithm.
+since establishing one would require an SP configured to use a weak algorithm. 
 
 Nine of the fifteen rules are not covered by an explicit proof on layer two. 
 As discussed in Section~\ref{subsec:detection-coverage}, five of them cannot sensibly be triggered 

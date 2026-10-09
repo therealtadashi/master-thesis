@@ -80,7 +80,7 @@ protocol itself verifies.
 \section{SAML}\label{sec:saml}
 
 The \gls{saml} is an XML-based standard developed by the \gls{oasis} for the exchange of authentication, 
-authorization, and other security-related information between different parties.
+authorisation, and other security-related information between different parties.
 SAML is a fundamental component of FIM and is widely used to enable SSO across organizational and 
 security boundaries~\cite{SAMLOverview}. 
 The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
@@ -95,7 +95,7 @@ capabilities, particularly with regard to federation, interoperability, and priv
 SAML assertions serve as security tokens that convey security-related information about a principal, 
 such as a user, system, or service. 
 An assertion contains statements made by an issuer about the principal, which may include authentication, 
-authorization, and attribute information. 
+authorisation, and attribute information. 
 Since these statements can have security-critical implications, their authenticity and integrity must be 
 ensured~\cite{SAMLAssertions}. 
 Therefore, the SAML element can be protected by a digital signature following the XML Signature standard, 
@@ -119,7 +119,7 @@ verified~\cite{W3CXMLSIG}.
 A signature is defined by the \texttt{Signature} element and can be applied to an entire SAML assertion 
 or to selected parts of an XML document~\cite{SAMLAssertions,BreakingSAML}. 
 
-Depending on the location of the signature relative to the signed data, XML signatures can be categorized 
+Depending on the location of the signature relative to the signed data, XML signatures can be categorised 
 into three types~\cite{W3CXMLSIG}. 
 An enveloped signature is contained within the XML element that it signs. 
 In contrast, an enveloping signature contains the signed data within the signature itself. 
@@ -193,7 +193,7 @@ associated security-related information.
 \subsection{Web Browser SSO Authentication Process}\label{subsec:sso-auth-process}
 
 The SAML Web Browser SSO profile enables a user to authenticate to an IdP and subsequently access a 
-protected service provided by a SP. 
+protected service provided by an SP. 
 The process is mediated by the user's web browser, which forwards SAML messages between the SP and IdP.
 
 The process begins when a user requests access to a protected resource at the SP. 
@@ -208,8 +208,8 @@ The SAML response is then returned to the user's browser, which forwards it to t
 The SP validates the received SAML response and assertion, including the digital signature and the 
 applicable validity conditions. 
 If the assertion is considered valid, the SP evaluates the contained statements and attributes to 
-determine whether the user is authorized to access the requested resource. 
-If the authorization requirements are satisfied, the SP grants the user access to the protected 
+determine whether the user is authorised to access the requested resource. 
+If the authorisation requirements are satisfied, the SP grants the user access to the protected 
 service~\cite{SAMLOverview}.
 Figure~\ref{fig:sp-initiated-sso} illustrates the described authentication process.
 
@@ -237,7 +237,7 @@ enforce the applicable validity conditions and replay-related constraints.
 
 \subsection{SAML Metadata}\label{subsec:saml-metadata}
 
-SAML metadata provides a standardized way for SAML entities to describe their configuration and 
+SAML metadata provides a standardised way for SAML entities to describe their configuration and 
 capabilities to other participating entities. 
 It enables IdPs and SPs to obtain information required for establishing communication and processing 
 SAML messages without requiring every configuration parameter to be exchanged manually. 
@@ -270,7 +270,7 @@ and origin of the metadata before using it for configuration or trust decisions.
 Shibboleth is a free and open-source web single sign-on software suite that 
 implements SAML and other standards for FIM. 
 It is widely used in federated authentication environments and places particular 
-emphasis on privacy and decentralized identity management. 
+emphasis on privacy and decentralised identity management. 
 The Shibboleth Consortium provides separate software components for the IdP and 
 SP, enabling organizations to participate in federated identity infrastructures~\cite{Shibboleth}.
 

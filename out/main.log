@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  9 OCT 2026 16:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  9 OCT 2026 18:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2474,7 +2474,11 @@ Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
 
 Underfull \vbox (badness 1742) has occurred while \output is active []
 
- [18 <./txt/../img/deployment.png>] [19] [20] [21] [22] [23] [24] [25]
+ [18 <./txt/../img/deployment.png>] [19] [20] [21] [22] [23]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [24]
+[25]
 Overfull \hbox (3.71716pt too wide) in paragraph at lines 526--526
 []|\T1/jkpl/m/n/10 (-20) STRIDE| 
  []
@@ -2482,10 +2486,7 @@ Overfull \hbox (3.71716pt too wide) in paragraph at lines 526--526
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-Underfull \vbox (badness 2856) has occurred while \output is active []
-
- [26]
+[26]
 Overfull \hbox (7.48018pt too wide) in paragraph at lines 559--573
 \T1/jkpl/m/n/10.95 (-20) duced in-de-pen-dently of each other for the same even
 t. The first, \T1/lmtt/m/n/10.95 CORRELATION_DISCREPANCY\T1/jkpl/m/n/10.95 (-20
@@ -2493,57 +2494,57 @@ t. The first, \T1/lmtt/m/n/10.95 CORRELATION_DISCREPANCY\T1/jkpl/m/n/10.95 (-20
  []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 4660) has occurred while \output is active []
 
  [27]
-[28] [29]) (./txt/5-implementation.tex [30]
+[28] [29] [30]) (./txt/5-implementation.tex [31] [32
+
+
+]
 chapter 5.
-[31
-
-
-] [32] [33] [34] [35] [36]
+[33] [34] [35] [36] [37] [38]
 Underfull \vbox (badness 1342) has occurred while \output is active []
 
- [37]
-[38]) (./txt/6-evaluation.tex [39] [40
+ [39]
+[40]) (./txt/6-evaluation.tex [41] [42
 
 
 ]
 chapter 6.
-[41] [42]
+[43] [44]
 
 LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
 (Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 133.
 
-[43] [44] [45] [46] [47]
+[45] [46] [47] [48] [49]
 Underfull \vbox (badness 3049) has occurred while \output is active []
 
- [48]
-[49] [50]
+ [50]
+[51] [52]
 Underfull \vbox (badness 1127) has occurred while \output is active []
 
- [51]
-[52] [53]
+ [53]
+[54] [55]
 Underfull \vbox (badness 1728) has occurred while \output is active []
 
- [54]
-[55] [56] [57] [58] [59] [60] [61] [62] [63]
+ [56]
+[57] [58] [59] [60] [61] [62] [63] [64] [65]
 Overfull \hbox (0.42671pt too wide) in paragraph at lines 1392--1397
 []\T1/jkpl/m/n/10.95 (-20) Several mea-sure-ments use an HTTP client har-ness r
 ather than a browser. Sec-tions []6.2.2.2[]
  []
 
-[64] [65]) (./txt/7-discussion.tex [66]
+[66] [67]) (./txt/7-discussion.tex [68]
 chapter 7.
-[67
+[69
 
 
-] [68] [69] [70]) (./txt/8-conclusion.tex [71] [72
+] [70] [71] [72]) (./txt/8-conclusion.tex [73] [74
 
 
 ]
 chapter 8.
-[73]) (./zyx/epilogue.tex [74]
+[75]) (./zyx/epilogue.tex [76]
 Package tocbasic Info: character protrusion at lof deactivated on input line 10
 .
  (out/main.lof)
@@ -2552,7 +2553,7 @@ Package tocbasic Info: character protrusion at lof deactivated on input line 10
 
 Package tocbasic Info: character protrusion at lot deactivated on input line 24
 .
- (out/main.lot [75
+ (out/main.lot [77
 
 
 
@@ -2561,7 +2562,7 @@ Package tocbasic Info: character protrusion at lot deactivated on input line 24
 \tf@lot=\write10
 \openout10 = `main.lot'.
 
- [76]
+ [78]
 chapter without number
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/jkpl/m/sc/10.95'.
@@ -2594,19 +2595,19 @@ ty-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . May 2025. \T1/jkpl/m/sc/10.95 (+
 20) url\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / /
  []
 
-[77
+[79
 
 
 
 
-] [78] [79]
+] [80] [81]
 Underfull \hbox (badness 1337) in paragraph at lines 30--30
 []\T1/jkpl/m/n/10.95 (+20) Shibboleth Con-sor-tium. \T1/jkpl/m/it/10.95 (+20) P
 ro-fil-eRequest-Con-text\T1/jkpl/m/n/10.95 (+20) . \T1/jkpl/m/sc/10.95 (+20) ur
 l\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / / shibboleth .
  []
 
-[80] [81] [82] (out/main.gls
+[82] [83] [84] (out/main.gls
 LaTeX Font Info:    Trying to load font information for T1+jkpss on input line 
 5.
 
@@ -2617,7 +2618,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `jkpss' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-)) [83
+)) [85
 
 
 
@@ -2625,7 +2626,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 ]
-[84
+[86
 
 
 ] (out/main.aux)
@@ -2640,10 +2641,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66742 strings out of 474116
- 1472551 string characters out of 5743682
- 2676194 words of memory out of 5000000
- 87064 multiletter control sequences out of 15000+600000
+ 66747 strings out of 474116
+ 1472614 string characters out of 5743682
+ 2675290 words of memory out of 5000000
+ 87066 multiletter control sequences out of 15000+600000
  747808 words of font info for 543 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,21n,145p,10977b,3472s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2661,10 +2662,10 @@ f-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dist/
 fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type
 1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (96 pages, 560625 bytes).
+Output written on out/main.pdf (98 pages, 563095 bytes).
 PDF statistics:
- 1630 PDF objects out of 1728 (max. 8388607)
- 1482 compressed objects within 15 object streams
- 304 named destinations out of 1000 (max. 500000)
+ 1643 PDF objects out of 1728 (max. 8388607)
+ 1493 compressed objects within 15 object streams
+ 307 named destinations out of 1000 (max. 500000)
  127188 words of extra memory for PDF output out of 128383 (max. 10000000)
 

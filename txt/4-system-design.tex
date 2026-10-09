@@ -145,8 +145,8 @@ On the one hand, the entry reflects the final outcome of a transaction, includin
 that are only determined at the end of processing, such as the encryption applied to the 
 outgoing assertion. 
 On the other hand, events that never result in a completed transaction produce no entry. 
-Failed password validations in particular are not recorded in the audit log, since the 
-authentication flow terminates before a transaction is concluded.
+Failed password validations in particular are not recorded in the audit log by default, since 
+no transaction is concluded for them. 
 
 As mentioned in Section~\ref{subsec:audit-logging}, the fields that are written to the audit 
 log are not fixed. 

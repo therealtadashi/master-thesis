@@ -113,7 +113,15 @@ DDoS, XSS and session swapping occur at the network level, in the browser or at 
 the observation point of the IdP for the same reasons~\cite{FIMSurvey}. 
 Two further attack classes, UI redressing and ACS spoofing, were reported only for SAML and exploit a 
 vulnerable IdP~\cite{FIMSurvey}. 
-They concern the IdP directly but are not addressed by the current rules. 
+UI redressing loads a page of the IdP into an invisible frame and tricks the user into clicking it, 
+and is mitigated by response headers such as \texttt{X-Frame-Options}~\cite{GuardiansClouds}. 
+These headers are typically set by the web server in front of the IdP~\cite{ShibbolethGIAC} and 
+lie outside the profile flows that the interceptors observe. 
+ACS spoofing places an endpoint controlled by the attacker in the authentication request and 
+succeeds if the IdP does not check it against the endpoints registered for the SP~\cite{GuardiansClouds}. 
+Since the IdP sends responses only to endpoints enumerated in the SP's metadata~\cite{MetadataForSP}, 
+a rule comparing the requested endpoint with the metadata would be conceivable, but it is not part 
+of the current catalogue. 
 
 Two cases are considered separately because of their particular relevance.
 The first is the bogus merchant scenario, which is the only cross-protocol issue in the survey 

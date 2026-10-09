@@ -1206,6 +1206,67 @@
       \verb https://www.sciencedirect.com/science/article/pii/S0167404821001802
       \endverb
     \endentry
+    \entry{GuardiansClouds}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=1796924d13dcc8286fb6be12e1032c5a}{%
+           family={Mayer},
+           familyi={M\bibinitperiod},
+           given={Andreas},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=550307abbb161e7a7052d6c06b435424}{%
+           family={Niemietz},
+           familyi={N\bibinitperiod},
+           given={Marcus},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a8e7bc76f7099aeeefdf2c29037a60d4}{%
+           family={Mladenov},
+           familyi={M\bibinitperiod},
+           given={Vladislav},
+           giveni={V\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2e8d508dc1580d520895855612148b91}{%
+           family={Schwenk},
+           familyi={S\bibinitperiod},
+           given={Jörg},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Scottsdale, Arizona, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{50de0286e421750d743d1b761d9ebc7b}
+      \strng{fullhash}{7891d7414b6496f4ffe2dfed7410e18f}
+      \strng{bibnamehash}{7891d7414b6496f4ffe2dfed7410e18f}
+      \strng{authorbibnamehash}{7891d7414b6496f4ffe2dfed7410e18f}
+      \strng{authornamehash}{50de0286e421750d743d1b761d9ebc7b}
+      \strng{authorfullhash}{7891d7414b6496f4ffe2dfed7410e18f}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 6th Edition of the ACM Workshop on Cloud Computing Security}
+      \field{isbn}{9781450332392}
+      \field{series}{CCSW '14}
+      \field{title}{Guardians of the Clouds: When Identity Providers Fail}
+      \field{year}{2014}
+      \field{pages}{105\bibrangedash 116}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1145/2664168.2664171
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/2664168.2664171
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/2664168.2664171
+      \endverb
+      \keyw{holder-of-key,identity theft,saml,sso,web security}
+    \endentry
     \entry{CWE117}{online}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=ed5f36b0c6246bf884830c7836478e39}{%

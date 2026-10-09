@@ -2521,11 +2521,15 @@
     <bcf:citekey order="135" intorder="1">FIMSurvey</bcf:citekey>
     <bcf:citekey order="136" intorder="1">FIMSurvey</bcf:citekey>
     <bcf:citekey order="137" intorder="1">FIMSurvey</bcf:citekey>
-    <bcf:citekey order="138" intorder="1">TamperDetection</bcf:citekey>
-    <bcf:citekey order="139" intorder="1">UEBAFederation</bcf:citekey>
-    <bcf:citekey order="140" intorder="1">OpenIDConnectCore</bcf:citekey>
-    <bcf:citekey order="141" intorder="1">RFC7636</bcf:citekey>
-    <bcf:citekey order="141" intorder="2">RFC9700</bcf:citekey>
+    <bcf:citekey order="138" intorder="1">GuardiansClouds</bcf:citekey>
+    <bcf:citekey order="139" intorder="1">ShibbolethGIAC</bcf:citekey>
+    <bcf:citekey order="140" intorder="1">GuardiansClouds</bcf:citekey>
+    <bcf:citekey order="141" intorder="1">MetadataForSP</bcf:citekey>
+    <bcf:citekey order="142" intorder="1">TamperDetection</bcf:citekey>
+    <bcf:citekey order="143" intorder="1">UEBAFederation</bcf:citekey>
+    <bcf:citekey order="144" intorder="1">OpenIDConnectCore</bcf:citekey>
+    <bcf:citekey order="145" intorder="1">RFC7636</bcf:citekey>
+    <bcf:citekey order="145" intorder="2">RFC9700</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

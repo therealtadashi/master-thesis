@@ -31,12 +31,7 @@ thesis.zip
 .pdf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
-*.bbl
-*.bcf
-*.blg
-*-blx.aux
-*-blx.bib
-*.run.xml
+
 
 ## Build tool auxiliary files:
 *.fdb_latexmk
@@ -305,7 +300,3 @@ Backup of *.doc*
 
 # Visio autosave temporary files
 *.~vsd*
-
-out/*
-!out/main.pdf
-!out/main.log

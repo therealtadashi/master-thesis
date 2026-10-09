@@ -1,0 +1,9 @@
+[0] Config.pm:307> INFO - This is Biber 2.19
+[0] Config.pm:310> INFO - Logfile is 'out/main.blg'
+[120] biber-darwin:340> INFO - === Fri Oct  9, 2026, 15:38:10
+[142] Biber.pm:419> INFO - Reading 'out/main.bcf'
+[335] Biber.pm:979> INFO - Found 60 citekeys in bib section 0
+[357] Biber.pm:4419> INFO - Processing section 0
+[373] Biber.pm:4610> INFO - Looking for bibtex file './literature.bib' for section 0
+[377] bibtex.pm:1713> INFO - LaTeX decoding ...
+[481] bibtex.pm:1519> INFO - Found BibTeX data source './literature.bib'

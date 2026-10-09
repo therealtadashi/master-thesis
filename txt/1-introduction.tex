@@ -26,25 +26,26 @@ are provided by an \gls{idp}.
 FIM consolidates authentication behind a single trusted authority called the IdP.
 When a user attempts to gain access on the SP in FIM, the user's browser is redirected 
 to the IdP.
-The user authenticates with the IdP, which then confirms the user's identity to the SP. 
+The user authenticates with the IdP, which then confirms the user's identity to the SP~\cite{FIMSurvey}. 
 
 Shibboleth, developed by Internet2, is one of the most widely deployed open-source implementations of 
 this model in the research and education sector~\cite{Shibboleth}. 
 Under this model, a user authenticates with their organisation's IdP once.
 The IdP then issues cryptographically signed SAML assertions that SPs accept 
-as proof of identity.
+as proof of identity. 
 This architecture is widely deployed in higher education and research federation such 
-as DFN-AAI~\cite{DFNAAI}, 
-where a single IdP serves dozens of SPs simultaneously.
+as DFN-AAI~\cite{DFNAAI}, where a single IdP serves dozens of SPs simultaneously.
 
 This architectural property introduces a critical consequence: the IdP becomes a single point of trust 
 for the entire federation~\cite{IdPSinglePointOfTrust}. 
 A compromised, misconfigured or vulnerable IdP does not affect one application.
 It can undermine the security of every relying SP. 
-A notable example of this vulnerability is the Sunburst supply chain attack. 
-After gaining initial access, the attackers obtained the trusted SAML signing certificate and used it to 
-forge authentication assertions, granting unauthorised access to all connected services without triggering 
-a single failed login~\cite{FireEyeSSC,MicrosoftBlogSSC}.
+A notable example is the Sunburst supply chain attack~\cite{FireEyeSSC}. 
+As Hartl and Derek note, after the initial compromise the attackers obtained the 
+trusted certificate used for signing SAML assertions and used it to access all 
+services within the targeted enterprise~\cite{FormalSecAnalysisSAML}. 
+Since such forged tokens are signed with the organisation's own trusted certificate, 
+the resulting anomalies may go unnoticed~\cite{MicrosoftBlogSSC}. 
 Beyond targeted attacks, the SAML protocol itself is susceptible to well-documented vulnerabilities, 
 such as \gls{xsw}~\cite{VulnerSAMLCloud, BreakingSAML}, Response Injection, Assertion Artifact Leakage 
 and IdP Spoofing~\cite{SecAnalysisSSO}.

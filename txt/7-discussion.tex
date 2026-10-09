@@ -166,7 +166,7 @@ observations made at the SP.
 The approach presented here is inherently limited by its position, as discussed in 
 Section~\ref{sec:limitation}, and several of the uncovered attack classes are located precisely 
 where the IdP has no visibility. 
-Martín and Beltrán have proposed behavioural anomaly detection on the relying party 
+Martín et al. have proposed behavioural anomaly detection on the relying party 
 side~\cite{UEBAFederation}, arguing that delegating authentication does not transfer the entire 
 security responsibility. 
 Combining both perspectives would address opposite ends of the same federation. 
@@ -201,7 +201,7 @@ registration of its clients, writes records of completed transactions and proces
 requests at runtime. 
 The detection rules, by contrast, are protocol specific and would not transfer, since conditions 
 such as a missing proof key exchange or an implicit flow have no direct counterpart in the rules 
-developed here~\cite{RFC7636}. 
+developed here~\cite{RFC7636, RFC9700}. 
 Future work could therefore examine which application level sources exist in an OIDC provider, 
 whether they are complementary in the same sense, and which rules follow from the documented 
 weaknesses of that protocol.

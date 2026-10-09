@@ -308,3 +308,4 @@ Backup of *.doc*
 
 out/*
 !out/main.pdf
+!out/main.log

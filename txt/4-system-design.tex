@@ -51,7 +51,7 @@ These considerations result in five requirements:
     \item Detection and reporting without automated intervention.
     \item Realisation as a plugin, without modification of the IdP.
     \item Storage outside the monitored system, with authenticated transport and pseudonymisation at the source.
-    \item Detection rules derived from documented attack classes and normative requirements.
+    \item Detection rules derived from documented attack classes and security recommendations.
 \end{enumerate}
 
 \section{Overview}\label{sec:overview}
@@ -405,9 +405,8 @@ any indication at the point where it originated.
 The design therefore prioritises non interference with the monitored service over a guarantee of delivery. 
 For a monitoring system that observes a central authentication service, this trade off appears justified. 
 A monitoring component that degrades the availability of the service it observes would undermine its own purpose. 
-Hall et al. arrive at the same decision for the same reason, transmitting detection events separately rather 
-than in response to the triggering request so that analysis does not delay the monitored 
-application~\cite{BlackWatch}. 
+Hall et al. decouple analysis for a similar reason: responses are retrieved separately rather than returned in 
+reply to the submitted event~\cite{BlackWatch}. 
 
 \section{Correlation and Detection Layer}\label{sec:processing}
 
@@ -536,7 +535,7 @@ Rule & Vulnerability & Attack Class & STRIDE & Source \\
 \texttt{ASSERTION\_\allowbreak{}REPLAY}                           & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
 \texttt{REQUEST\_\allowbreak{}REPLAY}                             & Lack of Binding            & Replay Attack            & S, E    & \cite{FIMSurvey,SAMLSecurityConsideration} \\
 \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} & Message Formatting         & Message Modification     & S, T, E & \cite{BreakingSAML,ShibbolethGIAC} \\
-\texttt{CERTIFICATE\_\allowbreak{}EXPIRED}                        & Normative requirement      & None                     & S       & \cite{SAMLSecurityConsideration} \\
+\texttt{CERTIFICATE\_\allowbreak{}EXPIRED}                        & Security recommendations   & None                     & S       & \cite{SAMLSecurityConsideration} \\
 \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}                    & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
 \texttt{FIELD\_\allowbreak{}MISMATCH}                             & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}        & None                       & None                     & ---     & --- \\
@@ -589,8 +588,8 @@ than omitted.
 
 Each alert detected by the detection layer described in Section~\ref{sec:processing} is assigned 
 a severity level.
-The severity levels used in this work are based on the risk classification proposed by Graves, 
-which ranges from R1 to R5 according to the impact of a successful attack. 
+The severity levels used in this work are based on the high-level risk categories proposed by 
+Graves, which ranges from R1 to R5 according to the impact of a successful attack. 
 The specific definitions of the risk categories are as follows~\cite{ShibbolethGIAC}:
 
 \begin{itemize}

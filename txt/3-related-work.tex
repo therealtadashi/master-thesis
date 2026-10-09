@@ -24,9 +24,9 @@ Somorovsky et al. examined fourteen SAML frameworks and found critical XSW vulne
 eleven of them~\cite{BreakingSAML}. 
 Their analysis is confined to the processing of assertions at the SP, and it does not consider 
 what information is available at the IdP during or after such an attack. 
-Kaur and Bansal extended this line of work to cloud environments and reported that a majority of 
-the analysed SaaS providers were vulnerable to at least one of eight identified attack 
-vectors~\cite{VulnerSAMLCloud}.
+Kaur and Bansal extended this line of work to cloud environments by reproducing an XSW attack 
+in their own OpenSAML-based SSO setup and rated its severity with CVSS before and after a 
+mitigation~\cite{VulnerSAMLCloud}. 
 
 A second line of work approaches the problem formally. 
 Sommer analyses the Shibboleth implementation with respect to authentication, session integrity 
@@ -141,7 +141,7 @@ This is precisely the gap addressed in this work.
 The same categories of data that AAIEye already collects for operational purposes are evaluated 
 here for their security semantics instead. 
 
-A complementary perspective is provided by Martín and Beltrán, who propose 
+A complementary perspective is provided by Martín et al., who propose 
 behavioural anomaly detection at the SP rather than the IdP~\cite{UEBAFederation}. 
 Their argument is that delegating authentication to an IdP does not transfer the entire security 
 responsibility, and that the relying party can contribute to detection even after authentication 
@@ -186,8 +186,8 @@ Graves demonstrates that log entries can be tampered with in a Shibboleth deploy
 recommends keeping Apache logs separate, since logs produced by Tomcat and the IdP itself can 
 potentially be modified by an attacker with sufficient system access~\cite{ShibbolethGIAC}. 
 OWASP A09 likewise identifies insufficient protection against log tampering as a security concern 
-and refers to CWE-117, which describes the insertion, modification, deletion, or forgery of log 
-entries to mislead subsequent analysis~\cite{OWASPA09,CWE117}.
+and refers to CWE-117, which describes the insertion, modification, or forgery of log entries to 
+mislead subsequent analysis~\cite{OWASPA09,CWE117}. 
 
 This makes the correlation of independent event sources more than a technical convenience. 
 It provides an additional means of identifying inconsistencies between records of the same event. 
@@ -264,9 +264,8 @@ The survey therefore provides the primary basis for identifying attack scenarios
 relevant to federated identity management.
 
 While the survey describes vulnerabilities that have been documented in the literature, the 
-OASIS SAML Security and Privacy Considerations provide a normative perspective by specifying 
-security requirements and recommended countermeasures for SAML 
-deployments~\cite{SAMLSecurityConsideration}. 
+OASIS SAML Security and Privacy Considerations provides security recommendations for SAML 
+deployments by specifying security requirements and suggested countermeasures~\cite{SAMLSecurityConsideration}. 
 This allows the detection rules to be derived not only from observed or documented attacks, 
 but also from the security properties that a SAML deployment is expected to enforce.
 

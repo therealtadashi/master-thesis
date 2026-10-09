@@ -95,7 +95,7 @@ Since these statements can have security-critical implications, their authentici
 ensured~\cite{SAMLAssertions}. 
 Therefore, the SAML element can be protected by a digital signature following the XML Signature standard, 
 allowing a relying party to verify that the assertion was issued by the stated issuer and has not been 
-modified.
+modified~\cite{BreakingSAML}. 
 
 Each assertion contains metadata that defines its origin and validity. 
 The \texttt{Issuer} element identifies the entity that issued the assertion, while the \texttt{IssueInstant} 
@@ -109,17 +109,17 @@ including any validity interval and applicable \texttt{OneTimeUse} condition.
 
 To protect the integrity and authenticity of SAML assertions, XML signatures can be used to 
 cryptographically bind the assertion to its issuer. 
-The XML Signature standard defines the syntax and processing rules for creating, representing, and 
-verifying XML-based digital signatures. 
-A signature is represented by the \texttt{Signature} element and can be applied to an entire SAML assertion 
-or to selected parts of an XML document~\cite{SAMLAssertions}.
+The XML Signature standard specifies the syntax and processing rules for generating, representing 
+and verifying XML-based digital signatures~\cite{BreakingSAML}. 
+A signature is defined by the \texttt{Signature} element and can be applied to an entire SAML assertion 
+or to selected parts of an XML document~\cite{SAMLAssertions,BreakingSAML}. 
 
 Depending on the location of the signature relative to the signed data, XML signatures can be categorized 
 into three types~\cite{W3CXMLSIG}. 
 An enveloped signature is contained within the XML element that it signs. 
 In contrast, an enveloping signature contains the signed data within the signature itself. 
 A detached signature is neither contained within nor a parent of the signed data and references the signed 
-content externally. 
+content externally~\cite{BreakingSAML}. 
 In the context of SAML, enveloped signatures are commonly used to sign SAML assertions and protocol 
 messages.
 
@@ -279,8 +279,7 @@ directory service, such as a \gls{ldap} server,
 which provides the IdP with the information required for authentication and 
 attribute release.
 It builds on the OpenSAML library for the construction and validation of SAML messages, which is relevant 
-because vulnerabilities reported for OpenSAML apply to Shibboleth deployments 
-as well~\cite{ShibbolethGIAC}.
+because vulnerabilities reported for OpenSAML can affect Shibboleth deployments as well~\cite{ShibbolethGIAC}.
 
 \subsection{Profile Flows and Interception Points}\label{subsec:profile-flows}
 

@@ -215,13 +215,17 @@ which is why the following paragraphs concern precision.
 for every report in all five datasets. 
 This includes D1, where the hashes exclude nothing and the event time alone decides, and D5, where 
 all users share one address. 
-The size of the window does not matter. 
+The size of the window does not affect the precision. 
 In D1 the mean number of candidates rises from 6.4 at $\pm$1\,s to 197.6 at $\pm$60\,s without a 
 single wrong assignment, since a larger window only adds candidates that lie further away and are 
 therefore never selected. 
-For operation, this means that a window of $\pm$1\,s suffices 
-(\textit{lg.correlation.\allowbreak{}window-seconds=1}), which reduces the number of candidates 
-examined per report from 58.1 at the default of $\pm$10\,s to 6.4.
+The window therefore only has to be large enough to contain the correct entry, and a larger window 
+costs nothing but query effort. 
+In the test environment $\pm$1\,s would have sufficed, but in operation a report can arrive later, 
+since the interceptors give up a transmission only after 1.5\,s, and on separate hosts the clocks 
+may differ. 
+The default of $\pm$10\,s covers both with a wide margin, at the price of examining 58.1 instead of 
+6.4 candidates per report in D1. 
 
 \paragraph{Without the hashes, wrong assignments occur only between logins less than 100\,ms apart.}
 \texttt{TIME\_\allowbreak{}WINDOW} reached 65.0 percent in D2, 73.7 percent in D5 and 89.9 percent 

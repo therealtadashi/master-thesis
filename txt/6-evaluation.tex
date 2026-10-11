@@ -52,57 +52,113 @@ Section~\ref{subsec:impl-correlation} described the correlation mechanism, which
 post authentication report to the audit entry of the same login. 
 It first tries \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} and falls back to two 
 heuristic strategies where the identifier is not available. 
-Both heuristics query the audit entries of the same SP within a time window around the report; 
+Both heuristics query the audit entries of the same SP within a time window around the report. 
 \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} additionally requires the 
 same \textit{usernameHash} and \textit{ipHash}, whereas \texttt{TIME\_\allowbreak{}WINDOW} relies 
 on the time alone. 
 The entries returned by such a query are referred to as candidates in the following, and the 
 strategy selects the candidate with the smallest temporal distance to the report. 
 This section examines how often the selected candidate is the correct one (precision) and how 
-many reports find a counterpart at all (coverage).
+many reports find a counterpart at all (coverage). 
+The exact strategy serves as the reference for the heuristics, and the measurement is repeated on 
+datasets that differ in the number of users and in the login generator. 
 
+\subsection{Method and Datasets}\label{subsec:eval-correlation-method}
+
+\paragraph{Ground truth.}
 To determine the precision of the heuristic strategies, a reference is required that indicates 
 whether a given correlation was correct. 
 The correlation via \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} establishes a 
 one-to-one relationship, since the identifier is unique per request. 
 Wherever this strategy produced a match, the correct counterpart is therefore known without 
-ambiguity, which allows it to serve as a ground truth for the heuristic strategies.
-The measurement method is as follows:
+ambiguity, which allows it to serve as a ground truth for the heuristic strategies. 
+An analysis program in the test sources of the backend proceeds as follows:
 
 \begin{itemize}
-    \item Collect all post authentication reports of a configurable time period for which \texttt{correlated\_\allowbreak{}by = INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}.
-    \item For each report and each window size, execute the query of the heuristic strategy unchanged and select the same candidate as the productive system would, namely the one with the smallest temporal distance.
-    \item Compare the selected candidate against the known correct audit identifier, classifying the outcome as a match, an incorrect assignment, or no match.
-    \item Additionally record the temporal offset between the reception of the post authentication report and the event time recorded by the IdP.
+    \item It collects all post authentication reports of a configurable time period that were correlated via \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}.
+    \item For each report and each window size from $\pm$1 to $\pm$60\,s, it executes the query of the heuristic strategy unchanged and selects the same candidate as the productive system would, namely the one with the smallest temporal distance.
+    \item It compares the selected candidate with the known correct audit entry and classifies the outcome as a hit, an incorrect assignment or no match. Precision is the share of hits among the assigned reports, coverage the share of reports that were assigned at all.
+    \item It records the offset between the reception of the report and the event time of its audit entry, and the distance to the nearest other audit entry of the same SP as a measure of the local login density.
 \end{itemize}
 
-The measurement was repeated on several datasets, which differ in the login generator 
-(Section~\ref{sec:setup}) and in the number of users active at the same time. 
-Table~\ref{tab:correlation-datasets} gives an overview. 
-The first dataset was recorded before the time base of the heuristics was corrected 
-(Section~\ref{subsec:eval-correlation-findings}) and only shows the effect of that correction; 
-all others were recorded afterwards. 
-In these, each user performed 200 logins, and counts above 200 per user stem from warm-up logins, 
-which are included in the data.
+Each report is evaluated on its own. 
+The productive filter that excludes audit entries already assigned to another report is 
+therefore omitted, since in retrospect it would exclude exactly the entry that the exact match 
+has claimed. 
+
+\paragraph{Two corrections before the measurement.}
+The ground truth requires the inbound message identifier in the audit log. 
+It was missing from the audit format of the IdP, so that the exact strategy had never been active 
+and all 3{,}690 correlations up to that point had been established by 
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}. 
+After \texttt{\%I} had been added to \textit{conf/audit.xml}, the strategy activated itself during 
+operation without a restart, as intended by the dynamic field adaptation of 
+Section~\ref{sec:impl-aggregation}. 
+The second correction concerns the time base of the heuristics, which initially compared against 
+the ingest time assigned by Filebeat. 
+Since Filebeat assigns one value to all entries of a batch, several logins shared the same time 
+and could not be ordered. 
+Logstash now derives the field \textit{event\_time} from the event time recorded by the IdP 
+(\texttt{\%T}), and all measurements below use it.
+
+    \item It records the offset between the reception of the report and the event time of its audit entry, and the distance to the nearest other audit entry of the same SP as a measure of the local login density.
+\end{itemize}
+
+Each report is evaluated on its own. 
+The productive filter that excludes audit entries already assigned to another report is 
+therefore omitted, since in retrospect it would exclude exactly the entry that the exact match 
+has claimed.
+
+\paragraph{Two corrections before the measurement.}
+The ground truth requires the inbound message identifier in the audit log. 
+It was missing from the audit format of the IdP, so that the exact strategy had never been active 
+and all 3{,}690 correlations up to that point had been established by 
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}. 
+After \texttt{\%I} had been added to \textit{conf/audit.xml}, the strategy activated itself during 
+operation without a restart, as intended by the dynamic field adaptation of 
+Section~\ref{sec:impl-aggregation}. 
+The second correction concerns the time base of the heuristics, which initially compared against 
+the ingest time assigned by Filebeat. 
+Since Filebeat assigns one value to all entries of a batch, several logins shared the same time 
+and could not be ordered. 
+Logstash now derives the field \textit{event\_time} from the event time recorded by the IdP 
+(\texttt{\%T}), and all measurements below use it.
+
+\paragraph{Datasets.}
+Table~\ref{tab:correlation-datasets} lists the datasets, each of which closes a gap left by the 
+previous ones. 
+With a single user, all candidates share subject, address and SP, so that only the temporal order 
+separates them and both heuristics select from identical candidates. 
+D1 therefore tests whether the event time is precise enough to order consecutive logins. 
+D2 adds two further users, which makes the hash filter matter and tests 
+\texttt{TIME\_\allowbreak{}WINDOW} for the first time. 
+Since the harness sends logins as fast as the server responds, D3 and D4 repeat both cases with a 
+browser to check whether the timing of the harness is representative. 
+In D4 each browser runs in its own container with its own address, which allows a reanalysis 
+without \textit{usernameHash} to isolate the contribution of \textit{ipHash}. 
+D5 covers the opposite case of several users sharing one address, as behind network address 
+translation, by running the users as threads of one process. 
+Coverage is determined on the performance series of Section~\ref{sec:overhead}, the largest 
+dataset and the one recorded with the final configuration.
 
 \begin{table}[h]
 \centering
-\caption{Datasets of the correlation measurements}\label{tab:correlation-datasets}
+\caption{Datasets of the Correlation Measurements}\label{tab:correlation-datasets}
 \small
-\begin{tabular}{llrrl}
+\begin{tabular}{llrr}
 \toprule
-Dataset & Login generator & Users & Reports & Section \\
+Dataset & Login generator & Users & Reports \\
 \midrule
-Before the time correction & HTTP harness                      & 1 & 415     & \ref{subsec:eval-correlation-results} \\
-Single user                & HTTP harness                      & 1 & 203     & \ref{subsec:eval-correlation-results} \\
-Concurrent users           & HTTP harness                      & 3 & 600     & \ref{subsubsec:precision-time-window-multi-user} \\
-Browser, single user       & Selenium                          & 1 & 202     & \ref{subsubsec:precision-browser-traffic} \\
-Browser, concurrent users  & Selenium                          & 3 & 606     & \ref{subsubsec:precision-multiple-browser-users}, \ref{subsubsec:influence-of-iphash} \\
-Shared address             & HTTP harness, threads of one process & 3 & 600  & \ref{subsubsec:precision-nat} \\
-Performance series         & HTTP harness                      & 1 & 7{,}236 & \ref{subsec:interpretation-correlation} \\
+D1 & HTTP harness                          & 1 & 203 \\
+D2 & HTTP harness                          & 3 & 600 \\
+D3 & Selenium                              & 1 & 202 \\
+D4 & Selenium, one container per user      & 3 & 606 \\
+D5 & HTTP harness, threads of one process  & 3 & 600 \\
+Performance series & HTTP harness          & 1 & 7{,}236 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
 
 \subsection{Defects Identified during the Evaluation}\label{subsec:eval-correlation-findings}
 

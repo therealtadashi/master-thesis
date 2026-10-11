@@ -347,6 +347,81 @@ scenarios whose expected outcome is fixed in advance, on the test levels introdu
 Section~\ref{sec:setup}, and series of legitimate logins show whether alerts arise where none are 
 due.
 
+\subsection{Method and Scenarios}\label{subsec:eval-detection-method}
+
+\paragraph{Proofs.}
+The tests establish two kinds of proof. 
+A true positive proof constructs a scenario in which a rule is supposed to raise an alert and 
+confirms that it does. 
+A true negative proof constructs a scenario in which no alert is due and confirms that none is 
+raised. 
+How much a proof shows depends on the test level at which it is established. 
+In an integration test, the test builds the input of the rule itself, for instance an audit entry 
+or a post authentication report, stores it in Elasticsearch and invokes the rule directly rather 
+than through the scheduler, so that the result does not depend on its timing. 
+Such a proof covers the rule, its queries and the stored documents, but not the way in which 
+Filebeat and Logstash turn a real audit line into such an input. 
+An end-to-end test starts from a real login in the browser and covers this path as well, which 
+makes it the only level at which a fault in the log shipping stack can become visible.
+
+\paragraph{Scenarios.}
+In operation, the detection layer has to meet two expectations at once. 
+It has to report the weaknesses and attacks that the rules describe, and it has to remain quiet 
+during the vast majority of logins, which are legitimate, since an operator who receives alerts for 
+ordinary logins soon stops reading them. 
+The two comparison rules carry a third expectation, namely to notice when a record has been altered 
+or has gone missing. 
+The scenarios address these expectations in turn and finally repeat the second one under sustained 
+load.
+
+Every rule has at least one scenario at the integration level that contains the condition it is 
+meant to detect. 
+For most rules this is a single prepared input, such as a login whose assertion was sent 
+unencrypted or a SAML request with two signature elements, a typical trace of a signature wrapping 
+attack. 
+Rules that depend on history receive it in the same way. 
+For \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} the test first stores five logins of a user from a known 
+address and then one from a new address, and for \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} it 
+stores a post authentication report that arrived twenty minutes earlier, so that the waiting period 
+of fifteen minutes has already elapsed. 
+Wherever a real login can produce the condition, an end-to-end scenario follows: a login with the 
+user agent of a script, a login with a wrong password, five failed logins within a fraction of a 
+second, and a login at the weak SP, whose assertions are not encrypted. 
+For the remaining rules no such login exists. 
+Some require a manipulated message or an accumulated history that a regular login does not 
+produce, some evaluate the configuration or the metadata of an SP and do not depend on a login at 
+all, and \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} only raises its alert after the waiting 
+period of fifteen minutes.
+
+The second expectation is tested with legitimate logins through the browser. 
+At the clean SP, three users log in alternately, 100 times in total, and after a further 
+100 seconds, in which the scheduler evaluates all entries, no alert of any type may exist. 
+Since every alert in this run would be a false alarm, the run is at the same time a true negative 
+proof for every rule that can react to a login. 
+The same run against the weak SP tests the consistency check in the presence of the alerts that the 
+weaknesses of this SP rightly cause, so that there no \texttt{FIELD\_\allowbreak{}MISMATCH} alert may 
+arise. 
+In addition, a single legitimate login serves as a baseline for five rule types.
+
+The third expectation concerns someone who alters the audit entry of a login after the fact, for 
+instance to conceal which request a response answered. 
+The consistency check is meant to notice this, since the outbound report is produced 
+independently by the IdP and reaches the backend directly. 
+It compares the fields that both records contain and that the audit format records. 
+For every login these are the status, the identifier of the request answered by the response, the 
+identifier and the issue time of the outbound message and the encryption state. 
+For an unencrypted assertion, the identifier of the assertion, the authentication instant, the authentication 
+context, the format of the name identifier and the pseudonymised name identifier are compared as well. 
+To produce a manipulation, a login against the clean SP was performed while the backend was 
+stopped. 
+After the audit entry had reached Elasticsearch, the identifier of the answered request was 
+replaced by a different value, and the backend was started again.
+
+Finally, the comparison rules must not raise false alarms when many logins arrive in quick 
+succession, since both depend on the correlation, which becomes harder as logins grow denser. 
+The performance series of Section~\ref{sec:overhead} provides this load, with 7{,}236 pairs of post 
+authentication and outbound reports from bursts of 200 logins against the weak SP.
+
 \subsection{What the Figures Represent}\label{subsec:detection-semantics}
 
 An important qualification precedes the results. 

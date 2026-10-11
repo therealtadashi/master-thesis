@@ -357,8 +357,9 @@ A true negative proof constructs a scenario in which no alert is due and confirm
 raised. 
 How much a proof shows depends on the test level at which it is established. 
 In an integration test, the test builds the input of the rule itself, for instance an audit entry 
-or a post authentication report, stores it in Elasticsearch and invokes the rule directly rather 
-than through the scheduler, so that the result does not depend on its timing. 
+or a post authentication report, stores any history the rule requires in Elasticsearch and passes 
+the input directly to the rule engine rather than waiting for the scheduler, so that the result does 
+not depend on its timing. 
 Such a proof covers the rule, its queries and the stored documents, but not the way in which 
 Filebeat and Logstash turn a real audit line into such an input. 
 An end-to-end test starts from a real login in the browser and covers this path as well, which 
@@ -376,17 +377,17 @@ load.
 
 Every rule has at least one scenario at the integration level that contains the condition it is 
 meant to detect. 
-For most rules this is a single prepared input, such as a login whose assertion was sent 
-unencrypted or a SAML request with two signature elements, a typical trace of a signature wrapping 
+For most rules this is a single prepared input, such as an audit entry that records an unencrypted 
+assertion or a SAML request with two signature elements, a typical trace of a signature wrapping 
 attack. 
 Rules that depend on history receive it in the same way. 
 For \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} the test first stores five logins of a user from a known 
 address and then one from a new address, and for \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} it 
 stores a post authentication report that arrived twenty minutes earlier, so that the waiting period 
 of fifteen minutes has already elapsed. 
-Wherever a real login can produce the condition, an end-to-end scenario follows: a login with the 
-user agent of a script, a login with a wrong password, five failed logins within a fraction of a 
-second, and a login at the weak SP, whose assertions are not encrypted. 
+Wherever a login in the test environment can produce the condition, an end-to-end scenario follows: 
+a login with the user agent of a script, a login with a wrong password, five failed logins in quick 
+succession, and a login at the weak SP, whose assertions are not encrypted. 
 For the remaining rules no such login exists. 
 Some require a manipulated message or an accumulated history that a regular login does not 
 produce, some evaluate the configuration or the metadata of an SP and do not depend on a login at 
@@ -418,9 +419,122 @@ After the audit entry had reached Elasticsearch, the identifier of the answered 
 replaced by a different value, and the backend was started again.
 
 Finally, the comparison rules must not raise false alarms when many logins arrive in quick 
-succession, since both depend on the correlation, which becomes harder as logins grow denser. 
-The performance series of Section~\ref{sec:overhead} provides this load, with 7{,}236 pairs of post 
-authentication and outbound reports from bursts of 200 logins against the weak SP.
+succession, since both rely on the records of every login being matched in time. 
+The performance series of Section~\ref{sec:overhead} provides this load, with 7{,}236 logins against 
+the weak SP in bursts of 200, for each of which both interceptors transmitted their reports. 
+
+\subsection{Results}\label{subsec:eval-detection-results}
+
+Table~\ref{tab:detection-coverage} shows on which test levels each rule is proven. 
+The following paragraphs state what the tests establish, from the coverage of the rules to the 
+limits of what the results can show.
+
+\begin{table}[h]
+\centering
+\caption{Test coverage per rule}\label{tab:detection-coverage}
+\small
+\begin{tabularx}{\textwidth}{@{}lccc>{\raggedright\arraybackslash}X@{}}
+\toprule
+Rule & Unit & Integration & End-to-end & Note \\
+\midrule
+\texttt{SUSPICIOUS\_USER\_AGENT}        & yes & yes & TP, TN          & --- \\
+\texttt{FAILED\_LOGIN}                  & yes & yes & TP, TN          & --- \\
+\texttt{BRUTE\_FORCE}                   & yes & yes & TP, TN          & --- \\
+\texttt{UNENCRYPTED\_ASSERTION}         & yes & yes & TP, TN          & --- \\
+\texttt{WEAK\_ENCRYPTION}               & yes & yes & TN              & No SP with a weak algorithm \\
+\texttt{FIELD\_MISMATCH}                & yes & yes & TN, TP (manual) & --- \\
+\midrule
+\texttt{BEHAVIOUR\_ANOMALY}             & yes & yes & ---             & Requires a login from an unknown address \\
+\texttt{MFA\_BYPASS}                    & yes & yes & ---             & Requires a login that bypasses MFA \\
+\texttt{ASSERTION\_REPLAY}              & yes & yes & ---             & Requires a replayed assertion \\
+\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & yes & yes & ---             & Requires a manipulated request \\
+\texttt{REQUEST\_REPLAY}                & yes & yes & ---             & Requires a replayed request \\
+\midrule
+\texttt{WEAK\_CONFIGURATION}            & yes & yes & ---             & Evaluates the SP configuration \\
+\texttt{MISSING\_MFA}                   & yes & yes & ---             & Evaluates the SP configuration \\
+\texttt{CERTIFICATE\_EXPIRED}           & yes & yes & ---             & Evaluates the SP metadata \\
+\midrule
+\texttt{CORRELATION\_DISCREPANCY}       & yes & yes & ---             & Alert only after 15 minutes \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Every rule is proven against a real Elasticsearch instance, six of them also end-to-end.}
+All fifteen rules have a true positive proof on the unit and on the integration level, so that for 
+every rule the queries, the index mapping and the stored documents are covered and not only the 
+detection logic. 
+The test suite comprises 118 unit tests for the rules, 21 integration tests and seven end-to-end 
+tests. 
+Six rules are additionally proven from a real login. 
+For \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}, \texttt{FAILED\_\allowbreak{}LOGIN}, 
+\texttt{BRUTE\_\allowbreak{}FORCE} and \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION}, the end-to-end 
+level contains both a true positive and a true negative proof. 
+\texttt{WEAK\_\allowbreak{}ENCRYPTION} has only the true negative proof, since no SP in the test 
+environment requests a weak algorithm, and the true positive proof of 
+\texttt{FIELD\_\allowbreak{}MISMATCH} is the manipulation described below. 
+For the remaining nine rules, the last column of the table names the reason why no end-to-end 
+scenario exists. 
+That the end-to-end level is not redundant became apparent when it uncovered a fault in the log 
+shipping stack that no integration test could have found (Section~\ref{sec:defects}).
+
+\paragraph{Legitimate logins raise no false alarms.}
+In the 100 logins at the clean SP, no alert of any type was raised, and in the 100 logins at the 
+weak SP, where the alerts caused by its weaknesses are expected, no 
+\texttt{FIELD\_\allowbreak{}MISMATCH} alert arose. 
+In all 200 logins, the post authentication report was correlated with its audit entry through the 
+inbound message identifier, and the consistency check passed, with five compared fields at the 
+clean SP and ten at the weak SP (Table~\ref{tab:consistency-fp}). 
+With no false alarm in 100 logins, the upper bound of the 95 percent Wilson interval for the false 
+alarm rate of the consistency check is 3.7 percent per SP and 1.9 percent for both together; for 
+the clean SP, the same bound applies to alerts of any type. 
+Sustained load did not change this. 
+During the performance series, the detection layer raised 21{,}712 alerts for 10{,}854 audit 
+entries, 3{,}618 of which stem from the baseline runs without interceptors. 
+All of them were expected: one \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and one 
+\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} alert per entry, since the benchmark 
+addresses the weak SP and is not a browser, and four configuration alerts. 
+None was a \texttt{FIELD\_\allowbreak{}MISMATCH} or \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} 
+alert, although 7{,}236 logins of the series passed through the consistency check. 
+These figures apply to correctly configured SPs and to the login flow of the test environment; 
+legitimate but unusual configurations were not tested.
+
+\begin{table}[h]
+\centering
+\caption{Consistency check for legitimate logins}\label{tab:consistency-fp}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+SP & Logins & Fields compared & Mismatches & Upper bound (95\,\%) \\
+\midrule
+Clean SP & 100 & 5  & 0 & 3.7\,\% \\
+Weak SP  & 100 & 10 & 0 & 3.7\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The consistency check detects a manipulated audit entry.}
+In the manipulation scenario, the backend matched the post authentication report to the altered 
+audit entry through the unchanged inbound message identifier within two seconds of its start. 
+The consistency check then raised a \texttt{FIELD\_\allowbreak{}MISMATCH} alert of high severity 
+that named exactly the altered field and no other. 
+The check thus detects a contradiction between two independently produced records of the same 
+login. 
+A single manipulation demonstrates the mechanism but provides no detection rate, and the check 
+establishes that the records disagree, not which of them was altered. 
+For \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}, the integration test confirms that a report 
+without a counterpart is marked as expired after the waiting period and raises the alert. 
+An audit entry that arrives only afterwards, for instance because of a delay in the log shipping 
+stack, is no longer correlated, so that the alert remains although the record exists.
+
+\paragraph{The results establish the fidelity of the implementation, not its detection quality in operation.}
+The rules were derived from documented weaknesses and requirements (Section~\ref{sec:rules}), and 
+the scenarios reproduce the conditions that the rules describe. 
+The results therefore show that the implementation behaves as specified: every rule raises its 
+alert when its condition occurs, and legitimate logins remain without false alarms. 
+How often the rules detect real attacks in operation, and how many of their alerts would be false 
+for productive traffic with its unusual but legitimate configurations, cannot be derived from them. 
+That would require productive logins labelled as legitimate or malicious independently of the 
+rules, which no test environment can produce.
 
 \subsection{What the Figures Represent}\label{subsec:detection-semantics}
 
@@ -487,7 +601,7 @@ Table~\ref{tab:detection-coverage} shows which layers each rule is covered on.
 
 \begin{table}[h]
 \centering
-\caption{Test coverage per rule across the three layers}\label{tab:detection-coverage}
+\caption{Test coverage per rule across the three layers}\label{tab:detection-coverag}
 \small
 \begin{tabular}{lccc}
 \toprule

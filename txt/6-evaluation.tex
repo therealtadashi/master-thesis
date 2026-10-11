@@ -168,6 +168,157 @@ D5 & HTTP harness, threads of one process & 3 & 200             & 600 \\
 \end{tabular}
 \end{table}
 
+\subsection{Results}\label{subsec:eval-correlation-results}\label{subsec:interpretation-correlation}
+
+Table~\ref{tab:correlation-precision} summarises the precision of both heuristics in the five 
+datasets. 
+The figures are identical for all window sizes from $\pm$1 to $\pm$60\,s, for a reason explained 
+below. 
+The following paragraphs state what the figures show, from the coverage of the correlation to the 
+limits of the heuristics.
+
+\begin{table}[h]
+\centering
+\caption{Precision of the heuristic strategies per dataset}\label{tab:correlation-precision}
+\small
+\begin{tabular}{llrr}
+\toprule
+Dataset & Scenario & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
+\midrule
+D1 & Single user                 & 100\% & 100\%  \\
+D2 & Several users               & 100\% & 65.0\% \\
+D3 & Real browser                & 100\% & 100\%  \\
+D4 & Real browser, several users & 100\% & 89.9\% \\
+D5 & Shared address              & 100\% & 73.7\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Every report finds its counterpart.}
+In the performance series, all 7{,}236 post authentication reports were correlated with their 
+audit entry through the inbound message identifier, and none expired without a counterpart. 
+The coverage of the exact strategy was therefore 100 percent, with a lower bound of 99.95 percent 
+for the 95 percent Wilson interval~\cite{Wilson}. 
+That this figure can be determined at all is due to the sweep described in 
+Section~\ref{subsec:impl-correlation}, which marks reports without a counterpart as permanently 
+uncorrelated after a waiting period, so that a lost report can be told apart from one that is still 
+waiting. 
+The heuristics also assigned every report in all five datasets from a window of $\pm$5\,s onwards, 
+in D1 and D2 already at $\pm$1\,s. 
+Where a heuristic fails, it therefore assigns a report to the wrong counterpart rather than to none, 
+which is why the following paragraphs concern precision.
+
+\paragraph{With the hashes, the heuristic is as reliable as the exact strategy.}
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} selected the correct entry 
+for every report in all five datasets. 
+This includes D1, where the hashes exclude nothing and the event time alone decides, and D5, where 
+all users share one address. 
+The size of the window does not matter. 
+In D1 the mean number of candidates rises from 6.4 at $\pm$1\,s to 197.6 at $\pm$60\,s without a 
+single wrong assignment, since a larger window only adds candidates that lie further away and are 
+therefore never selected. 
+For operation, this means that a window of $\pm$1\,s suffices 
+(\textit{lg.correlation.\allowbreak{}window-seconds=1}), which reduces the number of candidates 
+examined per report from 58.1 at the default of $\pm$10\,s to 6.4.
+
+\paragraph{Without the hashes, wrong assignments occur only between logins less than 100\,ms apart.}
+\texttt{TIME\_\allowbreak{}WINDOW} reached 65.0 percent in D2, 73.7 percent in D5 and 89.9 percent 
+in D4. 
+Table~\ref{tab:correlation-density} breaks these figures down by the distance of each login to the 
+nearest other login at the same SP, with the number of logins in each range in parentheses. 
+All wrong assignments concern logins with a distance below 100\,ms; at larger distances, 
+\texttt{TIME\_\allowbreak{}WINDOW} was correct in every case. 
+Within this zone, it selected the correct entry in 56 to 69 percent of cases, regardless of whether 
+the logins came from the harness or from browsers. 
+The differences between the overall figures therefore do not stem from the strategy but from how 
+many logins fall into the zone: 87 percent in D2, 84 percent in D5 and 23 percent in D4.
+
+\begin{table}[h]
+\centering
+\caption{Precision of \texttt{TIME\_WINDOW} by distance to the nearest other login at the same SP}\label{tab:correlation-density}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Distance & D2 & D3 & D4 & D5 \\
+\midrule
+$<$\,100\,ms      & 59.7\% (521) & --- (0)     & 55.8\% (138) & 68.7\% (504) \\
+100--300\,ms      & 100\% (65)   & --- (0)     & 100\% (132)  & 100\% (96)   \\
+300\,ms--1\,s     & 100\% (14)   & --- (0)     & 100\% (258)  & --- (0)      \\
+$>$\,1\,s         & --- (0)      & 100\% (202) & 100\% (78)   & --- (0)      \\
+\midrule
+Share below 100\,ms & 86.8\%     & 0\%         & 22.8\%       & 84.0\%       \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Real browser traffic reaches this zone far less often.}
+With a single browser user (D3), every login lay more than one second away from the next, and a 
+window of $\pm$1\,s contained on average one candidate instead of 6.4 with the harness. 
+Even with three users logging in simultaneously through browsers (D4), less than a quarter of the 
+logins fell below 100\,ms. 
+The weakness of \texttt{TIME\_\allowbreak{}WINDOW} is thus not an artefact of the harness, since it 
+is just as pronounced within the zone, but the harness reaches the zone far more often than browser 
+traffic does. 
+How often a productive IdP reaches it depends on its load at peak times and cannot be derived from 
+the test environment.
+
+\paragraph{Each hash covers the case in which the other one is uninformative.}
+In D4, every user had an address of their own. 
+Analysed without \textit{usernameHash}, the heuristic found exactly the same candidates as with both 
+hashes, for every window size and including the 138 logins below 100\,ms, and thus again reached 
+100 percent. 
+\textit{ipHash} alone therefore separates users who log in from different devices or networks. 
+In D5, where all users shared one address, the same variant produced exactly the figures of 
+\texttt{TIME\_\allowbreak{}WINDOW}, since a filter on the only address present excludes nothing. 
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} nevertheless remained at 
+100 percent, because \textit{usernameHash} separated the users on its own. 
+In all tested scenarios, the heuristic thus stays exact as long as at least one of the two 
+identifiers distinguishes the users, and it falls back to the density dependence of 
+\texttt{TIME\_\allowbreak{}WINDOW} only when both are missing or uninformative.
+
+\paragraph{The hashed heuristic only errs if one user logs in more than about three times per second.}
+Table~\ref{tab:correlation-offset} shows the offset between the reception of a report and the event 
+time of its audit entry. 
+It is mostly negative, by about 30\,ms, because the post authentication interceptor runs in the 
+middle of the profile flow, whereas \texttt{\%T} marks the completion of the transaction. 
+Since the heuristics select the entry closest to the reception time, a neighbouring login can only 
+be selected instead of the correct one if the two lie closer together than twice the largest 
+absolute offset (last column). 
+Across all datasets, this critical distance is at most 316\,ms (D4), which corresponds to about 
+three logins per second. 
+For \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}, the limit applies to 
+logins of the same subject from the same address at the same SP, a rate that interactive users do 
+not reach. 
+For \texttt{TIME\_\allowbreak{}WINDOW}, it applies to all logins at an SP, which explains why this 
+strategy fails in dense traffic. 
+The bound is conservative, since wrong assignments were only observed below 100\,ms. 
+All offsets were measured on a single host, where the IdP and the backend share one clock. 
+On separate hosts, the difference between the clocks adds to the offset and lowers the limit, so 
+that the offset, which the analysis records, has to be measured again in a different environment.
+
+\begin{table}[h]
+\centering
+\caption{Offset between the reception of a report and the event time of its audit entry}\label{tab:correlation-offset}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Dataset & Minimum & Maximum & Critical distance \\
+\midrule
+D1 & $-98$\,ms  & $+75$\,ms  & 196\,ms \\
+D3 & $-102$\,ms & $-17$\,ms  & 204\,ms \\
+D4 & $-158$\,ms & $+42$\,ms  & 316\,ms \\
+D5 & $-50$\,ms  & $+110$\,ms & 220\,ms \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Taken together, the correlation found a counterpart for every report, and with the inbound message 
+identifier or at least one separating hash, it found the correct one in every tested scenario. 
+Only an audit log that records neither the identifier nor the hashes leaves the correlation to time 
+alone, and it then errs where logins at the same SP follow each other within less than 100\,ms. 
+Operators should therefore record \texttt{\%I} in the audit format or, where that is not possible, 
+at least the subject and the address.
+
 \subsection{Defects Identified during the Evaluation}\label{subsec:eval-correlation-findings}
 
 Before the evaluation, 3{,}690 out of 3{,}690 correlations had been established through the 

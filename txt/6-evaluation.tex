@@ -6,15 +6,15 @@
 
 This chapter evaluates the proposed monitoring system. 
 It presents the test setup, evaluates the correlation and detection capabilities, 
-measures the performance overhead introduced by the interceptors, and concludes 
-with a discussion of the threats to validity. 
+measures the performance overhead introduced by the interceptors, lists the defects that the 
+evaluation uncovered, and concludes with a discussion of the threats to validity.
 
 \section{Test Setup}\label{sec:setup}
 
-To facilitate integration with the Java testing framework, the entire test environment 
-runs in containers. 
-This comprises the Shibboleth IdP, an LDAP directory serving as the user store, the SPs, 
-and the backend application of the monitoring tool.
+To facilitate integration with the Java testing framework, the test environment runs in containers. 
+This comprises the Shibboleth IdP, an LDAP directory serving as the user store, the SPs and the 
+log shipping stack. 
+Only the backend application of the monitoring tool and the test code run directly on the host. 
 
 Two SPs are deployed, referred to as the weak SP and the clean SP in the following. 
 The weak SP is used for the detection scenarios and is configured to exhibit the weaknesses
@@ -100,7 +100,9 @@ a few seconds, while at night a single login may stand alone.
 Some users log in from an address of their own, while others share one behind a gateway. 
 The five datasets reproduce these situations step by step, each adding a condition that the 
 previous ones leave open. 
-Table~\ref{tab:correlation-datasets} summarises how they were generated.
+Table~\ref{tab:correlation-datasets} summarises how they were generated. 
+Coverage is additionally determined on the performance series of Section~\ref{sec:overhead}, 
+which comprises 7{,}236 reports and is by far the largest dataset. 
 
 The starting point is the simplest case, a single user who logs in repeatedly at the same SP (D1). 
 For the heuristics, this case removes every distinguishing feature except time. 
@@ -148,8 +150,6 @@ longer distinguishes them.
 The separation then rests on \textit{usernameHash} alone. 
 D5 reproduces this case by running three users as threads of a single process, so that all logins 
 originate from one address. 
-Coverage is additionally determined on the performance series of Section~\ref{sec:overhead}, 
-which comprises 7{,}236 reports and is by far the largest dataset.
 
 \begin{table}[h]
 \centering
@@ -276,7 +276,7 @@ In all tested scenarios, the heuristic thus stays exact as long as at least one 
 identifiers distinguishes the users, and it falls back to the density dependence of 
 \texttt{TIME\_\allowbreak{}WINDOW} only when both are missing or uninformative.
 
-\paragraph{The hashed heuristic only errs if one user logs in more than about three times per second.}
+\paragraph{Operating limit of the heuristics.}
 Table~\ref{tab:correlation-offset} shows the offset between the reception of a report and the event 
 time of its audit entry. 
 It is mostly negative, by about 30\,ms, because the post authentication interceptor runs in the 
@@ -315,7 +315,8 @@ D5 & $-50$\,ms  & $+110$\,ms & 220\,ms \\
 Taken together, the correlation found a counterpart for every report, and with the inbound message 
 identifier or at least one separating hash, it found the correct one in every tested scenario. 
 Only an audit log that records neither the identifier nor the hashes leaves the correlation to time 
-alone, and it then errs where logins at the same SP follow each other within less than 100\,ms. 
+alone, and it then assigns reports to the wrong entry where logins at the same SP follow each other 
+within less than 100\,ms. 
 Operators should therefore record \texttt{\%I} in the audit format or, where that is not possible, 
 at least the subject and the address.
 

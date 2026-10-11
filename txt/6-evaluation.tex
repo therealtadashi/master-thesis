@@ -101,29 +101,6 @@ and could not be ordered.
 Logstash now derives the field \textit{event\_time} from the event time recorded by the IdP 
 (\texttt{\%T}), and all measurements below use it.
 
-    \item It records the offset between the reception of the report and the event time of its audit entry, and the distance to the nearest other audit entry of the same SP as a measure of the local login density.
-\end{itemize}
-
-Each report is evaluated on its own. 
-The productive filter that excludes audit entries already assigned to another report is 
-therefore omitted, since in retrospect it would exclude exactly the entry that the exact match 
-has claimed.
-
-\paragraph{Two corrections before the measurement.}
-The ground truth requires the inbound message identifier in the audit log. 
-It was missing from the audit format of the IdP, so that the exact strategy had never been active 
-and all 3{,}690 correlations up to that point had been established by 
-\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}. 
-After \texttt{\%I} had been added to \textit{conf/audit.xml}, the strategy activated itself during 
-operation without a restart, as intended by the dynamic field adaptation of 
-Section~\ref{sec:impl-aggregation}. 
-The second correction concerns the time base of the heuristics, which initially compared against 
-the ingest time assigned by Filebeat. 
-Since Filebeat assigns one value to all entries of a batch, several logins shared the same time 
-and could not be ordered. 
-Logstash now derives the field \textit{event\_time} from the event time recorded by the IdP 
-(\texttt{\%T}), and all measurements below use it.
-
 \paragraph{Datasets.}
 Table~\ref{tab:correlation-datasets} lists the datasets, each of which closes a gap left by the 
 previous ones. 

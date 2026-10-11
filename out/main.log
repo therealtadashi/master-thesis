@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  11 OCT 2026 19:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  11 OCT 2026 19:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2398,16 +2398,17 @@ Package tocbasic Info: character protrusion at toc deactivated on input line 10
  (out/main.toc [7
 
 
-])
+] [8])
 \tf@toc=\write8
 \openout8 = `main.toc'.
 
- [8])
+ [9] [10
+
+
+])
 (./txt/1-introduction.tex
 chapter 1.
 [1
-
-
 
 
 ]
@@ -2420,15 +2421,8 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `jkpl' (encoding: TS1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-
-
-LaTeX Warning: Reference `ch:discussion' on page 2 undefined on input line 99.
-
-
-LaTeX Warning: Reference `ch:conclusion' on page 2 undefined on input line 100.
-
-
-) (./txt/2-background.tex [2]
+)
+(./txt/2-background.tex [2]
 chapter 2.
 [3
 
@@ -2442,7 +2436,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Underfull \vbox (badness 2343) has occurred while \output is active []
 
  [5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [6]
-<./txt/../img/sp-init-sso.png, id=329, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=354, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 218.
@@ -2472,7 +2466,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=474, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=498, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2517,321 +2511,128 @@ Underfull \vbox (badness 1342) has occurred while \output is active []
 
 ]
 chapter 6.
-[43]
-
-! LaTeX Error: Lonely \item--perhaps a missing list environment.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.104     \item I
-                 t records the offset between the reception of the report an...
-
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-Underfull \hbox (badness 10000) detected at line 104
-[][]
- []
-
-! Undefined control sequence.
-\enit@enditemize ->\enit@after 
-                               \endlist \ifx \enit@series \relax \else \ifnu...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[44]
-! Undefined control sequence.
-\enit@enditemize ...x \else \ifnum \enit@resuming 
-                                                  =\@ne \enit@setresumekeys ...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Missing number, treated as zero.
-<to be read again> 
-                   =
-l.105 \end{itemize}
-                   
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-! Undefined control sequence.
-\enit@setresumekeys ...xpandafter {\enit@savekeys 
-                                                  }\xdef \enit@afterlist {#2...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-\enit@setresumekeys ...it@toks }\ifnum \enit@type 
-                                                  =\z@ #3\def \enit@noexcs {...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Missing number, treated as zero.
-<to be read again> 
-                   =
-l.105 \end{itemize}
-                   
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-! Undefined control sequence.
-<argument> enit@resume@series@\enit@series 
-                                           
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-\enit@setresumekeys ...me@#1}{\csname c@\@listctr 
-                                                  \endcsname \the \csname c@...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-\enit@setresumekeys ...e \the \csname c@\@listctr 
-                                                  \endcsname }\fi }
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! You can't use `\relax' after \the.
-<recently read> \c@ 
-                    
-l.105 \end{itemize}
-                   
-I'm forgetting what you said and using zero instead.
-
-! Undefined control sequence.
-\enit@enditemize ...ist \fi \ifnum \enit@resuming 
-                                                  =\thr@@ \enit@setresumekey...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Missing number, treated as zero.
-<to be read again> 
-                   =
-l.105 \end{itemize}
-                   
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-! Undefined control sequence.
-\enit@setresumekeys ...xpandafter {\enit@savekeys 
-                                                  }\xdef \enit@afterlist {#2...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-\enit@setresumekeys ...it@toks }\ifnum \enit@type 
-                                                  =\z@ #3\def \enit@noexcs {...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Missing number, treated as zero.
-<to be read again> 
-                   =
-l.105 \end{itemize}
-                   
-A number should have been here; I inserted `0'.
-(If you can't figure out why I needed to see a number,
-look up `weird error' in the index to The TeXbook.)
-
-! Undefined control sequence.
-\enit@setresumekeys ...me@#1}{\csname c@\@listctr 
-                                                  \endcsname \the \csname c@...
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-\enit@setresumekeys ...e \the \csname c@\@listctr 
-                                                  \endcsname }\fi }
-l.105 \end{itemize}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! You can't use `\relax' after \the.
-<recently read> \c@ 
-                    
-l.105 \end{itemize}
-                   
-I'm forgetting what you said and using zero instead.
-
-
-! LaTeX Error: \begin{document} ended by \end{itemize}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.105 \end{itemize}
-                   
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-Underfull \vbox (badness 3460) has occurred while \output is active []
-
- [45]
+[43] [44] [45]
 
 LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
-(Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 215.
+(Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 192.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+[46] [47] [48] [49] [50]
+Underfull \vbox (badness 3049) has occurred while \output is active []
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+ [51]
+[52] [53]
+Underfull \vbox (badness 1127) has occurred while \output is active []
 
+ [54]
+[55] [56]
+Underfull \vbox (badness 1728) has occurred while \output is active []
 
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[46]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[47]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[48]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[49]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[50] [51]
-Underfull \vbox (badness 3769) has occurred while \output is active []
-
- [52]
-[53] [54] [55] [56] [57] [58]
-
-LaTeX Warning: Reference `sec:limitation' on page 59 undefined on input line 10
-11.
-
-[59]
-
-LaTeX Warning: Reference `ch:discussion' on page 60 undefined on input line 103
-5.
-
-
-Underfull \vbox (badness 4084) has occurred while \output is active []
-
- [60]
-[61] [62]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[63]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-Underfull \vbox (badness 3482) has occurred while \output is active []
-
- [64]
-Underfull \vbox (badness 5771) has occurred while \output is active []
-
- [65]
-[66]
-Overfull \hbox (0.42671pt too wide) in paragraph at lines 1474--1479
+ [57]
+[58] [59] [60] [61] [62] [63] [64] [65] [66]
+Overfull \hbox (0.42671pt too wide) in paragraph at lines 1451--1456
 []\T1/jkpl/m/n/10.95 (-20) Several mea-sure-ments use an HTTP client har-ness r
 ather than a browser. Sec-tions []6.2.3.2[]
  []
 
-[67] [68] [69]
+[67] [68]) (./txt/7-discussion.tex [69] [70
 
-Package glossaries Warning: No \printglossary or \printglossaries found. 
-(Remove \makeglossaries if you don't want any glossaries.) 
-This document will not have a glossary.
 
-[70] (out/main.aux)
+]
+chapter 7.
+[71] [72] [73] [74]) (./txt/8-conclusion.tex [75] [76
+
+
+]
+chapter 8.
+[77]) (./zyx/epilogue.tex [78]
+Package tocbasic Info: character protrusion at lof deactivated on input line 10
+.
+ (out/main.lof)
+\tf@lof=\write9
+\openout9 = `main.lof'.
+
+Package tocbasic Info: character protrusion at lot deactivated on input line 24
+.
+ (out/main.lot [79
+
+
+
+
+])
+\tf@lot=\write10
+\openout10 = `main.lot'.
+
+ [80]
+chapter without number
+Package microtype Info: Character `029' is missing
+(microtype)             in font `T1/jkpl/m/sc/10.95'.
+(microtype)             Ignoring protrusion settings for this character.
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+[]\T1/jkpl/m/n/10.95 (+20) S. Can-tor. \T1/jkpl/m/it/10.95 (+20) At-tribute-Fil
+ter-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . Nov. 2023. \T1/jkpl/m/sc/10.95 
+(+20) url\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+[]\T1/jkpl/m/n/10.95 (+20) S. Can-tor. \T1/jkpl/m/it/10.95 (+20) Au-dit-Log-gin
+g-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . June 2026. \T1/jkpl/m/sc/10.95 (+
+20) url\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+[]\T1/jkpl/m/n/10.95 (+20) S. Can-tor. \T1/jkpl/m/it/10.95 (+20) Pro-fileIn-ter
+-cept-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . May 2023. \T1/jkpl/m/sc/10.95
+ (+20) url\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+[]\T1/jkpl/m/n/10.95 (+20) S. Can-tor. \T1/jkpl/m/it/10.95 (+20) Re-ly-ing-Par-
+ty-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . May 2025. \T1/jkpl/m/sc/10.95 (+
+20) url\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / /
+ []
+
+[81
+
+
+
+
+] [82] [83]
+Underfull \hbox (badness 1337) in paragraph at lines 30--30
+[]\T1/jkpl/m/n/10.95 (+20) Shibboleth Con-sor-tium. \T1/jkpl/m/it/10.95 (+20) P
+ro-fil-eRequest-Con-text\T1/jkpl/m/n/10.95 (+20) . \T1/jkpl/m/sc/10.95 (+20) ur
+l\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / / shibboleth .
+ []
+
+[84] [85] [86] (out/main.gls
+LaTeX Font Info:    Trying to load font information for T1+jkpss on input line 
+5.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/t1jkpss.fd
+File: t1jkpss.fd 2007/07/16 Fontinst v1.928 font definitions for T1/jkpss.
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `jkpss' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+)) [87
+
+
+
+
+
+
+]
+[88
+
+
+] (out/main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
@@ -2839,9 +2640,6 @@ L3 programming layer <2020/03/25>
 
 
 LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
@@ -2853,320 +2651,33 @@ Package biblatex Warning: Please (re)run Biber on the file:
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
- ) ) 
+ ) 
 Here is how much of TeX's memory you used:
- 66383 strings out of 474116
- 1464140 string characters out of 5743682
- 2673422 words of memory out of 5000000
- 86861 multiletter control sequences out of 15000+600000
- 722101 words of font info for 463 fonts, out of 8000000 for 9000
+ 66774 strings out of 474116
+ 1473277 string characters out of 5743682
+ 2676500 words of memory out of 5000000
+ 87081 multiletter control sequences out of 15000+600000
+ 747990 words of font info for 545 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
- 125i,21n,145p,10977b,2620s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-pdfTeX warning (dest): name{cite.0@Bonferroni} has been referenced but does not
- exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@Wilson} has been referenced but does not exi
-st, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SessionContext} has been referenced but does
- not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@AuthenticationContext} has been referenced b
-ut does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SubjectContext} has been referenced but does
- not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@RelyingPartyContext} has been referenced but
- does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@InOutOperationContext} has been referenced b
-ut does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@ProfileRequestContext} has been referenced b
-ut does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@AbstractProfileAction} has been referenced b
-ut does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@BSITR02102} has been referenced but does not
- exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@HMAC} has been referenced but does not exist
-, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:hmac} has been referenced but does not exist, r
-eplaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@CWE532} has been referenced but does not exi
-st, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@ProfileInterceptConfiguration} has been refe
-renced but does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@MetadataForSP} has been referenced but does 
-not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@Metadata} has been referenced but does not e
-xist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@LoggingConfiguration} has been referenced bu
-t does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@ThreatModeling} has been referenced but does
- not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SAMLSecurityConsideration} has been referenc
-ed but does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@NIST80092} has been referenced but does not 
-exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@CryptoSupportSecureLogs} has been referenced
- but does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@TamperDetection} has been referenced but doe
-s not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@CWE117} has been referenced but does not exi
-st, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@WazuhDocumentation} has been referenced but 
-does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@OWASPA09} has been referenced but does not e
-xist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:siem} has been referenced but does not exist, r
-eplaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@UEBAFederation} has been referenced but does
- not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@BlackWatch} has been referenced but does not
- exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:edr} has been referenced but does not exist, re
-placed by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@Taxonomy} has been referenced but does not e
-xist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:waf} has been referenced but does not exist, re
-placed by a fixed one
-
-
-pdfTeX warning (dest): name{glo:ids} has been referenced but does not exist, re
-placed by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@OWASPAppSensor} has been referenced but does
- not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@AttributeFilterConfiguration} has been refer
-enced but does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@MetadataConfiguration} has been referenced b
-ut does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@RelyingPartyConfiguration} has been referenc
-ed but does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@AuditLoggingConfiguration} has been referenc
-ed but does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@ProfileHandling} has been referenced but doe
-s not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:ldap} has been referenced but does not exist, r
-eplaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:acs} has been referenced but does not exist, re
-placed by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SAMLBinding} has been referenced but does no
-t exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@W3CXMLENC} has been referenced but does not 
-exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@W3CXMLSIG} has been referenced but does not 
-exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SAMLAssertions} has been referenced but does
- not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:idff} has been referenced but does not exist, r
-eplaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SAML1Standard} has been referenced but does 
-not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SAML2Standard} has been referenced but does 
-not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:oasis} has been referenced but does not exist, 
-replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:saml} has been referenced but does not exist, r
-eplaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SAMLMetadata} has been referenced but does n
-ot exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SAMLOverview} has been referenced but does n
-ot exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@ShibbolethGIAC} has been referenced but does
- not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@NIST80063B} has been referenced but does not
- exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@NIST80063C} has been referenced but does not
- exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:sso} has been referenced but does not exist, re
-placed by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@EAPeduroam} has been referenced but does not
- exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@MonitoringAAI} has been referenced but does 
-not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@SecAnalysisSSO} has been referenced but does
- not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@VulnerSAMLCloud} has been referenced but doe
-s not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@BreakingSAML} has been referenced but does n
-ot exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:xsw} has been referenced but does not exist, re
-placed by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@MicrosoftBlogSSC} has been referenced but do
-es not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@FormalSecAnalysisSAML} has been referenced b
-ut does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@FireEyeSSC} has been referenced but does not
- exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@IdPSinglePointOfTrust} has been referenced b
-ut does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@DFNAAI} has been referenced but does not exi
-st, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@Shibboleth} has been referenced but does not
- exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@FIMSurvey} has been referenced but does not 
-exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:idp} has been referenced but does not exist, re
-placed by a fixed one
-
-
-pdfTeX warning (dest): name{glo:fim} has been referenced but does not exist, re
-placed by a fixed one
-
-
-pdfTeX warning (dest): name{cite.0@VerizonDataBreach} has been referenced but d
-oes not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{glo:sp} has been referenced but does not exist, rep
-laced by a fixed one
-
-</usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbit8a.pfb></
-usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb></usr
-/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbne.pfb></usr/loc
-al/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmi.pfb></usr/local/te
-xlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmit8a.pfb></usr/local/texl
-ive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmite.pfb></usr/local/texlive
-/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmn8a.pfb></usr/local/texlive/20
-24/texmf-dist/fonts/type1/public/kpfonts/jkplmn8a.pfb></usr/local/texlive/2024/
-texmf-dist/fonts/type1/public/kpfonts/jkplmne.pfb></usr/local/texlive/2024/texm
-f-dist/fonts/type1/public/kpfonts/jkplmsc8a.pfb></usr/local/texlive/2024/texmf-
-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-dist/
+ 125i,21n,145p,10977b,3472s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbit8a.pfb>
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb></u
+sr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbne.pfb></usr/l
+ocal/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmi.pfb></usr/local/
+texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmit8a.pfb></usr/local/te
+xlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmite.pfb></usr/local/texli
+ve/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmn8a.pfb></usr/local/texlive/
+2024/texmf-dist/fonts/type1/public/kpfonts/jkplmn8a.pfb></usr/local/texlive/202
+4/texmf-dist/fonts/type1/public/kpfonts/jkplmne.pfb></usr/local/texlive/2024/te
+xmf-dist/fonts/type1/public/kpfonts/jkplmsc8a.pfb></usr/local/texlive/2024/texm
+f-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-dis
+t/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dist/
 fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type
 1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (80 pages, 505898 bytes).
+Output written on out/main.pdf (100 pages, 567023 bytes).
 PDF statistics:
- 1322 PDF objects out of 1440 (max. 8388607)
- 1195 compressed objects within 12 object streams
- 282 named destinations out of 1000 (max. 500000)
- 112788 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 1667 PDF objects out of 1728 (max. 8388607)
+ 1514 compressed objects within 16 object streams
+ 317 named destinations out of 1000 (max. 500000)
+ 127196 words of extra memory for PDF output out of 128383 (max. 10000000)
 

@@ -431,35 +431,35 @@ limits of what the results can show.
 
 \begin{table}[h]
 \centering
-\caption{Test coverage per rule}\label{tab:detection-coverage}
+\caption{End-to-end coverage per rule}\label{tab:detection-coverage}
 \small
-\begin{tabularx}{\textwidth}{@{}lccc>{\raggedright\arraybackslash}X@{}}
+\begin{tabularx}{\textwidth}{@{}lc>{\raggedright\arraybackslash}X@{}}
 \toprule
-Rule & Unit & Integration & End-to-end & Note \\
+Rule & End-to-end & Note \\
 \midrule
-\texttt{SUSPICIOUS\_USER\_AGENT}        & yes & yes & TP, TN          & --- \\
-\texttt{FAILED\_LOGIN}                  & yes & yes & TP, TN          & --- \\
-\texttt{BRUTE\_FORCE}                   & yes & yes & TP, TN          & --- \\
-\texttt{UNENCRYPTED\_ASSERTION}         & yes & yes & TP, TN          & --- \\
-\texttt{WEAK\_ENCRYPTION}               & yes & yes & TN              & No SP with a weak algorithm \\
-\texttt{FIELD\_MISMATCH}                & yes & yes & TN, TP (manual) & --- \\
+\texttt{SUSPICIOUS\_USER\_AGENT}        & TP, TN          & --- \\
+\texttt{FAILED\_LOGIN}                  & TP, TN          & --- \\
+\texttt{BRUTE\_FORCE}                   & TP, TN          & --- \\
+\texttt{UNENCRYPTED\_ASSERTION}         & TP, TN          & --- \\
+\texttt{WEAK\_ENCRYPTION}               & TN              & No SP with a weak algorithm \\
+\texttt{FIELD\_MISMATCH}                & TN, TP (manual) & --- \\
 \midrule
-\texttt{BEHAVIOUR\_ANOMALY}             & yes & yes & ---             & Requires a login from an unknown address \\
-\texttt{MFA\_BYPASS}                    & yes & yes & ---             & Requires a login that bypasses MFA \\
-\texttt{ASSERTION\_REPLAY}              & yes & yes & ---             & Requires a replayed assertion \\
-\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & yes & yes & ---             & Requires a manipulated request \\
-\texttt{REQUEST\_REPLAY}                & yes & yes & ---             & Requires a replayed request \\
+\texttt{BEHAVIOUR\_ANOMALY}             & ---             & Requires a login from an unknown address \\
+\texttt{MFA\_BYPASS}                    & ---             & Requires a login that bypasses MFA \\
+\texttt{ASSERTION\_REPLAY}              & ---             & Requires a replayed assertion \\
+\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & ---             & Requires a manipulated request \\
+\texttt{REQUEST\_REPLAY}                & ---             & Requires a replayed request \\
 \midrule
-\texttt{WEAK\_CONFIGURATION}            & yes & yes & ---             & Evaluates the SP configuration \\
-\texttt{MISSING\_MFA}                   & yes & yes & ---             & Evaluates the SP configuration \\
-\texttt{CERTIFICATE\_EXPIRED}           & yes & yes & ---             & Evaluates the SP metadata \\
+\texttt{WEAK\_CONFIGURATION}            & ---             & Evaluates the SP configuration \\
+\texttt{MISSING\_MFA}                   & ---             & Evaluates the SP configuration \\
+\texttt{CERTIFICATE\_EXPIRED}           & ---             & Evaluates the SP metadata \\
 \midrule
-\texttt{CORRELATION\_DISCREPANCY}       & yes & yes & ---             & Alert only after 15 minutes \\
+\texttt{CORRELATION\_DISCREPANCY}       & ---             & Alert only after 15 minutes \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\paragraph{Every rule is proven against a real Elasticsearch instance, six of them also end-to-end.}
+\paragraph{Every rule is proven against a real Elasticsearch instance, and six are also tested end-to-end.} 
 All fifteen rules have a true positive proof on the unit and on the integration level, so that for 
 every rule the queries, the index mapping and the stored documents are covered and not only the 
 detection logic. 
@@ -485,8 +485,8 @@ In all 200 logins, the post authentication report was correlated with its audit 
 inbound message identifier, and the consistency check passed, with five compared fields at the 
 clean SP and ten at the weak SP (Table~\ref{tab:consistency-fp}). 
 With no false alarm in 100 logins, the upper bound of the 95 percent Wilson interval for the false 
-alarm rate of the consistency check is 3.7 percent per SP and 1.9 percent for both together; for 
-the clean SP, the same bound applies to alerts of any type. 
+alarm rate of the consistency check is 3.7 percent per SP and 1.9 percent for both together. 
+For the clean SP, the same bound applies to alerts of any type. 
 Sustained load did not change this. 
 During the performance series, the detection layer raised 21{,}712 alerts for 10{,}854 audit 
 entries, 3{,}618 of which stem from the baseline runs without interceptors. 
@@ -495,8 +495,8 @@ All of them were expected: one \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and 
 addresses the weak SP and is not a browser, and four configuration alerts. 
 None was a \texttt{FIELD\_\allowbreak{}MISMATCH} or \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} 
 alert, although 7{,}236 logins of the series passed through the consistency check. 
-These figures apply to correctly configured SPs and to the login flow of the test environment; 
-legitimate but unusual configurations were not tested.
+These figures apply to the two SP configurations and to the login flow of the test environment. 
+Legitimate but unusual configurations were not tested. 
 
 \begin{table}[h]
 \centering
@@ -512,7 +512,7 @@ Weak SP  & 100 & 10 & 0 & 3.7\,\% \\
 \end{tabular}
 \end{table}
 
-\paragraph{The consistency check detects a manipulated audit entry.}
+\paragraph{The comparison rules detect an altered or a missing record.} 
 In the manipulation scenario, the backend matched the post authentication report to the altered 
 audit entry through the unchanged inbound message identifier within two seconds of its start. 
 The consistency check then raised a \texttt{FIELD\_\allowbreak{}MISMATCH} alert of high severity 

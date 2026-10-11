@@ -48,32 +48,61 @@ The implications of this are discussed in Section~\ref{sec:validity}.
 
 \section{Correlation}\label{sec:eval-correlation}
 
-Section~\ref{subsec:impl-correlation} described the technical details of the correlation 
-mechanism. 
-This section presents the results of the correlation and evaluates the precision of the 
-individual strategies.
+Section~\ref{subsec:impl-correlation} described the correlation mechanism, which links each 
+post authentication report to the audit entry of the same login. 
+It first tries \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} and falls back to two 
+heuristic strategies where the identifier is not available. 
+Both heuristics query the audit entries of the same SP within a time window around the report; 
+\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} additionally requires the 
+same \textit{usernameHash} and \textit{ipHash}, whereas \texttt{TIME\_\allowbreak{}WINDOW} relies 
+on the time alone. 
+The entries returned by such a query are referred to as candidates in the following, and the 
+strategy selects the candidate with the smallest temporal distance to the report. 
+This section examines how often the selected candidate is the correct one (precision) and how 
+many reports find a counterpart at all (coverage).
 
-To determine the precision of the less reliable strategies, a reference is required that 
-indicates whether a given correlation was correct. 
-The correlation via \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} establishes a one-to-one relationship, as 
-explained in Section~\ref{subsec:impl-correlation}, since the identifier is unique per request. 
+To determine the precision of the heuristic strategies, a reference is required that indicates 
+whether a given correlation was correct. 
+The correlation via \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} establishes a 
+one-to-one relationship, since the identifier is unique per request. 
 Wherever this strategy produced a match, the correct counterpart is therefore known without 
-ambiguity, which allows it to serve as a ground truth for the remaining strategies.
+ambiguity, which allows it to serve as a ground truth for the heuristic strategies.
 The measurement method is as follows:
 
 \begin{itemize}
-    \item Collect all post authentication reports of a configurable time period for which \texttt{correlated\_\allowbreak{}by = INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}
-    \item For each report and each window size, execute the exact query of the heuristic strategy and select the same candidate as the productive system would, namely the one with the smallest temporal distance
-    \item Compare the selected entry against the known correct audit identifier, classifying the outcome as a match, an incorrect assignment, or no match
-    \item Additionally record the temporal offset between the reception of the post authentication report and the actual audit event time as a distribution
+    \item Collect all post authentication reports of a configurable time period for which \texttt{correlated\_\allowbreak{}by = INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}.
+    \item For each report and each window size, execute the query of the heuristic strategy unchanged and select the same candidate as the productive system would, namely the one with the smallest temporal distance.
+    \item Compare the selected candidate against the known correct audit identifier, classifying the outcome as a match, an incorrect assignment, or no match.
+    \item Additionally record the temporal offset between the reception of the post authentication report and the event time recorded by the IdP.
 \end{itemize}
 
-The underlying data source of the measurement after the change to \textit{event\_time} is 200 
-consecutive logins of a single test user via the HTTP login harness, preceded by three warm-up 
-logins that are included in the measurement. 
-In terms of candidate ambiguity this represents the worst case, since all candidates share the 
-same \textit{usernameHash}, \textit{ipHash} and SP, leaving time as the only distinguishing 
-feature.
+The measurement was repeated on several datasets, which differ in the login generator 
+(Section~\ref{sec:setup}) and in the number of users active at the same time. 
+Table~\ref{tab:correlation-datasets} gives an overview. 
+The first dataset was recorded before the time base of the heuristics was corrected 
+(Section~\ref{subsec:eval-correlation-findings}) and only shows the effect of that correction; 
+all others were recorded afterwards. 
+In these, each user performed 200 logins, and counts above 200 per user stem from warm-up logins, 
+which are included in the data.
+
+\begin{table}[h]
+\centering
+\caption{Datasets of the correlation measurements}\label{tab:correlation-datasets}
+\small
+\begin{tabular}{llrrl}
+\toprule
+Dataset & Login generator & Users & Reports & Section \\
+\midrule
+Before the time correction & HTTP harness                      & 1 & 415     & \ref{subsec:eval-correlation-results} \\
+Single user                & HTTP harness                      & 1 & 203     & \ref{subsec:eval-correlation-results} \\
+Concurrent users           & HTTP harness                      & 3 & 600     & \ref{subsubsec:precision-time-window-multi-user} \\
+Browser, single user       & Selenium                          & 1 & 202     & \ref{subsubsec:precision-browser-traffic} \\
+Browser, concurrent users  & Selenium                          & 3 & 606     & \ref{subsubsec:precision-multiple-browser-users}, \ref{subsubsec:influence-of-iphash} \\
+Shared address             & HTTP harness, threads of one process & 3 & 600  & \ref{subsubsec:precision-nat} \\
+Performance series         & HTTP harness                      & 1 & 7{,}236 & \ref{subsec:interpretation-correlation} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Defects Identified during the Evaluation}\label{subsec:eval-correlation-findings}
 

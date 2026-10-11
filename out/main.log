@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  9 OCT 2026 18:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  11 OCT 2026 18:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2511,25 +2511,35 @@ Underfull \vbox (badness 1342) has occurred while \output is active []
 
 ]
 chapter 6.
-[43] [44]
+[43]
+Overfull \hbox (38.33789pt too wide) in paragraph at lines 92--105
+ [][] 
+ []
+
+[44]
 
 LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
-(Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 133.
+(Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 159.
 
-[45] [46] [47] [48] [49]
-Underfull \vbox (badness 3049) has occurred while \output is active []
 
- [50]
-[51] [52]
-Underfull \vbox (badness 1127) has occurred while \output is active []
+LaTeX Warning: `h' float specifier changed to `ht'.
 
- [53]
-[54] [55]
-Underfull \vbox (badness 1728) has occurred while \output is active []
 
- [56]
-[57] [58] [59] [60] [61] [62] [63] [64] [65]
-Overfull \hbox (0.42671pt too wide) in paragraph at lines 1392--1397
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[45] [46] [47] [48] [49] [50] [51] [52] [53]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[54] [55] [56] [57] [58] [59]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[60] [61] [62] [63] [64]
+Underfull \vbox (badness 1320) has occurred while \output is active []
+
+ [65]
+Overfull \hbox (0.42671pt too wide) in paragraph at lines 1418--1423
 []\T1/jkpl/m/n/10.95 (-20) Several mea-sure-ments use an HTTP client har-ness r
 ather than a browser. Sec-tions []6.2.2.2[]
  []
@@ -2641,10 +2651,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66747 strings out of 474116
- 1472614 string characters out of 5743682
- 2675290 words of memory out of 5000000
- 87066 multiletter control sequences out of 15000+600000
+ 66750 strings out of 474116
+ 1472687 string characters out of 5743682
+ 2676399 words of memory out of 5000000
+ 87068 multiletter control sequences out of 15000+600000
  747808 words of font info for 543 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,21n,145p,10977b,3472s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2662,10 +2672,10 @@ f-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dist/
 fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type
 1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (98 pages, 563095 bytes).
+Output written on out/main.pdf (98 pages, 564686 bytes).
 PDF statistics:
- 1643 PDF objects out of 1728 (max. 8388607)
- 1493 compressed objects within 15 object streams
- 307 named destinations out of 1000 (max. 500000)
+ 1655 PDF objects out of 1728 (max. 8388607)
+ 1504 compressed objects within 16 object streams
+ 308 named destinations out of 1000 (max. 500000)
  127188 words of extra memory for PDF output out of 128383 (max. 10000000)
 

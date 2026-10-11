@@ -329,10 +329,23 @@ at least the subject and the address.
 
 \section{Detection}\label{sec:eval-detection}
 
-This section evaluates the fifteen detection rules described in 
-Section~\ref{subsec:impl-detection}. 
-It first establishes what the reported figures can and cannot show, then presents the test 
-coverage per rule, and finally reports three defects that the evaluation itself uncovered.
+Section~\ref{subsec:impl-detection} described the detection layer, which evaluates fifteen rules 
+in four engines, one for each type of input: the login events derived from the audit log, the 
+configuration of an SP, its metadata, and the post authentication reports. 
+Most rules examine a single input for a condition that indicates a weakness or an attack, for 
+instance an assertion that was sent unencrypted or a series of failed logins for the same subject. 
+Two rules compare records that were produced independently of each other. 
+The consistency check compares the outbound report with the audit entry of the same login and 
+raises \texttt{FIELD\_\allowbreak{}MISMATCH} when the two disagree, and 
+\texttt{CORRELATION\_\allowbreak{}DISCREPANCY} reports a post authentication report for which no 
+audit entry arrives within the waiting period.
+
+This section examines whether each rule behaves as specified, that is whether it raises an alert 
+when the condition it examines occurs and remains silent when it does not. 
+Since no productive logins with a known classification are available, the rules are tested in 
+scenarios whose expected outcome is fixed in advance, on the test levels introduced in 
+Section~\ref{sec:setup}, and series of legitimate logins show whether alerts arise where none are 
+due.
 
 \subsection{What the Figures Represent}\label{subsec:detection-semantics}
 

@@ -423,8 +423,10 @@ replaced by a different value, and the backend was started again.
 
 Finally, the comparison rules must not raise false alarms when many logins arrive in quick 
 succession, since both rely on the records of every login being matched in time. 
-The performance series of Section~\ref{sec:overhead} provides this load, with 7{,}236 logins against 
-the weak SP in bursts of 200, for each of which both interceptors transmitted their reports. 
+The performance series of Section~\ref{sec:overhead} provides this load with 10{,}854 logins 
+against the weak SP, in measurements of about 200 logins each. 
+In 7{,}236 of them the interceptors were active and transmitted both reports. 
+The remaining logins belong to the baseline configuration without interceptors. 
 
 \subsection{Results}\label{subsec:eval-detection-results}
 
@@ -487,21 +489,25 @@ weak SP, where the alerts caused by its weaknesses are expected, no
 In all 200 logins, the post authentication report was correlated with its audit entry through the 
 inbound message identifier, and the consistency check passed, with five compared fields at the 
 clean SP and ten at the weak SP (Table~\ref{tab:consistency-fp}). 
-With no false alarm in 100 logins, the upper bound of the 95 percent Wilson interval for the false 
-alarm rate of the consistency check is 3.7 percent per SP and 1.9 percent for both together. 
-For the clean SP, the same bound applies to every alert that a login can trigger. 
+No false alarm in 100 logins does not prove that false alarms cannot occur, but it makes a rate 
+above 3.7 percent per SP unlikely, with 95 percent confidence according to the Wilson 
+interval~\cite{Wilson}. 
+For both SPs together, the limit is 1.9 percent. 
+At the clean SP this applies to every alert that a login can trigger, at the weak SP to the 
+consistency check.
 Findings about the configuration of an SP are not triggered by logins. 
 The clean SP, for instance, receives a \texttt{MISSING\_\allowbreak{}MFA} alert once per day, since it 
 does not offer an MFA flow. 
 Sustained load did not change this. 
-During the performance series, the detection layer raised 21{,}712 alerts for 10{,}854 audit 
-entries, 3{,}618 of which stem from the baseline runs without interceptors. 
-All of them were expected: one \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and one 
-\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} alert per entry, since the benchmark 
+During the 10{,}854 logins of the performance series, the detection layer raised 21{,}712 alerts, 
+all of them expected: one \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and one 
+\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} alert per login, since the benchmark 
 addresses the weak SP and is not a browser, and four configuration alerts. 
-Since \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} 
-report every affected login rather than the condition once, a persistent weakness of an SP produces 
-one alert per login. 
+Since these two rules report every affected login rather than the condition once, a persistent 
+weakness of an SP produces one alert per login. 
+None of the alerts was a \texttt{FIELD\_\allowbreak{}MISMATCH} or 
+\texttt{CORRELATION\_\allowbreak{}DISCREPANCY} alert, although the 7{,}236 logins with active 
+interceptors passed through the consistency check. 
 None was a \texttt{FIELD\_\allowbreak{}MISMATCH} or \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} 
 alert, although 7{,}236 logins of the series passed through the consistency check. 
 These figures apply to the two SP configurations and to the login flow of the test environment. 
@@ -528,12 +534,14 @@ The consistency check then raised a \texttt{FIELD\_\allowbreak{}MISMATCH} alert 
 that named exactly the altered field and no other. 
 The check thus detects a contradiction between two independently produced records of the same 
 login. 
-A single manipulation demonstrates the mechanism but provides no detection rate, and the check 
-establishes that the records disagree, not which of them was altered. 
+Since only one field of a single entry was altered, the test shows that the mechanism works, not how 
+reliably it detects manipulations in general. 
+A manipulation can only become visible in the fields that the check compares, and the check 
+establishes that the two records disagree, not which of them was altered. 
 For \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}, the integration test confirms that a report 
 without a counterpart is marked as expired after the waiting period and raises the alert. 
 An audit entry that arrives only afterwards, for instance because of a delay in the log shipping 
-stack, is no longer correlated, so that the alert remains although the record exists.
+stack, is no longer correlated, so that the alert remains although the record exists. 
 
 \paragraph{The results establish the fidelity of the implementation, not its detection quality in operation.}
 The rules were derived from documented weaknesses and requirements (Section~\ref{sec:rules}), and 

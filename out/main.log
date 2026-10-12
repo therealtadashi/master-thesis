@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 10:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 10:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2528,35 +2528,47 @@ LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Reference `sec:defects' on page 50 undefined on input line 481.
+LaTeX Warning: Reference `sec:defects' on page 50 undefined on input line 483.
 
-[50] [51] [52] [53] [54] [55] [56] [57]
-Underfull \vbox (badness 1320) has occurred while \output is active []
+[50] [51] [52] [53] [54]
 
- [58]
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[55]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \vbox (badness 3482) has occurred while \output is active []
+
+ [56]
+Underfull \vbox (badness 5771) has occurred while \output is active []
+
+ [57]
+[58]
 
 LaTeX Warning: Reference `subsubsec:precision-browser-traffic' on page 59 undef
-ined on input line 948.
+ined on input line 956.
 
 
 LaTeX Warning: Reference `subsubsec:precision-multiple-browser-users' on page 5
-9 undefined on input line 949.
+9 undefined on input line 957.
 
 [59] [60]
 
 LaTeX Warning: Reference `subsec:detection-coverage' on page 61 undefined on in
-put line 1056.
+put line 1064.
 
 
 LaTeX Warning: Reference `subsubsec:precision-nat' on page 61 undefined on inpu
-t line 1062.
+t line 1070.
 
-) (./txt/7-discussion.tex [61] [62
+[61]) (./txt/7-discussion.tex [62]
+chapter 7.
+[63
 
 
 ]
-chapter 7.
-[63]
 
 LaTeX Warning: Reference `subsec:detection-attack-space' on page 64 undefined o
 n input line 82.
@@ -2698,10 +2710,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (90 pages, 527162 bytes).
+Output written on out/main.pdf (90 pages, 527696 bytes).
 PDF statistics:
- 1507 PDF objects out of 1728 (max. 8388607)
- 1368 compressed objects within 14 object streams
+ 1508 PDF objects out of 1728 (max. 8388607)
+ 1369 compressed objects within 14 object streams
  303 named destinations out of 1000 (max. 500000)
  120972 words of extra memory for PDF output out of 128383 (max. 10000000)
 

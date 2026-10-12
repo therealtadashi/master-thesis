@@ -19,7 +19,7 @@ Only the backend application of the monitoring tool and the test code run direct
 Two SPs are deployed, referred to as the weak SP and the clean SP in the following. 
 The weak SP is used for the detection scenarios and is configured to exhibit the weaknesses
 that the rules are intended to identify. 
-The clean SP is configured according to current recommendations and serves as a reference for
+The clean SP encrypts its assertions and serves as a reference for
 the false positive rate, since any alert raised for a legitimate login against it is by
 definition a false positive. 
 
@@ -508,8 +508,6 @@ weakness of an SP produces one alert per login.
 None of the alerts was a \texttt{FIELD\_\allowbreak{}MISMATCH} or 
 \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} alert, although the 7{,}236 logins with active 
 interceptors passed through the consistency check. 
-None was a \texttt{FIELD\_\allowbreak{}MISMATCH} or \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} 
-alert, although 7{,}236 logins of the series passed through the consistency check. 
 These figures apply to the two SP configurations and to the login flow of the test environment. 
 Legitimate but unusual configurations were not tested. 
 
@@ -568,7 +566,7 @@ As described in Section~\ref{sec:impl-transport}, they send them without waiting
 so that a login does not depend on the backend. 
 A failed transmission is only recorded in the log of the IdP, and the record is not sent again. 
 Waiting for a confirmation would allow the login to react to such a failure, and the second 
-question is what waiting would cost and whether the choice of fire and forget transmission is 
+question is what waiting would cost and whether the choice of fire-and-forget transmission is 
 justified.
 
 Three configurations are compared. 
@@ -729,7 +727,7 @@ In the current implementation it would not even improve the delivery, since both
 failed transmission and neither sends the record again. 
 A delivery guarantee would require a local buffer that repeats failed transmissions, and such a 
 buffer works with asynchronous transmission as well. 
-The measurement therefore supports the choice of fire and forget transmission described in 
+The measurement therefore supports the choice of fire-and-forget transmission described in 
 Section~\ref{sec:impl-transport}.
 
 \section{Threats to Validity}\label{sec:validity}

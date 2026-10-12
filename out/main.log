@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 13:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 21:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2530,7 +2530,10 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: Reference `sec:defects' on page 50 undefined on input line 483.
 
-[50] [51] [52]
+[50] [51]
+Underfull \vbox (badness 6493) has occurred while \output is active []
+
+ [52]
 Underfull \vbox (badness 4036) has occurred while \output is active []
 
  [53]
@@ -2539,7 +2542,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 [54] [55] [56]
 
-LaTeX Warning: Reference `sec:defects' on page 57 undefined on input line 791.
+LaTeX Warning: Reference `sec:defects' on page 57 undefined on input line 789.
 
 ) (./txt/7-discussion.tex [57] [58
 
@@ -2692,7 +2695,7 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 510217 bytes).
+Output written on out/main.pdf (86 pages, 510093 bytes).
 PDF statistics:
  1421 PDF objects out of 1440 (max. 8388607)
  1287 compressed objects within 13 object streams

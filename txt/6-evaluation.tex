@@ -379,30 +379,33 @@ Every rule has at least one scenario at the integration level that contains the 
 meant to detect. 
 For most rules this is a single prepared input, such as an audit entry that records an unencrypted 
 assertion or a SAML request with two signature elements, a typical trace of a signature wrapping 
-attack. 
+attack, which the rule treats as a possible signature wrapping attempt. 
 Rules that depend on history receive it in the same way. 
 For \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} the test first stores five logins of a user from a known 
 address and then one from a new address, and for \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} it 
 stores a post authentication report that arrived twenty minutes earlier, so that the waiting period 
 of fifteen minutes has already elapsed. 
-Wherever a login in the test environment can produce the condition, an end-to-end scenario follows: 
-a login with the user agent of a script, a login with a wrong password, five failed logins in quick 
-succession, and a login at the weak SP, whose assertions are not encrypted. 
-For the remaining rules no such login exists. 
-Some require a manipulated message or an accumulated history that a regular login does not 
-produce, some evaluate the configuration or the metadata of an SP and do not depend on a login at 
-all, and \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} only raises its alert after the waiting 
-period of fifteen minutes.
+Wherever a regular login in the test environment can produce the condition, an end-to-end scenario 
+follows: a login with the user agent of a script, a login with a wrong password, five failed logins 
+in quick succession, which exceeds the threshold of three within five minutes, and a login at the 
+weak SP, whose assertions are not encrypted. 
+For the remaining rules, an end-to-end scenario would require more than a regular login, for 
+instance a second browser with another address, an SP that offers an MFA flow, a crafted or 
+replayed message, a changed configuration or metadata of an SP, or log shipping that stays 
+interrupted for longer than the waiting period. 
+These scenarios were not implemented in this work. 
+Table~\ref{tab:detection-coverage} names the requirement for each rule. 
 
 The second expectation is tested with legitimate logins through the browser. 
 At the clean SP, three users log in alternately, 100 times in total, and after a further 
-100 seconds, in which the scheduler evaluates all entries, no alert of any type may exist. 
+100 seconds, in which the scheduler evaluates all entries, none of the logins may have raised an alert. 
 Since every alert in this run would be a false alarm, the run is at the same time a true negative 
 proof for every rule that can react to a login. 
 The same run against the weak SP tests the consistency check in the presence of the alerts that the 
 weaknesses of this SP rightly cause, so that there no \texttt{FIELD\_\allowbreak{}MISMATCH} alert may 
 arise. 
-In addition, a single legitimate login serves as a baseline for five rule types.
+In addition, a single legitimate login at the clean SP provides the end-to-end true negative proofs of 
+the five rules marked TN in Table~\ref{tab:detection-coverage}. 
 
 The third expectation concerns someone who alters the audit entry of a login after the fact, for 
 instance to conceal which request a response answered. 
@@ -425,7 +428,8 @@ the weak SP in bursts of 200, for each of which both interceptors transmitted th
 
 \subsection{Results}\label{subsec:eval-detection-results}
 
-Table~\ref{tab:detection-coverage} shows on which test levels each rule is proven. 
+Table~\ref{tab:detection-coverage} shows which rules are also tested end-to-end and what an end-to-end 
+test of the others would require. 
 The following paragraphs state what the tests establish, from the coverage of the rules to the 
 limits of what the results can show.
 
@@ -441,20 +445,20 @@ Rule & End-to-end & Note \\
 \texttt{FAILED\_LOGIN}                  & TP, TN          & --- \\
 \texttt{BRUTE\_FORCE}                   & TP, TN          & --- \\
 \texttt{UNENCRYPTED\_ASSERTION}         & TP, TN          & --- \\
-\texttt{WEAK\_ENCRYPTION}               & TN              & No SP with a weak algorithm \\
+\texttt{WEAK\_ENCRYPTION}               & TN              & TP requires an SP with a weak algorithm \\
 \texttt{FIELD\_MISMATCH}                & TN, TP (manual) & --- \\
 \midrule
-\texttt{BEHAVIOUR\_ANOMALY}             & ---             & Requires a login from an unknown address \\
-\texttt{MFA\_BYPASS}                    & ---             & Requires a login that bypasses MFA \\
-\texttt{ASSERTION\_REPLAY}              & ---             & Requires a replayed assertion \\
-\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & ---             & Requires a manipulated request \\
-\texttt{REQUEST\_REPLAY}                & ---             & Requires a replayed request \\
+\texttt{BEHAVIOUR\_ANOMALY}             & ---             & Requires a second browser with another address \\
+\texttt{MFA\_BYPASS}                    & ---             & Requires an SP that offers an MFA flow \\
+\texttt{ASSERTION\_REPLAY}              & ---             & A replayed assertion is presented to the SP, not to the IdP \\
+\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & ---             & Requires a crafted request that the IdP accepts \\
+\texttt{REQUEST\_REPLAY}                & ---             & Requires a replay after the replay cache of the IdP has expired \\
 \midrule
-\texttt{WEAK\_CONFIGURATION}            & ---             & Evaluates the SP configuration \\
-\texttt{MISSING\_MFA}                   & ---             & Evaluates the SP configuration \\
-\texttt{CERTIFICATE\_EXPIRED}           & ---             & Evaluates the SP metadata \\
+\texttt{WEAK\_CONFIGURATION}            & ---             & Requires a changed SP configuration \\
+\texttt{MISSING\_MFA}                   & ---             & Requires a changed SP configuration \\
+\texttt{CERTIFICATE\_EXPIRED}           & ---             & Requires SP metadata with an expired certificate \\
 \midrule
-\texttt{CORRELATION\_DISCREPANCY}       & ---             & Alert only after 15 minutes \\
+\texttt{CORRELATION\_DISCREPANCY}       & ---             & Requires log shipping interrupted for 15 minutes \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -472,27 +476,32 @@ level contains both a true positive and a true negative proof.
 \texttt{WEAK\_\allowbreak{}ENCRYPTION} has only the true negative proof, since no SP in the test 
 environment requests a weak algorithm, and the true positive proof of 
 \texttt{FIELD\_\allowbreak{}MISMATCH} is the manipulation described below. 
-For the remaining nine rules, the last column of the table names the reason why no end-to-end 
-scenario exists. 
+For the remaining nine rules, the last column of the table names what an end-to-end scenario would require. 
 That the end-to-end level is not redundant became apparent when it uncovered a fault in the log 
 shipping stack that no integration test could have found (Section~\ref{sec:defects}).
 
 \paragraph{Legitimate logins raise no false alarms.}
-In the 100 logins at the clean SP, no alert of any type was raised, and in the 100 logins at the 
+In the 100 logins at the clean SP, none of the logins raised an alert, and in the 100 logins at the 
 weak SP, where the alerts caused by its weaknesses are expected, no 
-\texttt{FIELD\_\allowbreak{}MISMATCH} alert arose. 
+\texttt{FIELD\_\allowbreak{}MISMATCH} was raised. 
 In all 200 logins, the post authentication report was correlated with its audit entry through the 
 inbound message identifier, and the consistency check passed, with five compared fields at the 
 clean SP and ten at the weak SP (Table~\ref{tab:consistency-fp}). 
 With no false alarm in 100 logins, the upper bound of the 95 percent Wilson interval for the false 
 alarm rate of the consistency check is 3.7 percent per SP and 1.9 percent for both together. 
-For the clean SP, the same bound applies to alerts of any type. 
+For the clean SP, the same bound applies to every alert that a login can trigger. 
+Findings about the configuration of an SP are not triggered by logins. 
+The clean SP, for instance, receives a \texttt{MISSING\_\allowbreak{}MFA} alert once per day, since it 
+does not offer an MFA flow. 
 Sustained load did not change this. 
 During the performance series, the detection layer raised 21{,}712 alerts for 10{,}854 audit 
 entries, 3{,}618 of which stem from the baseline runs without interceptors. 
 All of them were expected: one \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and one 
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} alert per entry, since the benchmark 
 addresses the weak SP and is not a browser, and four configuration alerts. 
+Since \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} 
+report every affected login rather than the condition once, a persistent weakness of an SP produces 
+one alert per login. 
 None was a \texttt{FIELD\_\allowbreak{}MISMATCH} or \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} 
 alert, although 7{,}236 logins of the series passed through the consistency check. 
 These figures apply to the two SP configurations and to the login flow of the test environment. 
@@ -535,346 +544,6 @@ How often the rules detect real attacks in operation, and how many of their aler
 for productive traffic with its unusual but legitimate configurations, cannot be derived from them. 
 That would require productive logins labelled as legitimate or malicious independently of the 
 rules, which no test environment can produce.
-
-\subsection{What the Figures Represent}\label{subsec:detection-semantics}
-
-An important qualification precedes the results. 
-The figures reported here are not the outcome of a sampling study over productive traffic. 
-No labelled dataset of real logins exists against which precision and recall could be computed. 
-What is evaluated instead are test cases, that is scenarios constructed by the developer in which 
-the expected outcome is fixed in advance.
-
-Three terms are used throughout this section. 
-A true positive proof means that a test constructs a scenario in which a rule is supposed to fire 
-and the assertion confirms that it does. 
-A true negative proof means that a test constructs a scenario in which no alert is supposed to be 
-raised and the assertion confirms that none is. 
-A false negative class is not a measured rate but a case derivable from the code in which an 
-actual attack would structurally produce no alert.
-
-The strength of a true negative proof is not uniform, and this distinction turns out to matter. 
-A negative case constructed directly in Java verifies only that the rule remains silent when 
-given a correctly formed input object. 
-It does not verify whether the pipeline preceding the rule, comprising the Logstash parsing and 
-the field mapping, produces such an object correctly in practice. 
-A negative case established through a real login verifies both at once. 
-Section~\ref{subsec:detection-logstash-defect} presents a case in which precisely this difference 
-made a defect visible that had remained invisible otherwise.
-
-This evaluation therefore answers whether the implemented code behaves exactly as intended for 
-the constructed cases. 
-It does not answer how often the system errs in operation, since that would require a comparison 
-against traffic whose correct classification is known independently of the rules themselves. 
-Section~\ref{sec:validity} returns to this distinction.
-
-\subsection{Test Layers}\label{subsec:detection-layers}
-
-The rules are verified on three layers that differ in how much of the system they exercise. 
-Unit tests examine a rule in isolation with its repository replaced by a mock. 
-They verify the detection logic itself and are the fastest to write and to execute.
-
-Layer one tests run the rule against a real Elasticsearch instance provided through 
-Testcontainers. 
-Compared with a unit test, this additionally covers the query as it is actually formulated in the 
-Elasticsearch query language, the index mapping and the serialisation of the stored documents. 
-The rule under test is invoked directly rather than through the scheduler, which decouples the 
-correctness of the detection from the timing of the scheduler.
-
-Layer two tests exercise the complete path. 
-A real browser performs a login against the real IdP, the resulting audit entry passes through 
-Filebeat and Logstash into Elasticsearch, and the test then verifies the alert produced by the 
-backend. 
-This is the only layer on which a defect in the log shipping pipeline can become visible.
-
-Two of the layer two tests are false positive runs. 
-Each performs 100 consecutive logins of three rotating users through the browser and examines the 
-alerts that arose in the observed period. 
-Against the clean SP the assertion is that no alert of any type was raised, and against the 
-weakly configured provider the assertion is that no \texttt{FIELD\_MISMATCH} alert was raised, since 
-the alerts of the other rules are expected there. 
-Both runs wait about 100 seconds after the last login, so that alerts that arise only after the 
-retry window of the correlation, such as the discrepancy alert, are not covered by them.
-
-\subsection{Coverage per Rule}\label{subsec:detection-coverage}
-
-Table~\ref{tab:detection-coverage} shows which layers each rule is covered on.
-
-\begin{table}[h]
-\centering
-\caption{Test coverage per rule across the three layers}\label{tab:detection-coverag}
-\small
-\begin{tabular}{lccc}
-\toprule
-Alert Type & Unit & Layer 1 & Layer 2 \\
-\midrule
-\texttt{SUSPICIOUS\_USER\_AGENT}        & yes & yes & TP, TN          \\
-\texttt{FAILED\_LOGIN}                  & yes & yes & TP, TN          \\
-\texttt{BRUTE\_FORCE}                   & yes & yes & TP, TN          \\
-\texttt{UNENCRYPTED\_ASSERTION}         & yes & yes & TP, TN          \\
-\texttt{WEAK\_ENCRYPTION}               & yes & yes & TN only         \\
-\texttt{FIELD\_MISMATCH}                & yes & yes & TN, TP (manual) \\
-\texttt{CORRELATION\_DISCREPANCY}       & yes & yes & ---             \\
-\texttt{BEHAVIOUR\_ANOMALY}              & yes & yes & ---             \\
-\texttt{MFA\_BYPASS}                    & yes & yes & ---             \\
-\texttt{ASSERTION\_REPLAY}              & yes & yes & ---             \\
-\texttt{WEAK\_CONFIGURATION}            & yes & yes & ---             \\
-\texttt{MISSING\_MFA}                   & yes & yes & ---             \\
-\texttt{CERTIFICATE\_EXPIRED}           & yes & yes & ---             \\
-\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & yes & yes & ---             \\
-\texttt{REQUEST\_REPLAY}                & yes & yes & ---             \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-All fifteen rules are covered by an explicit true positive proof against a real Elasticsearch instance. 
-The counts comprise 118 unit tests for the fifteen rules, 21 layer one tests and seven layer two 
-tests, counted as annotated test methods. 
-The unit tests of the four rule engines, 19 further tests, are not included. 
-Of the layer two tests, four are true positive tests for individual rules, one is a baseline with a 
-single clean login for five rule types, and two are the false positive runs.
-
-Six rules are additionally covered on layer two. 
-Four of them, namely \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}, \texttt{FAILED\_\allowbreak{}LOGIN}, 
-\texttt{BRUTE\_\allowbreak{}FORCE} and \texttt{UNENCRYPTED\_ASSERTION}, have both a true positive and a true negative proof. 
-\texttt{WEAK\_\allowbreak{}ENCRYPTION} has only a true negative proof at present, and \texttt{FIELD\_\allowbreak{}MISMATCH} has 
-an automated true negative proof in the 200 logins of the false positive runs, whereas its true 
-positive proof is the manual manipulation described in Section~\ref{subsec:detection-consistency}. 
-Because the clean run asserts that no alert of any kind occurred, it also serves as a true negative 
-proof for the remaining rules, insofar as they can raise an alert within the observation period.
-
-The remaining nine rules are not covered on layer two, for three different reasons. 
-Five of them, namely \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}, \texttt{MFA\_\allowbreak{}BYPASS}, 
-\texttt{ASSERTION\_\allowbreak{}REPLAY}, \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} and 
-\texttt{REQUEST\_\allowbreak{}REPLAY}, cannot sensibly be triggered through a normal login, since they require 
-a manipulated message or an accumulated history rather than a single successful authentication. 
-The other three, namely \texttt{WEAK\_\allowbreak{}CONFIGURATION}, \texttt{MISSING\_\allowbreak{}MFA} and 
-\texttt{CERTIFICATE\_\allowbreak{}EXPIRED}, do not depend on a login at all. 
-They evaluate configuration and metadata, which the layer one tests already exercise in full, so 
-that layer two would add nothing for them.
-The ninth, \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}, raises its alert only after the retry window of 
-fifteen minutes, which the end to end tests do not wait for.
-
-\subsection{A Defect Visible Only through the Full Pipeline}\label{subsec:detection-logstash-defect}
-
-The true negative proof for \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} on layer two required a service 
-provider whose assertions are actually encrypted, since the existing one transmitted them in 
-plain text. 
-A second provider was therefore registered with \texttt{encryptAssertions=true} and a real login 
-performed against it. 
-The expectation was that no alert would be raised.
-
-The first run contradicted this. 
-For the same login, Elasticsearch contained both \textit{encryption\_algo} with the value 
-\texttt{AES128-GCM} and \textit{encrypted} with the value \texttt{false}, which is an internal 
-contradiction since both fields originate from the same audit line.
-
-The cause lay in the log shipping pipeline rather than in the rule. 
-The audit format logs \texttt{\%XA}, the algorithm, which Logstash maps correctly. 
-It does not log the separate standard token for the encryption state, which Logstash therefore 
-derives from a backward compatibility alias that the audit format never populated. 
-The subsequent processing logic recognises only the literal strings \texttt{true} and 
-\texttt{false}, so that an empty value falls into the same branch as \texttt{false}. 
-The field \textit{encrypted} was consequently set to \texttt{false} for every login, entirely 
-independently of the actual encryption state.
-
-The consequence is not a missed detection but the opposite. 
-For genuinely unencrypted logins the result remained accidentally correct. 
-For encrypted logins the rule would have reported every single one as 
-\texttt{UNENCRYPTED\_\allowbreak{}ASSERTION}. 
-This is not a rare edge case but a structurally guaranteed false positive rate of one hundred 
-percent across all encrypted traffic, concealed solely by the fact that the test environment had 
-until then contained no SP with encryption enabled.
-
-The defect was invisible on layer one for a structural reason. 
-The three existing negative scenarios for this rule construct their audit object directly in Java 
-with the encryption state set explicitly and therefore never pass through Logstash at all. 
-A test that bypasses the pipeline cannot, in principle, find a defect located within it. 
-The fix derives the encryption state from the algorithm field, treating a non-empty value as 
-encrypted. 
-
-After restarting Logstash, a login against the same SP produced documents carrying 
-\textit{encryption\_algo} with the value \texttt{AES128-GCM} and \textit{encrypted} correctly set 
-to \texttt{true}.
-
-\subsection{A Defect Visible Only against Real Persistence}\label{subsec:detection-version-defect}
-
-A second defect illustrates why layer one is not redundant with respect to unit testing.
-During development, the unit test for \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} passed consistently 
-while the rule did not work in operation. 
-The behaviour profile of a user was written once and never updated thereafter. 
-The cause was a missing version field on the stored document, which caused Elasticsearch to 
-discard every update silently rather than to reject it with an error. 
-
-A mock-based test cannot detect this class of defect. 
-The mocked repository returns success for every save operation, irrespective of whether a real 
-Elasticsearch instance would have accepted the document. 
-The test therefore verified that the rule calls the repository, not that the repository call has 
-any effect. 
-This finding is the reason why layer one was introduced for all rules rather than only for those 
-where it seemed most obviously necessary. 
-
-\subsection{A Systemic Class of False Negatives}\label{subsec:detection-registry-guard}
-
-Seven of the fifteen rules begin by checking whether the audit field they depend on is present in 
-the field registry, and return without a result if it is not, and the consistency check skips each 
-field that the registry does not contain. 
-As a design decision this is sound, since a rule should not guess when the data it requires is 
-absent, as argued in Section~\ref{subsec:detection}.
-
-The consequence, however, is that the detection coverage of the system is bounded from above by 
-the completeness of the audit configuration rather than by the detection logic itself. 
-An operator who shortens the audit format for reasons of data protection or storage reduces the 
-detection surface accordingly, and no alert or warning indicates that this has happened. 
-The rules do not fail in that case, they simply remain silent.
-
-A related case occurred in the development environment of this work. 
-Two rules depend on the SP configuration, which reaches the backend exclusively 
-through a dedicated ingest path. 
-That path was inactive for an extended period, first because a security configuration no longer 
-permitted the corresponding request and later because the pipeline configuration referenced an 
-outdated address. 
-Both rules therefore evaluated against an index that was no longer being updated, without any 
-indication that their input had become stale.
-
-\subsection{Consistency between Outbound Report and Audit Entry}\label{subsec:detection-consistency}
- 
-The consistency check described in Section~\ref{subsec:detection} compares the outbound report of a 
-login with the audit entry that the post authentication report of the same login was correlated 
-with. 
-It runs after the correlation and compares the fields that both records contain and that the 
-audit format of the deployment records. 
-For every login these are the status, the identifier of the request answered by the response, the 
-identifier and the issue time of the outbound message and the encryption state. 
-Where the assertion is not encrypted, the identifier of the assertion, the authentication instant, 
-the authentication context, the name identifier format and the pseudonymised name identifier are 
-compared as well. 
-Values that the audit log writes in an abbreviated form are mapped to the notation of the outbound 
-report before the comparison.
- 
-The evaluation addresses two questions. 
-The first is whether the check remains silent for legitimate logins. 
-To examine this, 100 consecutive logins of three rotating test users were performed through a real 
-browser against each of two SPs, namely the deliberately clean provider with encrypted assertions 
-and the weakly configured provider without encryption described in Section~\ref{sec:setup}. 
-The IdP transmitted its records in the asynchronous mode. 
-Every login ran through the complete pipeline, from the browser to the comparison in the backend. 
-Table~\ref{tab:consistency-fp} summarises the result.
- 
-\begin{table}[h]
-\centering
-\caption{Result of the consistency check for legitimate logins (upper bound: 95 percent Wilson interval)}\label{tab:consistency-fp}
-\small
-\begin{tabular}{lrrrrr}
-\toprule
-SP & Logins & Fields compared & Checks passed & Mismatches & Upper bound \\
-\midrule
-Clean SP & 100 & 5  & 100 & 0 & 3.7\,\% \\
-Weak SP & 100 & 10 & 100 & 0 & 3.7\,\% \\
-\bottomrule
-\end{tabular}
-\end{table}
- 
-In all 200 logins the post authentication report was correlated with its audit entry through the 
-inbound message identifier, no report expired without a counterpart, and the check passed. 
-No \texttt{FIELD\_MISMATCH} alert was raised. 
-The number of compared fields is taken from the log of the check, which lists the fields of every 
-comparison. 
-It is five for the clean provider and ten for the weak one in each of the 100 logins. 
-With no deviation in 100 comparisons per provider, the upper bound of the 95 percent Wilson 
-interval for the false positive rate of the check is 3.7 percent for each provider and 1.9 percent 
-for both together. 
-The two runs differ in the fields that can be compared. 
-For encrypted assertions the assertion internal fields are not observable at the point where the 
-outbound interceptor sees the response, so that only the response level fields and the encryption 
-state take part. 
-The run against the weak provider additionally covers the assertion internal fields, including the 
-pseudonymised name identifier, and with them the mapping of the values that the audit format 
-abbreviates. 
-Earlier runs in the synchronous transmission mode produced the same result. 
-The performance series described in Section~\ref{sec:overhead} adds 7{,}236 further pairs of 
-records, for which no \texttt{FIELD\_MISMATCH} alert was raised either 
-(Section~\ref{subsec:interpretation-correlation}).
- 
-The second question is whether the check reports a discrepancy that actually exists. 
-For this purpose a login against the clean provider was performed while the backend was stopped. 
-After the audit entry had reached Elasticsearch, one of its fields, the identifier of the request 
-answered by the response, was replaced by a different value, and the backend was started again. 
-At its next correlation run the backend matched the post authentication report to the audit entry 
-through the unchanged inbound message identifier, within two seconds of the start. 
-The check then raised a \texttt{FIELD\_MISMATCH} alert of high severity that names exactly this 
-field, and no other field of the pair was reported.
- 
-This demonstrates that the mechanism detects a contradiction between two independently produced 
-records of the same event. 
-It does not provide a detection rate, since it rests on a single manipulation of a single field. 
-The modification was applied to the stored audit entry and not to the log file on the IdP. 
-Because the outbound report is produced independently of that file, the check would react in the same way 
-to a modification of the file before it is shipped, but this case was not demonstrated separately. 
-Finally, the check establishes that the records disagree and not which of them was altered. 
-An attacker who controls the application process can manipulate the report as well, as discussed 
-in Section~\ref{sec:limitation}.
-
-The check is triggered by the correlation of the post authentication report. 
-Events that only the outbound interceptor observes, such as an error response that the IdP issues 
-before authentication, are therefore not compared with their audit entries, although the outbound 
-report and the audit entry would suffice for such a comparison.
-
-\subsection{Coverage of the Documented Attack Space}\label{subsec:detection-attack-space}
-
-The figures presented so far describe the relationship between the rules and the tests written 
-for them. 
-They say nothing about the relationship between the rules and the attacks that actually occur, 
-since both the rules and the scenarios originate from the same source.
-
-A partial answer is available through the assignment established in 
-Section~\ref{subsec:detection}, where the rules were related to the vulnerabilities and attack 
-classes documented by Simpson and Groß~\cite{FIMSurvey}. 
-That assignment provides a denominator that was not defined by this work. 
-Of the six cross-protocol issues concerning SAML, the implemented rules address two directly, 
-while a third, namely \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED}, addresses 
-the same attack class through a vulnerability that the survey does not list for SAML.
-
-The remaining issues are not addressed, and the reasons are structural rather than a matter of 
-implementation effort. 
-They are discussed in Chapter~\ref{ch:discussion}.
-
-\subsection{Thresholds}\label{subsec:detection-thresholds}
-
-Several rules depend on numerical thresholds, among them the number of failed attempts and the 
-length of the window within which they are counted, the number of logins before a behaviour 
-profile is considered established, and the number of occurrences after which a replay is 
-reported.
-
-None of these values has been subjected to a sensitivity analysis, that is an examination of the 
-threshold at which a true positive turns into a false negative. 
-They were chosen as plausible point values rather than derived from measurement. 
-Since the thresholds were moved into the configuration during this work, such an analysis has 
-become technically possible, but it has not been carried out.
-
-\subsection{Fidelity of the Rules and Defects Uncovered by Testing}\label{subsec:interpretation-detection}
-
-All fifteen rules behave as intended for the scenarios constructed for them, and all are 
-verified against real persistence rather than against mocks alone. 
-This is a statement about the fidelity of the implementation, and within that scope it is a 
-complete one.
-
-It is not a statement about detection quality in operation. 
-Determining how reliably a rule identifies genuine attacks would require productive traffic in 
-which each login is independently labelled as malicious or benign. 
-Such a dataset does not exist for this work and cannot be produced within a test environment. 
-The circularity of rules and scenarios originating from the same source is therefore not resolved 
-by the figures reported here, although the derivation of the rules themselves, as described in 
-Section~\ref{subsec:detection}, no longer rests on the author's own judgement.
-
-What the evaluation of the rules did establish is of a different kind. 
-Three defects became visible that operation itself did not reveal. 
-A missing version field caused every profile update to be discarded silently, a pipeline defect 
-would have reported every encrypted login as unencrypted, and the dependence of two rules on a 
-stale index went unnoticed for months. 
-In all three cases the system continued to run, alerts continued to be produced and the dashboard 
-continued to be populated. 
-The defects became apparent only when the behaviour was measured systematically against an 
-expectation defined in advance.
 
 \section{Performance Overhead}\label{sec:overhead}
  

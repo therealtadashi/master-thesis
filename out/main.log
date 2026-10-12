@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 00:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 10:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2098,20 +2098,13 @@ LaTeX Font Info:    Trying to load font information for T1+jkpl on input line 8
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/t1jkpl.fd
 File: t1jkpl.fd 2007/08/30 Fontinst v1.928 font definitions for T1/jkpl.
-) (out/main.aux
-
-LaTeX Warning: Label `tab:consistency-fp' multiply defined.
-
-
-LaTeX Warning: Label `tab:consistency-fp@cref' multiply defined.
-
-)
+) (out/main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/jkpl/m/it on input line 8.
 LaTeX Font Info:    Trying to load font information for OML+jkpl on input line 
 8.
- (/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/omljkpl.fd
+(/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/omljkpl.fd
 File: omljkpl.fd 2006/08/15 v1.0
 )
 LaTeX Font Info:    ... okay on input line 8.
@@ -2405,17 +2398,16 @@ Package tocbasic Info: character protrusion at toc deactivated on input line 10
  (out/main.toc [7
 
 
-] [8])
+])
 \tf@toc=\write8
 \openout8 = `main.toc'.
 
- [9] [10
-
-
-])
+ [8])
 (./txt/1-introduction.tex
 chapter 1.
 [1
+
+
 
 
 ]
@@ -2443,7 +2435,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Underfull \vbox (badness 2343) has occurred while \output is active []
 
  [5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [6]
-<./txt/../img/sp-init-sso.png, id=354, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=325, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 218.
@@ -2473,7 +2465,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=498, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=470, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2513,6 +2505,10 @@ chapter 5.
 Underfull \vbox (badness 1342) has occurred while \output is active []
 
  [39]
+
+LaTeX Warning: Reference `subsec:detection-consistency' on page 40 undefined on
+ input line 404.
+
 [40]) (./txt/6-evaluation.tex [41] [42
 
 
@@ -2532,45 +2528,50 @@ LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Reference `sec:defects' on page 50 undefined on input line 478.
+LaTeX Warning: Reference `sec:defects' on page 50 undefined on input line 481.
 
-[50]
+[50] [51] [52] [53] [54] [55] [56] [57]
+Underfull \vbox (badness 1320) has occurred while \output is active []
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+ [58]
 
-[51] [52]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[53] [54] [55] [56] [57] [58]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[59] [60] [61] [62] [63] [64]
-
-LaTeX Warning: Reference `subsubsec:precision-browser-traffic' on page 65 undef
-ined on input line 1279.
+LaTeX Warning: Reference `subsubsec:precision-browser-traffic' on page 59 undef
+ined on input line 948.
 
 
-LaTeX Warning: Reference `subsubsec:precision-multiple-browser-users' on page 6
-5 undefined on input line 1280.
+LaTeX Warning: Reference `subsubsec:precision-multiple-browser-users' on page 5
+9 undefined on input line 949.
 
-[65] [66]
+[59] [60]
 
-LaTeX Warning: Reference `subsubsec:precision-nat' on page 67 undefined on inpu
-t line 1393.
+LaTeX Warning: Reference `subsec:detection-coverage' on page 61 undefined on in
+put line 1056.
 
-) (./txt/7-discussion.tex [67] [68
+
+LaTeX Warning: Reference `subsubsec:precision-nat' on page 61 undefined on inpu
+t line 1062.
+
+) (./txt/7-discussion.tex [61] [62
 
 
 ]
 chapter 7.
-[69] [70] [71] [72]) (./txt/8-conclusion.tex [73] [74
+[63]
+
+LaTeX Warning: Reference `subsec:detection-attack-space' on page 64 undefined o
+n input line 82.
+
+[64] [65]
+
+LaTeX Warning: Reference `subsec:detection-consistency' on page 66 undefined on
+ input line 191.
+
+[66]) (./txt/8-conclusion.tex [67] [68
 
 
 ]
 chapter 8.
-[75]) (./zyx/epilogue.tex [76]
+[69]) (./zyx/epilogue.tex [70]
 Package tocbasic Info: character protrusion at lof deactivated on input line 10
 .
  (out/main.lof)
@@ -2583,12 +2584,12 @@ Package tocbasic Info: character protrusion at lot deactivated on input line 24
 \tf@lot=\write10
 \openout10 = `main.lot'.
 
- [77
+ [71
 
 
 
 
-] [78
+] [72
 
 
 ]
@@ -2624,17 +2625,17 @@ ty-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . May 2025. \T1/jkpl/m/sc/10.95 (+
 20) url\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / /
  []
 
-[79
+[73
 
 
-] [80] [81]
+] [74] [75]
 Underfull \hbox (badness 1337) in paragraph at lines 30--30
 []\T1/jkpl/m/n/10.95 (+20) Shibboleth Con-sor-tium. \T1/jkpl/m/it/10.95 (+20) P
 ro-fil-eRequest-Con-text\T1/jkpl/m/n/10.95 (+20) . \T1/jkpl/m/sc/10.95 (+20) ur
 l\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / / shibboleth .
  []
 
-[82] [83] [84] (out/main.gls
+[76] [77] [78] (out/main.gls
 LaTeX Font Info:    Trying to load font information for T1+jkpss on input line 
 5.
 
@@ -2645,7 +2646,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `jkpss' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-)) [85
+)) [79
 
 
 
@@ -2653,7 +2654,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 ]
-[86
+[80
 
 
 ] (out/main.aux)
@@ -2664,9 +2665,6 @@ L3 programming layer <2020/03/25>
 
 
 LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
@@ -2680,11 +2678,11 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66736 strings out of 474116
- 1472220 string characters out of 5743682
- 2673379 words of memory out of 5000000
- 87054 multiletter control sequences out of 15000+600000
- 741408 words of font info for 534 fonts, out of 8000000 for 9000
+ 66687 strings out of 474116
+ 1471291 string characters out of 5743682
+ 2672002 words of memory out of 5000000
+ 87025 multiletter control sequences out of 15000+600000
+ 741357 words of font info for 534 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,21n,145p,10977b,3472s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
@@ -2700,10 +2698,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (98 pages, 549440 bytes).
+Output written on out/main.pdf (90 pages, 527162 bytes).
 PDF statistics:
- 1617 PDF objects out of 1728 (max. 8388607)
- 1469 compressed objects within 15 object streams
- 323 named destinations out of 1000 (max. 500000)
- 121052 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 1507 PDF objects out of 1728 (max. 8388607)
+ 1368 compressed objects within 14 object streams
+ 303 named destinations out of 1000 (max. 500000)
+ 120972 words of extra memory for PDF output out of 128383 (max. 10000000)
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 11:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 11:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2442,7 +2442,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Underfull \vbox (badness 2343) has occurred while \output is active []
 
  [5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [6]
-<./txt/../img/sp-init-sso.png, id=327, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=329, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 218.
@@ -2472,7 +2472,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=472, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=474, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2537,35 +2537,39 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: Reference `sec:defects' on page 50 undefined on input line 483.
 
-[50] [51] [52] [53] [54] [55] [56]
+[50] [51] [52] [53]
+Overfull \hbox (16.8262pt too wide) in paragraph at lines 655--664
+ [][] 
+ []
+
+[54] [55] [56] [57] [58]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[57] [58] [59]
+[59] [60] [61]
 
-LaTeX Warning: Reference `subsubsec:precision-browser-traffic' on page 60 undef
-ined on input line 1015.
+LaTeX Warning: Reference `subsubsec:precision-browser-traffic' on page 62 undef
+ined on input line 1087.
 
 
 LaTeX Warning: Reference `subsubsec:precision-multiple-browser-users' on page 6
-0 undefined on input line 1016.
+2 undefined on input line 1088.
 
-[60] [61]
+[62] [63]
 
-LaTeX Warning: Reference `subsec:detection-coverage' on page 62 undefined on in
-put line 1123.
+LaTeX Warning: Reference `subsec:detection-coverage' on page 64 undefined on in
+put line 1195.
 
-[62]
 
-LaTeX Warning: Reference `subsubsec:precision-nat' on page 63 undefined on inpu
-t line 1129.
+LaTeX Warning: Reference `subsubsec:precision-nat' on page 64 undefined on inpu
+t line 1201.
 
-) (./txt/7-discussion.tex [63] [64
+) (./txt/7-discussion.tex [64]
+chapter 7.
+[65
 
 
 ]
-chapter 7.
-[65]
 
 LaTeX Warning: Reference `subsec:detection-attack-space' on page 66 undefined o
 n input line 82.
@@ -2690,11 +2694,11 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66707 strings out of 474116
- 1471553 string characters out of 5743682
- 2672201 words of memory out of 5000000
- 87028 multiletter control sequences out of 15000+600000
- 742212 words of font info for 540 fonts, out of 8000000 for 9000
+ 66746 strings out of 474116
+ 1472050 string characters out of 5743682
+ 2673391 words of memory out of 5000000
+ 87033 multiletter control sequences out of 15000+600000
+ 744504 words of font info for 558 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,21n,145p,10977b,3472s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
@@ -2710,10 +2714,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (92 pages, 532486 bytes).
+Output written on out/main.pdf (92 pages, 536901 bytes).
 PDF statistics:
- 1529 PDF objects out of 1728 (max. 8388607)
- 1388 compressed objects within 14 object streams
- 312 named destinations out of 1000 (max. 500000)
- 120980 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 1549 PDF objects out of 1728 (max. 8388607)
+ 1407 compressed objects within 15 object streams
+ 322 named destinations out of 1000 (max. 500000)
+ 120988 words of extra memory for PDF output out of 128383 (max. 10000000)
 

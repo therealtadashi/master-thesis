@@ -641,6 +641,78 @@ As a simple check, the number of runs in which one configuration was slower than
 counted as well. 
 With 18 runs, the confidence intervals of the latency differences have a half width of about 
 11\,ms, so that smaller differences cannot be distinguished from zero.
+
+\subsection{Results}\label{subsec:eval-overhead-results}
+
+Table~\ref{tab:overhead-cost} summarises what a login costs in each configuration. 
+The following paragraphs explain the figures, from the work inside the interceptors to the answers 
+to the two questions.
+
+\begin{table}[h]
+\centering
+\caption{Cost of a login per configuration}\label{tab:overhead-cost}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Configuration & Median & Difference & 95\,\% CI & Difference at p90 & CPU time per login \\
+\midrule
+baseline & 356.5\,ms & ---              & ---                  & ---              & 126\,ms \\
+async    & 362.7\,ms & $+6.2$\,ms       & $[-4.7;\ +17.1]$     & $+8.1$\,ms       & 154\,ms \\
+sync     & 416.1\,ms & $+59.6$\,ms      & $[+48.7;\ +70.4]$    & $+92.0$\,ms      & 166\,ms \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The work inside the interceptors takes less than half a millisecond.}
+The internal measurement yields a median of 0.415\,ms for the post authentication interceptor and 
+0.039\,ms for the outbound interceptor, and even the slowest one percent of the reports stays below 
+2\,ms. 
+Together this is about 0.45\,ms, or 0.13 percent of a median login in the baseline. 
+Since the measurement excludes the construction of the payload and the transmission, it is a lower 
+bound, but it shows that collecting and pseudonymising the data does not weigh on the login. 
+Any larger difference between the configurations must therefore stem from the transmission.
+
+\paragraph{Asynchronous transmission adds no latency that the experiment can distinguish from zero.}
+A median login takes 6.2\,ms longer than in the baseline, and the 95 percent confidence interval 
+ranges from $-4.7$ to $+17.1$\,ms and thus includes zero. 
+In twelve of the 18 runs the asynchronous configuration was the slower one, which is a weak 
+tendency but not an established effect. 
+The slower logins behave in the same way, since the difference at the 90th percentile is 8.1\,ms. 
+With 95 percent confidence, the overhead therefore lies below 17.1\,ms, or 4.8 percent of a median 
+login. 
+Smaller effects, such as the point estimate suggests, are below the resolution of the experiment.
+
+\paragraph{Synchronous transmission adds about 60 milliseconds to every login.}
+A median login takes 59.6\,ms or 16.7 percent longer than in the baseline, with a 95 percent 
+confidence interval from $+48.7$ to $+70.4$\,ms, and the synchronous configuration was the slower 
+one in all 18 runs. 
+Compared with the asynchronous configuration, the difference is 53.4\,ms. 
+Since every login contains two blocking transmissions, each of them costs roughly 27 to 30\,ms. 
+The slower logins are affected more strongly, as the difference grows to 92.0\,ms or 21.6 percent at 
+the 90th percentile. 
+Since the work inside the interceptors amounts to less than half a millisecond, this time is spent 
+waiting for the backend.
+
+\paragraph{Asynchronous transmission costs processor time, and waiting does not save it.}
+In the asynchronous configuration, the IdP container uses 6.9 percentage points of one core more than 
+in the baseline, with a 95 percent confidence interval from $+4.0$ to $+9.9$ points. 
+This is about 21 percent more than in the baseline and was observed in 16 of the 18 runs. 
+The synchronous configuration shows a lower utilisation than the asynchronous one, but only because 
+it completes fewer logins per second, 2.36 instead of 2.71, since each login waits for the backend. 
+Per login, it does not use less processor time. 
+The IdP spends 126\,ms of processor time on a login in the baseline, 154\,ms in the asynchronous and 
+166\,ms in the synchronous configuration. 
+Asynchronous transmission thus costs about 28\,ms of processor time per login, which does not show 
+in the latency because the transmission runs in background threads. 
+Measured against the 16 cores of the host, the additional utilisation amounts to less than half a 
+percent of its capacity.
+
+In the configuration intended for operation, the interceptors therefore add no measurable latency 
+and about 28\,ms of processor time to a login, which answers the first question. 
+Waiting for a confirmation would add about 60\,ms to every login and more to the slow ones, without 
+saving processor time, and its only gain would be that the IdP notices when a record is lost. 
+The measurement therefore supports the choice of fire and forget transmission described in 
+Section~\ref{sec:impl-transport}.
  
 \subsection{Measurement Sources}\label{subsec:measurement-sources}
  

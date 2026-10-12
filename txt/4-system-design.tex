@@ -400,8 +400,8 @@ would delay the service it observes.
 The records are consequently transmitted asynchronously. 
 Each interceptor dispatches its record and continues processing without awaiting a response. 
 This has a cost. 
-If a transmission fails, the collection component does not learn of it, and the record is lost without 
-any indication at the point where it originated. 
+If a transmission fails, the record is not sent again and is missing in the monitoring tool, and 
+only a warning in the log of the IdP indicates the failure. 
 The design therefore prioritises non interference with the monitored service over a guarantee of delivery. 
 For a monitoring system that observes a central authentication service, this trade off appears justified. 
 A monitoring component that degrades the availability of the service it observes would undermine its own purpose. 
@@ -547,7 +547,8 @@ Rule & Vulnerability & Attack Class & STRIDE & Source \\
 Two observations follow from this assignment. 
 Lack of binding appears in three of the six SAML related entries and is therefore the most frequently 
 documented weakness of the protocol in the survey. 
-Both replay rules address it directly. 
+Both replay rules address it, although only a replayed request passes the IdP, whereas a replayed 
+assertion is presented to the SP (Section~\ref{sec:limitation}). 
 Furthermore, several rules form pairs in which the same weakness is captured twice, once as a 
 configuration state and once as an event that has occurred. 
 \texttt{MISSING\_\allowbreak{}MFA} examines whether an SP requires multi factor authentication at all, whereas 

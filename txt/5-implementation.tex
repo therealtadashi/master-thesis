@@ -399,8 +399,7 @@ Both are triggered by the correlation service.
 When a report is marked as permanently uncorrelated, either because the retry loop reaches the end 
 of its window or because the periodic sweep finds it expired, the service raises a 
 \texttt{CORRELATION\_DISCREPANCY} alert of medium severity. 
-Each report is expired exactly once, so that the alert needs no deduplication, which distinguishes 
-it from the alerts of the rule engines, of which at most one per type is stored per day.
+Each report is expired exactly once, so that this alert cannot produce repeated findings. 
  
 When a report is correlated with an audit entry, the service loads the outbound report with the 
 same request identifier and passes it together with the audit entry to the consistency service. 

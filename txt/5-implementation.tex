@@ -178,8 +178,8 @@ As mentioned in Section~\ref{sec:trust}, the interceptors send their payload asy
 Neither of them waits for a response from the monitoring tool, and each proceeds with the 
 authentication flow immediately after dispatching its record. 
 If a transmission fails, whether because the backend is unreachable, the request times out or 
-the record is rejected, the interceptor receives no indication of it and the record is lost 
-without a trace at its point of origin.
+the record is rejected, the interceptor records a warning in the log of the IdP but does not send 
+the record again, so that it is missing in the monitoring tool. 
 
 To quantify the cost of this design decision, the interceptors also support a synchronous mode. 
 In this mode each of them waits for the backend to confirm receipt before the authentication flow 
@@ -305,8 +305,7 @@ Since Filebeat processes log lines in batches, this value is shared by all entri
 does not preserve their order. 
 The Logstash pipeline therefore derives a dedicated field from the event timestamp recorded by the 
 IdP, and both time window strategies operate on this field. 
-The effect of this distinction on correlation precision is examined in 
-Chapter~\ref{sec:defects}. 
+The effect of this distinction on correlation precision is reported in Section~\ref{sec:defects}. 
 
 The temporal offset described in Section~\ref{subsec:correlation} is addressed by repeated 
 attempts. 
@@ -355,8 +354,13 @@ the log shipping stack are not skipped.
 A further mechanism concerns repeated findings. 
 A weakness in a configuration persists until the operator changes it, and evaluating the same 
 configuration every few minutes would otherwise produce a continuous stream of identical alerts. 
-The application therefore stores at most one alert of a given type per subject and day, so that 
-a persistent condition is reported once rather than repeatedly.
+The engines for the configuration, the metadata and the post authentication reports therefore 
+store at most one alert of a given type per SP and day. 
+The engine for login events stores at most one alert of a given type per audit entry, so that a 
+rule that examines a property of every login, such as an unencrypted assertion, raises an alert 
+for every affected login. 
+Rules that aggregate several logins limit themselves further, \texttt{BRUTE\_\allowbreak{}FORCE} to 
+one alert per subject and day and \texttt{ASSERTION\_\allowbreak{}REPLAY} to one per assertion and day. 
 
 The rules differ in the kind of condition they examine. 
 Three examples illustrate this range. 

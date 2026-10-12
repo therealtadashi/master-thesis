@@ -38,8 +38,9 @@ pipeline from a browser login, four of them up to the resulting alert.
 In the asynchronous transmission mode, the end-to-end login latency did not differ measurably from 
 a deployment without interceptors, with an upper bound of 17\,ms for the 95\% confidence interval, 
 below five percent of the median login duration. 
-The processor load of the IdP increased by about seven percentage points of one core, whereas 
-blocking transmission added about 60\,ms to each login. 
+Instead, the interceptors cost about 28\,ms of processor time per login, which the IdP spends in 
+background threads, whereas blocking transmission added about 60\,ms to each login without saving 
+processor time.
 
 The work also identifies the boundaries of the chosen observation point. 
 Attack classes located at a different system layer, involving a different party, or observable 

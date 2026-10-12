@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 22:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 22:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2435,7 +2435,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Underfull \vbox (badness 2343) has occurred while \output is active []
 
  [5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [6]
-<./txt/../img/sp-init-sso.png, id=299, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=301, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 218.
@@ -2465,7 +2465,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=443, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=445, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2494,18 +2494,7 @@ Underfull \vbox (badness 4660) has occurred while \output is active []
 
 ]
 chapter 5.
-[33] [34] [35] [36] [37]
-
-LaTeX Warning: Reference `sec:defects' on page 38 undefined on input line 309.
-
-[38]
-Underfull \vbox (badness 1342) has occurred while \output is active []
-
- [39]
-Underfull \vbox (badness 1163) has occurred while \output is active []
-
- [40])
-(./txt/6-evaluation.tex [41] [42
+[33] [34] [35] [36] [37] [38] [39] [40]) (./txt/6-evaluation.tex [41] [42
 
 
 ]
@@ -2523,9 +2512,6 @@ LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-LaTeX Warning: Reference `sec:defects' on page 50 undefined on input line 483.
-
 [50] [51]
 Underfull \vbox (badness 6493) has occurred while \output is active []
 
@@ -2536,23 +2522,20 @@ Underfull \vbox (badness 4036) has occurred while \output is active []
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[54] [55] [56]
+[54] [55]
 
-LaTeX Warning: Reference `sec:defects' on page 57 undefined on input line 789.
+LaTeX Warning: `h' float specifier changed to `ht'.
 
-) (./txt/7-discussion.tex [57] [58
+[56]
+Underfull \vbox (badness 5302) has occurred while \output is active []
 
-
-]
+ [57])
+(./txt/7-discussion.tex [58]
 chapter 7.
-
-LaTeX Warning: Reference `subsec:eval-correlation-results' on page 59 undefined
- on input line 34.
+[59
 
 
-LaTeX Warning: Reference `tab:defects' on page 59 undefined on input line 57.
-
-[59] [60] [61] [62]) (./txt/8-conclusion.tex [63] [64
+] [60] [61] [62]) (./txt/8-conclusion.tex [63] [64
 
 
 ]
@@ -2648,10 +2631,6 @@ Package microtype Info: Loading generic protrusion settings for font family
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 Package logreq Info: Writing requests to 'main.run.xml'.
@@ -2659,11 +2638,11 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66644 strings out of 474116
- 1469980 string characters out of 5743682
- 2669746 words of memory out of 5000000
- 86967 multiletter control sequences out of 15000+600000
- 742823 words of font info for 546 fonts, out of 8000000 for 9000
+ 66660 strings out of 474116
+ 1470139 string characters out of 5743682
+ 2669924 words of memory out of 5000000
+ 86969 multiletter control sequences out of 15000+600000
+ 744095 words of font info for 555 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,21n,145p,10977b,3472s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
@@ -2679,10 +2658,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 510711 bytes).
+Output written on out/main.pdf (86 pages, 514290 bytes).
 PDF statistics:
- 1426 PDF objects out of 1440 (max. 8388607)
- 1292 compressed objects within 13 object streams
- 302 named destinations out of 1000 (max. 500000)
- 120868 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 1442 PDF objects out of 1728 (max. 8388607)
+ 1307 compressed objects within 14 object streams
+ 304 named destinations out of 1000 (max. 500000)
+ 120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

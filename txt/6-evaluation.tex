@@ -168,7 +168,7 @@ D5 & HTTP harness, threads of one process & 3 & 200             & 600 \\
 \end{tabular}
 \end{table}
 
-\subsection{Results}\label{subsec:interpretation-correlation}
+\subsection{Results}\label{subsec:eval-correlation-results}
 
 Table~\ref{tab:correlation-precision} summarises the precision of both heuristics in the five 
 datasets. 
@@ -581,7 +581,7 @@ comparison of \textit{async} and \textit{sync} the second.
 Both are measured as the client experiences a login and as processor load of the IdP, in repeated 
 runs that compare all three configurations under the same conditions. 
 
-\subsection{Method and Measurements}\label{subsec:experimental-design}
+\subsection{Method and Measurements}\label{subsec:eval-overhead-method}
 
 \paragraph{Measurements.}
 Three measurements capture the cost of the interceptors from different angles. 
@@ -593,7 +593,7 @@ The external measurement is the duration of a login as the client observes it, f
 request to the point at which the SP grants access. 
 Since it includes every step of the login, it shows the delay that a user actually experiences. 
 The third measurement records the processor utilisation of the IdP container about every two 
-seconds through \texttt{docker stats}, where 100 percent corresponds to one fully used core. 
+seconds through \texttt{docker stats}, where 100 percent corresponds to one fully used logical processor. 
 Only the samples taken during the measured logins are evaluated, so that the warm-up, in which class 
 loading and compilation in the freshly started IdP raise the utilisation, is excluded. 
 This measurement captures a cost that appears as additional computation rather than as additional 
@@ -715,9 +715,9 @@ completes fewer logins per second, 2.36 instead of 2.71, since each login waits 
 Per login, however, it does not use less processor time than the asynchronous configuration. 
 The additional processor time does not show in the latency of the asynchronous configuration because 
 the transmission runs in background threads. 
-At the load of the test it occupies less than half a percent of the 16 cores of the host, but it 
+At the load of the test it occupies less than half a percent of the 16 logical processors of the host, but it 
 grows with the number of logins, so that 50 logins per second at a peak would require about 1.4 
-additional cores.
+additional logical processors.
 
 In the configuration intended for operation, the interceptors therefore add no measurable latency 
 and about 28\,ms of processor time to a login, which answers the first question. 
@@ -729,6 +729,48 @@ A delivery guarantee would require a local buffer that repeats failed transmissi
 buffer works with asynchronous transmission as well. 
 The measurement therefore supports the choice of fire-and-forget transmission described in 
 Section~\ref{sec:impl-transport}.
+
+\section{Defects Found}\label{sec:defects}
+
+Besides the results reported above, the evaluation uncovered six defects that operation itself 
+had not revealed. 
+In each case the system kept running and produced plausible output, and the defect only became 
+visible when the behaviour was compared with an expectation defined in advance. 
+Table~\ref{tab:defects} lists them together with the consequence they would have had in operation. 
+After \texttt{\%I} had been added to the audit format, the exact strategy activated itself during 
+operation without a restart, as intended by the dynamic field adaptation of Section~\ref{sec:impl-aggregation}. 
+All six defects were corrected, and the results in this chapter refer to the corrected system. 
+What this pattern means for the monitoring of an IdP is discussed in Section~\ref{sec:interpretation}.
+
+\begin{table}[h]
+\centering
+\caption{Defects uncovered by the evaluation}\label{tab:defects}
+\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3.2cm}@{}}
+\toprule
+Defect & Consequence if undetected & Uncovered by \\
+\midrule
+Inbound message identifier (\texttt{\%I}) missing from the audit format 
+  & Exact correlation never active, all 3{,}690 correlations up to then made by the hashed heuristic 
+  & Correlation measurement \\
+Heuristics compared against the Filebeat ingest time instead of the IdP event time 
+  & 2{,}423 audit entries shared 448 time values, precision of the hashed heuristic 6 to 7 percent 
+  & Correlation measurement \\
+Logstash set the field \textit{encrypted} to false for every login 
+  & Every encrypted login reported as \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} 
+  & End-to-end test against the clean SP \\
+Version field missing from the stored behaviour profile 
+  & Profile updates discarded silently, so that \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} compared against outdated profiles, while the unit test with a mocked repository passed 
+  & Integration test \\
+Ingest path for the SP configuration inactive 
+  & Two rules evaluated an index that was no longer updated 
+  & Detection evaluation \\
+Indexing errors in the analysis script of the performance measurement 
+  & Plausible but incorrect performance figures 
+  & Tracing values back to the raw measurement files \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \section{Threats to Validity}\label{sec:validity}
 
@@ -776,7 +818,7 @@ In the performance series, each login started only after the previous one had co
 the IdP handled fewer than three logins per second and never two at once. 
 The figures therefore describe the cost of a single login at low load. 
 At a peak with many simultaneous logins, the additional processor time of the interceptors competes 
-with other logins, and the estimate of about 1.4 additional cores at 50 logins per second assumes 
+with other logins, and the estimate of about 1.4 additional logical processors at 50 logins per second assumes 
 that the processor time per login does not grow with the load. 
 Whether the backend accepts the reports quickly enough at such a peak was not tested either. 
 Since the asynchronous interceptors give up a transmission after 1.5\,s, a backend that falls behind 

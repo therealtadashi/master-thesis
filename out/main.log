@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 12:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 13:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2435,7 +2435,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Underfull \vbox (badness 2343) has occurred while \output is active []
 
  [5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [6]
-<./txt/../img/sp-init-sso.png, id=311, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=299, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 218.
@@ -2465,7 +2465,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=456, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=443, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2541,45 +2541,36 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: Reference `sec:defects' on page 57 undefined on input line 791.
 
-[57]
-
-LaTeX Warning: Reference `subsubsec:precision-browser-traffic' on page 58 undef
-ined on input line 833.
-
-
-LaTeX Warning: Reference `subsubsec:precision-multiple-browser-users' on page 5
-8 undefined on input line 834.
-
-[58] [59]
-
-LaTeX Warning: Reference `subsec:detection-coverage' on page 60 undefined on in
-put line 941.
-
-
-LaTeX Warning: Reference `subsubsec:precision-nat' on page 60 undefined on inpu
-t line 947.
-
-) (./txt/7-discussion.tex [60]
-chapter 7.
-[61
+) (./txt/7-discussion.tex [57] [58
 
 
 ]
+chapter 7.
 
-LaTeX Warning: Reference `subsec:detection-attack-space' on page 62 undefined o
+LaTeX Warning: Reference `subsec:validity-detection' on page 59 undefined on in
+put line 35.
+
+[59]
+
+LaTeX Warning: Reference `subsec:detection-attack-space' on page 60 undefined o
 n input line 82.
 
-[62] [63]
+[60] [61]
 
-LaTeX Warning: Reference `subsec:detection-consistency' on page 64 undefined on
+LaTeX Warning: Reference `subsec:detection-consistency' on page 62 undefined on
  input line 191.
 
-[64]) (./txt/8-conclusion.tex [65] [66
+[62]
+
+LaTeX Warning: Reference `subsec:validity-detection' on page 63 undefined on in
+put line 223.
+
+) (./txt/8-conclusion.tex [63] [64
 
 
 ]
 chapter 8.
-[67]) (./zyx/epilogue.tex [68]
+[65]) (./zyx/epilogue.tex [66]
 Package tocbasic Info: character protrusion at lof deactivated on input line 10
 .
  (out/main.lof)
@@ -2592,12 +2583,12 @@ Package tocbasic Info: character protrusion at lot deactivated on input line 24
 \tf@lot=\write10
 \openout10 = `main.lot'.
 
- [69
+ [67
 
 
 
 
-] [70
+] [68
 
 
 ]
@@ -2633,17 +2624,17 @@ ty-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . May 2025. \T1/jkpl/m/sc/10.95 (+
 20) url\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / /
  []
 
-[71
+[69
 
 
-] [72] [73]
+] [70] [71]
 Underfull \hbox (badness 1337) in paragraph at lines 30--30
 []\T1/jkpl/m/n/10.95 (+20) Shibboleth Con-sor-tium. \T1/jkpl/m/it/10.95 (+20) P
 ro-fil-eRequest-Con-text\T1/jkpl/m/n/10.95 (+20) . \T1/jkpl/m/sc/10.95 (+20) ur
 l\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / / shibboleth .
  []
 
-[74] [75] [76] (out/main.gls
+[72] [73] [74] (out/main.gls
 LaTeX Font Info:    Trying to load font information for T1+jkpss on input line 
 5.
 
@@ -2654,7 +2645,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `jkpss' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-)) [77
+)) [75
 
 
 
@@ -2662,7 +2653,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 ]
-[78
+[76
 
 
 ] (out/main.aux)
@@ -2676,21 +2667,16 @@ LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-
-Package biblatex Warning: Please (re)run Biber on the file:
-(biblatex)                main
-(biblatex)                and rerun LaTeX afterwards.
-
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66686 strings out of 474116
- 1470937 string characters out of 5743682
- 2670569 words of memory out of 5000000
- 86996 multiletter control sequences out of 15000+600000
- 743276 words of font info for 549 fonts, out of 8000000 for 9000
+ 66649 strings out of 474116
+ 1470156 string characters out of 5743682
+ 2669930 words of memory out of 5000000
+ 86972 multiletter control sequences out of 15000+600000
+ 742823 words of font info for 546 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,21n,145p,10977b,3472s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
@@ -2706,10 +2692,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (88 pages, 522159 bytes).
+Output written on out/main.pdf (86 pages, 510217 bytes).
 PDF statistics:
- 1470 PDF objects out of 1728 (max. 8388607)
- 1333 compressed objects within 14 object streams
- 311 named destinations out of 1000 (max. 500000)
- 120916 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 1421 PDF objects out of 1440 (max. 8388607)
+ 1287 compressed objects within 13 object streams
+ 302 named destinations out of 1000 (max. 500000)
+ 120868 words of extra memory for PDF output out of 128383 (max. 10000000)
 

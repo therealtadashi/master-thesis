@@ -74,38 +74,6 @@
       \verb https://www.w3.org/TR/xmldsig-core/
       \endverb
     \endentry
-    \entry{Bonferroni}{book}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=47b0db12707663dd05f218e8db56a79b}{%
-           family={Bonferroni},
-           familyi={B\bibinitperiod},
-           given={Carlo\bibnamedelima E.},
-           giveni={C\bibinitperiod\bibinitdelim E\bibinitperiod},
-           givenun=0}}%
-      }
-      \list{publisher}{1}{%
-        {Seeber}%
-      }
-      \strng{namehash}{47b0db12707663dd05f218e8db56a79b}
-      \strng{fullhash}{47b0db12707663dd05f218e8db56a79b}
-      \strng{bibnamehash}{47b0db12707663dd05f218e8db56a79b}
-      \strng{authorbibnamehash}{47b0db12707663dd05f218e8db56a79b}
-      \strng{authornamehash}{47b0db12707663dd05f218e8db56a79b}
-      \strng{authorfullhash}{47b0db12707663dd05f218e8db56a79b}
-      \field{sortinit}{B}
-      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{series}{Pubblicazioni del R. Istituto superiore di scienze economiche e commerciali di Firenze}
-      \field{title}{Teoria statistica delle classi e calcolo delle probabilità}
-      \field{year}{1936}
-      \verb{urlraw}
-      \verb https://books.google.de/books?id=3CY-HQAACAAJ
-      \endverb
-      \verb{url}
-      \verb https://books.google.de/books?id=3CY-HQAACAAJ
-      \endverb
-    \endentry
     \entry{AttributeFilterConfiguration}{online}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=d81f5333693d3d89741595e3d90230cc}{%

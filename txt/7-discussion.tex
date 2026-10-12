@@ -26,36 +26,38 @@ responsibilities.
 
 The second question asked how these data can be correlated in order to detect configuration 
 weaknesses and anomalies. 
-The correlation operates reliably within a limit that the evaluation was able to quantify, namely 
-approximately six logins per second for a given combination of subject, address and SP, 
-beyond which the heuristic strategies can no longer resolve the order of events. 
-The fifteen detection rules behave as intended for the scenarios constructed for them, and all 
-are verified against real persistence rather than against mocked repositories alone. 
+The correlation found a counterpart for every report, and with the inbound message identifier or at 
+least one hash that separates the users, it found the correct one in every tested scenario. 
+Only the strategy that relies on time alone (\texttt{TIME\_\allowbreak{}WINDOW}) assigned reports to 
+the wrong entry, and only where logins at the same SP followed each other within less than 100\,ms. 
+The heuristics remain reliable up to about three logins per second for a given combination of 
+subject, address and SP, a rate that interactive users do not reach (Section~\ref{subsec:eval-correlation-results}). 
+The fifteen detection rules behave as intended for the scenarios constructed for them. 
+All of them are verified against a real Elasticsearch instance, six also from a real login, and 
+legitimate logins raised no false alarms. 
 This establishes the fidelity of the implementation, though not the detection quality in 
-operation, a distinction developed in Section~\ref{subsec:validity-detection}.
+operation, a distinction developed in Section~\ref{subsec:eval-detection-results}.
 
 The third question asked what overhead the resulting system imposes. 
-In the asynchronous delivery mode, the end-to-end login latency did not differ measurably from a 
-deployment without interceptors. 
-The point estimate is $+6.2$\,ms, and the upper bound of the 95\% confidence interval is 17\,ms, 
+With asynchronous transmission, the latency of a login did not differ measurably from a deployment 
+without interceptors. 
+The point estimate is $+6.2$\,ms, and the upper bound of the 95\,\% confidence interval is 17\,ms, 
 which is below five percent of the median login duration. 
-The work performed inside the two interceptors amounts to about 0.45\,ms, or 0.13\% of the login 
-duration, as a lower bound that excludes the transmission. 
-The processor utilisation of the IdP container rises by about seven percentage points of one core, 
-which corresponds to roughly 30\,ms of additional processor time per login. 
-Blocking transmission adds about 60\,ms to every login, roughly 27 to 30\,ms for each of the two 
-transmissions, and it does not save processor time: its lower utilisation results from the lower 
-throughput. 
-This difference is consistent across all 18 runs.
+The work inside the two interceptors amounts to about 0.45\,ms. 
+The cost appears as processor time instead, about 28\,ms per login or 22 percent of the processor 
+time of a login without interceptors, which the IdP spends in background threads. 
+Synchronous transmission adds about 60\,ms to every login and was the slower configuration in all 
+18 runs, without saving processor time. 
+In the current implementation it would not improve the delivery either, since both modes only log 
+a failed transmission (Section~\ref{subsec:eval-overhead-results}). 
+The measurement therefore supports the choice of fire-and-forget transmission.
 
 Beyond the individual research questions, one observation emerges across all three evaluations. 
-In each of them the measurement uncovered a defect that operation itself had not revealed. 
-In the correlation evaluation, a missing token in the audit format had left the exact strategy 
-permanently inactive. 
-In the detection evaluation, a defect in the log shipping pipeline would have reported every 
-encrypted login as unencrypted. 
-In the performance evaluation, two indexing errors in the analysis script had produced plausible 
-but incorrect figures. 
+Each of them uncovered at least one defect that operation itself had not revealed, six in total 
+(Table~\ref{tab:defects}). 
+A missing token in the audit format had left the exact correlation permanently inactive, the log 
+shipping stack would have reported every encrypted login as unencrypted, and indexing errors in the 
+analysis script had produced plausible but incorrect performance figures. 
 In none of these cases did the system fail visibly. 
 It continued to run, alerts continued to be produced, and the dashboard continued to be 
 populated. 
@@ -77,15 +79,13 @@ from the position of the monitoring system within the IdP.
 It is therefore distinct from Section~\ref{sec:validity}, which stated what the measurements of 
 this work do not show. 
 The limitations discussed here would persist irrespective of the effort invested, since they 
-follow from where the observation takes place rather than from how thoroughly it was carried out.
+follow from where the observation takes place rather than from how thoroughly it was carried out. 
 
-As discussed in Section~\ref{subsec:detection-attack-space}, the system addresses two of the six 
-SAML cross-protocol issues identified by Simpson and Groß~\cite{FIMSurvey}, namely unencrypted 
+As the assignment in Table~\ref{tab:rules} shows, the rules address two of the six SAML 
+cross-protocol issues identified by Simpson and Groß~\cite{FIMSurvey}, namely unencrypted 
 communications exploited by message modification and lack of binding exploited by replay. 
-This limited coverage is not primarily caused by missing implementations but by the observation 
-position of the monitoring system, which operates from within the IdP. 
-The four remaining issues fall into three groups, namely those affecting a different system layer, 
-those affecting a different party, and those observable only indirectly.
+The second is covered only in part, since a replayed assertion is presented to the SP and does not 
+pass the IdP again, so that only the replay of a request remains observable (Table~\ref{tab:detection-coverage}).
 
 The first group consists of an issue that primarily affects a different system layer. 
 DNS poisoning concerns name resolution and therefore a layer beneath the application~\cite{FIMSurvey}. 
@@ -188,7 +188,7 @@ presupposes cooperation between parties that are administratively independent.
 A second direction concerns the observation point within the IdP itself. 
 The outbound interceptor added in this work makes the response level fields available from a second, 
 independent source, and it enables the comparison with the audit entry described in 
-Section~\ref{subsec:detection-consistency}. 
+Section~\ref{subsec:detection}. 
 What it cannot provide are the assertion internal fields of encrypted assertions, since the 
 encryption has already taken place at that hook. 
 An observation point before the encryption would close this gap, but the interception points that 
@@ -220,7 +220,7 @@ weaknesses of that protocol.
 Finally, one question cannot be addressed by extending the system at all. 
 Determining how reliably the rules detect genuine attacks requires productive traffic in which 
 each authentication is independently labelled, as discussed in 
-Section~\ref{subsec:validity-detection}. 
+Section~\ref{subsec:eval-detection-results}. 
 Producing such a dataset is a research problem in its own right rather than an implementation 
 task, and it would benefit not only this work but any evaluation of detection systems in federated 
 identity infrastructures, where the same constraint applies. 

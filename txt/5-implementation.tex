@@ -306,7 +306,7 @@ does not preserve their order.
 The Logstash pipeline therefore derives a dedicated field from the event timestamp recorded by the 
 IdP, and both time window strategies operate on this field. 
 The effect of this distinction on correlation precision is examined in 
-Chapter~\ref{ch:evaluation}.
+Chapter~\ref{sec:defects}. 
 
 The temporal offset described in Section~\ref{subsec:correlation} is addressed by repeated 
 attempts. 
@@ -401,7 +401,11 @@ it from the alerts of the rule engines, of which at most one per type is stored 
 When a report is correlated with an audit entry, the service loads the outbound report with the 
 same request identifier and passes it together with the audit entry to the consistency service. 
 If no outbound report exists, the check is skipped. 
-Otherwise the service compares the fields listed in Section~\ref{subsec:detection-consistency}. 
+Otherwise the service compares the fields that both records contain, namely the status, the 
+identifier of the answered request, the identifier and the issue time of the outbound message and 
+the encryption state, and for an unencrypted assertion also the identifier of the assertion, the 
+authentication instant, the authentication context, the format of the name identifier and the 
+pseudonymised name identifier. 
 A field is compared only if the interceptor observed a value for it and the field registry shows 
 that the audit format of the deployment records it. 
 If the audit entry lacks a value for a field that the registry lists, the field counts as 

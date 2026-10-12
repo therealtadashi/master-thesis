@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 12:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 12:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2534,33 +2534,26 @@ LaTeX Warning: Reference `sec:defects' on page 50 undefined on input line 483.
 Underfull \vbox (badness 4036) has occurred while \output is active []
 
  [53]
-Overfull \hbox (93.4431pt too wide) in paragraph at lines 666--675
- [][] 
- []
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[54] [55]
-Underfull \vbox (badness 3068) has occurred while \output is active []
-
- [56]
+[54] [55] [56]
 
 LaTeX Warning: Reference `subsubsec:precision-browser-traffic' on page 57 undef
-ined on input line 777.
+ined on input line 780.
 
 
 LaTeX Warning: Reference `subsubsec:precision-multiple-browser-users' on page 5
-7 undefined on input line 778.
+7 undefined on input line 781.
 
 [57] [58]
 
 LaTeX Warning: Reference `subsec:detection-coverage' on page 59 undefined on in
-put line 885.
+put line 888.
 
 
 LaTeX Warning: Reference `subsubsec:precision-nat' on page 59 undefined on inpu
-t line 891.
+t line 894.
 
 ) (./txt/7-discussion.tex [59] [60
 
@@ -2709,7 +2702,7 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (88 pages, 518507 bytes).
+Output written on out/main.pdf (88 pages, 518510 bytes).
 PDF statistics:
  1459 PDF objects out of 1728 (max. 8388607)
  1322 compressed objects within 14 object streams

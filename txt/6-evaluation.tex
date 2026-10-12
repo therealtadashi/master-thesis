@@ -663,13 +663,16 @@ to the two questions.
 \centering
 \caption{Cost of a login per configuration}\label{tab:overhead-cost}
 \small
-\begin{tabular}{lrrrrr}
+\begin{tabular}{lrrr}
 \toprule
-Configuration & Median & Difference (95\,\% CI) & Difference at p90 & Logins per second & CPU time per login \\
+ & baseline & async & sync \\
 \midrule
-baseline & 356.5\,ms & ---                                  & ---              & 2.77 & 126\,ms \\
-async    & 362.7\,ms & $+6.2$\,ms $[-4.7;\ +17.1]$          & $+8.1$\,ms       & 2.71 & 154\,ms \\
-sync     & 416.1\,ms & $+59.6$\,ms $[+48.7;\ +70.4]$        & $+92.0$\,ms      & 2.36 & 166\,ms \\
+Median login                       & 356.5\,ms & 362.7\,ms             & 416.1\,ms \\
+Difference to baseline             & ---       & $+6.2$\,ms            & $+59.6$\,ms \\
+95\,\% confidence interval         & ---       & $[-4.7;\ +17.1]$\,ms  & $[+48.7;\ +70.4]$\,ms \\
+Difference at the 90th percentile  & ---       & $+8.1$\,ms            & $+92.0$\,ms \\
+Logins per second                  & 2.77      & 2.71                  & 2.36 \\
+Processor time per login           & 126\,ms   & 154\,ms               & 166\,ms \\
 \bottomrule
 \end{tabular}
 \end{table}

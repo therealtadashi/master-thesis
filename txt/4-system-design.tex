@@ -558,9 +558,9 @@ records what took place.
 
 Two of the rules do not examine a single record. 
 They compare records that were produced independently of each other for the same event. 
-The first, \texttt{CORRELATION\_DISCREPANCY}, reports a post authentication report for which no 
+The first, \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}, reports a post authentication report for which no 
 audit entry arrived within the retry window of the correlation. 
-The second, \texttt{FIELD\_MISMATCH}, compares the fields of the outbound report with those of the 
+The second, \texttt{FIELD\_\allowbreak{}MISMATCH}, compares the fields of the outbound report with those of the 
 audit entry that the post authentication report of the same login was correlated with, and reports 
 every field in which they disagree. 
 Both follow the detection point IE6 of AppSensor, the violation of security log integrity, and the 

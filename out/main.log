@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 21:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  12 OCT 2026 21:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2486,13 +2486,6 @@ Overfull \hbox (3.71716pt too wide) in paragraph at lines 526--526
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [26]
-Overfull \hbox (7.48018pt too wide) in paragraph at lines 559--573
-\T1/jkpl/m/n/10.95 (-20) duced in-de-pen-dently of each other for the same even
-t. The first, \T1/lmtt/m/n/10.95 CORRELATION_DISCREPANCY\T1/jkpl/m/n/10.95 (-20
-) ,
- []
-
-
 Underfull \vbox (badness 4660) has occurred while \output is active []
 
  [27]
@@ -2695,7 +2688,7 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 510093 bytes).
+Output written on out/main.pdf (86 pages, 510077 bytes).
 PDF statistics:
  1421 PDF objects out of 1440 (max. 8388607)
  1287 compressed objects within 13 object streams

@@ -555,33 +555,92 @@ rules, which no test environment can produce.
 
 \section{Performance Overhead}\label{sec:overhead}
  
-This section presents the results of the overhead evaluation of the two interceptors. 
-Both run inside the IdP and therefore lie on the critical path of each authentication process, 
-the first as a \textit{post\allowbreak{}Authentication\allowbreak{}Flow} and the second as an 
+The two interceptors run inside the IdP, the post authentication interceptor as a 
+\textit{post\allowbreak{}Authentication\allowbreak{}Flow} and the outbound interceptor as an 
 \textit{outbound\allowbreak{}Interceptor\allowbreak{}Flow}. 
-The evaluation addresses two questions:
- 
-\begin{itemize}
-      \item How much overhead do the interceptors introduce to the end to end authentication 
-            latency and to the processor load of the IdP?
-      \item Does the difference between asynchronous and synchronous transmission justify the 
-            use of fire and forget transmission?
-\end{itemize}
- 
-Three configurations are compared, namely \textit{baseline}, \textit{async} and \textit{sync}. 
-In the \textit{baseline} configuration, neither of the two interceptor flows is configured for the 
-SP, so that no interceptor is executed during the authentication process. 
-In the \textit{async} configuration, both flows are enabled, and each interceptor transmits its 
-data to the monitoring tool without waiting for a response, in the fire and forget manner. 
-In the \textit{sync} configuration, both flows are enabled as well, but each interceptor waits for 
-the response of the monitoring tool before it completes, so that a login contains two blocking 
-transmissions.
- 
-Comparing \textit{baseline} against \textit{async} quantifies the cost of the interceptors in their 
-productive configuration. 
-Comparing \textit{async} against \textit{sync} quantifies the cost of the design decision 
-described in Section~\ref{sec:impl-transport}, namely what waiting for a confirmation would cost 
-if the records were transmitted synchronously.
+Both therefore lie on the critical path of every login, so that any time they take is added to the 
+time a user waits for access to the SP, and any processor time they use is taken from the IdP. 
+The evaluation addresses two questions. 
+The first is how much the interceptors add to a login, in latency and in processor time, in the 
+configuration intended for operation. 
+The second concerns the way in which they transmit their records. 
+As described in Section~\ref{sec:impl-transport}, they send them without waiting for a response, 
+so that a login does not depend on the backend, at the price that a record lost in transmission 
+goes unnoticed at its point of origin. 
+Waiting for a confirmation would avoid this loss, and the second question is what it would cost and 
+whether the saving justifies the choice of fire and forget transmission.
+
+Three configurations are compared. 
+In \textit{baseline}, neither interceptor is configured for the SP, so that a login runs as in an 
+IdP without monitoring. 
+In \textit{async}, both interceptors are active and transmit their records without waiting, which 
+is the configuration intended for operation. 
+In \textit{sync}, both are active but wait for the confirmation of the backend, so that every login 
+contains two blocking transmissions. 
+The comparison of \textit{baseline} and \textit{async} answers the first question, and the 
+comparison of \textit{async} and \textit{sync} the second. 
+Both are measured as the client experiences a login and as processor load of the IdP, in repeated 
+runs that compare all three configurations under the same conditions. 
+
+\subsection{Method and Measurements}\label{subsec:eval-overhead-method}\label{subsec:experimental-design}
+
+\paragraph{Measurements.}
+Three measurements capture the cost of the interceptors from different angles. 
+The internal measurement is recorded by each interceptor itself (\textit{executionTimeMs}) and 
+covers the collection of the data, the hashing and the extraction of fields. 
+It excludes the construction of the payload and the transmission and is therefore a lower bound measurement.  
+It is available for every login without further instrumentation. 
+The external measurement is the duration of the login process as observed by the client, 
+from the first request to the point at which the SP grants access. 
+It contains everything a user waits for and therefore shows whether the overhead is noticeable. 
+The third measurement records the processor utilisation of the IdP container once per second 
+through \texttt{docker stats}, where 100 percent corresponds to one fully used core, and excludes 
+the start of the container, in which class loading and compilation cause peaks of up to 400 percent. 
+It captures a cost that appears as additional computation rather than as additional waiting time, 
+which the two latency measurements could miss. 
+Since the configurations do not complete the same number of logins per second, the processor time 
+per login is derived by dividing the utilisation by the throughput. 
+
+\paragraph{Procedure.}
+All logins are generated by the HTTP harness for a single test account against the weak SP. 
+Each login uses a fresh client with an empty cookie store, so that it passes through the complete 
+authentication without reusing a session, and the next login starts as soon as the previous one has 
+completed. 
+The series comprises 18 runs, each of which measures all three configurations, which yields 54 
+measurements. 
+For every measurement, the IdP container is recreated with the settings of the configuration, and 
+a single check login verifies that the configuration is in effect by testing whether the expected 
+reports arrive at the backend. 
+One hundred warm-up logins follow, whose values are discarded, and then the one hundred logins that 
+are measured. 
+The backend runs during all measurements, including the baseline, so that the environment is the 
+same, and a pause of four minutes after each measurement gives it time to process the records. 
+The whole series took about five hours and comprised 10{,}854 logins.
+
+Within a session, later measurements turn out slower than earlier ones. 
+In this series, the third position of a run was on average about 10\,ms slower than the first, 
+which is of the same order as the effects to be measured. 
+Plausible causes are the memory use of the host, with about 12 of the 15\,GiB in use during the 
+series, and the frequency scaling of the notebook processor. 
+Neither was examined further. 
+To keep this drift from being attributed to a configuration, the order of the configurations is 
+rotated between runs, so that each configuration occupies each of the three positions six times.
+
+\paragraph{Analysis.}
+The run, not the individual login, is the unit of the analysis. 
+The hundred logins of a measurement share the same JVM, the same container and the same load, so 
+that they are not independent observations, and the variation between runs is larger than the 
+variation within them. 
+Each measurement therefore contributes the median of its hundred logins, and for the processor 
+utilisation the median of its samples, which yields 18 values per configuration. 
+The slower logins are described by the 90th percentile of each measurement. 
+The differences between the configurations are estimated with a linear model that accounts for 
+the run and the position within the run besides the configuration, and they are reported with their 
+95 percent confidence interval. 
+As a simple check, the number of runs in which one configuration was slower than the other is 
+counted as well. 
+With 18 runs, the confidence intervals of the latency differences have a half width of about 
+11\,ms, so that smaller differences cannot be distinguished from zero.
  
 \subsection{Measurement Sources}\label{subsec:measurement-sources}
  

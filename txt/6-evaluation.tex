@@ -588,11 +588,11 @@ runs that compare all three configurations under the same conditions.
 Three measurements capture the cost of the interceptors from different angles. 
 The internal measurement is recorded by each interceptor itself (\textit{executionTimeMs}) and 
 covers the collection of the data, the hashing and the extraction of fields. 
-It excludes the construction of the payload and the transmission and is therefore a lower bound measurement.  
-It is available for every login without further instrumentation. 
-The external measurement is the duration of the login process as observed by the client, 
-from the first request to the point at which the SP grants access. 
-It contains everything a user waits for and therefore shows whether the overhead is noticeable. 
+It excludes the construction of the payload and the transmission and is therefore a lower bound. 
+Since the value is part of every report, it is available without further instrumentation. 
+The external measurement is the duration of a login as the client observes it, from the first 
+request to the point at which the SP grants access. 
+Since it includes every step of the login, it shows the delay that a user actually experiences. 
 The third measurement records the processor utilisation of the IdP container once per second 
 through \texttt{docker stats}, where 100 percent corresponds to one fully used core, and excludes 
 the start of the container, in which class loading and compilation cause peaks of up to 400 percent. 

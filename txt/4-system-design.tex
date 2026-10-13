@@ -603,20 +603,28 @@ The specific definitions of the risk categories are as follows~\cite{ShibbolethG
 \item \textbf{R5:} Log on to any SP as any user
 \end{itemize}
 
-This classification describes the potential impact of an attack from an attacker's perspective.
-However, the rules developed in this work identify two different types of security conditions. 
-Some rules detect vulnerabilities that can enable an attack, while others detect attacks or 
-anomalous events that have already occurred.
-Severity classification is therefore performed in two steps. 
-First, the identified risk determines the base severity level. 
-Second, the classification is adjusted according to whether the rule identifies only a condition 
-that enables an attack or evidence that the corresponding event has already occurred. 
-A detected attack is therefore assigned a higher severity than a vulnerability that merely enables 
-the attack. 
+These categories describe what an attacker can achieve. 
+The backend, in contrast, uses four levels from low to critical, and the two scales are not mapped 
+one to one. 
+The categories serve as an orientation for the severity of each rule, which is listed in 
+Table~\ref{tab:severity}. 
 
-The classification serves as an orientation rather than as a formula. 
-The severity is therefore assigned per rule, as listed in Table~\ref{tab:severity}, and it is 
-raised or lowered only where the impact of a rule depends on its context. 
+A rule is rated critical if its condition directly endangers the authentication of users at an SP, 
+for instance an assertion that is transmitted without encryption or a request that shows the traces 
+of a signature wrapping attack. 
+Rules rated high report an attack in progress, such as a series of failed logins for the same 
+subject or a replayed request. 
+Rules rated low report indicators that are not harmful on their own, such as a single failed login 
+or the user agent of a script. 
+None of the rules addresses R5, since it presupposes a compromise of the signing key. 
+
+The discrepancy rule is classified as medium, since a missing counterpart can also result from 
+operational causes such as a delayed log shipping chain. 
+The mismatch rule is classified as high, since a contradiction between two records of the same 
+event points either to a manipulation or to a defect in the collection, and both undermine the 
+basis on which the other rules operate.
+
+Five rules have no fixed severity, since their impact depends on the context. 
 The two multi factor rules (\texttt{MISSING\_MFA}, \texttt{MFA\_BYPASS}) depend on whether an SP 
 must use multi factor authentication. 
 The operator can place an SP on a list of providers for which this is required, and for such an 
@@ -624,16 +632,10 @@ SP both rules are rated critical.
 \texttt{MFA\_\allowbreak{}BYPASS} is also critical if the configuration of the SP permits no 
 flow other than multi factor authentication. 
 In all other cases, both rules are rated medium. 
-\texttt{WEAK\_\allowbreak{}ENCRYPTION} takes the severity from the algorithm policy, 
-\texttt{CERTIFICATE\_\allowbreak{}EXPIRED} from the expiry status of the certificate, and 
-\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} is rated high if at least two independent reasons apply 
-and medium otherwise.
-
-The discrepancy rule is classified as medium, since a missing counterpart can also result from 
-operational causes such as a delayed log shipping chain. 
-The mismatch rule is classified as high, since a contradiction between two records of the same 
-event points either to a manipulation or to a defect in the collection, and both undermine the 
-basis on which the other rules operate.
+\texttt{WEAK\_\allowbreak{}ENCRYPTION} takes its severity from the algorithm policy and 
+\texttt{CERTIFICATE\_\allowbreak{}EXPIRED} from the expiry status of the certificate. 
+\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} is rated high if at least two independent reasons apply, 
+and medium otherwise. 
 
 \begin{table}[h]
 \centering
@@ -691,10 +693,13 @@ rather than presenting all findings as equally certain.
 
 \section{Design Decisions and Rejected Alternatives}\label{sec:design}
 
-This section presents the main design decisions made for the monitoring tool and discusses the 
-alternatives that were considered but rejected. 
-Each decision involves a trade off, and the cost of the chosen option is stated alongside its 
-rationale.
+This section presents the main design decisions made for the monitoring tool and the alternatives 
+that were considered but rejected. 
+Each decision involves a trade-off, and the cost of the chosen option is stated alongside its 
+rationale. 
+Two decisions are not repeated here, since they were discussed where they arise, namely the choice 
+of the interception points in Section~\ref{subsec:interceptor} and the asynchronous transmission in 
+Section~\ref{sec:trust}.
 
 The first alternative was to extend the monitoring tool with the capability to actively intervene 
 in ongoing attacks. 
@@ -737,25 +742,13 @@ the rules were formulated.
 Attack patterns that do not correspond to any defined rule remain unnoticed, whereas a statistical 
 approach could in principle identify previously unknown deviations. 
 
-A further decision concerns the number of interceptors. 
-The system collects at two points, since the post authentication point was the basis of the 
-collection and the outbound point was added to make the fields of the response observable. 
-The outbound point turned out to see more events than the post authentication point. 
-For an SP that was configured for encryption without a suitable key, the IdP answered with an error 
-status before authentication began, as the empty subject and authentication fields of the audit 
-entry show, and only the outbound interceptor produced a report. 
-In principle, a single outbound interceptor could collect the data of both interceptors and halve 
-the number of transmissions per login, since the contexts read by the post authentication 
-interceptor are still part of the context tree at the outbound point. 
-The assertion level fields of encrypted assertions would remain unavailable, as they are with the 
-two interceptors used here. 
-This was not examined beyond the request identifier, which the outbound interceptor already reads 
-from the inbound message context. 
-
-Two further decisions have already been discussed in the context in which they arise. 
-The choice of the interception points, described in Section~\ref{subsec:interceptor}, 
-determines which information the collection mechanism can observe and which remains outside its view. 
-The decision to transmit records asynchronously, described in Section~\ref{sec:trust}, prioritises 
-non interference with the monitored service over a guarantee of delivery.
+The fourth alternative was to collect all data with a single outbound interceptor. 
+The contexts read by the post authentication interceptor are still part of the context tree at the 
+outbound point, so that one interceptor could collect the data of both and halve the number of 
+transmissions per login. 
+The assertion level fields of encrypted assertions would remain unavailable in either case. 
+This alternative was not examined beyond the request identifier, which the outbound interceptor 
+already reads from the inbound message context. 
+The cost of the chosen design is a second transmission per login.
 
 \end{document}

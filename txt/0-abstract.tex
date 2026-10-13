@@ -14,9 +14,8 @@ rather than on security.
 
 This thesis presents a monitoring system that observes a Shibboleth identity provider from within 
 its own application layer. 
-The system draws on three sources that differ in what they can observe, namely the audit log 
-written at the end of a transaction, the configuration and metadata declared for each service 
-provider, and the runtime state accessible through interceptors executing inside the 
+The system combines three sources that observe a login at different points, namely the audit log, 
+the configuration and metadata of the service providers, and two interceptors inside the 
 authentication flow. 
 Records from these sources are pseudonymised at their origin, transmitted to a backend located 
 outside the trust boundary of the provider, correlated with one another and evaluated against a 
@@ -27,12 +26,15 @@ and Privacy Considerations.
 
 The evaluation examines how reliably the records can be correlated, whether the detection rules 
 behave as specified, and what the resulting system costs. 
-The correlation reaches a coverage of 100\,\% over 7{,}236 reports. 
-Where the audit log records the identifier of the request, it assigns every report unambiguously, 
-independent of the login density. 
-Where the identifier is missing, the heuristic strategies remained free of incorrect assignments in 
-every tested scenario as long as the subject or the address separates the users, and the strategy 
-based on time alone confused only logins at the same service provider less than 100\,ms apart. 
+The correlation found a counterpart for all 7{,}236 reports. 
+Where the audit log records the identifier of the request, each report is assigned unambiguously, 
+independent of how many logins take place at the same time. 
+Where the identifier is missing, a heuristic strategy compares the pseudonymised subject and 
+address instead. 
+In every tested scenario it assigned each report correctly, as long as one of these two values 
+distinguishes the users. 
+Only the fallback strategy based on time alone made wrong assignments, and only between logins at 
+the same service provider that were less than 100\,ms apart. 
 All fifteen rules were verified against a real search index and six additionally through the complete 
 pipeline from a browser login, four of them up to the resulting alert.
 In the asynchronous transmission mode, the end-to-end login latency did not differ measurably from 

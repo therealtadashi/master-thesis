@@ -13,9 +13,7 @@ each system layer and describing its technical implementation.
 
 As described in Section~\ref{sec:data-aggregation}, the data aggregation layer 
 uses log shippers to collect and parse log entries and static configuration 
-files, as well as two custom interceptors that operate within the Shibboleth IdP, 
-the post authentication interceptor and the outbound interceptor, which are named 
-after the hook at which they run. 
+files, as well as two custom interceptors that operate within the Shibboleth IdP. 
 The log shipping stack consists of Filebeat for reading the source files and 
 Logstash for preprocessing and transmitting the collected data. 
 Both components run as separate containers on the same host as the IdP and access its log files 
@@ -37,7 +35,7 @@ Using only recent entries ensures that fields no longer written by the IdP are
 eventually removed from the registry. 
 Both the detection rules and the correlation strategies query the registry before 
 they are applied, which is how the withdrawal described in 
-Section~\ref{subsec:detection} is realised in practice. 
+Section~\ref{subsec:detection} is realised. 
 
 The audit log is not the only log file read by the collection layer. 
 As described in Section~\ref{subsec:audit-log}, authentication attempts that do not 

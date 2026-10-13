@@ -225,9 +225,8 @@ The SAML messages exchanged between the IdP and SP are transmitted through the u
 therefore pass through a communication path that is not directly controlled by either party. 
 Neither the IdP nor the SP can assume that the messages remain unchanged while being forwarded. 
 Consequently, the security of the protocol cannot rely solely on the communication channel. 
-Instead, mechanisms such as digital signatures, message identifiers, validity conditions, and audience 
-restrictions are used to ensure the authenticity and integrity of SAML messages and to 
-prevent their misuse~\cite{SAMLSecurityConsideration}.
+Instead, mechanisms such as digital signatures, message identifiers and validity conditions are used 
+to ensure the authenticity and integrity of SAML messages and to prevent their misuse~\cite{SAMLSecurityConsideration}.
 
 An important security property of this process is the prevention of message replay. 
 SAML requests and assertions contain unique identifiers that allow the SP and IdP to assign messages 

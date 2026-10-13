@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  13 OCT 2026 20:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  13 OCT 2026 20:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2493,7 +2493,15 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 ]
 chapter 5.
-[33] [34] [35] [36] [37] [38] [39] [40]) (./txt/6-evaluation.tex [41] [42
+[33]
+Underfull \vbox (badness 2326) has occurred while \output is active []
+
+ [34]
+[35] [36] [37] [38]
+Underfull \vbox (badness 2326) has occurred while \output is active []
+
+ [39]
+[40]) (./txt/6-evaluation.tex [41] [42
 
 
 ]
@@ -2657,10 +2665,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 514516 bytes).
+Output written on out/main.pdf (86 pages, 514254 bytes).
 PDF statistics:
- 1453 PDF objects out of 1728 (max. 8388607)
- 1318 compressed objects within 14 object streams
+ 1454 PDF objects out of 1728 (max. 8388607)
+ 1319 compressed objects within 14 object streams
  304 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

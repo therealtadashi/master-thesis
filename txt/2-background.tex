@@ -300,7 +300,7 @@ the IdP provides a set of defined hooks.
 A subflow attached to such a hook is called an interceptor, and three hooks exist: 
 \begin{enumerate}
     \item inbound message processing
-    \item post-authentication processing and
+    \item post authentication processing and
     \item outbound message processing
 \end{enumerate}
 The first and third are available in any profile flow, whereas the second applies only to profiles that 
@@ -314,7 +314,7 @@ An inbound interceptor sees the incoming message context but not the outcome of 
 since that has not yet taken place. 
 An outbound interceptor sees the state of the tree produced by the profile execution, including the 
 outgoing message. 
-The post-authentication hook runs in the middle of processing, after the user has been authenticated but 
+The post authentication hook runs in the middle of processing, after the user has been authenticated but 
 before the outgoing message is constructed. 
 It can therefore observe both the incoming request and the authentication result, but not the response that 
 is issued afterwards~\cite{ProfileInterceptConfiguration}.

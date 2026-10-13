@@ -227,8 +227,8 @@ relationship between an audit entry and a post authentication report.
 
 \begin{itemize}
     \item \textbf{I}: the inbound message identifier of the SAML request
-    \item \textbf{u}: the username, pseudonymised by Logstash
-    \item \textbf{a}: the client IP address, pseudonymised by Logstash
+    \item \textbf{u}: the username, pseudonymised by Logstash (\textit{usernameHash})
+    \item \textbf{a}: the client IP address, pseudonymised by Logstash (\textit{ipHash})
     \item \textbf{T}: the timestamp of the event
 \end{itemize}
 
@@ -365,18 +365,16 @@ Their assignment to documented vulnerabilities and attack classes is given in
 Table~\ref{tab:rules}. 
 
 A further difficulty arose with the comparison between configuration and runtime event. 
-The authentication flows permitted for an SP are listed in 
-\textit{relying-party.xml} without a namespace prefix, whereas the audit log records the 
-flow that was actually used with one. 
-The same flow therefore appears as \texttt{MFA} in the configuration and as 
-\texttt{authn/MFA} in the audit entry. 
+The authentication flows permitted for an SP are listed in \textit{relying-party.xml} by their 
+short name, for instance \texttt{MFA}, whereas the audit log records the full flow identifier 
+with the prefix \texttt{authn/}, for instance \texttt{authn/MFA}. 
 A direct string comparison between the two never matches, and the rule would consequently 
 never report a finding. 
+Like the two cases in Section~\ref{sec:impl-aggregation}, this fault would have remained silent, 
+since no exception or log entry would have revealed it. 
 The comparison is therefore performed token by token and accepts both notations. 
-It is implemented in a shared comparison function that is used by all rules evaluating authentication flows. 
-As with the two cases described in Section~\ref{sec:impl-aggregation}, the failure mode 
-here would have been silent, since neither an exception nor a log entry would have 
-indicated that the comparison was ineffective. 
+It is implemented in a shared comparison function that is used by all rules evaluating 
+authentication flows.
 
 Two rules operate on pairs of records and are therefore not evaluated by the rule engines. 
 Both are triggered by the correlation service. 
@@ -390,17 +388,13 @@ same request identifier and passes it together with the audit entry to the consi
 If no outbound report exists, the check is skipped. 
 Otherwise the service compares the fields that both records contain, namely the status, the 
 identifier of the answered request, the identifier and the issue time of the outbound message and 
-the encryption state, and for an unencrypted assertion also the identifier of the assertion, the 
-authentication instant, the authentication context, the format of the name identifier and the 
-pseudonymised name identifier. 
+the encryption state. 
+For an unencrypted assertion, it also compares the identifier of the assertion, the authentication 
+instant, the authentication context, the format of the name identifier and the pseudonymised name identifier. 
 A field is compared only if the interceptor observed a value for it and the field registry shows 
 that the audit format of the deployment records it. 
 If the audit entry lacks a value for a field that the registry lists, the field counts as 
 deviating, since a removed field is itself a sign of tampering. 
-Timestamps are parsed and compared as instants, and the other values as strings after the 
-abbreviations of the audit format have been mapped back to the notation of the report. 
-The map mirrors the default map of the IdP and is a copy that is not synchronised with its 
-configuration. 
 On a deviation the service stores a \texttt{FIELD\_MISMATCH} alert of high severity, whose details 
 list each deviating field with the values of both records.
 

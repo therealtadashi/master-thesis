@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  13 OCT 2026 21:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  13 OCT 2026 21:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2501,11 +2501,7 @@ Underfull \vbox (badness 2326) has occurred while \output is active []
 Underfull \vbox (badness 1320) has occurred while \output is active []
 
  [36]
-[37] [38]
-Underfull \vbox (badness 2326) has occurred while \output is active []
-
- [39]
-[40]) (./txt/6-evaluation.tex [41] [42
+[37] [38] [39] [40]) (./txt/6-evaluation.tex [41] [42
 
 
 ]
@@ -2649,11 +2645,11 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66656 strings out of 474116
- 1470100 string characters out of 5743682
+ 66660 strings out of 474116
+ 1470143 string characters out of 5743682
  2671024 words of memory out of 5000000
  86969 multiletter control sequences out of 15000+600000
- 743693 words of font info for 552 fonts, out of 8000000 for 9000
+ 744146 words of font info for 555 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,21n,145p,10977b,3472s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
@@ -2669,7 +2665,7 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 513636 bytes).
+Output written on out/main.pdf (86 pages, 513406 bytes).
 PDF statistics:
  1453 PDF objects out of 1728 (max. 8388607)
  1318 compressed objects within 14 object streams

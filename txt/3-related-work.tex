@@ -169,15 +169,15 @@ OWASP A09 explicitly recommends centralised logging and monitoring and identifie
 as the ELK stack as possible tools for addressing logging and monitoring 
 vulnerabilities~\cite{OWASPA09}.
 
-The question therefore shifts from how events are analysed to how their underlying sources can 
+Therefore, the question changes from how events are analysed to how their underlying sources can 
 be verified. 
-Wazuh is particularly relevant in this context, as it combines log analysis with file integrity 
-monitoring and security configuration assessment, thereby addressing both event-based analysis 
-and the verification of system state~\cite{WazuhDocumentation}. 
-However, these mechanisms primarily address configuration and file state rather than the 
-relationship between configuration and individual runtime events. 
-Security configuration assessment evaluates system configurations against defined policies, 
-while file integrity monitoring detects changes to monitored files. 
+In this context, Wazuh is particularly relevant, as it combines log analysis with file integrity 
+monitoring and security configuration assessment. 
+This addresses both event-based analysis and the verification of the system state~\cite{WazuhDocumentation}. 
+However, these mechanisms mainly focus on configuration and file state rather than the relationship 
+between configuration and individual runtime events. 
+For instance, the security configuration assessment evaluates system configurations against defined 
+policies, while file integrity monitoring detects changes to monitored files. 
 Neither mechanism directly establishes whether a particular runtime event is consistent with the 
 configuration state that was active when the event occurred. 
 

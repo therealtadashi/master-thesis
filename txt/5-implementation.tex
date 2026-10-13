@@ -254,11 +254,12 @@ unambiguously, since the same value appears in both records.
 The two pseudonymised identifiers narrow the set of candidates to those belonging to the same 
 subject and origin, but several logins of the same user may share them. 
 The timestamp alone can only indicate temporal proximity. 
-In addition, all strategies restrict candidates to the SP recorded in both records, since 
-an audit entry for a different partner can never be the counterpart of a given report.
+Strategies that rely on the hashes or on time alone additionally restrict the candidates to the SP 
+recorded in the report, since an audit entry for a different SP can never be its counterpart. 
+The inbound message identifier needs no such restriction, since it is unique. 
 Where the inbound message identifier is not recorded, the relationship can therefore only be 
 approximated. 
-If none of the identifiers is available, the timestamp remains the sole criterion.
+If none of the identifiers is available, the timestamp remains the sole criterion. 
 
 The three correlation strategies implement a common interface and are applied in a fixed order 
 of precedence. 
@@ -273,13 +274,8 @@ Since this value is unique per request, a match establishes the relationship wit
 The second strategy, \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}, narrows 
 the candidates by SP, pseudonymised subject and pseudonymised client address, and additionally restricts 
 them to a configurable time window around the event. 
-The third strategy, \texttt{TIME\_\allowbreak{}WINDOW}, retains only the SP and the time window, and is 
-therefore used where neither the message identifier nor the pseudonymised identifiers are recorded. 
-
-The pseudonymised subject appears under two names, since the post authentication report stores it as 
-\textit{subjectHash} whereas the audit entry records it as \textit{usernameHash}. 
-Both hold the same value, derived from the same identifier with the same salt, and the distinction 
-is one of naming within the respective data source rather than of content. 
+The third strategy, \texttt{TIME\_\allowbreak{}WINDOW}, retains only the SP and the time window. 
+It is therefore used where neither the message identifier nor the pseudonymised identifiers are recorded. 
 
 Both time window strategies may return more than one candidate. 
 In this case the entry with the smallest temporal distance to the post authentication report is selected. 

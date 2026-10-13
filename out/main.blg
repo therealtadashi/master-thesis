@@ -1,15 +1,9 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'out/main.blg'
-[203] biber-darwin:340> INFO - === Mon Oct 12, 2026, 13:02:53
-[253] Biber.pm:419> INFO - Reading 'out/main.bcf'
-[542] Biber.pm:979> INFO - Found 60 citekeys in bib section 0
-[584] Biber.pm:4419> INFO - Processing section 0
-[609] Biber.pm:4610> INFO - Looking for bibtex file './literature.bib' for section 0
-[622] bibtex.pm:1713> INFO - LaTeX decoding ...
-[772] bibtex.pm:1519> INFO - Found BibTeX data source './literature.bib'
-[1635] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[1635] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[1635] Biber.pm:4239> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
-[1636] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
-[1785] bbl.pm:660> INFO - Writing 'out/main.bbl' with encoding 'UTF-8'
-[1857] bbl.pm:763> INFO - Output to out/main.bbl
+[140] biber-darwin:340> INFO - === Tue Oct 13, 2026, 13:40:49
+[171] Biber.pm:419> INFO - Reading 'out/main.bcf'
+[375] Biber.pm:979> INFO - Found 60 citekeys in bib section 0
+[401] Biber.pm:4419> INFO - Processing section 0
+[425] Biber.pm:4610> INFO - Looking for bibtex file './literature.bib' for section 0
+[434] bibtex.pm:1713> INFO - LaTeX decoding ...
+[541] bibtex.pm:1519> INFO - Found BibTeX data source './literature.bib'

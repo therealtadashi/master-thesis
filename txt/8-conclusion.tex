@@ -30,11 +30,11 @@ complete pipeline, four of them from a browser login up to the resulting alert.
 
 The correlation links the records of a login reliably. 
 All 7{,}236 reports of the performance series found their counterpart, and with the identifier of 
-the request or at least the subject or the address of a login, the correct one was found in every 
-tested scenario. 
-Only the strategy based on time alone (TIME\_\allowbreak{}WINDOW) confused logins, and only those 
-that followed each other at the same service provider within less than 100\,ms, so that operators 
-should record the identifier in the audit format. 
+the request, or with the subject and the address as long as one of them separates the users, the 
+correct one was found in every tested scenario. 
+Only the strategy based on time alone (\texttt{TIME\_\allowbreak{}WINDOW}) confused logins, and 
+only those that followed each other at the same SP within less than 100\,ms, so that operators 
+should record the identifier in the audit format, or at least the subject and the address. 
 
 In the asynchronous transmission mode, the two interceptors introduced no measurable latency overhead. 
 The difference to a deployment without interceptors is $+6.2$\,ms with an upper bound of 17\,ms for 

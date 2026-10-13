@@ -26,7 +26,7 @@ An RP can require a minimum authentication assurance level, which the IdP fulfil
 the assertion~\cite{NIST80063C}, and from the second level upwards this requires two distinct 
 authentication factors~\cite{NIST80063B}. 
 Concentrating authentication at one well-managed site also focuses administrative effort and makes 
-multi-factor authentication more acceptable to users, who encounter it less often~\cite{ShibbolethGIAC}.
+multi factor authentication more acceptable to users, who encounter it less often~\cite{ShibbolethGIAC}.
 Administration follows the same pattern, since accounts are created, modified and revoked 
 centrally rather than in each service individually.
 
@@ -108,7 +108,7 @@ attribute specifies the time at which it was issued.
 Furthermore, every assertion is assigned a unique identifier that must not be reused. 
 Once an assertion has been issued, the issuer has no direct control over its subsequent use. 
 Consequently, a consumer of an assertion is expected to enforce its specified validity conditions, 
-including any validity interval and applicable \texttt{OneTimeUse} condition.
+including any validity interval and applicable \texttt{OneTimeUse} condition~\cite{SAMLAssertions}.
 
 \subsection{XML-Signature and Encryption}\label{subsec:xml-sig-enc}
 
@@ -126,7 +126,7 @@ In contrast, an enveloping signature contains the signed data within the signatu
 A detached signature is kept apart from the signed data, which it neither contains nor is contained 
 in, and refers to that data by reference~\cite{W3CXMLSIG}. 
 In the context of SAML, enveloped signatures are commonly used to sign SAML assertions and protocol 
-messages.
+messages~\cite{SAMLAssertions}.
 
 XML Encryption provides confidentiality for sensitive information contained in SAML messages. 
 Instead of transmitting the original XML content in plaintext, the protected content is replaced by 
@@ -173,7 +173,7 @@ binding is particularly suitable for relatively small SAML messages, such as an
 authentication request. 
 The HTTP-Redirect binding therefore provides the mechanism by which the SP can 
 initiate the authentication process without requiring a direct communication channel 
-between the SP and IdP.
+between the SP and IdP~\cite{SAMLBinding}.
 
 \subsubsection{HTTP-POST Binding}
 
@@ -188,7 +188,7 @@ the SP.
 Compared with the HTTP-Redirect binding, HTTP-POST is better suited for larger SAML 
 messages because the message is not encoded into the URL. 
 This makes it particularly suitable for SAML responses containing assertions and 
-associated security-related information. 
+associated security-related information~\cite{SAMLBinding}. 
 
 \subsection{Web Browser SSO Authentication Process}\label{subsec:sso-auth-process}
 
@@ -227,7 +227,7 @@ Neither the IdP nor the SP can assume that the messages remain unchanged while b
 Consequently, the security of the protocol cannot rely solely on the communication channel. 
 Instead, mechanisms such as digital signatures, message identifiers, validity conditions, and audience 
 restrictions are used to ensure the authenticity and integrity of SAML messages and to 
-prevent their misuse.
+prevent their misuse~\cite{SAMLSecurityConsideration}.
 
 An important security property of this process is the prevention of message replay. 
 SAML requests and assertions contain unique identifiers that allow the SP and IdP to assign messages 
@@ -263,7 +263,7 @@ The security of the metadata itself is therefore an important aspect of a SAML d
 If an entity accepts manipulated metadata, an attacker could potentially influence endpoints, 
 supported bindings, or cryptographic keys used during SAML message processing. 
 SAML metadata can itself be protected using digital signatures, allowing an entity to verify the integrity 
-and origin of the metadata before using it for configuration or trust decisions.
+and origin of the metadata before using it for configuration or trust decisions~\cite{SAMLMetadata}.
 
 \section{Shibboleth}\label{sec:shibboleth}
 
@@ -309,7 +309,7 @@ The first and third are available in any profile flow, whereas the second applie
 actually authenticate a user~\cite{ProfileHandling}.
 An interceptor is registered as a bean and enabled by adding its flow identifier to the corresponding list 
 property of a profile configuration in \texttt{conf/relying-party.xml}. 
-No modification of the IdP source code is required.
+No modification of the IdP source code is required~\cite{ProfileInterceptConfiguration}.
 
 The choice of hook determines what an interceptor can observe. 
 An inbound interceptor sees the incoming message context but not the outcome of authentication, 
@@ -319,7 +319,7 @@ outgoing message.
 The post-authentication hook runs in the middle of processing, after the user has been authenticated but 
 before the outgoing message is constructed. 
 It can therefore observe both the incoming request and the authentication result, but not the response that 
-is issued afterwards.
+is issued afterwards~\cite{ProfileInterceptConfiguration}.
 
 \subsection{The Context Tree}\label{subsec:context-tree}
 

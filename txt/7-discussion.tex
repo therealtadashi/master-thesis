@@ -98,7 +98,7 @@ The IdP processes the request it receives regardless of how the client resolved 
 address. 
 
 The second group consists of issues that affect a different party within the federation. 
-\gls{csrf}, describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
+\gls{csrf} describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
 The relevant interaction occurs between the browser and the SP and therefore does not pass 
 through the IdP. 
 The same applies to message modification enabled by a lack of binding, whose mitigation lies in 
@@ -202,9 +202,10 @@ conflict with the third requirement from Section~\ref{sec:requirements}.
 Whether the audit extraction points of the IdP could serve this purpose is a question for future work.
 
 A third direction addresses the one Shibboleth specific issue that remains uncovered. 
-Monitoring changes to the configuration and metadata of an SP would provide a partial answer to the 
-bogus merchant scenario, since a change is the only observable signal where no basis 
-for prior trust exists. 
+The system already receives every changed configuration and metadata document of an SP 
+(Section~\ref{sec:impl-aggregation}), but no rule reports the change itself. 
+Such a rule would provide a partial answer to the bogus merchant scenario, since a change is the 
+only observable signal where no basis for prior trust exists. 
 What such a mechanism could establish and what it could not is discussed in 
 Section~\ref{sec:limitation}, and the distinction would need to be stated carefully in any 
 implementation.

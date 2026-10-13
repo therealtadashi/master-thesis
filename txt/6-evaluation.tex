@@ -379,7 +379,7 @@ Every rule has at least one scenario at the integration level that contains the 
 meant to detect. 
 For most rules this is a single prepared input, such as an audit entry that records an unencrypted 
 assertion or a SAML request with two signature elements, a typical trace of a signature wrapping 
-attack, which the rule treats as a possible signature wrapping attempt. 
+attack, which the rule treats as a possible signature wrapping attempt~\cite{BreakingSAML}. 
 Rules that depend on history receive it in the same way. 
 For \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} the test first stores five logins of a user from a known 
 address and then one from a new address, and for \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} it 

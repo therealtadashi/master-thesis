@@ -246,7 +246,7 @@ The \texttt{InResponseTo} value of the response echoes the identifier of the inb
 and a strategy built on it would establish the same one-to-one relationship as the inbound message 
 identifier already does, with no difference in outcome. 
 The assertion identifier and the outbound message identifier are unique as well, but they are 
-created after the post-authentication hook has run, which executes before the outgoing message 
+created after the post authentication hook has run, which executes before the outgoing message 
 content is constructed~\cite{ProfileHandling}, and are extracted at later points of the audit 
 pipeline~\cite{AuditLoggingConfiguration}. 
 They are therefore not available to the interceptor at the post authentication hook. 
@@ -328,7 +328,7 @@ been referenced by another report before accepting a match.
 The detection logic is divided into four engines, following the separation by input type 
 described in Section~\ref{subsec:detection}. 
 The rule engine evaluates login events derived from audit entries, the configuration rule 
-engine evaluates the security settings of a SP, the metadata rule engine evaluates its 
+engine evaluates the security settings of an SP, the metadata rule engine evaluates its 
 metadata, and the interceptor rule engine evaluates the post authentication reports produced 
 by the interceptor. 
 
@@ -376,7 +376,7 @@ signature elements referencing an identifier that occurs more than once.
 
 The remaining rules follow one of these patterns or compare an observed event against the 
 configuration declared for the SP involved, as described for \texttt{MFA\_\allowbreak{}BYPASS} in 
-Section~\ref{sec:why-not-siem}. 
+Section~\ref{subsec:detection}. 
 Their assignment to documented vulnerabilities and attack classes is given in 
 Table~\ref{tab:rules}. 
 

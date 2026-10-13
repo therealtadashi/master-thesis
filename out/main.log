@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  13 OCT 2026 01:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  13 OCT 2026 13:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2435,7 +2435,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Underfull \vbox (badness 2343) has occurred while \output is active []
 
  [5{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}] [6]
-<./txt/../img/sp-init-sso.png, id=301, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=305, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 218.
@@ -2465,7 +2465,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=445, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=455, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2540,11 +2540,7 @@ chapter 7.
 
 ]
 chapter 8.
-
-Underfull \vbox (badness 1931) has occurred while \output is active []
-
- [65])
-(./zyx/epilogue.tex [66]
+[65]) (./zyx/epilogue.tex [66]
 Package tocbasic Info: character protrusion at lof deactivated on input line 10
 .
  (out/main.lof)
@@ -2644,7 +2640,7 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  66660 strings out of 474116
  1470139 string characters out of 5743682
- 2669923 words of memory out of 5000000
+ 2669924 words of memory out of 5000000
  86969 multiletter control sequences out of 15000+600000
  744095 words of font info for 555 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
@@ -2662,10 +2658,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 514955 bytes).
+Output written on out/main.pdf (86 pages, 515251 bytes).
 PDF statistics:
- 1443 PDF objects out of 1728 (max. 8388607)
- 1308 compressed objects within 14 object streams
+ 1453 PDF objects out of 1728 (max. 8388607)
+ 1318 compressed objects within 14 object streams
  304 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

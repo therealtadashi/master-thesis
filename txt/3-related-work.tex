@@ -99,7 +99,7 @@ Rieckers applies the principle of passive observation to network traffic, captur
 EAP-TLS traffic of the eduroam infrastructure to analyse the TLS parameters that clients 
 offer~\cite{EAPeduroam}. 
 In captured traffic, information that exists only inside the application, such as the structure 
-of a SAML assertion or the configuration of a SP, is not visible. 
+of a SAML assertion or the configuration of an SP, is not visible. 
 This work adopts the principle and applies it inside the Shibboleth IdP itself. 
 Extending the system with automatic response mechanisms would contradict this passive 
 observation principle. 
@@ -214,8 +214,8 @@ Snodgrass et al. report an overhead of up to 16 percent for their approach~\cite
 The approach taken in this work is different. 
 Instead of modifying the existing logging infrastructure, two independently generated records 
 of the same event are compared. 
-The difference is therefore not based on a new trust boundary, but on the temporal and 
-architectural separation between the records. 
+The protection therefore does not rest on cryptography, but on the temporal and architectural 
+separation between the records. 
 A log file may remain accessible to an attacker with file-system access for an extended period, 
 whereas a record generated within the application process itself exists only for the duration of 
 the corresponding processing before it is transmitted away. 

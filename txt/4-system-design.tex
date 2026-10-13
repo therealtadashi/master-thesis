@@ -241,8 +241,8 @@ it observes.
 
 \subsection{Interceptor}\label{subsec:interceptor}
 
-As mentioned Section~\ref{subsec:profile-flows} Shibboleth provides three interception points 
-within its profile processing: inbound message processing, post-authentication processing, and 
+As mentioned in Section~\ref{subsec:profile-flows} Shibboleth provides three interception points 
+within its profile processing: inbound message processing, post authentication processing, and 
 outbound message processing. 
 Interceptors are implemented as Spring Web Flow subflows that are executed at these predefined 
 points without requiring modifications to the underlying profile 
@@ -264,7 +264,7 @@ For the monitoring system developed in this work, the inbound interception point
 for observing properties of the incoming SAML message and its processing context before the main 
 profile execution continues.
 
-The post-authentication interception point is executed after authentication and attribute lookup have 
+The post authentication interception point is executed after authentication and attribute lookup have 
 taken place, but before the profile constructs the outgoing message. 
 Unlike the inbound and outbound hooks, this interception point is only available for a subset of 
 profiles, particularly profiles that perform user authentication~\cite{ProfileHandling}.
@@ -391,7 +391,7 @@ message authentication code for each transmitted message.
 
 The final design decision concerning the transport layer is whether the collection component should wait for 
 the monitoring tool to confirm receiving the data.
-The interceptors executes within the authentication flow of the IdP. 
+The interceptors execute within the authentication flow of the IdP. 
 Any time spent transmitting a record is therefore time added to the login of the user who triggered it. 
 Waiting for a response would make the duration of every authentication dependent on the availability and 
 response time of a component outside the IdP, and a monitoring tool that is slow or temporarily unreachable 
@@ -402,8 +402,8 @@ Each interceptor dispatches its record and continues processing without awaiting
 This has a cost. 
 If a transmission fails, the record is not sent again and is missing in the monitoring tool, and 
 only a warning in the log of the IdP indicates the failure. 
-The design therefore prioritises non interference with the monitored service over a guarantee of delivery. 
-For a monitoring system that observes a central authentication service, this trade off appears justified. 
+The design therefore prioritises non-interference with the monitored service over a guarantee of delivery. 
+For a monitoring system that observes a central authentication service, this trade-off appears justified. 
 A monitoring component that degrades the availability of the service it observes would undermine its own purpose. 
 Hall et al. decouple analysis for a similar reason: responses are retrieved separately rather than returned in 
 reply to the submitted event~\cite{BlackWatch}. 
@@ -619,8 +619,7 @@ that enables an attack or evidence that the corresponding event has already occu
 A detected attack is therefore assigned a higher severity than a vulnerability that merely enables 
 the attack. 
 
-This classification describes the potential impact of an attack from an attacker's perspective 
-and serves as an orientation rather than as a formula. 
+The classification serves as an orientation rather than as a formula. 
 The severity is therefore assigned per rule, as listed in Table~\ref{tab:severity}, and it is 
 raised or lowered only where the impact of a rule depends on its context. 
 The two multi factor rules are critical if the SP is on the list of providers that must use multi 

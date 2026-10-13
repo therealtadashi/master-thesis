@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  13 OCT 2026 21:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  13 OCT 2026 22:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2519,25 +2519,15 @@ LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[50] [51]
-Underfull \vbox (badness 6493) has occurred while \output is active []
-
- [52]
-Underfull \vbox (badness 4036) has occurred while \output is active []
-
- [53]
+[50]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[54] [55]
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+Underfull \vbox (badness 3977) has occurred while \output is active []
 
-[56]
-Underfull \vbox (badness 5302) has occurred while \output is active []
-
- [57])
-(./txt/7-discussion.tex [58]
+ [51]
+[52] [53] [54] [55] [56]) (./txt/7-discussion.tex [57] [58]
 chapter 7.
 [59
 
@@ -2665,7 +2655,7 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 513406 bytes).
+Output written on out/main.pdf (86 pages, 512593 bytes).
 PDF statistics:
  1453 PDF objects out of 1728 (max. 8388607)
  1318 compressed objects within 14 object streams

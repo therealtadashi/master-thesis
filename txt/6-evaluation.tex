@@ -406,7 +406,8 @@ The third expectation concerns someone who alters the audit entry of a login aft
 instance to conceal which request a response answered. 
 The consistency check is meant to notice this, since the outbound report is produced 
 independently by the IdP and reaches the backend directly. 
-It compares the fields that both records contain and that the audit format records. 
+It compares the fields listed in Section~\ref{subsec:impl-detection} that the audit format records, 
+five for every login and five more for an unencrypted assertion. 
 To produce a manipulation, a login against the clean SP was performed while the backend was stopped. 
 After the audit entry had reached Elasticsearch, the identifier of the answered request was 
 replaced by a different value, and the backend was started again. 

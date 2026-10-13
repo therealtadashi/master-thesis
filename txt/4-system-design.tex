@@ -293,8 +293,6 @@ authentication workflow and properties of the response that is about to be issue
 
 The monitoring system uses two interception points, the post authentication point and the 
 outbound point. 
-An inbound interceptor would see the incoming message but not the outcome of authentication, 
-since that has not yet taken place. 
 The post authentication point is the earliest point at which both the incoming message and the 
 authentication result are available in the same context, and it serves as the main collection point. 
 The outbound point still has access to both, since its input is the entire state of the tree that 

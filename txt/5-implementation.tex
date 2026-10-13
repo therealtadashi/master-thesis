@@ -194,10 +194,8 @@ following the same structure as Section~\ref{sec:processing}.
 \subsection{Storage}\label{subsec:impl-storage}
 
 Elasticsearch serves as the primary data store of the backend application. 
-The choice follows from the data collection layer described in 
-Section~\ref{sec:impl-aggregation}, since Filebeat and Logstash write directly into 
-Elasticsearch and no further conversion is required for the data they deliver. 
-
+It was chosen to ease the integration with the log shipping stack described in 
+Section~\ref{sec:impl-aggregation}. 
 The application uses separate indices for the different types of data it handles, 
 namely audit entries, metadata, configuration data and the reports of the two 
 interceptors. 

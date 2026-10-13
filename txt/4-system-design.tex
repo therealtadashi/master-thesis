@@ -83,8 +83,8 @@ An audit entry describes a record that the IdP writes to its audit log and that 
 monitoring tool through the log shipping stack. 
 A report represents a record that an interceptor produces within the IdP and transmits directly to the 
 monitoring tool. 
-Since two interceptors are used, their reports are called the post authentication report and the 
-outbound report where they have to be distinguished. 
+Since two interceptors are used, their reports are called the post authentication report and the outbound 
+report, to distinguish between them. 
 A report and an audit entry may describe the same authentication event, which makes the 
 correlation described in Section~\ref{subsec:correlation} possible.
 
@@ -258,11 +258,9 @@ and the context in which it is being processed.
 This makes the interception point particularly suitable for security checks on the incoming request. 
 Shibboleth itself uses inbound interceptors for various security policy checks. 
 An interceptor may also modify the context tree, although such modifications directly influence 
-subsequent profile processing~\cite{ProfileHandling}.
-
-For the monitoring system developed in this work, the inbound interception point is therefore relevant 
-for observing properties of the incoming SAML message and its processing context before the main 
-profile execution continues.
+subsequent profile processing~\cite{ProfileHandling}. 
+For the monitoring system, however, this point comes too early, since the outcome of the 
+authentication is not yet known when it is reached.
 
 The post authentication interception point is executed after authentication and attribute lookup have 
 taken place, but before the profile constructs the outgoing message. 
@@ -472,13 +470,12 @@ The precision achieved by each strategy is examined in Chapter~\ref{ch:evaluatio
 
 \subsection{Detection}\label{subsec:detection}
 
-Once the data has been collected and stored, it is evaluated against a catalogue of detection 
-rules, where possible. 
-With two exceptions described below, a rule receives a single object as input and either returns 
-a finding or nothing.
-The conditions are stated explicitly rather than learned from data, which means that every 
-finding can be traced back to the condition that produced it and, through the derivation in 
-Section~\ref{sec:rules}, to the documented weakness or requirement it is based on. 
+Once the data has been stored, the detection layer evaluates it against a catalogue of fifteen rules. 
+Each rule describes a condition that indicates a weakness or an attack and reports a finding when 
+this condition is met. 
+Since the conditions are defined explicitly rather than learned from data, every finding can be 
+traced back to its rule and, through the derivation in Section~\ref{sec:rules}, to the documented 
+weakness or requirement behind it.
 
 The rules do not all operate on the same kind of input. 
 Four input types occur in this system: login events derived from the audit log, the configuration 
@@ -489,8 +486,7 @@ changes rarely and may remain unchanged for long periods of time.
 
 Evaluating all rules against all data whenever any of it changes would therefore be inefficient 
 and, in the case of configuration data, largely redundant. 
-The detection logic is consequently divided into four engines, each responsible for one input 
-type. 
+The detection logic is consequently divided into four engines, each responsible for one input type. 
 An engine evaluates the rules that apply to its input and can be scheduled according to the 
 frequency at which that input actually changes.
 
@@ -502,8 +498,7 @@ Evaluating it regardless would produce a result that appears definite but rests 
 information, and a rule that cannot observe a condition must not report its absence as a finding. 
 Each rule therefore declares which fields it requires, and the engine verifies their availability 
 before evaluating the rule. 
-Where the required information is not recorded, the rule withdraws rather than returning a 
-result. 
+Where the required information is not recorded, the rule withdraws rather than returning a result. 
 Which rules are active in a given deployment is thus determined by what that deployment logs. 
 
 Which conditions the rules examine is a separate question from how they are evaluated. 
@@ -622,9 +617,13 @@ the attack.
 The classification serves as an orientation rather than as a formula. 
 The severity is therefore assigned per rule, as listed in Table~\ref{tab:severity}, and it is 
 raised or lowered only where the impact of a rule depends on its context. 
-The two multi factor rules are critical if the SP is on the list of providers that must use multi 
-factor authentication, and \texttt{MFA\_\allowbreak{}BYPASS} also if the configured flow requires 
-it in every case, and medium otherwise. 
+The two multi factor rules (\texttt{MISSING\_MFA}, \texttt{MFA\_BYPASS}) depend on whether an SP 
+must use multi factor authentication. 
+The operator can place an SP on a list of providers for which this is required, and for such an 
+SP both rules are rated critical. 
+\texttt{MFA\_\allowbreak{}BYPASS} is also critical if the configuration of the SP permits no 
+flow other than multi factor authentication. 
+In all other cases, both rules are rated medium. 
 \texttt{WEAK\_\allowbreak{}ENCRYPTION} takes the severity from the algorithm policy, 
 \texttt{CERTIFICATE\_\allowbreak{}EXPIRED} from the expiry status of the certificate, and 
 \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} is rated high if at least two independent reasons apply 

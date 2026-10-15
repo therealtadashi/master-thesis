@@ -28,8 +28,7 @@ Unit tests examine individual components in isolation, with their dependencies r
 mocks, so that a test result reflects the behaviour of that component alone. 
 Integration tests run against a real Elasticsearch instance, which additionally covers the
 persistence layer, the index mappings and the queries that a mock cannot represent. 
-End-to-end tests exercise the complete pipeline, from a login at the SP through the log
-shipping stack to the alert produced by the backend. 
+End-to-end tests exercise the complete pipeline, from the IdP through the log shipping stack. 
 
 Logins are generated in two ways. 
 An HTTP client harness performs the SAML login sequence directly, parsing the forms returned
@@ -357,8 +356,8 @@ the input directly to the rule engine rather than waiting for the scheduler, so 
 not depend on its timing. 
 Such a proof covers the rule, its queries and the stored documents, but not the way in which 
 Filebeat and Logstash turn a real audit line into such an input. 
-An end-to-end test starts from a real login in the browser and covers this path as well, which 
-makes it the only level at which a fault in the log shipping stack can become visible.
+An end-to-end test starts from a real event at the IdP, usually a login in the browser, and covers this 
+path as well, which makes it the only level at which a fault in the log shipping stack can become visible. 
 
 \paragraph{Scenarios.}
 In operation, the detection layer has to meet two expectations at once. 
@@ -410,8 +409,8 @@ proof for every rule that can react to a login.
 The same run against the weak SP tests the consistency check in the presence of the alerts that the 
 weaknesses of this SP rightly cause, so that there no \texttt{FIELD\_\allowbreak{}MISMATCH} alert may 
 arise. 
-In addition, a single legitimate login at the clean SP provides the end-to-end true negative proofs of 
-the five rules marked TN in Table~\ref{tab:detection-coverage}. 
+In addition, a single legitimate login at the clean SP provides end-to-end true negative proofs for eight 
+rules, among them the two replay rules, for which no true positive scenario exists at this level. 
 
 The third expectation concerns someone who alters the audit entry of a login after the fact, for 
 instance to conceal which request a response answered. 
@@ -493,6 +492,29 @@ For the remaining nine rules, the last column of the table names what an end-to-
 That the end-to-end level is not redundant became apparent when it uncovered a fault in the log 
 shipping stack that no integration test could have found (Section~\ref{sec:defects}).
 
+\paragraph{Every rule is proven against a real Elasticsearch instance, and thirteen are also tested end-to-end.} 
+All fifteen rules have a true positive proof on the unit and on the integration level, so that for 
+every rule the queries, the index mapping and the stored documents are covered and not only the 
+detection logic. 
+The test suite comprises 118 unit tests for the rules, 21 integration tests and 18 end-to-end 
+tests. 
+Eleven rules have both a true positive and a true negative proof on the end-to-end level, eight of 
+them triggered by a login and three by a changed file. 
+For the two replay rules, the end-to-end level provides only the true negative proof, and two rules 
+are not tested end-to-end at all. 
+\texttt{MFA\_\allowbreak{}BYPASS} could be triggered in the test environment, but not tested 
+meaningfully. 
+The SP requests the authentication context for password protected transport, and the audit format 
+does not record the authentication flow. 
+The audit entry of a login with a second factor would therefore look the same as that of a login 
+with a password alone, and the rule would report both. 
+The scenario for \texttt{WEAK\_\allowbreak{}ENCRYPTION} showed in addition that the IdP uses Triple DES 
+as soon as the metadata of an SP offers only this algorithm, although its configuration prefers 
+AES-GCM. 
+The weakness is thus not prevented by the IdP but only made visible by the monitoring. 
+That the end-to-end level is not redundant became apparent when it uncovered a fault in the log 
+shipping stack that no integration test could have found (Section~\ref{sec:defects}).
+
 \paragraph{Legitimate logins raise no false alarms.}
 In the 100 logins at the clean SP, none of the logins raised an alert, and in the 100 logins at the 
 weak SP, where the alerts caused by its weaknesses are expected, no 
@@ -537,17 +559,18 @@ Weak SP  & 100 & 10 & 0 & 3.7\,\% \\
 
 \paragraph{The comparison rules detect an altered or a missing record.} 
 In the manipulation scenario, the backend matched the post authentication report to the altered 
-audit entry through the unchanged inbound message identifier within two seconds of its start. 
+audit entry through the unchanged inbound message identifier. 
 The consistency check then raised a \texttt{FIELD\_\allowbreak{}MISMATCH} alert of high severity 
-that named exactly the altered field and no other. 
+that named the altered field.
 The check thus detects a contradiction between two independently produced records of the same 
 login. 
 Since only one field of a single entry was altered, the test shows that the mechanism works, not how 
 reliably it detects manipulations in general. 
 A manipulation can only become visible in the fields that the check compares, and the check 
 establishes that the two records disagree, not which of them was altered. 
-For \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}, the integration test confirms that a report 
-without a counterpart is marked as expired after the waiting period and raises the alert. 
+With Filebeat stopped, the report of the login was marked as expired after the waiting period and 
+raised a \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} alert, while the report of a regular login 
+was correlated and raised none.
 An audit entry that arrives only afterwards, for instance because of a delay in the log shipping 
 stack, is no longer correlated, so that the alert remains although the record exists. 
 
@@ -833,9 +856,11 @@ would lose reports rather than slow down the logins.
 
 \paragraph{Rules without an end-to-end test.}
 \texttt{MFA\_\allowbreak{}BYPASS} and \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} 
-rest on the integration test, which passes its input directly to the rule engine and thus bypasses 
-the log shipping stack. 
-A fault in this stack, such as the one in Logstash described in Section~\ref{sec:defects}, would 
+rest on the integration test, which passes its input directly to the rule engine. 
+In operation, the input of \texttt{MFA\_\allowbreak{}BYPASS} arrives through the log shipping stack, 
+and that of \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} with the post 
+authentication report. 
+A fault on either path, such as the one in Logstash described in Section~\ref{sec:defects}, would 
 remain undetected for these two rules if it only affected fields that none of the rules with an 
 end-to-end test reads. 
 For the two replay rules, the same applies to the true positive case.

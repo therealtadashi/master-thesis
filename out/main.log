@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  15 OCT 2026 20:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  15 OCT 2026 21:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2516,24 +2516,17 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [45] [46]
 
 LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
-(Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 244.
+(Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 243.
 
 [47] [48] [49]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [50] [51] [52]
-Underfull \vbox (badness 4036) has occurred while \output is active []
+Underfull \vbox (badness 1661) has occurred while \output is active []
 
  [53]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[54] [55]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[56] [57]) (./txt/7-discussion.tex [58]
+[54] [55] [56] [57]) (./txt/7-discussion.tex [58]
 chapter 7.
 [59
 
@@ -2641,8 +2634,8 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66660 strings out of 474116
- 1470143 string characters out of 5743682
+ 66662 strings out of 474116
+ 1470167 string characters out of 5743682
  2671024 words of memory out of 5000000
  86969 multiletter control sequences out of 15000+600000
  744168 words of font info for 555 fonts, out of 8000000 for 9000
@@ -2661,10 +2654,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 514128 bytes).
+Output written on out/main.pdf (86 pages, 515567 bytes).
 PDF statistics:
- 1455 PDF objects out of 1728 (max. 8388607)
- 1320 compressed objects within 14 object streams
- 304 named destinations out of 1000 (max. 500000)
+ 1457 PDF objects out of 1728 (max. 8388607)
+ 1322 compressed objects within 14 object streams
+ 306 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

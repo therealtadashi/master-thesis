@@ -33,7 +33,7 @@ the wrong entry, and only where logins at the same SP followed each other within
 The heuristics remain reliable up to about three logins per second for a given combination of 
 subject, address and SP, a rate that interactive users do not reach (Section~\ref{subsec:eval-correlation-results}). 
 The fifteen detection rules behave as intended for the scenarios constructed for them. 
-All of them are verified against a real Elasticsearch instance, six also from a real login, and 
+All of them are verified against a real Elasticsearch instance, thirteen also through the complete pipeline, and 
 legitimate logins raised no false alarms. 
 This establishes the fidelity of the implementation, though not the detection quality in 
 operation, a distinction developed in Section~\ref{subsec:eval-detection-results}.

@@ -376,20 +376,31 @@ For most rules this is a single prepared input, such as an audit entry that reco
 assertion or a SAML request with two signature elements, a typical trace of a signature wrapping 
 attack, which the rule treats as a possible signature wrapping attempt~\cite{BreakingSAML}. 
 Rules that depend on history receive it in the same way. 
-For \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} the test first stores five logins of a user from a known 
-address and then one from a new address, and for \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} it 
-stores a post authentication report that arrived twenty minutes earlier, so that the waiting period 
-of fifteen minutes has already elapsed. 
-Wherever a regular login in the test environment can produce the condition, an end-to-end scenario 
-follows: a login with the user agent of a script, a login with a wrong password, five failed logins 
-in quick succession, which exceeds the threshold of three within five minutes, and a login at the 
-weak SP, whose assertions are not encrypted. 
-For the remaining rules, an end-to-end scenario would require more than a regular login, for 
-instance a second browser with another address, an SP that offers an MFA flow, a crafted or 
-replayed message, a changed configuration or metadata of an SP, or log shipping that stays 
-interrupted for longer than the waiting period. 
-These scenarios were not implemented in this work. 
-Table~\ref{tab:detection-coverage} names the requirement for each rule. 
+
+At the end-to-end level, eight rules are triggered by a login in the browser. 
+Four of them need nothing but the login itself: a login with the user agent of a script, a login 
+with a wrong password, multiple failed logins in quick succession, and a login at the weak SP, whose 
+assertions are not encrypted. 
+For \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}, a user first logs in five times with the same browser 
+and then once with a client that the stored profile does not contain. 
+For \texttt{WEAK\_\allowbreak{}ENCRYPTION}, the copy of the clean SP metadata that the IdP has loaded 
+is changed so that it offers only Triple DES for encryption. 
+The IdP then encrypts the next assertion for this SP with this algorithm. 
+The scenarios of the two comparison rules are described below with the third expectation. 
+Three further rules are triggered by a changed file. 
+For \texttt{WEAK\_\allowbreak{}CONFIGURATION} and \texttt{MISSING\_\allowbreak{}MFA}, the test adds an 
+override to \texttt{relying-party.xml} that neither encrypts the assertions nor offers an MFA flow. 
+For \texttt{CERTIFICATE\_\allowbreak{}EXPIRED}, it adds the metadata of an SP whose certificate has 
+expired. 
+Since the metadata rules are only evaluated at start-up and once a day, this test starts the 
+scheduled check itself once the metadata has arrived. 
+Each of these scenarios has a true negative counterpart with the same trigger but without the 
+weakness, for instance a further login with the known browser or an override that encrypts and 
+offers an MFA flow. 
+For \texttt{MFA\_\allowbreak{}BYPASS} and \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED}, 
+no end-to-end scenario was implemented, and the two replay rules have only a true negative proof at 
+this level. 
+Table~\ref{tab:detection-coverage} states the reasons.
 
 The second expectation is tested with legitimate logins through the browser. 
 At the clean SP, three users log in alternately, 100 times in total, and after a further 
@@ -408,9 +419,18 @@ The consistency check is meant to notice this, since the outbound report is prod
 independently by the IdP and reaches the backend directly. 
 It compares the fields listed in Section~\ref{subsec:impl-detection} that the audit format records, 
 five for every login and five more for an unencrypted assertion. 
-To produce a manipulation, a login against the clean SP was performed while the backend was stopped. 
-After the audit entry had reached Elasticsearch, the identifier of the answered request was 
-replaced by a different value, and the backend was started again. 
+To produce a manipulation, the test performs a login against the clean SP and waits until its audit 
+entry has reached Elasticsearch. 
+It then replaces the identifier of the answered request with a different value. 
+This happens before the backend correlates the entry, since the backend attempts a correlation only 
+once a report has reached a minimum age (Section~\ref{subsec:impl-correlation}). 
+
+An audit entry can also go missing, for instance when the log shipping stack fails. 
+\texttt{CORRELATION\_\allowbreak{}DISCREPANCY} is meant to notice this, since the post 
+authentication report then has no counterpart. 
+To produce a missing record, the test stops Filebeat before a login, so that the report reaches 
+the backend but the audit entry does not. 
+For this test, the waiting period is shortened from fifteen minutes to one minute by configuration. 
 
 Finally, the comparison rules must not raise false alarms when many logins arrive in quick 
 succession, since both rely on the records of every login being matched in time. 
@@ -432,26 +452,26 @@ limits of what the results can show.
 \small
 \begin{tabularx}{\textwidth}{@{}lc>{\raggedright\arraybackslash}X@{}}
 \toprule
-Rule & End-to-end & Note \\
+Rule & End-to-end & Trigger or reason \\
 \midrule
-\texttt{SUSPICIOUS\_USER\_AGENT}        & TP, TN          & --- \\
-\texttt{FAILED\_LOGIN}                  & TP, TN          & --- \\
-\texttt{BRUTE\_FORCE}                   & TP, TN          & --- \\
-\texttt{UNENCRYPTED\_ASSERTION}         & TP, TN          & --- \\
-\texttt{WEAK\_ENCRYPTION}               & TN              & TP requires an SP with a weak algorithm \\
-\texttt{FIELD\_MISMATCH}                & TN, TP (manual) & --- \\
+\texttt{SUSPICIOUS\_USER\_AGENT}        & TP, TN & Login with the user agent of a script \\
+\texttt{FAILED\_LOGIN}                  & TP, TN & Login with a wrong password \\
+\texttt{BRUTE\_FORCE}                   & TP, TN & Five failed logins in quick succession \\
+\texttt{UNENCRYPTED\_ASSERTION}         & TP, TN & Login at the weak SP \\
+\texttt{BEHAVIOUR\_ANOMALY}             & TP, TN & Login with a client unknown to the profile \\
+\texttt{WEAK\_ENCRYPTION}               & TP, TN & Login after the SP metadata offers only Triple DES \\
+\texttt{FIELD\_MISMATCH}                & TP, TN & Login with an altered audit entry \\
+\texttt{CORRELATION\_DISCREPANCY}       & TP, TN & Login with Filebeat stopped \\
 \midrule
-\texttt{BEHAVIOUR\_ANOMALY}             & ---             & Requires a second browser with another address \\
-\texttt{MFA\_BYPASS}                    & ---             & Requires an SP that offers an MFA flow \\
-\texttt{ASSERTION\_REPLAY}              & ---             & A replayed assertion is presented to the SP, not to the IdP \\
-\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & ---             & Requires a crafted request that the IdP accepts \\
-\texttt{REQUEST\_REPLAY}                & ---             & Requires a replay after the replay cache of the IdP has expired \\
+\texttt{WEAK\_CONFIGURATION}            & TP, TN & Changed \texttt{relying-party.xml} \\
+\texttt{MISSING\_MFA}                   & TP, TN & Changed \texttt{relying-party.xml} \\
+\texttt{CERTIFICATE\_EXPIRED}           & TP, TN & New SP metadata \\
 \midrule
-\texttt{WEAK\_CONFIGURATION}            & ---             & Requires a changed SP configuration \\
-\texttt{MISSING\_MFA}                   & ---             & Requires a changed SP configuration \\
-\texttt{CERTIFICATE\_EXPIRED}           & ---             & Requires SP metadata with an expired certificate \\
+\texttt{ASSERTION\_REPLAY}              & TN     & A replayed assertion is presented to the SP, not to the IdP \\
+\texttt{REQUEST\_REPLAY}                & TN     & Requires a replay after the replay cache of the IdP has expired \\
 \midrule
-\texttt{CORRELATION\_DISCREPANCY}       & ---             & Requires log shipping interrupted for 15 minutes \\
+\texttt{MFA\_BYPASS}                    & ---    & In the test environment, the audit entry does not show whether a second factor was used \\
+\texttt{SIGNATURE\_WRAPPING\_SUSPECTED} & ---    & Requires a crafted request that the IdP accepts \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -812,11 +832,12 @@ Since the asynchronous interceptors give up a transmission after 1.5\,s, a backe
 would lose reports rather than slow down the logins.
 
 \paragraph{Rules without an end-to-end test.}
-Nine of the fifteen rules rest on the integration test, which passes its input directly to the rule 
-engine and writes the stored history directly into Elasticsearch, and thus bypasses the log shipping 
-stack. 
+\texttt{MFA\_\allowbreak{}BYPASS} and \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} 
+rest on the integration test, which passes its input directly to the rule engine and thus bypasses 
+the log shipping stack. 
 A fault in this stack, such as the one in Logstash described in Section~\ref{sec:defects}, would 
-remain undetected for these rules if it only affected fields that none of the six rules with an 
-end-to-end test reads.
+remain undetected for these two rules if it only affected fields that none of the rules with an 
+end-to-end test reads. 
+For the two replay rules, the same applies to the true positive case.
 
 \end{document}

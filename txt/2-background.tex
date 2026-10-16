@@ -291,13 +291,13 @@ sequence of processing steps is described declaratively rather than in program c
 A flow consists of states that are traversed in order, and a state may delegate to a subflow, 
 that is a self-contained flow which performs a defined task and returns control to its caller. 
 Every top-level flow of the IdP implements one of the supported protocol interfaces, referred to 
-as profiles, such as SAML 2 SP-initiated \gls{sso}. 
+as profiles, such as SAML 2.0 Web Browser \gls{sso}.
 Recurring tasks within such a profile, among them the authentication of the user, are carried out 
 by subflows~\cite{ProfileHandling}. 
 
 To allow developers to extend this behaviour without copying or editing the internal flow definitions, 
 the IdP provides a set of defined hooks. 
-A subflow attached to such a hook is called an interceptor, and three hooks exist: 
+A subflow attached to one of these hooks is known as an interceptor, and there are three hooks in total: 
 \begin{enumerate}
     \item inbound message processing
     \item post authentication processing and
@@ -353,9 +353,8 @@ The format of a log line is defined per profile in the \textit{shibboleth.AuditF
 A format consists of formatting tokens, each of which is replaced by a value from the context tree 
 of the transaction when the line is written, for instance the time of the event, the identifier of 
 the inbound message or the address of the client. 
-Some values are written in an abbreviated form, which the IdP derives from a replacement map 
-(\textit{shibboleth.AuditFieldReplacementMap}), and further tokens can be added by the 
-operator~\cite{AuditLoggingConfiguration}.
+Some values are written in an abbreviated form, which the IdP derives from a replacement map, 
+and further tokens can be added by the operator~\cite{AuditLoggingConfiguration}.
 
 \subsection{Configuration}\label{subsec:config}
 

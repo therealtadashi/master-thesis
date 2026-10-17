@@ -154,7 +154,7 @@ Before the aggregated data is transmitted, the collecting component authenticate
 the monitoring tool using an HMAC signature, as outlined in Section~\ref{sec:trust}. 
 Both Logstash and the interceptor hold the shared secret and sign the records they send, 
 so that the backend can verify that a received message originates from an authorised collection 
-component.
+component. 
 
 The verification is conditional on configuration. 
 If no secret is configured on the sending side, the message is transmitted unsigned, and the 

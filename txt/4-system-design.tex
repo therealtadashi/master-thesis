@@ -47,7 +47,7 @@ conditions within the federated identity environment.
 
 These considerations result in five requirements:
 \begin{enumerate}
-    \item Two independent sources: the declared configuration and the observed event.
+    \item At least two independent sources: the declared configuration and the observed event.
     \item Detection and reporting without automated intervention.
     \item Realisation as a plugin, without modification of the IdP.
     \item Storage outside the monitored system, with authenticated transport and pseudonymisation at the source.
@@ -113,6 +113,10 @@ An alert derived from either source could not be attributed to a transaction.
 
 The remaining three channels form the collection layer of this work. 
 These are the audit log, the configuration files, and the runtime state accessible through interceptors. 
+Together they provide the two independent sources that the first requirement of 
+Section~\ref{sec:requirements} demands. 
+The configuration files describe the intended state of an SP, while the audit log and the 
+interceptors record what actually occurred.
 They are described in the following sections. 
 
 \subsection{The Audit Logs}\label{subsec:audit-log}
@@ -328,6 +332,8 @@ As stated in Section~\ref{sec:overview}, this tool is deliberately deployed outs
 trust boundary of the IdP. 
 The separation avoids placing the monitoring system under the same security assumptions 
 and access controls as the system it monitors. 
+Together with the authenticated transport and the pseudonymisation described in this section, the 
+separation realises the fourth requirement of Section~\ref{sec:requirements}. 
 
 If the monitoring functionality were deployed entirely within the IdP, an attacker who compromises 
 the IdP could potentially compromise or manipulate the monitoring functionality at the same time. 
@@ -501,14 +507,15 @@ Which rules are active in a given deployment is thus determined by what that dep
 
 Which conditions the rules examine is a separate question from how they are evaluated. 
 Thirteen of the fifteen rules can be traced to documented sources. 
+For these rules, the fifth requirement of Section~\ref{sec:requirements} is met.
 Ten of them were derived from the three frameworks introduced in Section~\ref{sec:rules}, namely 
 the survey by Simpson and Groß, the OASIS security considerations and the STRIDE classification. 
-\texttt{FAILED\_\allowbreak{}LOGIN} reports an indicator rather than an attack and follows the 
-OWASP guidance on security logging. 
+One further rule, \texttt{FAILED\_\allowbreak{}LOGIN}, reports an indicator rather than an attack 
+and follows the OWASP guidance on security logging. 
 The two rules that compare independently produced records follow the log integrity argument of 
 Section~\ref{sec:why-not-siem}. 
 The remaining two rules cannot be traced and are discussed after Table~\ref{tab:rules}, 
-which shows the resulting assignment for each rule.
+which shows the resulting assignment for each rule. 
 
 \begin{table}[h]
 \centering

@@ -25,8 +25,8 @@ Since an IdP authenticates on behalf of other entities, such a comparison requir
 independent sources.
 One source describing the intended configuration and another describing what actually occurred.
 
-The classification in Section~\ref{sec:why-inside} placed this work at the \textit{Monitor and Detect} 
-level, with \textit{Plan and Prevent} deliberately excluded. 
+The classification in Section~\ref{sec:why-inside} placed this work at the \textit{Monitor \& Detect} 
+level, with \textit{Plan \& Prevent} deliberately excluded. 
 The system must therefore report detected security-relevant events without automatically intervening.
 
 As mentioned in Section~\ref{sec:why-inside}, Hall et al. identify the integration of detection 
@@ -234,7 +234,7 @@ it observes.
 
 \subsection{Interceptor}\label{subsec:interceptor}
 
-As mentioned in Section~\ref{subsec:profile-flows} Shibboleth provides three interception points 
+As mentioned in Section~\ref{subsec:profile-flows}, Shibboleth provides three interception points 
 within its profile processing: inbound message processing, post authentication processing, and 
 outbound message processing. 
 Interceptors are implemented as Spring Web Flow subflows that are executed at these predefined 
@@ -490,8 +490,7 @@ A rule may depend on a field that a given deployment does not record, in which c
 cannot reach a valid conclusion. 
 Evaluating it regardless would produce a result that appears definite but rests on absent 
 information, and a rule that cannot observe a condition must not report its absence as a finding. 
-Each rule therefore declares which fields it requires, and the engine verifies their availability 
-before evaluating the rule. 
+Each rule therefore checks whether the fields it requires are recorded before it evaluates an input. 
 Where the required information is not recorded, the rule withdraws rather than returning a result. 
 Which rules are active in a given deployment is thus determined by what that deployment logs. 
 
@@ -511,7 +510,7 @@ which shows the resulting assignment for each rule.
 \centering
 \caption{Assignment of the 15 Detection Rules to Documented Vulnerabilities and Attack Classes}\label{tab:rules}
 \small
-\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{2.7cm}>{\raggedright\arraybackslash}p{2.4cm}p{1.1cm}l}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{2.7cm}>{\raggedright\arraybackslash}p{2.4cm}p{1.3cm}l}
 \toprule
 Rule & Vulnerability & Attack Class & STRIDE & Source \\
 \midrule

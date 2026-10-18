@@ -30,7 +30,7 @@ The correlation found a counterpart for every report, and with the inbound messa
 least one hash that separates the users, it found the correct one in every tested scenario. 
 Only the strategy that relies on time alone (\texttt{TIME\_\allowbreak{}WINDOW}) assigned reports to 
 the wrong entry, and only where logins at the same SP followed each other within less than 100\,ms. 
-The hashed heuristics (\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}) remains 
+The hashed heuristic (\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW}) remains 
 reliable up to about three logins per second for a given combination of subject, address and SP, a rate 
 that interactive users do not reach (Section~\ref{subsec:eval-correlation-results}). 
 The fifteen detection rules behave as intended for the scenarios constructed for them. 

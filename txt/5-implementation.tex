@@ -131,7 +131,7 @@ identifier of the request that it answers and the issue time of the response, so
 level fields can be compared with the audit entry. 
 The Logstash pipeline already mapped the corresponding tokens to fields.
 
-The information obtained from these contexts is extracted, parsed, and combined into 
+The information collected by the two interceptors is extracted, parsed, and combined into 
 a single payload. 
 Before this payload leaves the IdP, the sensitive identifiers it contains are 
 pseudonymised, as required by the design described in Section~\ref{sec:trust}.
@@ -263,8 +263,8 @@ If none of the identifiers is available, the timestamp remains the sole criterio
 
 The three correlation strategies implement a common interface and are applied in a fixed order 
 of precedence. 
-Each strategy declares the audit fields it depends on and queries the field registry described 
-in Section~\ref{sec:impl-aggregation} before it is applied. 
+Each strategy first checks in the field registry described in Section~\ref{sec:impl-aggregation} 
+whether the audit fields it depends on are recorded. 
 Where a required field is not recorded by the deployment, the strategy withdraws and the next 
 one in the chain is attempted. 
 
@@ -316,13 +316,13 @@ engine evaluates the security settings of an SP, the metadata rule engine evalua
 metadata, and the interceptor rule engine evaluates the post authentication reports produced 
 by the interceptor. 
 
-All rules implement a common interface. 
+The rules of each engine implement a common interface. 
 A rule receives a single object of the type its engine is responsible for and returns either 
 an alert or nothing. 
-Each rule additionally declares which fields it depends on, and the engine queries the field 
-registry described in Section~\ref{sec:impl-aggregation} before evaluating it. 
-Where a required field is not recorded by the deployment, the rule is skipped rather than 
-evaluated on incomplete data. 
+Each rule first checks in the field registry described in Section~\ref{sec:impl-aggregation} 
+whether the fields it depends on are recorded. 
+Where a required field is not recorded by the deployment, the rule returns no result rather than 
+evaluating incomplete data.
 
 The engines are executed by a scheduler at intervals that reflect the rhythm of their input. 
 Login events and post authentication reports arrive continuously and are therefore evaluated 

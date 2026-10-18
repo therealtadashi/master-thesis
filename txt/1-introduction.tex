@@ -17,8 +17,8 @@ One way in which malicious attackers take advantage of this vulnerable authentic
 large databases of leaked user credentials (often including email addresses and corresponding passwords) 
 to authenticate at \glspl{sp} as the affected user. 
 This attack method is called credential stuffing. 
-Verizon reports that credential abuse was the leading initial attack vector in 22\% of the 12{,}195 confirmed 
-data breaches in the 2025 report~\cite{VerizonDataBreach}. 
+Verizon reports that credential abuse was the most common initial access vector, involved in 22\% of the 
+12{,}195 confirmed data breaches in the 2025 report~\cite{VerizonDataBreach}. 
 
 To reduce the number of places where credentials are created and stored, \gls{fim} was developed. 
 FIM lets users access several SPs with a single set of credentials that is managed by an \gls{idp}. 
@@ -27,12 +27,12 @@ When a user attempts to gain access on the SP in FIM, the user's browser is redi
 to the IdP.
 The user authenticates with the IdP, which then confirms the user's identity to the SP~\cite{FIMSurvey}. 
 
-Shibboleth, developed by Internet2, is one of the most widely deployed open-source implementations of 
-this model in the research and education sector~\cite{Shibboleth}. 
+Shibboleth, originally developed by Internet2, is one of the most widely deployed open-source 
+implementations of this model in the research and education sector~\cite{Shibboleth}. 
 Under this model, a user authenticates with their organisation's IdP once.
 The IdP then issues cryptographically signed SAML assertions that SPs accept 
 as proof of identity. 
-This architecture is widely deployed in higher education and research federation such 
+This architecture is widely deployed in higher education and research federations such 
 as DFN-AAI~\cite{DFNAAI}, where a single IdP serves dozens of SPs simultaneously.
 
 This architectural property introduces a critical consequence: the IdP becomes a single point of trust 

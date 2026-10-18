@@ -176,40 +176,6 @@
       \verb https://shibboleth.atlassian.net/wiki/spaces/IDP5/pages/3199509659/LoggingConfiguration
       \endverb
     \endentry
-    \entry{Metadata}{online}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=d81f5333693d3d89741595e3d90230cc}{%
-           family={Cantor},
-           familyi={C\bibinitperiod},
-           given={Scott},
-           giveni={S\bibinitperiod},
-           givenun=0}}%
-      }
-      \strng{namehash}{d81f5333693d3d89741595e3d90230cc}
-      \strng{fullhash}{d81f5333693d3d89741595e3d90230cc}
-      \strng{bibnamehash}{d81f5333693d3d89741595e3d90230cc}
-      \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
-      \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
-      \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
-      \field{extraname}{4}
-      \field{sortinit}{C}
-      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{month}{05}
-      \field{title}{Metadata}
-      \field{urlday}{11}
-      \field{urlmonth}{9}
-      \field{urlyear}{2026}
-      \field{year}{2021}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://shibboleth.atlassian.net/wiki/spaces/CONCEPT/pages/928645459/Metadata
-      \endverb
-      \verb{url}
-      \verb https://shibboleth.atlassian.net/wiki/spaces/CONCEPT/pages/928645459/Metadata
-      \endverb
-    \endentry
     \entry{MetadataConfiguration}{online}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=d81f5333693d3d89741595e3d90230cc}{%
@@ -225,7 +191,7 @@
       \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
-      \field{extraname}{5}
+      \field{extraname}{4}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labelnamesource}{author}
@@ -259,7 +225,7 @@
       \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
-      \field{extraname}{6}
+      \field{extraname}{5}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labelnamesource}{author}
@@ -293,7 +259,7 @@
       \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
-      \field{extraname}{7}
+      \field{extraname}{6}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labelnamesource}{author}
@@ -327,7 +293,7 @@
       \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
-      \field{extraname}{8}
+      \field{extraname}{7}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labelnamesource}{author}
@@ -361,7 +327,7 @@
       \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
-      \field{extraname}{9}
+      \field{extraname}{8}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labelnamesource}{author}

@@ -85,7 +85,7 @@ Section~\ref{sec:requirements} is met.
 
 The post authentication interceptor extends the \texttt{Abstract\allowbreak{}Profile\allowbreak{}Action} 
 API of the Shibboleth IdP and operates on the \texttt{Profile\allowbreak{}Request\allowbreak{}Context}, 
-which represents the current state of the profile execution~\cite{AbstractProfileAction, ProfileRequestContext}. 
+the root of the context tree described in Section~\ref{subsec:context-tree}~\cite{AbstractProfileAction, ProfileRequestContext}. 
 From this context it accesses the child contexts that carry the information relevant to 
 the monitoring purpose. 
 The \texttt{Relying\allowbreak{}Party\allowbreak{}Context} identifies the SP for which the authentication is 
@@ -355,8 +355,14 @@ can be adjusted without changing the rule itself.
 authentication attempts of the same subject within a defined time window, which requires a query 
 across previously stored events. 
 \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} operates on the raw SAML request 
-contained in a post authentication report and examines its structure for duplicate identifiers and for 
-signature elements referencing an identifier that occurs more than once. 
+contained in a post authentication report and examines it for more than one signature element and 
+for signature references to an identifier that occurs more than once. 
+A signature refers to the element it protects through this identifier 
+(Section~\ref{subsec:xml-sig-enc}), so that a second element with the same identifier leaves open 
+which of the two was signed. 
+Signature elements only appear in requests sent with the HTTP-POST binding, since the HTTP-Redirect 
+binding removes the signature from the message and transmits it as a URL parameter 
+(Section~\ref{subsec:saml-bindings})~\cite{SAMLBinding}. 
 
 The remaining rules follow one of these patterns or compare an observed event against the 
 configuration declared for the SP involved, as described for \texttt{MFA\_\allowbreak{}BYPASS} in 

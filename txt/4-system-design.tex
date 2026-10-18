@@ -177,23 +177,12 @@ the audit entry, as described in Section~\ref{sec:impl-aggregation}.
 
 \subsection{Metadata and Relying Party File}\label{subsec:static-configuration}
 
-In a Shibboleth IdP, SAML metadata describes the entities that participate in a federation 
-and provides the information required for establishing communication between them. 
-Metadata is represented in XML and contains information about the roles, endpoints, supported 
-protocols, and cryptographic keys of the participating entities~\cite{Metadata}.
-
-A SAML entity can support one or more roles, which are represented by role descriptors within 
-the metadata. 
-For SPs, the relevant role is represented by the \texttt{md:SPSSODescriptor} element. 
-This descriptor contains information required by the IdP to communicate with the SP, including 
-the supported SAML protocol families specified by the \texttt{protocol\allowbreak{}Support\allowbreak{}Enumeration} 
-attribute, cryptographic keys, supported name identifier formats, and the endpoints provided 
-by the SP~\cite{MetadataForSP}.
-A central component of an SP's metadata is the \texttt{md:Assertion\allowbreak{}Consumer\allowbreak{}Service} element. 
-It specifies an endpoint to which the IdP can send SAML responses and assertions on behalf 
-of the SP. 
-By explicitly enumerating these endpoints in the metadata, the IdP can determine the locations 
-to which SAML messages may be sent~\cite{MetadataForSP}.
+SAML metadata, introduced in Section~\ref{subsec:saml-metadata}, describes the entities that 
+participate in a federation. 
+For an SP, the relevant role descriptor is the \texttt{md:SPSSODescriptor} element. 
+It lists among others the supported protocols, the name identifier formats, the cryptographic keys 
+and the \texttt{md:Assertion\allowbreak{}Consumer\allowbreak{}Service} endpoints to which the IdP 
+may send its responses~\cite{MetadataForSP}. 
 
 The Shibboleth IdP consumes metadata through configured metadata providers. 
 These providers define the sources from which SAML metadata is obtained and are configured using 
@@ -205,7 +194,7 @@ information are associated with them.
 Alongside the runtime information recorded in the audit log, the IdP holds a second class of 
 information that describes not what happened, but what is supposed to happen. 
 This information is contained in the configuration files of the deployment, most notably in 
-\textit{relying-party.xml}.
+\textit{relying-party.xml} (Section~\ref{subsec:config}).
 
 This file specifies which functional features the IdP supports and allows these settings to be 
 customised based on the identity of a relying party. 

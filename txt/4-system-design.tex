@@ -253,9 +253,9 @@ points without requiring modifications to the underlying profile
 flow~\cite{ProfileHandling, ProfileInterceptConfiguration}.
 
 Inbound interceptors are executed during the processing of an incoming request. 
-At this point, the inbound \texttt{Message\allowbreak{}Context} tree is generally populated and, where 
-applicable, contains a \texttt{Relying\allowbreak{}Party\allowbreak{}Context} as well as contexts required for operations 
-such as transport or message authentication~\cite{ProfileHandling}.
+At this point, the inbound \texttt{Message\allowbreak{}Context} tree is fully populated. 
+A \texttt{Relying\allowbreak{}Party\allowbreak{}Context} has typically been created as well, together 
+with contexts required for operations such as transport or message authentication~\cite{ProfileHandling}.
 
 Consequently, an inbound interceptor can observe information associated with the received message 
 and the context in which it is being processed. 
@@ -266,8 +266,9 @@ subsequent profile processing~\cite{ProfileHandling}.
 For the monitoring system, however, this point comes too early, since the outcome of the 
 authentication is not yet known when it is reached.
 
-The post authentication interception point is executed after authentication and attribute lookup have 
-taken place, but before the profile constructs the outgoing message. 
+The post authentication interception point is executed after the user has been authenticated and 
+after the attributes have been resolved and filtered, but before the profile constructs the 
+outgoing message~\cite{ProfileInterceptConfiguration}. 
 Unlike the inbound and outbound hooks, this interception point is only available for a subset of 
 profiles, particularly profiles that perform user authentication~\cite{ProfileHandling}.
 
@@ -297,20 +298,21 @@ authentication workflow and properties of the response that is about to be issue
 
 The monitoring system uses two interception points, the post authentication point and the 
 outbound point. 
-The post authentication point is the earliest point at which both the incoming message and the 
-authentication result are available in the same context, and it serves as the main collection point. 
+The post authentication point is the earliest of the three interception points at which both the 
+incoming message and the authentication result are available in the context tree, and it serves as 
+the main collection point.
 The outbound point still has access to both, since its input is the entire state of the tree that 
 the profile execution has produced~\cite{ProfileHandling}, and it additionally holds the response 
 that is about to be issued. 
 At the post authentication point, in contrast, the outgoing response does not exist yet. 
 The outbound interceptor therefore complements the main collection point with the fields that only 
 the response carries.
-The outbound point is also reached by responses that the IdP issues without authenticating the 
-user, for instance an error response for an SP whose configuration cannot be fulfilled, which the 
-post authentication point never sees.
+The outbound point is also reached by error responses, for instance after a failed login or when 
+the IdP cannot provide the authentication context that the SP requested. 
+The post authentication point never sees these responses, since no authentication has succeeded. 
 
 What remains outside the view of the post authentication point is the outgoing response, including 
-the response identifier, the final status of the transaction and the encryption actually applied. 
+the response identifier, the final status of the transaction and whether the assertion was encrypted. 
 The outbound interceptor makes these properties observable, with one limit. 
 When the assertion is encrypted, the encryption has already taken place when the outbound hook 
 runs, so that the assertion identifier, the authentication context and the name identifier are no 

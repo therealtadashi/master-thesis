@@ -19,10 +19,10 @@ The immediate benefit is convenience, since users no longer need to create and r
 separate set of credentials for every service. 
 The more consequential benefit lies elsewhere. 
 Because credentials exist in one place rather than in every participating service, the number of 
-systems that store and verify them is reduced, since the RP neither verifies the user's 
+systems that store and verify them is reduced, since the SP neither verifies the user's 
 authenticators itself nor needs to issue its own~\cite{NIST80063C}. 
 The strength of authentication is consequently also determined in one place. 
-An RP can require a minimum authentication assurance level, which the IdP fulfils and reports in 
+An SP can require a minimum authentication assurance level, which the IdP fulfils and reports in 
 the assertion~\cite{NIST80063C}, and from the second level upwards this requires two distinct 
 authentication factors~\cite{NIST80063B}. 
 Concentrating authentication at one well-managed site also focuses administrative effort and makes 
@@ -52,6 +52,7 @@ A federation consists of two kinds of participants.
 The IdP authenticates users and issues statements about them~\cite{SAMLOverview}. 
 The SP offers the resource a user wants to reach and relies on those statements instead of authenticating 
 the user itself. 
+Since it relies on the statements of the IdP, the SP is also referred to as the relying party. 
 Neither role is meaningful without the other, and their interaction follows a fixed pattern. 
 
 When a user requests a protected resource, the SP does not check credentials. 
@@ -329,7 +330,7 @@ Attached to this root are child contexts, each holding one aspect of the request
 state grows as processing advances rather than being assembled in a single object at the outset.
 
 Three of these child contexts are relevant in the following. 
-The \texttt{InboundMessageContext} holds the message as it was received, the 
+The inbound \texttt{MessageContext} holds the message as it was received, the 
 \texttt{RelyingPartyContext} identifies the SP the request originates from and records whether 
 that identity could be verified, and the \texttt{SubjectContext} holds the authenticated subject 
 once authentication has completed~\cite{ProfileHandling}. 

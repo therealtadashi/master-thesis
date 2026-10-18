@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  18 OCT 2026 17:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  18 OCT 2026 17:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2438,9 +2438,15 @@ Underfull \vbox (badness 6741) has occurred while \output is active []
 <./txt/../img/sp-init-sso.png, id=305, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
-Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 218.
+Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 219.
 (pdftex.def)             Requested size: 320.09357pt x 256.91148pt.
- [7 <./txt/../img/sp-init-sso.png>] [8] [9]) (./txt/3-related-work.tex [10]
+ [7 <./txt/../img/sp-init-sso.png>] [8]
+Overfull \hbox (1.20769pt too wide) in paragraph at lines 332--339
+[]\T1/jkpl/m/n/10.95 (-20) Three of these child con-texts are rel-e-vant in the
+ fol-low-ing. The in-bound \T1/lmtt/m/n/10.95 MessageContext
+ []
+
+[9]) (./txt/3-related-work.tex [10]
 chapter 3.
 [11
 
@@ -2653,7 +2659,7 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 514783 bytes).
+Output written on out/main.pdf (86 pages, 514887 bytes).
 PDF statistics:
  1459 PDF objects out of 1728 (max. 8388607)
  1324 compressed objects within 14 object streams

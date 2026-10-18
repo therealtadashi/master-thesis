@@ -475,23 +475,6 @@ Rule & End-to-end & Trigger or reason \\
 \end{tabularx}
 \end{table}
 
-\paragraph{Every rule is proven against a real Elasticsearch instance, and six are also tested end-to-end.} 
-All fifteen rules have a true positive proof on the unit and on the integration level, so that for 
-every rule the queries, the index mapping and the stored documents are covered and not only the 
-detection logic. 
-The test suite comprises 118 unit tests for the rules, 21 integration tests and seven end-to-end 
-tests. 
-Six rules are additionally proven from a real login. 
-For \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}, \texttt{FAILED\_\allowbreak{}LOGIN}, 
-\texttt{BRUTE\_\allowbreak{}FORCE} and \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION}, the end-to-end 
-level contains both a true positive and a true negative proof. 
-\texttt{WEAK\_\allowbreak{}ENCRYPTION} has only the true negative proof, since no SP in the test 
-environment requests a weak algorithm, and the true positive proof of 
-\texttt{FIELD\_\allowbreak{}MISMATCH} is the manipulation described below. 
-For the remaining nine rules, the last column of the table names what an end-to-end scenario would require. 
-That the end-to-end level is not redundant became apparent when it uncovered a fault in the log 
-shipping stack that no integration test could have found (Section~\ref{sec:defects}).
-
 \paragraph{Every rule is proven against a real Elasticsearch instance, and thirteen are also tested end-to-end.} 
 All fifteen rules have a true positive proof on the unit and on the integration level, so that for 
 every rule the queries, the index mapping and the stored documents are covered and not only the 
@@ -619,7 +602,7 @@ runs that compare all three configurations under the same conditions.
 \paragraph{Measurements.}
 Three measurements capture the cost of the interceptors from different angles. 
 The internal measurement is recorded by each interceptor itself (\textit{executionTimeMs}) and 
-covers the collection of the data, the hashing and the extraction of fields. 
+covers reading the contexts and extracting the fields. 
 It excludes the construction of the payload and the transmission and is therefore a lower bound. 
 Since the value is part of every report, it is available without further instrumentation. 
 The external measurement is the duration of a login as the client observes it, from the first 

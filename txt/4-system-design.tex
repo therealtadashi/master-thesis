@@ -565,10 +565,10 @@ The comparison establishes that two records disagree but not which of them was a
 attacker who controls the application process can alter the report as well. 
 It also cannot compare fields that only one of the records contains. 
 For encrypted assertions this applies to the fields inside the assertion, which the outbound 
-interceptor cannot read after the encryption and which only the audit log records. 
-A field is compared only if the interceptor observed it and the audit format of the deployment 
-records it, in line with the rule of the other detectors that a rule should not guess when the data 
-it requires is absent.
+interceptor cannot read after the encryption, whereas the audit log records them. 
+Unlike the other rules, the comparison does not withdraw as a whole when a field is missing. 
+It compares only the fields that the interceptor observed and that the audit format of the 
+deployment records. 
 
 Two rules cannot be traced to any documented source. 
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} identifies an indicator for which no documented relation to a specific attack 

@@ -94,7 +94,7 @@ The design of the collection layer begins with a broader question than the choic
 Through which kinds of channel does an application disclose information about itself at all?
 Applied to the Shibboleth IdP, five such channels can be identified. 
 The application writes log files, it reads static configuration and metadata, it maintains runtime state that 
-is accessible through defined extension points, it exposes status endpoints, and it publishes metrics via Java 
+is accessible through defined extension points, it exposes status endpoints and it publishes metrics via Java 
 Management Extensions. 
 
 Not all of these are suitable for the purpose of this work. 
@@ -112,7 +112,7 @@ A counter reports that a number of logins occurred, not which login was affected
 An alert derived from either source could not be attributed to a transaction. 
 
 The remaining three channels form the collection layer of this work. 
-These are the audit log, the configuration files, and the runtime state accessible through interceptors. 
+These are the audit log, the configuration files and the runtime state accessible through interceptors. 
 Together they provide the two independent sources that the first requirement of 
 Section~\ref{sec:requirements} demands. 
 The configuration files describe the intended state of an SP, while the audit log and the 
@@ -188,7 +188,7 @@ The Shibboleth IdP consumes metadata through configured metadata providers.
 These providers define the sources from which SAML metadata is obtained and are configured using 
 \texttt{<MetadataProvider>} elements in \textit{conf/metadata-providers.xml}~\cite{MetadataConfiguration}. 
 The metadata therefore forms an essential part of the IdP configuration, as it determines which 
-federation entities are known to the IdP and which endpoints, protocols, and cryptographic 
+federation entities are known to the IdP and which endpoints, protocols and cryptographic 
 information are associated with them. 
 
 Alongside the runtime information recorded in the audit log, the IdP holds a second class of 
@@ -201,7 +201,7 @@ customised based on the identity of a relying party.
 It determines which profiles are enabled for a given partner and allows security configurations 
 to be attached at various levels. 
 These include whether assertions and other content are encrypted, at which layer signing is 
-performed, and which cryptographic algorithms are used~\cite{RelyingPartyConfiguration}.
+performed and which cryptographic algorithms are used~\cite{RelyingPartyConfiguration}. 
 
 Of particular relevance to this work is that these settings are not global. 
 A deployment defines default behaviour that applies to all partners, and may then override this 
@@ -235,7 +235,7 @@ it observes.
 \subsection{Interceptor}\label{subsec:interceptor}
 
 As mentioned in Section~\ref{subsec:profile-flows}, Shibboleth provides three interception points 
-within its profile processing: inbound message processing, post authentication processing, and 
+within its profile processing: inbound message processing, post authentication processing and 
 outbound message processing. 
 Interceptors are implemented as Spring Web Flow subflows that are executed at these predefined 
 points without requiring modifications to the underlying profile 
@@ -405,7 +405,7 @@ reply to the submitted event~\cite{BlackWatch}.
 
 This section explains how the monitoring tool processes the collected data. 
 Records originating from different sources are first linked to the authentication event they describe, then 
-evaluated against the detection rules, and finally classified according to the impact of the condition they report.
+evaluated against the detection rules and finally classified according to the impact of the condition they report.
 
 \subsection{Correlation}\label{subsec:correlation}
 
@@ -473,7 +473,7 @@ traced back to its rule and to a documented weakness or requirement (Table~\ref{
 
 The rules do not all operate on the same kind of input. 
 Four input types occur in this system: login events derived from the audit log, the configuration 
-of an SP, its metadata, and the post authentication reports produced by the interceptor.
+of an SP, its metadata and the post authentication reports produced by the interceptor.
 These differ not only in structure but also in the rhythm at which they appear. 
 Login events occur continuously during operation, whereas a configuration or a metadata document 
 changes rarely and may remain unchanged for long periods of time.
@@ -652,7 +652,7 @@ Context  & \texttt{MISSING\_MFA}, \texttt{MFA\_BYPASS}, \texttt{WEAK\_ENCRYPTION
 
 \section{Visualisation Layer}\label{sec:visualisation}
 
-The primary purpose of the visualisation layer is to present the collected, correlated, and 
+The primary purpose of the visualisation layer is to present the collected, correlated and 
 detected information to an operator through a user interface. 
 The layer does not generate new information. 
 Instead, it presents the data produced and aggregated by the preceding layers. 
@@ -727,7 +727,7 @@ The third alternative was to use machine learning instead of explicitly defined 
 In such an approach, the system would learn normal behaviour statistically and identify deviations 
 from it as anomalies.
 This approach was rejected because the detection rules developed in this work are explicitly 
-derived from documented vulnerabilities, security requirements, and threat classifications. 
+derived from documented vulnerabilities, security requirements and threat classifications. 
 A rule based approach therefore provides direct traceability from a finding to the underlying 
 security rationale, which is a central objective of the derivation described in 
 Section~\ref{sec:rules}. 

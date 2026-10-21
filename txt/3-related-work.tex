@@ -9,7 +9,7 @@ development of a monitoring system for an IdP operating at the application layer
 The goal was to find relevant existing solutions and examine their limitations and 
 applicability to this thesis. 
 These related works provide valuable insights and a foundation for this thesis by identifying 
-existing approaches, their areas of coverage, and gaps that remain relevant to the 
+existing approaches, their areas of coverage and gaps that remain relevant to the 
 considered scenario. 
 The most relevant studies and projects are presented and analysed in the following sections.
 
@@ -70,7 +70,7 @@ Two dimensions of this taxonomy are particularly relevant to the scope of this w
 \texttt{Architecture Level} and the \texttt{Self-Protection Level}.
 
 The \texttt{Architecture Level} describes the layer at which a security mechanism operates and 
-distinguishes between Network, Host, Software/Application, and Services. 
+distinguishes between Network, Host, Software/Application and Services. 
 This dimension allows the observation position of different security mechanisms to be compared. 
 Network-based IDS, such as Suricata and Snort, operate primarily at the network level, 
 whereas \gls{edr} solutions operate at the host level. 
@@ -81,10 +81,10 @@ security-relevant information becomes observable.
 
 While the Architecture Level describes where the system operates, the \texttt{Self-Protection Level} 
 describes the degree of self-protection according to the MAPE process of Monitor, Analyze, 
-Plan, and Execute. 
+Plan and Execute. 
 The proposed system fully covers the \textit{Monitor \& Detect} level by collecting and detecting 
 security-relevant events within the IdP. 
-The \textit{Analyze \& Characterise} level is partially addressed through event correlation and 
+The \textit{Analyze \& Characterize} level is partially addressed through event correlation and 
 severity classification. 
 In contrast, \textit{Plan \& Prevent} is outside the scope of this work. 
 The system generates alerts based on detected events but does not autonomously modify the system 
@@ -162,7 +162,7 @@ cannot independently verify information that is incorrect or has been manipulate
 
 These limitations do not diminish the value of SIEM systems, but they define the boundary within 
 which they operate. 
-The collection, storage, and correlation of log data used in this work therefore correspond to 
+The collection, storage and correlation of log data used in this work therefore correspond to 
 established SIEM functionality and do not constitute an original contribution. 
 OWASP A09 explicitly recommends centralised logging and monitoring and identifies solutions such 
 as the ELK stack as possible tools for addressing logging and monitoring 
@@ -231,7 +231,7 @@ application~\cite{OWASPAppSensor}.
 
 AppSensor detection points primarily monitor the behaviour of a user within an application 
 session. 
-They can detect events such as tampered cookies, modified parameters, or injection attempts. 
+They can detect events such as tampered cookies, modified parameters or injection attempts. 
 The framework therefore asks whether a user's behaviour is suspicious. 
 It does not provide a mechanism for comparing an observed runtime event with a configuration 
 or security state declared by a third party.
@@ -263,7 +263,7 @@ classification scheme.
 The FIM survey identifies 11 vulnerabilities and 14 attack classes based on a systematic 
 literature review~\cite{FIMSurvey}. 
 The vulnerabilities are grouped into cross-protocol issues where the same weakness is exploited 
-by the same attack class, results in the same CIA consequence, and is documented for at least 
+by the same attack class, results in the same CIA consequence and is documented for at least 
 two different protocols. 
 The survey identifies 14 such issues. 
 Six of them concern SAML (issues 5, 7, 8, 9, 10 and 14 in the numbering of the survey), while 
@@ -280,7 +280,7 @@ but also from the security properties that a SAML deployment is expected to enfo
 A third perspective is provided by STRIDE, which is a threat classification scheme that 
 categorises threats according to their mode of operation~\cite{ThreatModeling}. 
 It distinguishes between spoofing, tampering, repudiation, information disclosure, denial 
-of service, and elevation of privilege. 
+of service and elevation of privilege. 
 Graves applies this framework to the analysis of threats against Shibboleth~\cite{ShibbolethGIAC}. 
 In this work, STRIDE is used to characterise the security impact of the attack scenarios 
 identified by the other two sources.

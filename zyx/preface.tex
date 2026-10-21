@@ -105,6 +105,25 @@ benutzt sowie wörtliche und sinngemäße Zitate als solche gekennzeichnet habe.
  \currentpdfbookmark{Contents}{contents}
 }
 \tableofcontents{}
+
+\begin{hidenfromTOC}
+\cleardoublepage
+\iftotalfigures\listoffigures{}\vspace{1em}\fi
+
+\begingroup
+\let\cleardoublepage\relax
+\let\clearpage\relax
+\ifthenelse{\equal{\mylanguage}{de}}{%
+ \renewcommand{\lstlistlistingname}{Programmverzeichnis}
+}{%
+ \renewcommand{\lstlistlistingname}{List of Listings}
+}
+\iftotallstlistings\lstlistoflistings{}\vspace{1em}\fi
+\iftotaltables\listoftables{}\fi
+\endgroup
+\end{hidenfromTOC}
+
+\printglossaries
 \microtypesetup{protrusion=true}
 \mainmatter{}
 

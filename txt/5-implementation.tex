@@ -131,7 +131,7 @@ identifier of the request that it answers and the issue time of the response, so
 level fields can be compared with the audit entry. 
 The Logstash pipeline already mapped the corresponding tokens to fields.
 
-The information collected by the two interceptors is extracted, parsed, and combined into 
+The information collected by the two interceptors is extracted, parsed and combined into 
 a single payload. 
 Before this payload leaves the IdP, the sensitive identifiers it contains are 
 pseudonymised, as required by the design described in Section~\ref{sec:trust}.
@@ -164,7 +164,7 @@ test environment, at the cost of accepting unauthenticated records in that case.
 A production deployment is therefore expected to configure the secret on both sides. 
 
 The monitoring tool provides a separate endpoint for each type of collected data. 
-A post authentication report, an outbound report, and a configuration document 
+A post authentication report, an outbound report and a configuration document 
 differ in structure and in the processing, so that separating them at the interface 
 avoids having to determine the type of a record before it can be handled. 
 The path of audit entries is different, since Logstash writes them directly into 
@@ -406,7 +406,7 @@ list each deviating field with the values of both records.
 
 \section{Visualisation Layer}\label{sec:impl-visualisation}
 
-The visualisation layer displays the collected, correlated, and detected data through an 
+The visualisation layer displays the collected, correlated and detected data through an 
 Angular based web application. 
 A generic dashboard such as Kibana was not used, since the views required here are specific to 
 the domain of the monitoring tool. 
@@ -416,7 +416,7 @@ generic index queries alone.
 The main pages implemented for the web application are described below.
 
 The dashboard provides an overview of the most important data within a specified timeframe. 
-It includes the total number of logins, failed logins, successful logins, and detected alerts. 
+It includes the total number of logins, failed logins, successful logins and detected alerts. 
 In addition, it provides a line chart showing the number of logins over the selected timeframe, 
 an overview of the total number of logins per SP, and a detailed table of the individual login 
 events.

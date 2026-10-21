@@ -66,7 +66,7 @@ The credentials themselves never leave the IdP.
 This division has a consequence for how a federation is configured. 
 Because the IdP serves many SPs, it does not treat them uniformly. 
 It maintains a separate configuration for each partner, specifying for instance whether the statement 
-is to be encrypted, which authentication methods are permitted, and which attributes are released. 
+is to be encrypted, which authentication methods are permitted and which attributes are released. 
 The SP maintains its own configuration in turn, stating what it expects to receive and what 
 it will accept.
 
@@ -81,7 +81,7 @@ protocol itself verifies.
 \section{SAML}\label{sec:saml}
 
 The \gls{saml} is an XML-based standard developed by the \gls{oasis} for the exchange of authentication, 
-authorisation, and other security-related information between different parties.
+authorisation and other security-related information between different parties.
 SAML is a fundamental component of FIM and is widely used to enable SSO across organisational and 
 security boundaries~\cite{SAMLOverview}. 
 The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
@@ -89,12 +89,12 @@ SAML 1.1 had already gained widespread adoption in federated identity environmen
 However, several competing approaches existed at the time, including the \gls{idff} developed by the Liberty 
 Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
 SAML 2.0 consolidated several of these approaches into a common standard and introduced additional 
-capabilities, particularly with regard to federation, interoperability, and privacy. 
+capabilities, particularly with regard to federation, interoperability and privacy. 
 
 \subsection{SAML Assertions}\label{subsec:assertions}
 
 SAML assertions serve as security tokens that convey security-related information about a principal, 
-such as a user, system, or service. 
+such as a user, system or service. 
 An assertion contains statements made by an issuer about the principal, which may include authentication, 
 authorisation, and attribute information. 
 Since these statements can have security-critical implications, their authenticity and integrity must be 
@@ -247,7 +247,7 @@ which are represented using role descriptors within an \texttt{EntityDescriptor}
 For an IdP, the \texttt{IDPSSODescriptor} describes information relevant to its role as a SAML IdP. 
 Similarly, an SP can be described using an \texttt{SPSSODescriptor}. 
 These descriptors contain information such as supported SAML protocols, communication endpoints, 
-supported bindings, and cryptographic keys. 
+supported bindings and cryptographic keys. 
 For example, an SP metadata document can specify its \gls{acs} endpoint and the bindings supported 
 for receiving SAML responses, while an IdP can specify its SSO Service endpoints and the corresponding 
 supported bindings.
@@ -261,7 +261,7 @@ endpoints and cryptographic keys are considered valid by an implementation.
 
 The security of the metadata itself is therefore an important aspect of a SAML deployment. 
 If an entity accepts manipulated metadata, an attacker could potentially influence endpoints, 
-supported bindings, or cryptographic keys used during SAML message processing. 
+supported bindings or cryptographic keys used during SAML message processing. 
 SAML metadata can itself be protected using digital signatures, allowing an entity to verify the integrity 
 and origin of the metadata before using it for configuration or trust decisions~\cite{SAMLMetadata}.
 

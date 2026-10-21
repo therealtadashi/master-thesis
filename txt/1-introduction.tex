@@ -91,6 +91,18 @@ Three research questions guide this work:
     \item RQ3 What measurable overhead does the resulting system impose on the monitored IdP?
 \end{itemize}
 
+To answer these questions, the system combines three sources whose records can be related to an 
+individual login, namely the audit log, two interceptors in the authentication flow and the 
+configuration and metadata of the SPs. 
+The records are pseudonymised at their source, correlated in a separate backend and evaluated 
+against fifteen detection rules. 
+The evaluation in a test environment shows that the records of a login can be linked reliably, 
+that all rules behave as specified and that the interceptors add no measurable latency to a login. 
+The main contributions are an analysis of which security-relevant data are observable from which 
+position within the IdP, a monitoring system that correlates these sources across a trust boundary 
+and a catalogue of detection rules that includes two rules comparing independently produced records 
+of the same login. 
+
 The remainder of this thesis is structured as follows. 
 Chapter~\ref{ch:background} introduces the technical foundations of FIM, SAML and the Shibboleth IdP. 
 Chapter~\ref{ch:related-work} positions this work within existing research on application layer intrusion 

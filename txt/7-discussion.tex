@@ -5,7 +5,7 @@
 \chapter{Discussion}\label{ch:discussion}
 
 This chapter interprets the results with respect to the research questions, discusses 
-the structural limitations of the approach, and outlines directions for future work. 
+the structural limitations of the approach and outlines directions for future work. 
 
 \section{Interpretation of the Results}\label{sec:interpretation}
 
@@ -57,11 +57,10 @@ Beyond the individual research questions, one observation emerges across all thr
 Each of them uncovered at least one defect that operation itself had not revealed, six in total 
 (Table~\ref{tab:defects}). 
 A missing token in the audit format had left the exact correlation permanently inactive, the log 
-shipping stack would have reported every encrypted login as unencrypted, and indexing errors in the 
+shipping stack would have reported every encrypted login as unencrypted and indexing errors in the 
 analysis script had produced plausible but incorrect performance figures. 
 In none of these cases did the system fail visibly. 
-It continued to run, alerts continued to be produced, and the dashboard continued to be 
-populated. 
+It continued to run, alerts continued to be produced and the dashboard continued to be populated. 
 The defects became apparent only when the behaviour was compared against an expectation defined 
 in advance.
 
@@ -221,8 +220,8 @@ The detection rules, by contrast, are protocol specific and would not transfer, 
 such as a missing proof key exchange or an implicit flow have no direct counterpart in the rules 
 developed here~\cite{RFC7636, RFC9700}. 
 Future work could therefore examine which application level sources exist in an OIDC provider, 
-whether they are complementary in the same sense, and which rules follow from the documented 
-weaknesses of that protocol.
+whether they are complementary in the same sense and which rules follow from the documented 
+weaknesses of that protocol. 
 
 Finally, one question cannot be addressed by extending the system at all. 
 Determining how reliably the rules detect genuine attacks requires productive traffic in which 

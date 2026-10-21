@@ -89,7 +89,7 @@ the root of the context tree described in Section~\ref{subsec:context-tree}~\cit
 From this context it accesses the child contexts that carry the information relevant to 
 the monitoring purpose. 
 The \texttt{Relying\allowbreak{}Party\allowbreak{}Context} identifies the SP for which the authentication is 
-performed, the \texttt{Subject\allowbreak{}Context} provides the authenticated subject, and the 
+performed, the \texttt{Subject\allowbreak{}Context} provides the authenticated subject and the 
 inbound \texttt{Message\allowbreak{}Context} gives access to the raw SAML request as it was 
 received~\cite{RelyingPartyContext, SubjectContext, InOutOperationContext}. 
 Further contexts, among them the \texttt{Authentication\allowbreak{}Context} and the 
@@ -313,7 +313,7 @@ The detection logic is divided into four engines, following the separation by in
 described in Section~\ref{subsec:detection}. 
 The rule engine evaluates login events derived from audit entries, the configuration rule 
 engine evaluates the security settings of an SP, the metadata rule engine evaluates its 
-metadata, and the interceptor rule engine evaluates the post authentication reports produced 
+metadata and the interceptor rule engine evaluates the post authentication reports produced 
 by the interceptor. 
 
 The rules of each engine implement a common interface. 
@@ -418,7 +418,7 @@ The main pages implemented for the web application are described below.
 The dashboard provides an overview of the most important data within a specified timeframe. 
 It includes the total number of logins, failed logins, successful logins and detected alerts. 
 In addition, it provides a line chart showing the number of logins over the selected timeframe, 
-an overview of the total number of logins per SP, and a detailed table of the individual login 
+an overview of the total number of logins per SP and a detailed table of the individual login 
 events.
 
 The login overview for each SP also provides a detailed dialog containing the configuration and 

@@ -7,7 +7,7 @@
 This chapter evaluates the proposed monitoring system. 
 It presents the test setup, evaluates the correlation and detection capabilities, 
 measures the performance overhead introduced by the interceptors, lists the defects that the 
-evaluation uncovered, and concludes with a discussion of the threats to validity.
+evaluation uncovered and concludes with a discussion of the threats to validity.
 
 \section{Test Setup}\label{sec:setup}
 
@@ -820,7 +820,7 @@ different browsers and networks.
 Since no logins of real users were available, the evaluations show how the system behaves in the 
 situations they reproduce, but not how often these situations arise in operation. 
 This concerns how often logins at an SP follow each other closely enough to confuse the time-only 
-correlation, which load a productive IdP reaches at its peak, and how often the rules detect real 
+correlation, which load a productive IdP reaches at its peak and how often the rules detect real 
 attacks or raise false alarms (Section~\ref{subsec:eval-detection-results}). 
 Single sign-on follow-up requests, which reuse an existing session, were not measured either. 
 Since such requests are faster than a full login, the interceptors would account for a larger share 

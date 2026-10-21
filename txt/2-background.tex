@@ -76,7 +76,7 @@ What binds them together is the metadata each party publishes about itself.
 This includes the endpoints at which it can be reached, and the certificates by which its statements can be verified. 
 Trust within a federation rests on these metadata being current and correctly exchanged~\cite{SAMLMetadata}. 
 Whether the two configurations remain consistent with one another, however, is not something the 
-protocol itself verifies.
+SAML standard itself verifies.
 
 \section{SAML}\label{sec:saml}
 
@@ -225,7 +225,7 @@ The use of the user's web browser as an intermediary introduces an important sec
 The SAML messages exchanged between the IdP and SP are transmitted through the user's browser and 
 therefore pass through a communication path that is not directly controlled by either party. 
 Neither the IdP nor the SP can assume that the messages remain unchanged while being forwarded. 
-Consequently, the security of the protocol cannot rely solely on the communication channel. 
+Consequently, the security of the exchange cannot rely solely on the communication channel. 
 Instead, mechanisms such as digital signatures, message identifiers and validity conditions are used 
 to ensure the authenticity and integrity of SAML messages and to prevent their misuse~\cite{SAMLSecurityConsideration}.
 

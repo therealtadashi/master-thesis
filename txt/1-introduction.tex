@@ -10,27 +10,42 @@ These accounts are frequently linked to personal data such as an email address, 
 even an official identity document. 
 Attackers exploit password reuse by testing large collections of leaked credentials against other 
 services, an attack known as credential stuffing. 
+Verizon's 2026 Data Breach Investigations Report shows that this risk is shifting rather than 
+disappearing. 
 Credential abuse, the most common initial access vector of the previous year, is down to 13\% of 
-more than 22{,}000 confirmed breaches, while the exploitation of vulnerabilities has risen 
-to 31\%~\cite{VerizonDBIR2026}. 
+more than 22{,}000 confirmed breaches, while the exploitation of vulnerabilities has risen to 
+31\%~\cite{VerizonDBIR2026}. 
 
-To reduce the number of places where credentials are created and stored, \gls{fim} was developed. 
-FIM lets users access several \glspl{sp} with a single set of credentials that is managed by an \gls{idp}. 
-FIM consolidates authentication behind a single trusted authority. 
+\Gls{fim} reduces the number of places where credentials are created and stored. 
+It concentrates authentication behind a single trusted authority, the \gls{idp}, so that users 
+can access several \glspl{sp} with one set of credentials. 
 When a user wants to access an SP, the SP redirects the user's browser to the IdP. 
-The user authenticates with the IdP, which then confirms the user's identity to the SP~\cite{FIMSurvey}. 
+The user authenticates with the IdP, which then confirms the user's identity to the 
+SP~\cite{FIMSurvey}. 
 
-Shibboleth, is one of the most widely deployed open-source implementations of this model in the 
-research and education sector~\cite{Shibboleth}. 
-Under this model, a user authenticates with their organisation's IdP once. 
-The IdP then issues cryptographically signed SAML assertions that SPs accept as proof of identity. 
-This describes the authentication process under the SAML implementation of Shibboleth. 
-Shibboleth also supports an official plugin for OpenID Connect~\cite{ShibbolethOIDC}. 
+Shibboleth is one of the most widely deployed open-source implementations of FIM in the research 
+and education sector~\cite{Shibboleth}. 
+A user authenticates once with the IdP of their organisation, which then issues signed SAML 
+assertions that SPs accept as proof of identity. 
+The Shibboleth IdP also supports OpenID Connect through an official plugin~\cite{ShibbolethOIDC}. 
 
-This architectural property introduces a critical consequence: the IdP becomes a single point of trust 
-for the entire federation~\cite{IdPSinglePointOfTrust}. 
-A compromised, misconfigured or vulnerable IdP does not affect one application.
-It can undermine the security of every relying SP. 
+Institutions in research and education usually join a national federation such as 
+DFN-AAI~\cite{DFNAAI}. 
+Its members do not agree on trust bilaterally with every partner. 
+Instead, a federation operator registers the IdPs and SPs of all members and publishes their 
+metadata, on which every member relies~\cite{DFNMRPS}. 
+DFN-AAI and the interfederation service eduGAIN use a full-mesh architecture, in which every 
+institution operates its own IdP and exchanges messages directly with the SPs. 
+Hub-and-spoke federations route all assertions through a central hub instead, and in their variant 
+with central login, a single IdP authenticates the users of all organisations~\cite{IdPSinglePointOfTrust}. 
+
+In a full-mesh federation, the IdP of an institution therefore becomes a single point of trust for 
+every SP that its users access. 
+Only with central login does one IdP have to be trusted by the entire 
+federation~\cite{IdPSinglePointOfTrust}. 
+A compromised, misconfigured or vulnerable IdP thus does not affect one application but every SP 
+that relies on its assertions. 
+
 A notable example is the Sunburst supply chain attack~\cite{FireEyeSSC}. 
 As Hartl and Derek note, after the initial compromise the attackers obtained the 
 trusted certificate used for signing SAML assertions and used it to access all 
@@ -54,11 +69,9 @@ IdP deployments remains largely absent.
 Existing approaches such as AAIEye~\cite{MonitoringAAI} focus primarily on operational availability, 
 leaving security-relevant aspects unaddressed. 
 The research literature reflects a comparable gap. 
-A survey of security analyses in federated identity management finds Shibboleth to be among the least 
-examined protocols and raises the question of whether this reflects a stronger security posture or merely 
-a lower level of attention~\cite{FIMSurvey}. 
-Formal analyses of SAML likewise remain scarce despite its deployment across government, enterprise and 
-education~\cite{FormalSecAnalysisSAML}. 
+A survey of security analyses in FIM finds that Shibboleth has received little attention compared 
+with other FIM systems and asks whether this reflects a stronger security posture or simply a lack 
+of scrutiny~\cite{FIMSurvey}. 
 
 This thesis addresses this gap by proposing a security-oriented monitoring system that operates 
 directly within the Shibboleth application layer. 
@@ -79,14 +92,13 @@ Three research questions guide this work:
 \end{itemize}
 
 The remainder of this thesis is structured as follows. 
-\begin{itemize}
-    \item Chapter~\ref{ch:background} introduces the technical foundations of FIM, SAML and the Shibboleth IdP.
-    \item Chapter~\ref{ch:related-work} positions this work within existing research on application layer intrusion detection and delimits it from network and host based monitoring systems.
-    \item Chapter~\ref{ch:system-design} presents the architecture of the proposed system.
-    \item Chapter~\ref{ch:implementation} describes its implementation, divided by layer.
-    \item Chapter~\ref{ch:evaluation} evaluates the correlation, the detection rules and the overhead of the system.
-    \item Chapter~\ref{ch:discussion} interprets the results with respect to the research questions and discusses the limitations of the approach.
-    \item Chapter~\ref{ch:conclusion} summarises the findings.
-\end{itemize}
+Chapter~\ref{ch:background} introduces the technical foundations of FIM, SAML and the Shibboleth IdP. 
+Chapter~\ref{ch:related-work} positions this work within existing research on application layer intrusion 
+detection and distinguishes it from network and host based monitoring systems. 
+Chapter~\ref{ch:system-design} derives the requirements and presents the architecture of the 
+system, and Chapter~\ref{ch:implementation} describes its implementation layer by layer. 
+Chapter~\ref{ch:evaluation} evaluates the correlation, the detection rules and the overhead of the system. 
+Chapter~\ref{ch:discussion} interprets the results with respect to the research questions and 
+discusses the limitations of the approach, before Chapter~\ref{ch:conclusion} concludes the thesis. 
 
 \end{document}

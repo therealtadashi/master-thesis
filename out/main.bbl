@@ -616,6 +616,34 @@
       \verb https://cloud.google.com/blog/topics/threat-intelligence/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor
       \endverb
     \endentry
+    \entry{DFNAAI}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=09bc289b85eea4bd32d95a2ef099cad3}{%
+           family={{German National Research and Education Network (DFN)}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{09bc289b85eea4bd32d95a2ef099cad3}
+      \strng{fullhash}{09bc289b85eea4bd32d95a2ef099cad3}
+      \strng{bibnamehash}{09bc289b85eea4bd32d95a2ef099cad3}
+      \strng{authorbibnamehash}{09bc289b85eea4bd32d95a2ef099cad3}
+      \strng{authornamehash}{09bc289b85eea4bd32d95a2ef099cad3}
+      \strng{authorfullhash}{09bc289b85eea4bd32d95a2ef099cad3}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{DFN-AAI portal}
+      \field{urlday}{1}
+      \field{urlmonth}{9}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.aai.dfn.de/index.en.html
+      \endverb
+      \verb{url}
+      \verb https://www.aai.dfn.de/index.en.html
+      \endverb
+    \endentry
     \entry{ShibbolethGIAC}{report}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=0704320850a776dcb0f8984164ed4ae2}{%
@@ -1439,6 +1467,39 @@
       \endverb
       \verb{url}
       \verb https://owasp.org/www-project-appsensor/
+      \endverb
+    \endentry
+    \entry{DFNMRPS}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=e9ecccf0c1e1dc233cabc45772506764}{%
+           family={Pempe},
+           familyi={P\bibinitperiod},
+           given={Wolfgang},
+           giveni={W\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{e9ecccf0c1e1dc233cabc45772506764}
+      \strng{fullhash}{e9ecccf0c1e1dc233cabc45772506764}
+      \strng{bibnamehash}{e9ecccf0c1e1dc233cabc45772506764}
+      \strng{authorbibnamehash}{e9ecccf0c1e1dc233cabc45772506764}
+      \strng{authornamehash}{e9ecccf0c1e1dc233cabc45772506764}
+      \strng{authorfullhash}{e9ecccf0c1e1dc233cabc45772506764}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{03}
+      \field{title}{Metadata Registration Practice Statement of the DFN-AAI Federation, Version 1.0}
+      \field{urlday}{21}
+      \field{urlmonth}{10}
+      \field{urlyear}{2026}
+      \field{year}{2019}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.aai.dfn.de/fileadmin/documents/mrps_dfn-aai_1.0.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.aai.dfn.de/fileadmin/documents/mrps_dfn-aai_1.0.pdf
       \endverb
     \endentry
     \entry{SAMLOverview}{online}{}

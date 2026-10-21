@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  21 OCT 2026 16:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  21 OCT 2026 17:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2454,7 +2454,7 @@ chapter 1.
 
 ]
 LaTeX Font Info:    Trying to load font information for TS1+jkpl on input line 
-76.
+89.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/ts1jkpl.fd
 File: ts1jkpl.fd 2007/08/30 Fontinst v1.928 font definitions for TS1/jkpl.
 )
@@ -2469,7 +2469,7 @@ chapter 2.
 
 
 ] [4] [5] [6]
-<./txt/../img/sp-init-sso.png, id=365, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=367, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 219.
@@ -2508,7 +2508,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=506, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=508, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2623,10 +2623,7 @@ ro-fil-eRequest-Con-text\T1/jkpl/m/n/10.95 (+20) . \T1/jkpl/m/sc/10.95 (+20) ur
 l\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / / shibboleth .
  []
 
-[70]) [71] [72
-
-
-] (out/main.aux)
+[70] [71]) [72] (out/main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
@@ -2638,11 +2635,11 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66646 strings out of 474116
- 1469924 string characters out of 5743682
- 2670992 words of memory out of 5000000
- 86966 multiletter control sequences out of 15000+600000
- 743121 words of font info for 547 fonts, out of 8000000 for 9000
+ 66662 strings out of 474116
+ 1470278 string characters out of 5743682
+ 2671076 words of memory out of 5000000
+ 86972 multiletter control sequences out of 15000+600000
+ 743944 words of font info for 553 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,20n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
@@ -2658,10 +2655,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 512451 bytes).
+Output written on out/main.pdf (86 pages, 514117 bytes).
 PDF statistics:
- 1462 PDF objects out of 1728 (max. 8388607)
- 1327 compressed objects within 14 object streams
- 303 named destinations out of 1000 (max. 500000)
+ 1467 PDF objects out of 1728 (max. 8388607)
+ 1332 compressed objects within 14 object streams
+ 305 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

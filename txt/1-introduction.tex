@@ -16,7 +16,8 @@ Credential abuse, the most common initial access vector of the previous year, is
 more than 22{,}000 confirmed breaches, while the exploitation of vulnerabilities has risen to 
 31\%~\cite{VerizonDBIR2026}. 
 
-\Gls{fim} reduces the number of places where credentials are created and stored. 
+\Gls{fim} addresses the credential side of this risk by reducing the number of places where 
+credentials are created and stored. 
 It concentrates authentication behind a single trusted authority, the \gls{idp}, so that users 
 can access several \glspl{sp} with one set of credentials. 
 When a user wants to access an SP, the SP redirects the user's browser to the IdP. 
@@ -46,14 +47,14 @@ federation~\cite{IdPSinglePointOfTrust}.
 A compromised, misconfigured or vulnerable IdP thus does not affect one application but every SP 
 that relies on its assertions. 
 
-A notable example is the Sunburst supply chain attack~\cite{FireEyeSSC}. 
+The Sunburst supply chain attack shows the consequences of such a compromise~\cite{FireEyeSSC}. 
 As Hartl and Derek note, after the initial compromise the attackers obtained the 
 trusted certificate used for signing SAML assertions and used it to access all 
 services within the targeted enterprise~\cite{FormalSecAnalysisSAML}. 
 Since tokens forged with this certificate carry the organisation's own trusted signature, 
 the resulting anomalies may go unnoticed~\cite{MicrosoftBlogSSC}. 
-Beyond targeted attacks, SAML deployments are exposed to weaknesses in the protocol and in its 
-implementations. 
+Beyond targeted attacks, an IdP is itself software that is reachable from the internet, and SAML 
+deployments are exposed to weaknesses in the SAML standard and in its implementations. 
 Somorovsky et al. found \gls{xsw} vulnerabilities in eleven of fourteen SAML frameworks, including 
 Shibboleth, which allow an attacker to inject forged claims that the SP accepts once the signature 
 has been validated~\cite{BreakingSAML}, and the attack has since been reproduced in other 
@@ -81,14 +82,13 @@ Rather than testing the deployment actively, the system observes it passively.
 This principle has been applied to the eduroam infrastructure by analysing its network 
 traffic~\cite{EAPeduroam}, whereas this work applies it inside the application, at the application 
 layer of the IdP. 
-The system thereby provides federation operators with a continuous view of the security posture of 
-their authentication infrastructure. 
+The system thereby provides the operators of an IdP with a continuous view of its security posture. 
 
 Three research questions guide this work:
 \begin{itemize}
-    \item RQ1 Which security-relevant data can be collected at the application layer of a Shibboleth IdP, and through which mechanisms are these data accessible?
-    \item RQ2 How can these data be correlated in order to detect configuration weaknesses and anomalies in the authentication process?
-    \item RQ3 What measurable overhead does the resulting system impose on the monitored IdP?
+    \item \textbf{RQ1:} Which security-relevant data can be collected at the application layer of a Shibboleth IdP, and through which mechanisms are these data accessible?
+    \item \textbf{RQ2:} How can these data be correlated in order to detect configuration weaknesses and anomalies in the authentication process?
+    \item \textbf{RQ3:} What measurable overhead does the resulting system impose on the monitored IdP?
 \end{itemize}
 
 To answer these questions, the system combines three sources whose records can be related to an 

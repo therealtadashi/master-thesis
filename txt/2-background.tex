@@ -52,14 +52,6 @@ the user itself.
 Since it relies on the statements of the IdP, the SP is also referred to as the relying party. 
 Neither role is meaningful without the other, and their interaction follows a fixed pattern. 
 
-When a user requests a protected resource, the SP does not check credentials. 
-It determines which IdP is responsible for the user and redirects the browser there together 
-with an authentication request~\cite{SAMLOverview}. 
-The IdP authenticates the user by whatever means the deployment provides, and returns a signed statement 
-asserting that the authentication took place and describing the user by a set of attributes. 
-The SP verifies the signature, evaluates the statement and grants or denies access on that basis. 
-The credentials themselves never leave the IdP.
-
 This division has a consequence for how a federation is configured. 
 Because the IdP serves many SPs, it does not treat them uniformly. 
 It maintains a separate configuration for each partner, specifying for instance whether the statement 
@@ -167,15 +159,14 @@ Figure~\ref{fig:sp-initiated-sso} illustrates the described authentication proce
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.75\textwidth]{../img/sp-init-sso}
+    \includegraphics[width=1.0\textwidth]{../img/sp-init-sso}
     \caption{SP-Initiated SSO with Redirect and POST Bindings~\cite{SAMLOverview}}
     \label{fig:sp-initiated-sso}
 \end{figure}
 
 The use of the user's web browser as an intermediary introduces an important security consideration. 
-The SAML messages exchanged between the IdP and SP are transmitted through the user's browser and 
-therefore pass through a communication path that is not directly controlled by either party. 
-Neither the IdP nor the SP can assume that the messages remain unchanged while being forwarded. 
+SAML messages pass through a communication path that is not directly controlled by either the IdP or the SP. 
+Therefore, neither party can assume that the messages remain unchanged while being forwarded. 
 Consequently, the security of the exchange cannot rely solely on the communication channel. 
 Instead, mechanisms such as digital signatures, message identifiers and validity conditions are used 
 to ensure the authenticity and integrity of SAML messages and to prevent their misuse~\cite{SAMLSecurityConsideration}.
@@ -223,11 +214,7 @@ and origin of the metadata before using it for configuration or trust decisions~
 
 Shibboleth is a free and open-source web single sign-on software suite that 
 implements SAML and other standards for FIM. 
-It is widely used in federated authentication environments and places particular 
-emphasis on privacy and decentralised identity management. 
-The Shibboleth Consortium provides separate software components for the IdP and 
-SP, enabling organisations to participate in federated identity infrastructures~\cite{Shibboleth}.
-
+The Shibboleth Consortium provides separate components for the IdP and the SP~\cite{Shibboleth}. 
 For the scope of this thesis, the Shibboleth IdP is of particular relevance, as it 
 is responsible for authenticating users and issuing SAML assertions to participating 
 SPs. 
@@ -253,26 +240,12 @@ by subflows~\cite{ProfileHandling}.
 To allow developers to extend this behaviour without copying or editing the internal flow definitions, 
 the IdP provides a set of defined hooks. 
 A subflow attached to one of these hooks is known as an interceptor, and there are three hooks in total: 
-\begin{enumerate}
-    \item inbound message processing
-    \item post authentication processing and
-    \item outbound message processing
-\end{enumerate}
+inbound message processing, post authentication processing and outbound message processing. 
 The first and third are available in any profile flow, whereas the second applies only to profiles that 
 actually authenticate a user~\cite{ProfileHandling}.
 An interceptor is registered as a bean and enabled by adding its flow identifier to the corresponding list 
 property of a profile configuration in \texttt{conf/relying-party.xml}. 
 No modification of the IdP source code is required~\cite{ProfileInterceptConfiguration}.
-
-The choice of hook determines what an interceptor can observe. 
-An inbound interceptor sees the incoming message context but not the outcome of authentication, 
-since that has not yet taken place. 
-An outbound interceptor sees the state of the tree produced by the profile execution, including the 
-outgoing message. 
-The post authentication hook runs in the middle of processing, after the user has been authenticated but 
-before the outgoing message is constructed. 
-It can therefore observe both the incoming request and the authentication result, but not the response that 
-is issued afterwards~\cite{ProfileInterceptConfiguration}.
 
 \subsection{The Context Tree}\label{subsec:context-tree}
 

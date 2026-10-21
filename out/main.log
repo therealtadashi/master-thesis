@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  21 OCT 2026 21:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  21 OCT 2026 21:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2469,13 +2469,16 @@ Package microtype Info: Loading generic protrusion settings for font family
 ]
 chapter 2.
 [5] [6] [7]
-<./txt/../img/sp-init-sso.png, id=357, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=356, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
-Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 170.
-(pdftex.def)             Requested size: 320.09357pt x 256.91148pt.
+Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 162.
+(pdftex.def)             Requested size: 426.79143pt x 342.54865pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [8 <./txt/../img/sp-init-sso.png>] [9]
-Overfull \hbox (1.20769pt too wide) in paragraph at lines 286--293
+Overfull \hbox (1.20769pt too wide) in paragraph at lines 259--266
 []\T1/jkpl/m/n/10.95 (-20) Three of these child con-texts are rel-e-vant in the
  fol-low-ing. The in-bound \T1/lmtt/m/n/10.95 MessageContext
  []
@@ -2505,7 +2508,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=504, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=498, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2632,9 +2635,9 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66646 strings out of 474116
- 1469600 string characters out of 5743682
- 2670941 words of memory out of 5000000
+ 66643 strings out of 474116
+ 1469582 string characters out of 5743682
+ 2670940 words of memory out of 5000000
  86955 multiletter control sequences out of 15000+600000
  744346 words of font info for 556 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
@@ -2652,10 +2655,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (88 pages, 512366 bytes).
+Output written on out/main.pdf (88 pages, 510986 bytes).
 PDF statistics:
- 1456 PDF objects out of 1728 (max. 8388607)
- 1319 compressed objects within 14 object streams
- 302 named destinations out of 1000 (max. 500000)
+ 1449 PDF objects out of 1728 (max. 8388607)
+ 1312 compressed objects within 14 object streams
+ 299 named destinations out of 1000 (max. 500000)
  120868 words of extra memory for PDF output out of 128383 (max. 10000000)
 

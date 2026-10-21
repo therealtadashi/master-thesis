@@ -138,7 +138,7 @@ This allows, for example, sensitive attributes contained in a SAML assertion to 
 requiring the entire message to be encrypted.
 
 Although XML Signature and XML Encryption provide important security mechanisms, their use and 
-configuration depend on the respective SAML profile, deployment, and implementation. 
+configuration depend on the respective SAML profile, deployment and implementation. 
 Therefore, SAML is not a security protocol in itself, but rather a framework whose optional features 
 can be combined in various ways. 
 The resulting security properties depend on the chosen combination. 
@@ -332,7 +332,7 @@ state grows as processing advances rather than being assembled in a single objec
 Three of these child contexts are relevant in the following. 
 The inbound \texttt{MessageContext} holds the message as it was received, the 
 \texttt{RelyingPartyContext} identifies the SP the request originates from and records whether 
-that identity could be verified, and the \texttt{SubjectContext} holds the authenticated subject 
+that identity could be verified and the \texttt{SubjectContext} holds the authenticated subject 
 once authentication has completed~\cite{ProfileHandling}. 
 The last of these illustrates the incremental nature of the structure, since it does not exist 
 before the user has been authenticated.

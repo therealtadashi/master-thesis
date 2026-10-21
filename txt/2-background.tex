@@ -12,9 +12,8 @@ Shibboleth IdP.
 
 \section{Technical Foundation of Federated Identity Management}\label{sec:fim}
 
-As introduced in Chapter~\ref{ch:introduction}, FIM allows users to access the resources they 
-need with a single digital identity and provides \gls{sso} functionality across the applications 
-of an organisation. 
+As introduced in Chapter~\ref{ch:introduction}, FIM allows users to access resources with a single 
+digital identity and provides \gls{sso} functionality across the applications of an organisation. 
 The immediate benefit is convenience, since users no longer need to create and remember a 
 separate set of credentials for every service. 
 The more consequential benefit lies elsewhere. 
@@ -25,21 +24,19 @@ The strength of authentication is consequently also determined in one place.
 An SP can require a minimum authentication assurance level, which the IdP fulfils and reports in 
 the assertion~\cite{NIST80063C}, and from the second level upwards this requires two distinct 
 authentication factors~\cite{NIST80063B}. 
-Concentrating authentication at one well-managed site also focuses administrative effort and makes 
-multi factor authentication more acceptable to users, who encounter it less often~\cite{ShibbolethGIAC}.
+Concentrating authentication at one well-managed site also focuses administrative effort. 
+It also makes multi factor authentication more acceptable to users, since with single sign-on they 
+meet the second factor once per session at the IdP rather than at every service~\cite{ShibbolethGIAC}. 
 Administration follows the same pattern, since accounts are created, modified and revoked 
 centrally rather than in each service individually.
 
 This centralisation introduces a new risk in return. 
-FIM rests on a relationship of trust between organisations, and that trust depends entirely on 
-the security of the IdP. 
+Every SP that accepts the assertions of an IdP relies on it to authenticate users correctly. 
 Concentrating credentials in one place also concentrates the consequences of a compromise, since 
 an attacker who gains control of the IdP can potentially authenticate as any of its users at the 
 services that rely on it~\cite{IdPSinglePointOfTrust}. 
 
-A compromise of a primary IdP could potentially grant broad unauthorised access across the 
-entire federation. 
-This characteristic requires both the IdP and SP to maintain a high level of security~\cite{NIST80063C}. 
+Both the IdP and the SP therefore have to maintain a high level of security~\cite{NIST80063C}. 
 The policies defined for each SP in the IdP must accurately translate to the rules 
 at the corresponding SP. 
 The configuration of the IdP and that of each SP must remain consistent with one another. 
@@ -84,12 +81,8 @@ The \gls{saml} is an XML-based standard developed by the \gls{oasis} for the exc
 authorisation and other security-related information between different parties.
 SAML is a fundamental component of FIM and is widely used to enable SSO across organisational and 
 security boundaries~\cite{SAMLOverview}. 
-The second major version, SAML 2.0, was published by OASIS in March 2005~\cite{SAML2Standard}.
-SAML 1.1 had already gained widespread adoption in federated identity environments~\cite{SAML1Standard}. 
-However, several competing approaches existed at the time, including the \gls{idff} developed by the Liberty 
-Alliance and the Shibboleth architecture~\cite{SAML2Standard}. 
-SAML 2.0 consolidated several of these approaches into a common standard and introduced additional 
-capabilities, particularly with regard to federation, interoperability and privacy. 
+The current version, SAML 2.0, was published in March 2005 and consolidated earlier approaches, 
+among them the Shibboleth architecture~\cite{SAML2Standard}. 
 
 \subsection{SAML Assertions}\label{subsec:assertions}
 

@@ -1363,7 +1363,6 @@
       \strng{authorbibnamehash}{a7971f5bb0bc445669c151df3d7cf8ca}
       \strng{authornamehash}{a7971f5bb0bc445669c151df3d7cf8ca}
       \strng{authorfullhash}{a7971f5bb0bc445669c151df3d7cf8ca}
-      \field{extraname}{1}
       \field{sortinit}{O}
       \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
       \field{labelnamesource}{author}
@@ -1380,37 +1379,6 @@
       \endverb
       \verb{url}
       \verb https://www.oasis-open.org/2005/03/13/members-approve-security-assertion-markup-language-saml-v2-0-as-oasis-standard/
-      \endverb
-    \endentry
-    \entry{SAML1Standard}{online}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=a7971f5bb0bc445669c151df3d7cf8ca}{%
-           family={{OASIS Open}},
-           familyi={O\bibinitperiod}}}%
-      }
-      \strng{namehash}{a7971f5bb0bc445669c151df3d7cf8ca}
-      \strng{fullhash}{a7971f5bb0bc445669c151df3d7cf8ca}
-      \strng{bibnamehash}{a7971f5bb0bc445669c151df3d7cf8ca}
-      \strng{authorbibnamehash}{a7971f5bb0bc445669c151df3d7cf8ca}
-      \strng{authornamehash}{a7971f5bb0bc445669c151df3d7cf8ca}
-      \strng{authorfullhash}{a7971f5bb0bc445669c151df3d7cf8ca}
-      \field{extraname}{2}
-      \field{sortinit}{O}
-      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{month}{09}
-      \field{title}{Security Assertion Markup Language (SAML) version 1.1 ratified as OASIS Standard}
-      \field{urlday}{3}
-      \field{urlmonth}{9}
-      \field{urlyear}{2026}
-      \field{year}{2003}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://www.oasis-open.org/2003/09/21/security-assertion-markup-language-saml-version-1-1-ratified-as-oasis-standard/
-      \endverb
-      \verb{url}
-      \verb https://www.oasis-open.org/2003/09/21/security-assertion-markup-language-saml-version-1-1-ratified-as-oasis-standard/
       \endverb
     \endentry
     \entry{OWASPA09}{online}{}

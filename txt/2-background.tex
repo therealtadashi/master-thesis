@@ -201,7 +201,10 @@ These descriptors contain information such as supported SAML protocols, communic
 supported bindings and cryptographic keys. 
 For example, an SP metadata document can specify its \gls{acs} endpoint and the bindings supported 
 for receiving SAML responses, while an IdP can specify its SSO Service endpoints and the corresponding 
-supported bindings.
+supported bindings. 
+A binding defines how a SAML message is transported over an underlying protocol, for instance in the 
+query string of an HTTP redirect (HTTP-Redirect) or in an HTML form that the browser submits 
+(HTTP-POST)~\cite{SAMLBinding}. 
 
 Cryptographic information contained in metadata is particularly important for the security of SAML 
 communication. 

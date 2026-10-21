@@ -4,52 +4,31 @@
 
 \chapter*{\myAbstractTitle}
 
-In a federated identity infrastructure, a single identity provider authenticates users on behalf 
-of many service providers and thereby becomes the trust anchor of the entire federation. 
-A compromised or misconfigured provider does not affect one application but can undermine the 
-security of every service relying on it. 
-Despite this exposure, systematic security monitoring at the application layer of such providers 
-remains largely absent, and existing approaches in this domain focus on operational availability 
-rather than on security.
+An identity provider (IdP) authenticates the users of an organisation across multiple service 
+providers (SPs), so that a single misconfigured or compromised IdP can affect every service its 
+users access. 
+Existing monitoring approaches for IdPs focus on availability rather than on security. 
+This thesis proposes a security monitoring system that observes the Shibboleth IdP from within its 
+application layer. 
+It combines three data sources from the Shibboleth IdP: the audit log, two interceptors that run 
+inside the authentication flow and the configuration and metadata of the SPs. 
+The records are pseudonymised at their source, sent to a separate backend, correlated with each 
+other and checked against fifteen detection rules. 
+Thirteen of these rules can be traced to documented vulnerabilities and security recommendations. 
 
-This thesis presents a monitoring system that observes a Shibboleth identity provider from within 
-its own application layer. 
-The system combines three sources that observe a login at different points, namely the audit log, 
-the configuration and metadata of the service providers, and two interceptors inside the 
-authentication flow. 
-Records from these sources are pseudonymised at their origin, transmitted to a backend located 
-outside the trust boundary of the provider, correlated with one another and evaluated against a 
-catalogue of fifteen detection rules. 
-The rules are derived from vulnerabilities and attack classes documented in a systematic survey 
-of federated identity security and from the security recommendations of the OASIS SAML Security 
-and Privacy Considerations. 
+The evaluation shows that the records of a login can be linked reliably. 
+Where the audit log records the identifier of the request, every record was linked to the correct 
+login. 
+Without this identifier, a fallback based on the pseudonymised user and address also linked every 
+record correctly in all tested scenarios. 
+All rules behaved as specified in tests against a real database, and thirteen of them also in tests 
+of the complete pipeline. 
+Legitimate logins raised no false alarms. 
+With asynchronous transmission, the interceptors added no measurable login delay but cost about 
+28\,ms of processor time per login.
 
-The evaluation examines how reliably the records can be correlated, whether the detection rules 
-behave as specified, and what the resulting system costs. 
-The correlation found a counterpart for all 7{,}236 reports. 
-Where the audit log records the identifier of the request, each report is assigned unambiguously, 
-independent of how many logins take place at the same time. 
-Where the identifier is missing, a heuristic strategy compares the pseudonymised subject and 
-address instead. 
-In every tested scenario it assigned each report correctly, as long as one of these two values 
-distinguishes the users. 
-Only the fallback strategy based on time alone made wrong assignments, and only between logins at 
-the same service provider that were less than 100\,ms apart. 
-All fifteen rules were verified against a real search index and thirteen additionally through 
-the complete pipeline, eleven of them with both a positive and a negative scenario. 
-In the asynchronous transmission mode, the end-to-end login latency did not differ measurably from 
-a deployment without interceptors, with an upper bound of 17\,ms for the 95\% confidence interval, 
-below five percent of the median login duration. 
-Instead, the interceptors cost about 28\,ms of processor time per login, which the IdP spends in 
-background threads, whereas blocking transmission added about 60\,ms to each login without saving 
-processor time.
-
-The work also identifies the boundaries of the chosen observation point. 
-Attack classes located at a different system layer, involving a different party, or observable 
-only through their preconditions remain outside its reach, and a provider abusing its own position 
-cannot be detected by a system executing inside it. 
-Beyond these results, each of the three evaluations uncovered a defect in the infrastructure or the 
-tooling of this work that operation itself had not revealed, which illustrates the premise underlying 
-the work, namely that a system appearing to function is not thereby known to function.
+The work also shows the limitations of monitoring an IdP from within. 
+Attacks that take place at the SP, in the network or with a stolen signing key remain invisible to 
+the system, and an attacker who controls the IdP can suppress the records about their own actions. 
 
 \end{document}

@@ -244,7 +244,7 @@
       \verb https://shibboleth.atlassian.net/wiki/spaces/CONCEPT/pages/928645420/MetadataForSP
       \endverb
     \endentry
-    \entry{ProfileHandling}{online}{}
+    \entry{ShibbolethOIDC}{online}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=d81f5333693d3d89741595e3d90230cc}{%
            family={Cantor},
@@ -260,6 +260,40 @@
       \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
       \field{extraname}{6}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{06}
+      \field{title}{OIDC OP}
+      \field{urlday}{21}
+      \field{urlmonth}{10}
+      \field{urlyear}{2026}
+      \field{year}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://shibboleth.atlassian.net/wiki/spaces/IDPPLUGINS/pages/1376878976
+      \endverb
+      \verb{url}
+      \verb https://shibboleth.atlassian.net/wiki/spaces/IDPPLUGINS/pages/1376878976
+      \endverb
+    \endentry
+    \entry{ProfileHandling}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=d81f5333693d3d89741595e3d90230cc}{%
+           family={Cantor},
+           familyi={C\bibinitperiod},
+           given={Scott},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d81f5333693d3d89741595e3d90230cc}
+      \strng{fullhash}{d81f5333693d3d89741595e3d90230cc}
+      \strng{bibnamehash}{d81f5333693d3d89741595e3d90230cc}
+      \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
+      \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
+      \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
+      \field{extraname}{7}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labelnamesource}{author}
@@ -293,7 +327,7 @@
       \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
-      \field{extraname}{7}
+      \field{extraname}{8}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labelnamesource}{author}
@@ -327,7 +361,7 @@
       \strng{authorbibnamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authornamehash}{d81f5333693d3d89741595e3d90230cc}
       \strng{authorfullhash}{d81f5333693d3d89741595e3d90230cc}
-      \field{extraname}{8}
+      \field{extraname}{9}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{labelnamesource}{author}
@@ -580,34 +614,6 @@
       \endverb
       \verb{url}
       \verb https://cloud.google.com/blog/topics/threat-intelligence/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor
-      \endverb
-    \endentry
-    \entry{DFNAAI}{online}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=09bc289b85eea4bd32d95a2ef099cad3}{%
-           family={{German National Research and Education Network (DFN)}},
-           familyi={G\bibinitperiod}}}%
-      }
-      \strng{namehash}{09bc289b85eea4bd32d95a2ef099cad3}
-      \strng{fullhash}{09bc289b85eea4bd32d95a2ef099cad3}
-      \strng{bibnamehash}{09bc289b85eea4bd32d95a2ef099cad3}
-      \strng{authorbibnamehash}{09bc289b85eea4bd32d95a2ef099cad3}
-      \strng{authornamehash}{09bc289b85eea4bd32d95a2ef099cad3}
-      \strng{authorfullhash}{09bc289b85eea4bd32d95a2ef099cad3}
-      \field{sortinit}{G}
-      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{DFN-AAI portal}
-      \field{urlday}{1}
-      \field{urlmonth}{9}
-      \field{urlyear}{2026}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://www.aai.dfn.de/index.en.html
-      \endverb
-      \verb{url}
-      \verb https://www.aai.dfn.de/index.en.html
       \endverb
     \endentry
     \entry{ShibbolethGIAC}{report}{}
@@ -2227,34 +2233,37 @@
       \verb https://aaltodoc.aalto.fi/server/api/core/bitstreams/38beefb5-9846-433f-921a-aebb7884204c/content
       \endverb
     \endentry
-    \entry{VerizonDataBreach}{online}{}
+    \entry{VerizonDBIR2026}{online}{}
       \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=9ef23a446a119387586d089c425f2d55}{%
-           family={Verizon},
+        {{un=0,uniquepart=base,hash=fc971930f16af614663abf7a225f5946}{%
+           family={{Verizon Business}},
            familyi={V\bibinitperiod}}}%
       }
-      \strng{namehash}{9ef23a446a119387586d089c425f2d55}
-      \strng{fullhash}{9ef23a446a119387586d089c425f2d55}
-      \strng{bibnamehash}{9ef23a446a119387586d089c425f2d55}
-      \strng{authorbibnamehash}{9ef23a446a119387586d089c425f2d55}
-      \strng{authornamehash}{9ef23a446a119387586d089c425f2d55}
-      \strng{authorfullhash}{9ef23a446a119387586d089c425f2d55}
+      \list{institution}{1}{%
+        {Verizon}%
+      }
+      \strng{namehash}{fc971930f16af614663abf7a225f5946}
+      \strng{fullhash}{fc971930f16af614663abf7a225f5946}
+      \strng{bibnamehash}{fc971930f16af614663abf7a225f5946}
+      \strng{authorbibnamehash}{fc971930f16af614663abf7a225f5946}
+      \strng{authornamehash}{fc971930f16af614663abf7a225f5946}
+      \strng{authorfullhash}{fc971930f16af614663abf7a225f5946}
       \field{sortinit}{V}
       \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{month}{04}
-      \field{title}{Verizon's 2025 Data Breach Investigations Report: Alarming surge in cyberattacks through third-parties}
-      \field{urlday}{1}
-      \field{urlmonth}{9}
+      \field{month}{05}
+      \field{title}{2026 Data Breach Investigations Report}
+      \field{urlday}{21}
+      \field{urlmonth}{10}
       \field{urlyear}{2026}
-      \field{year}{2025}
+      \field{year}{2026}
       \field{urldateera}{ce}
       \verb{urlraw}
-      \verb https://www.verizon.com/about/news/2025-data-breach-investigations-report
+      \verb https://www.verizon.com/business/resources/executivebriefs/2026-dbir-executive-summary.pdf
       \endverb
       \verb{url}
-      \verb https://www.verizon.com/about/news/2025-data-breach-investigations-report
+      \verb https://www.verizon.com/business/resources/executivebriefs/2026-dbir-executive-summary.pdf
       \endverb
     \endentry
     \entry{WazuhDocumentation}{online}{}

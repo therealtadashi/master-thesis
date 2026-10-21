@@ -2364,10 +2364,10 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">./literature.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="2" intorder="1">VerizonDataBreach</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">VerizonDBIR2026</bcf:citekey>
     <bcf:citekey order="3" intorder="1">FIMSurvey</bcf:citekey>
     <bcf:citekey order="4" intorder="1">Shibboleth</bcf:citekey>
-    <bcf:citekey order="5" intorder="1">DFNAAI</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">ShibbolethOIDC</bcf:citekey>
     <bcf:citekey order="6" intorder="1">IdPSinglePointOfTrust</bcf:citekey>
     <bcf:citekey order="7" intorder="1">FireEyeSSC</bcf:citekey>
     <bcf:citekey order="8" intorder="1">FormalSecAnalysisSAML</bcf:citekey>

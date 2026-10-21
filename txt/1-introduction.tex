@@ -4,36 +4,28 @@
 
 \chapter{Introduction}\label{ch:introduction}
 
-In today's increasingly digital world, where most online services require users to create an account to 
-access them, users are forced to create and memorise a large number of different credentials, or are even 
-forcibly encouraged to reuse old passwords on multiple services. 
-These online profiles are highly sensitive, as they are typically associated with the user's personal 
-identity, including details such as their email address, phone number or even official government 
-documentation like a personal ID. 
-More often than not, this profile is protected by a single password created by the user. 
-This dominant method of password-based authentication, which is responsible for verifying and authenticating 
-users online, poses a significant risk to companies and other large organisations. 
-One way in which malicious attackers take advantage of this vulnerable authentication method is by using 
-large databases of leaked user credentials (often including email addresses and corresponding passwords) 
-to authenticate at \glspl{sp} as the affected user. 
-This attack method is called credential stuffing. 
-Verizon reports that credential abuse was the most common initial access vector, involved in 22\% of the 
-12{,}195 confirmed data breaches in the 2025 report~\cite{VerizonDataBreach}. 
+Most online services require users to create an account, so that users have to manage a large number 
+of credentials and often reuse the same password for several services. 
+These accounts are frequently linked to personal data such as an email address, a phone number or 
+even an official identity document. 
+Attackers exploit password reuse by testing large collections of leaked credentials against other 
+services, an attack known as credential stuffing. 
+Credential abuse, the most common initial access vector of the previous year, is down to 13\% of 
+more than 22{,}000 confirmed breaches, while the exploitation of vulnerabilities has risen 
+to 31\%~\cite{VerizonDBIR2026}. 
 
 To reduce the number of places where credentials are created and stored, \gls{fim} was developed. 
-FIM lets users access several SPs with a single set of credentials that is managed by an \gls{idp}. 
-FIM consolidates authentication behind a single trusted authority called the IdP.
-When a user attempts to gain access on the SP in FIM, the user's browser is redirected 
-to the IdP.
+FIM lets users access several \glspl{sp} with a single set of credentials that is managed by an \gls{idp}. 
+FIM consolidates authentication behind a single trusted authority. 
+When a user wants to access an SP, the SP redirects the user's browser to the IdP. 
 The user authenticates with the IdP, which then confirms the user's identity to the SP~\cite{FIMSurvey}. 
 
-Shibboleth, originally developed by Internet2, is one of the most widely deployed open-source 
-implementations of this model in the research and education sector~\cite{Shibboleth}. 
-Under this model, a user authenticates with their organisation's IdP once.
-The IdP then issues cryptographically signed SAML assertions that SPs accept 
-as proof of identity. 
-This architecture is widely deployed in higher education and research federations such 
-as DFN-AAI~\cite{DFNAAI}, where a single IdP serves dozens of SPs simultaneously.
+Shibboleth, is one of the most widely deployed open-source implementations of this model in the 
+research and education sector~\cite{Shibboleth}. 
+Under this model, a user authenticates with their organisation's IdP once. 
+The IdP then issues cryptographically signed SAML assertions that SPs accept as proof of identity. 
+This describes the authentication process under the SAML implementation of Shibboleth. 
+Shibboleth also supports an official plugin for OpenID Connect~\cite{ShibbolethOIDC}. 
 
 This architectural property introduces a critical consequence: the IdP becomes a single point of trust 
 for the entire federation~\cite{IdPSinglePointOfTrust}. 

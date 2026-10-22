@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  21 OCT 2026 21:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 10:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2469,7 +2469,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 ]
 chapter 2.
 [5] [6] [7]
-<./txt/../img/sp-init-sso.png, id=356, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=354, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 162.
@@ -2508,7 +2508,7 @@ en-ti-cated trans-port and pseudonymi-
 
 
 ]
-<./txt/../img/deployment.png, id=498, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=496, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
@@ -2635,8 +2635,8 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66643 strings out of 474116
- 1469582 string characters out of 5743682
+ 66641 strings out of 474116
+ 1469566 string characters out of 5743682
  2670940 words of memory out of 5000000
  86955 multiletter control sequences out of 15000+600000
  744346 words of font info for 556 fonts, out of 8000000 for 9000
@@ -2655,10 +2655,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (88 pages, 510986 bytes).
+Output written on out/main.pdf (88 pages, 510561 bytes).
 PDF statistics:
- 1449 PDF objects out of 1728 (max. 8388607)
- 1312 compressed objects within 14 object streams
- 299 named destinations out of 1000 (max. 500000)
+ 1445 PDF objects out of 1728 (max. 8388607)
+ 1308 compressed objects within 14 object streams
+ 297 named destinations out of 1000 (max. 500000)
  120868 words of extra memory for PDF output out of 128383 (max. 10000000)
 

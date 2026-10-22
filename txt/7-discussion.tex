@@ -98,14 +98,14 @@ The IdP processes the request it receives regardless of how the client resolved 
 address. 
 
 The second group consists of issues that affect a different party within the federation. 
-\gls{csrf} describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
+CSRF describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
 The relevant interaction occurs between the browser and the SP and therefore does not pass 
 through the IdP. 
 The same applies to message modification enabled by a lack of binding, whose mitigation lies in 
 the SP checking the credentials it receives~\cite{FIMSurvey}.
 
 The third group contains an issue that can be observed only indirectly from the IdP. 
-A \gls{mitm} attack is the issue in this category. 
+A MITM attack is the issue in this category. 
 It exploits a lack of binding, where a token is not tied to the SP for which it was issued, and the 
 survey names binding the token to its intended SP as the countermeasure~\cite{FIMSurvey}. 
 The attack itself takes place on the communication path after the message has left the IdP. 

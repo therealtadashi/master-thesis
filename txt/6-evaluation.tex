@@ -80,7 +80,7 @@ An analysis program in the test sources of the backend proceeds as follows:
     \item It records the offset between the reception of the report and the event time of its audit entry, and the distance to the nearest other audit entry of the same SP as a measure of the local login density.
 \end{itemize}
 
-In operation, an audit entry that has already been assigned to a report is no longer offered as a 
+In production, an audit entry that has already been assigned to a report is no longer offered as a 
 candidate for other reports. 
 The analysis has to omit this filter, since every audit entry in the ground truth has already been 
 assigned to its correct report, so that the filter would remove exactly the candidate that is being 
@@ -93,7 +93,7 @@ instance because an operator does not record it or uses an older audit format.
 Whether they then select the correct entry depends on two properties of the traffic: how many 
 logins at the same SP fall into the same time window, and whether these logins can be told apart 
 by subject and address. 
-Both vary considerably in operation. 
+Both vary considerably in production. 
 At the start of a lecture or during an exam registration, many users log in at the same SP within 
 a few seconds, while at night a single login may stand alone. 
 Some users log in from an address of their own, while others share one behind a gateway. 
@@ -112,7 +112,7 @@ consecutive logins apart.
 D1 therefore tests the time base on which both heuristics rest. 
 If it failed here, none of the further scenarios could succeed. 
 
-In operation, however, the logins within a window rarely stem from one person. 
+In production, however, the logins within a window rarely stem from one person. 
 In D2, three users log in at the same SP at the same time, so that candidates of different users 
 lie in the same window. 
 This is precisely the situation for which the hashes exist. 
@@ -220,7 +220,7 @@ single wrong assignment, since a larger window only adds candidates that lie fur
 therefore never selected. 
 The window therefore only has to be large enough to contain the correct entry, and a larger window 
 costs nothing but query effort. 
-In the test environment $\pm$1\,s would have sufficed, but in operation a report can arrive later, 
+In the test environment $\pm$1\,s would have sufficed, but in production a report can arrive later, 
 since the interceptors give up a transmission only after 1.5\,s, and on separate hosts the clocks 
 may differ. 
 The default of $\pm$10\,s covers both with a wide margin, at the price of examining 58.1 instead of 
@@ -343,24 +343,24 @@ In addition, series of legitimate logins show whether the rules remain silent wh
 
 \subsection{Method and Scenarios}\label{subsec:eval-detection-method}
 
-\paragraph{Proofs.}
-The tests establish two kinds of proof. 
-A true positive proof constructs a scenario in which a rule is supposed to raise an alert and 
+\paragraph{Validation.}
+The tests establish two kinds of validation. 
+A true positive test constructs a scenario in which a rule is supposed to raise an alert and 
 confirms that it does. 
-A true negative proof constructs a scenario in which no alert is due and confirms that none is 
+A true negative test constructs a scenario in which no alert is due and confirms that none is 
 raised. 
-How much a proof shows depends on the test level at which it is established. 
+How much a validation shows depends on the test level at which it is established. 
 In an integration test, the test builds the input of the rule itself, for instance an audit entry 
 or a post authentication report, stores any history the rule requires in Elasticsearch and passes 
 the input directly to the rule engine rather than waiting for the scheduler, so that the result does 
 not depend on its timing. 
-Such a proof covers the rule, its queries and the stored documents, but not the way in which 
+Such a validation covers the rule, its queries and the stored documents, but not the way in which 
 Filebeat and Logstash turn a real audit line into such an input. 
 An end-to-end test starts from a real event at the IdP, usually a login in the browser, and covers this 
 path as well, which makes it the only level at which a fault in the log shipping stack can become visible. 
 
 \paragraph{Scenarios.}
-In operation, the detection layer has to meet two expectations at once. 
+In production, the detection layer has to meet two expectations at once. 
 It has to report the weaknesses and attacks that the rules describe, and it has to remain quiet 
 during the vast majority of logins, which are legitimate, since an operator who receives alerts for 
 ordinary logins soon stops reading them. 
@@ -397,7 +397,7 @@ Each of these scenarios has a true negative counterpart with the same trigger bu
 weakness, for instance a further login with the known browser or an override that encrypts and 
 offers an MFA flow. 
 For \texttt{MFA\_\allowbreak{}BYPASS} and \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED}, 
-no end-to-end scenario was implemented, and the two replay rules have only a true negative proof at 
+no end-to-end scenario was implemented, and the two replay rules have only a true negative validation at 
 this level. 
 Table~\ref{tab:detection-coverage} states the reasons.
 
@@ -405,11 +405,11 @@ The second expectation is tested with legitimate logins through the browser.
 At the clean SP, three users log in alternately, 100 times in total, and after a further 
 100 seconds, in which the scheduler evaluates all entries, none of the logins may have raised an alert. 
 Since every alert in this run would be a false alarm, the run is at the same time a true negative 
-proof for every rule that can react to a login. 
+validation for every rule that can react to a login. 
 The same run against the weak SP tests the consistency check in the presence of the alerts that the 
 weaknesses of this SP rightly cause, so that there no \texttt{FIELD\_\allowbreak{}MISMATCH} alert may 
 arise. 
-In addition, a single legitimate login at the clean SP provides end-to-end true negative proofs for eight 
+In addition, a single legitimate login at the clean SP provides end-to-end true negative validations for eight 
 rules, among them the two replay rules, for which no true positive scenario exists at this level. 
 
 The third expectation concerns someone who alters the audit entry of a login after the fact, for 
@@ -475,15 +475,15 @@ Rule & End-to-end & Trigger or reason \\
 \end{tabularx}
 \end{table}
 
-\paragraph{Every rule is proven against a real Elasticsearch instance, and thirteen are also tested end-to-end.} 
-All fifteen rules have a true positive proof on the unit and on the integration level, so that for 
+\paragraph{Every rule is tested against a real Elasticsearch instance, and thirteen are also tested end-to-end.} 
+All fifteen rules have a true positive validation on the unit and on the integration level, so that for 
 every rule the queries, the index mapping and the stored documents are covered and not only the 
 detection logic. 
 The test suite comprises 118 unit tests for the rules, 21 integration tests and 18 end-to-end 
 tests. 
-Eleven rules have both a true positive and a true negative proof on the end-to-end level, eight of 
+Eleven rules have both a true positive and a true negative validation on the end-to-end level, eight of 
 them triggered by a login and three by a changed file. 
-For the two replay rules, the end-to-end level provides only the true negative proof, and two rules 
+For the two replay rules, the end-to-end level provides only the true negative validation, and two rules 
 are not tested end-to-end at all. 
 \texttt{MFA\_\allowbreak{}BYPASS} could be triggered in the test environment, but not tested 
 meaningfully. 
@@ -557,12 +557,12 @@ was correlated and raised none.
 An audit entry that arrives only afterwards, for instance because of a delay in the log shipping 
 stack, is no longer correlated, so that the alert remains although the record exists. 
 
-\paragraph{The results establish the fidelity of the implementation, not its detection quality in operation.}
+\paragraph{The results establish the fidelity of the implementation, not its detection quality in production.}
 The rules were derived from documented weaknesses and requirements (Section~\ref{sec:rules}), and 
 the scenarios reproduce the conditions that the rules describe. 
 The results therefore show that the implementation behaves as specified: every rule raises its 
 alert when its condition occurs, and legitimate logins remain without false alarms. 
-How often the rules detect real attacks in operation, and how many of their alerts would be false 
+How often the rules detect real attacks in production, and how many of their alerts would be false 
 for productive traffic with its unusual but legitimate configurations, cannot be derived from them. 
 That would require productive logins labelled as legitimate or malicious independently of the 
 rules, which no test environment can produce.
@@ -576,7 +576,7 @@ Both therefore lie on the critical path of every login, so that any time they ta
 time a user waits for access to the SP, and any processor time they use is taken from the IdP. 
 The evaluation addresses two questions. 
 The first is how much the interceptors add to a login, in latency and in processor time, in the 
-configuration intended for operation. 
+configuration intended for production. 
 The second concerns the way in which they transmit their records. 
 As described in Section~\ref{sec:impl-transport}, they send them without waiting for a response, 
 so that a login does not depend on the backend. 
@@ -589,7 +589,7 @@ Three configurations are compared.
 In \textit{baseline}, neither interceptor is configured for the SP, so that a login runs as in an 
 IdP without monitoring. 
 In \textit{async}, both interceptors are active and transmit their records without waiting, which 
-is the configuration intended for operation. 
+is the configuration intended for production. 
 In \textit{sync}, both are active but wait for the confirmation of the backend, so that every login 
 contains two blocking transmissions. 
 The comparison of \textit{baseline} and \textit{async} answers the first question, and the 
@@ -732,7 +732,7 @@ At the load of the test it occupies less than half a percent of the 16 logical p
 grows with the number of logins, so that 50 logins per second at a peak would require about 1.4 
 additional logical processors.
 
-In the configuration intended for operation, the interceptors therefore add no measurable latency 
+In the configuration intended for production, the interceptors therefore add no measurable latency 
 and about 28\,ms of processor time to a login, which answers the first question. 
 Waiting for a confirmation would add about 60\,ms to every login and more to the slow ones, without 
 saving processor time. 
@@ -745,13 +745,13 @@ Section~\ref{sec:impl-transport}.
 
 \section{Defects Found}\label{sec:defects}
 
-Besides the results reported above, the evaluation uncovered six defects that operation itself 
+Besides the results reported above, the evaluation uncovered six defects that production itself 
 had not revealed. 
 In each case the system kept running and produced plausible output, and the defect only became 
 visible when the behaviour was compared with an expectation defined in advance. 
-Table~\ref{tab:defects} lists them together with the consequence they would have had in operation. 
+Table~\ref{tab:defects} lists them together with the consequence they would have had in production. 
 After the missing identifier had been added to the audit format, the exact strategy activated itself during 
-operation without a restart, as intended by the dynamic field adaptation of Section~\ref{sec:impl-aggregation}. 
+production without a restart, as intended by the dynamic field adaptation of Section~\ref{sec:impl-aggregation}. 
 All six defects were corrected, and the results in this chapter refer to the corrected system. 
 What this pattern means for the monitoring of an IdP is discussed in Section~\ref{sec:interpretation}.
 
@@ -818,7 +818,7 @@ with three test accounts, two SPs and a single authentication flow based on a pa
 Real users log in less regularly, through other flows such as a second factor, and from many 
 different browsers and networks. 
 Since no logins of real users were available, the evaluations show how the system behaves in the 
-situations they reproduce, but not how often these situations arise in operation. 
+situations they reproduce, but not how often these situations arise in production. 
 This concerns how often logins at an SP follow each other closely enough to confuse the time-only 
 correlation, which load a productive IdP reaches at its peak and how often the rules detect real 
 attacks or raise false alarms (Section~\ref{subsec:eval-detection-results}). 
@@ -840,7 +840,7 @@ would lose reports rather than slow down the logins.
 \paragraph{Rules without an end-to-end test.}
 \texttt{MFA\_\allowbreak{}BYPASS} and \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} 
 rest on the integration test, which passes its input directly to the rule engine. 
-In operation, the input of \texttt{MFA\_\allowbreak{}BYPASS} arrives through the log shipping stack, 
+In production, the input of \texttt{MFA\_\allowbreak{}BYPASS} arrives through the log shipping stack, 
 and that of \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} with the post 
 authentication report. 
 A fault on either path, such as the one in Logstash described in Section~\ref{sec:defects}, would 

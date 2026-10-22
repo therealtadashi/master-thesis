@@ -23,7 +23,18 @@ Section~\ref{sec:why-not-siem} showed that AppSensor's detection model provides 
 comparing an observed event against a configuration declared by a third party. 
 Since an IdP authenticates on behalf of other entities, such a comparison requires at least two 
 independent sources.
-One source describing the intended configuration and another describing what actually occurred.
+One source describing the intended configuration and another describing what actually occurred. 
+
+As discussed in Chapter~\ref{ch:introduction}, the proposed monitoring system operates 
+directly within the application layer of the Shibboleth IdP. 
+Its objective is to detect attacks based on events and behaviour observable from 
+within the application.
+
+The underlying concept is not new. 
+The OWASP AppSensor project describes an approach in which intrusion detection and response 
+capabilities are integrated directly into an application~\cite{OWASPAppSensor}. 
+In contrast to network-based security mechanisms, application-layer monitoring can make use of 
+information about the application's internal state and semantics.
 
 The proposed system can be classified using the taxonomy for self-protecting software systems 
 introduced by Yuan and Malek~\cite{Taxonomy}. 
@@ -32,9 +43,9 @@ Two dimensions of this taxonomy are particularly relevant to the scope of this w
 The \texttt{Architecture Level} describes the layer at which a security mechanism operates and 
 distinguishes between Network, Host, Software/Application and Services. 
 This dimension allows the observation position of different security mechanisms to be compared. 
-Network-based IDS, such as Suricata and Snort, operate primarily at the network level, 
-whereas endpoint detection and response solutions operate at the host level. 
-The proposed system operates at the Software / Application level, as it observes events directly 
+Network-based intrusion detection systems, such as Suricata and Snort, operate primarily at the 
+network level, whereas endpoint detection and response solutions operate at the host level. 
+The proposed system operates at the Software/Application level, as it observes events directly 
 within the Shibboleth IdP. 
 The distinction between these systems therefore lies primarily in the layer at which 
 security-relevant information becomes observable. 

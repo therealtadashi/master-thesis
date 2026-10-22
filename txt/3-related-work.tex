@@ -43,19 +43,9 @@ which configuration is in effect.
 
 \section{Application-Level Intrusion Detection}\label{sec:app-detection}
 
-As discussed in Chapter~\ref{ch:introduction}, the proposed monitoring system operates 
-directly within the application layer of the Shibboleth IdP. 
-Its objective is to detect attacks based on events and behaviour observable from 
-within the application.
-
-The underlying concept is not new. 
-The OWASP AppSensor project describes an approach in which intrusion detection and response 
-capabilities are integrated directly into an application~\cite{OWASPAppSensor}. 
-In contrast to network-based security mechanisms, application-layer monitoring can make use of 
-information about the application's internal state and semantics.
-
-Rieckers observes the eduroam infrastructure passively by capturing its RADIUS and EAP-TLS traffic 
-and analysing the TLS parameters that clients offer\cite{EAPeduroam}. 
+Rieckers applies the principle of passive observation to network traffic, capturing the RADIUS 
+and EAP-TLS traffic of the eduroam infrastructure to analyse the TLS parameters that clients 
+offer~\cite{EAPeduroam}. 
 In captured traffic, information that exists only inside the application, such as the structure 
 of a SAML assertion or the configuration of an SP, is not visible. 
 This work adopts the principle and applies it inside the Shibboleth IdP itself. 

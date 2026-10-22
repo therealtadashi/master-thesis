@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 10:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 11:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2573,7 +2573,11 @@ chapter 7.
 [61
 
 
-] [62] [63] [64]) (./txt/8-conclusion.tex [65] [66
+] [62] [63]
+Underfull \vbox (badness 2495) has occurred while \output is active []
+
+ [64])
+(./txt/8-conclusion.tex [65] [66
 
 
 ]
@@ -2655,10 +2659,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (88 pages, 510561 bytes).
+Output written on out/main.pdf (88 pages, 508393 bytes).
 PDF statistics:
- 1445 PDF objects out of 1728 (max. 8388607)
- 1308 compressed objects within 14 object streams
+ 1444 PDF objects out of 1728 (max. 8388607)
+ 1307 compressed objects within 14 object streams
  297 named destinations out of 1000 (max. 500000)
  120868 words of extra memory for PDF output out of 128383 (max. 10000000)
 

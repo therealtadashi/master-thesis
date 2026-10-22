@@ -10,31 +10,26 @@ combining three separate sources of information from within the IdP.
 The collected data is transmitted to an external backend, where it is stored, correlated and 
 evaluated against a catalogue of fifteen detection rules.
 
-The three sources proved complementary, and the reason is more specific than their number. 
+The three sources complemented one another. 
 The audit log records the outcome of a completed transaction, the configuration states what was 
 intended for the partner involved, and the interceptors observe the incoming request and the 
 outgoing response while the transaction is being processed. 
 What each source can see follows from its position in the processing sequence, which is why their 
-combination permits comparisons that no single source supports on its own. 
-The comparison between a declared configuration and an observed event is the clearest example, 
-since a login without multi factor authentication is unremarkable until it is related to a service 
-provider that requires it.
+combination allows comparisons that no single source supports on its own. 
 
-The detection rules are derived rather than assembled from experience. 
+The detection rules are derived rather than assembled. 
 Thirteen of the fifteen rules can be traced to vulnerabilities and attack classes documented in the 
-literature, to security recommendations for SAML deployments or, for the two rules that compare 
-independently produced records, to the log integrity argument. 
+literature. 
 The two rules that cannot be traced are named as such. 
 All fifteen are verified against a real Elasticsearch instance, and thirteen additionally through 
-the complete pipeline, eleven of them with both a true positive and a true negative proof. 
+the complete pipeline, eleven of them with both a true positive and a true negative test. 
 
 The correlation links the records of a login reliably. 
 All 7{,}236 reports of the performance series found their counterpart, and with the identifier of 
 the request, or with the subject and the address as long as one of them separates the users, the 
 correct one was found in every tested scenario. 
 Only the strategy based on time alone (\texttt{TIME\_\allowbreak{}WINDOW}) confused logins, and 
-only those that followed each other at the same SP within less than 100\,ms, so that operators 
-should record the identifier in the audit format, or at least the subject and the address. 
+only those that followed each other at the same SP within less than 100\,ms. 
 
 In the asynchronous transmission mode, the two interceptors introduced no measurable latency overhead. 
 The difference to a deployment without interceptors is $+6.2$\,ms with an upper bound of 17\,ms for 
@@ -42,9 +37,6 @@ the 95\% confidence interval, and the work performed inside the interceptors amo
 0.13\% of the login duration. 
 Their cost appears as processor time instead, about 28\,ms per login, while blocking transmission 
 would add about 60\,ms to each login without saving any of it. 
-The approach can therefore be integrated into the authentication workflow of a central 
-authentication service without a perceptible effect on the logins it observes, provided that the 
-records are transmitted asynchronously.
 
 The comparison of two independently produced records of the same event serves as a check of log 
 integrity without changing the logging chain. 
@@ -52,17 +44,6 @@ For 200 legitimate logins the consistency check between outbound report and audi
 no alert, and it reported exactly the modified field of a deliberately manipulated audit entry. 
 The check shows that two records disagree, but not which of them was altered, and it cannot see the 
 fields inside an encrypted assertion.
-
-A recurring observation across the evaluation deserves mention, since it bears on the premise of 
-the work. 
-In each of the three evaluations, the measurement uncovered a defect that operation itself had not 
-revealed. 
-The system continued to run in every case, alerts continued to be produced and the dashboard 
-continued to be populated. 
-The defects became apparent only when the behaviour was compared against an expectation defined in 
-advance. 
-That a system appears to function is therefore not evidence that it does, which is the same 
-argument that motivates observing an IdP from within in the first place.
 
 The study also identified limitations that follow from the observation point rather than from the 
 effort invested. 
@@ -72,12 +53,9 @@ One case is more fundamental, since a malicious IdP cannot be detected by a syst
 running inside it, where observer and adversary coincide. 
 The severity classification makes a further boundary explicit, as none of the fifteen rules 
 reaches the highest risk level, which presupposes a compromise of the signing key. 
-The Sunburst incident that motivated this work would consequently not have been detected by the 
-system presented here, although the configuration weaknesses that make such an attack easier to 
-carry out and harder to notice are within its reach.
 
 What this thesis contributes is therefore not a new architecture for collecting and correlating 
-security events, since that is established practice. 
+security events. 
 It is the demonstration that an IdP holds security relevant information which no 
 log consuming system can obtain, an analysis of which properties are observable from which 
 position and an implementation that makes this information available at a cost that can be 

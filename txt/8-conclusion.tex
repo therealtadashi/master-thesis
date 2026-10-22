@@ -7,52 +7,30 @@
 This thesis presented an application layer monitoring tool for the Shibboleth IdP that detects 
 documented vulnerabilities, configuration weaknesses and anomalous authentication behaviour by 
 combining three separate sources of information from within the IdP. 
+These sources are the audit log, two interceptors in the authentication flow and the configuration 
+and metadata of the SPs. 
 The collected data is transmitted to an external backend, where it is stored, correlated and 
-evaluated against a catalogue of fifteen detection rules.
+evaluated against a catalogue of fifteen detection rules. 
 
-The three sources complemented one another. 
-The audit log records the outcome of a completed transaction, the configuration states what was 
-intended for the partner involved, and the interceptors observe the incoming request and the 
-outgoing response while the transaction is being processed. 
-What each source can see follows from its position in the processing sequence, which is why their 
+For the first research question, the IdP aggregates security relevant data through the three 
+channels. 
+What each source can see is defined by their positions in the processing sequence, which is why their 
 combination allows comparisons that no single source supports on its own. 
+The configuration describes what is intended for an SP, while the audit log and the interceptors 
+record independently of each other what actually happened. 
+For the second question, the records of a login can be linked reliably as long as the audit log records the 
+identifier of the request or the pseudonymised user and address. 
+Only a correlation by time alone fails when login at the same SP follow each other within less than 100\,ms. 
+The rules correlate observed logins to the declared configuration and to each other, and all of them behaved 
+as specified in the tested scenarios. 
+For the third question, asynchronous transmission introduced no measurable latency overhead. 
+The cost appears as processor time instead. 
 
-The detection rules are derived rather than assembled. 
-Thirteen of the fifteen rules can be traced to vulnerabilities and attack classes documented in the 
-literature. 
-The two rules that cannot be traced are named as such. 
-All fifteen are verified against a real Elasticsearch instance, and thirteen additionally through 
-the complete pipeline, eleven of them with both a true positive and a true negative test. 
-
-The correlation links the records of a login reliably. 
-All 7{,}236 reports of the performance series found their counterpart, and with the identifier of 
-the request, or with the subject and the address as long as one of them separates the users, the 
-correct one was found in every tested scenario. 
-Only the strategy based on time alone (\texttt{TIME\_\allowbreak{}WINDOW}) confused logins, and 
-only those that followed each other at the same SP within less than 100\,ms. 
-
-In the asynchronous transmission mode, the two interceptors introduced no measurable latency overhead. 
-The difference to a deployment without interceptors is $+6.2$\,ms with an upper bound of 17\,ms for 
-the 95\% confidence interval, and the work performed inside the interceptors amounts to about 
-0.13\% of the login duration. 
-Their cost appears as processor time instead, about 28\,ms per login, while blocking transmission 
-would add about 60\,ms to each login without saving any of it. 
-
-The comparison of two independently produced records of the same event serves as a check of log 
-integrity without changing the logging chain. 
-For 200 legitimate logins the consistency check between outbound report and audit entry raised 
-no alert, and it reported exactly the modified field of a deliberately manipulated audit entry. 
-The check shows that two records disagree, but not which of them was altered, and it cannot see the 
-fields inside an encrypted assertion.
-
-The study also identified limitations that follow from the observation point rather than from the 
-effort invested. 
+This thesis also identified limitations that follow from the observation point. 
 Several federation level attack scenarios occur at a different system layer, involve a different 
 party or are observable only through their preconditions. 
-One case is more fundamental, since a malicious IdP cannot be detected by a system 
-running inside it, where observer and adversary coincide. 
-The severity classification makes a further boundary explicit, as none of the fifteen rules 
-reaches the highest risk level, which presupposes a compromise of the signing key. 
+The comparison of independent records shows that two records disagree, but not which of them was 
+altered. 
 
 What this thesis contributes is therefore not a new architecture for collecting and correlating 
 security events. 
@@ -60,5 +38,7 @@ It is the demonstration that an IdP holds security relevant information which no
 log consuming system can obtain, an analysis of which properties are observable from which 
 position and an implementation that makes this information available at a cost that can be 
 stated in numbers rather than assumed. 
+Future work could extend the observation to the SPs, transfer the approach to OpenID Connect and 
+evaluate the rules on labelled productive traffic. 
 
 \end{document}

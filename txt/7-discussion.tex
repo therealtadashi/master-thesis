@@ -37,7 +37,21 @@ The fifteen detection rules behave as intended for the scenarios constructed for
 All of them are verified against a real Elasticsearch instance, thirteen also through the complete pipeline, and 
 legitimate logins raised no false alarms. 
 This establishes the fidelity of the implementation, though not the detection quality in 
-operation, a distinction developed in Section~\ref{subsec:eval-detection-results}.
+production, a distinction developed in Section~\ref{subsec:eval-detection-results}. 
+
+The number of alerts deserves attention as well. 
+During the performance series, the detection layer raised 21{,}712 alerts for 10{,}854 logins, 
+since the benchmark used a script client against the weak SP and both affected rules report every 
+login (Section~\ref{subsec:eval-detection-results}). 
+In a production environment, such a high volume of alerts would make it difficult to identify the few 
+that indicate an attack, potentially leading to alert fatigue. 
+The two rules rated low report indicators that are of limited value on their own. 
+In the evaluation, they served to verify the pipeline end to end, but in production they mainly add 
+volume. 
+\texttt{FAILED\_\allowbreak{}LOGIN} reports every failed login attempt. 
+In production, \texttt{FAILED\_\allowbreak{}LOGIN} could therefore be hidden, and 
+\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} could be shown in condensed form, for instance 
+as a daily count per SP. 
 
 The third question asked what overhead the resulting system imposes. 
 With asynchronous transmission, the latency of a login did not differ measurably from a deployment 
@@ -51,21 +65,14 @@ Synchronous transmission adds about 60\,ms to every login and was the slower con
 18 runs, without saving processor time. 
 In the current implementation it would not improve the delivery either, since both modes only log 
 a failed transmission (Section~\ref{subsec:eval-overhead-results}). 
-The measurement therefore supports the choice of fire-and-forget transmission.
+The measurement therefore supports the choice of fire-and-forget transmission. 
 
-Beyond the individual research questions, one observation emerges across all three evaluations. 
-Each of them uncovered at least one defect that operation itself had not revealed, six in total 
-(Table~\ref{tab:defects}). 
-A missing token in the audit format had left the exact correlation permanently inactive, the log 
-shipping stack would have reported every encrypted login as unencrypted and indexing errors in the 
-analysis script had produced plausible but incorrect performance figures. 
-In none of these cases did the system fail visibly. 
-It continued to run, alerts continued to be produced and the dashboard continued to be populated. 
-The defects became apparent only when the behaviour was compared against an expectation defined 
-in advance. 
-This relates to the basis of the work itself. 
-The argument for observing an IdP from within rests on the assumption that a system which appears 
-to function is not thereby known to function. 
+Beyond the individual research questions, each of the three evaluations uncovered at least one 
+defect, six in total (Table~\ref{tab:defects}). 
+None of them caused a visible failure. 
+They became apparent only through a comparison with an expectation defined in advance, such as the 
+ground truth of the correlation or an end-to-end test against the clean SP. 
+Tests at several levels were therefore necessary to establish that the system works as intended. 
 
 \section{Limitations of the Approach}\label{sec:limitation}
 
@@ -87,14 +94,14 @@ The IdP processes the request it receives regardless of how the client resolved 
 address. 
 
 The second group consists of issues that affect a different party within the federation. 
-CSRF describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
+Cross-site request forgery describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
 The relevant interaction occurs between the browser and the SP and therefore does not pass 
 through the IdP. 
 The same applies to message modification enabled by a lack of binding, whose mitigation lies in 
 the SP checking the credentials it receives~\cite{FIMSurvey}.
 
 The third group contains an issue that can be observed only indirectly from the IdP. 
-A MITM attack is the issue in this category. 
+A man-in-the-middle attack is the issue in this category. 
 It exploits a lack of binding, where a token is not tied to the SP for which it was issued, and the 
 survey names binding the token to its intended SP as the countermeasure~\cite{FIMSurvey}. 
 The attack itself takes place on the communication path after the message has left the IdP. 
@@ -104,8 +111,8 @@ the implemented rules currently examines this condition.
 
 The survey further lists attack classes that do not form cross-protocol issues and are therefore not 
 part of the coverage figure. 
-DDoS, XSS and session swapping occur at the network level, in the browser or at the SP and lie outside 
-the observation point of the IdP for the same reasons~\cite{FIMSurvey}. 
+Distributed denial of service, cross-site scripting and session swapping occur at the network level, 
+in the browser or at the SP and lie outside the observation point of the IdP for the same reasons~\cite{FIMSurvey}. 
 Two further attack classes, UI redressing and ACS spoofing, were reported only for SAML and exploit a 
 vulnerable IdP~\cite{FIMSurvey}. 
 UI redressing loads a page of the IdP into an invisible frame and tricks the user into clicking it, 

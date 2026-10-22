@@ -343,18 +343,18 @@ In addition, series of legitimate logins show whether the rules remain silent wh
 
 \subsection{Method and Scenarios}\label{subsec:eval-detection-method}
 
-\paragraph{Validation.}
-The tests establish two kinds of validation. 
+\paragraph{Tests.}
+There are two types of tests. 
 A true positive test constructs a scenario in which a rule is supposed to raise an alert and 
 confirms that it does. 
 A true negative test constructs a scenario in which no alert is due and confirms that none is 
 raised. 
-How much a validation shows depends on the test level at which it is established. 
+How much a test shows depends on the level at which it runs. 
 In an integration test, the test builds the input of the rule itself, for instance an audit entry 
 or a post authentication report, stores any history the rule requires in Elasticsearch and passes 
 the input directly to the rule engine rather than waiting for the scheduler, so that the result does 
 not depend on its timing. 
-Such a validation covers the rule, its queries and the stored documents, but not the way in which 
+Such a test covers the rule, its queries and the stored documents, but not the way in which 
 Filebeat and Logstash turn a real audit line into such an input. 
 An end-to-end test starts from a real event at the IdP, usually a login in the browser, and covers this 
 path as well, which makes it the only level at which a fault in the log shipping stack can become visible. 
@@ -397,7 +397,7 @@ Each of these scenarios has a true negative counterpart with the same trigger bu
 weakness, for instance a further login with the known browser or an override that encrypts and 
 offers an MFA flow. 
 For \texttt{MFA\_\allowbreak{}BYPASS} and \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED}, 
-no end-to-end scenario was implemented, and the two replay rules have only a true negative validation at 
+no end-to-end scenario was implemented, and the two replay rules have only a true negative test at 
 this level. 
 Table~\ref{tab:detection-coverage} states the reasons.
 
@@ -405,11 +405,11 @@ The second expectation is tested with legitimate logins through the browser.
 At the clean SP, three users log in alternately, 100 times in total, and after a further 
 100 seconds, in which the scheduler evaluates all entries, none of the logins may have raised an alert. 
 Since every alert in this run would be a false alarm, the run is at the same time a true negative 
-validation for every rule that can react to a login. 
+test for every rule that can react to a login. 
 The same run against the weak SP tests the consistency check in the presence of the alerts that the 
 weaknesses of this SP rightly cause, so that there no \texttt{FIELD\_\allowbreak{}MISMATCH} alert may 
 arise. 
-In addition, a single legitimate login at the clean SP provides end-to-end true negative validations for eight 
+In addition, a single legitimate login at the clean SP provides end-to-end true negative tests for eight 
 rules, among them the two replay rules, for which no true positive scenario exists at this level. 
 
 The third expectation concerns someone who alters the audit entry of a login after the fact, for 
@@ -476,14 +476,14 @@ Rule & End-to-end & Trigger or reason \\
 \end{table}
 
 \paragraph{Every rule is tested against a real Elasticsearch instance, and thirteen are also tested end-to-end.} 
-All fifteen rules have a true positive validation on the unit and on the integration level, so that for 
+All fifteen rules have a true positive test on the unit and on the integration level, so that for 
 every rule the queries, the index mapping and the stored documents are covered and not only the 
 detection logic. 
 The test suite comprises 118 unit tests for the rules, 21 integration tests and 18 end-to-end 
 tests. 
-Eleven rules have both a true positive and a true negative validation on the end-to-end level, eight of 
+Eleven rules have both a true positive and a true negative test on the end-to-end level, eight of 
 them triggered by a login and three by a changed file. 
-For the two replay rules, the end-to-end level provides only the true negative validation, and two rules 
+For the two replay rules, the end-to-end level provides only the true negative test, and two rules 
 are not tested end-to-end at all. 
 \texttt{MFA\_\allowbreak{}BYPASS} could be triggered in the test environment, but not tested 
 meaningfully. 
@@ -745,13 +745,14 @@ Section~\ref{sec:impl-transport}.
 
 \section{Defects Found}\label{sec:defects}
 
-Besides the results reported above, the evaluation uncovered six defects that production itself 
-had not revealed. 
+Besides the results reported above, the evaluation revealed six defects that were not visible 
+while the system was running. 
 In each case the system kept running and produced plausible output, and the defect only became 
 visible when the behaviour was compared with an expectation defined in advance. 
 Table~\ref{tab:defects} lists them together with the consequence they would have had in production. 
-After the missing identifier had been added to the audit format, the exact strategy activated itself during 
-production without a restart, as intended by the dynamic field adaptation of Section~\ref{sec:impl-aggregation}. 
+After the missing identifier had been added to the audit format, the exact strategy activated 
+itself while the system was running, without a restart, as intended by the dynamic field adaptation 
+of Section~\ref{sec:impl-aggregation}. 
 All six defects were corrected, and the results in this chapter refer to the corrected system. 
 What this pattern means for the monitoring of an IdP is discussed in Section~\ref{sec:interpretation}.
 

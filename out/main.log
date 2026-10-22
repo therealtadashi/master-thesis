@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 11:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 12:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2573,16 +2573,15 @@ chapter 7.
 [61
 
 
-] [62] [63]
-Underfull \vbox (badness 2495) has occurred while \output is active []
-
- [64])
-(./txt/8-conclusion.tex [65] [66
+] [62] [63] [64]) (./txt/8-conclusion.tex [65] [66
 
 
 ]
 chapter 8.
-[67]) (./zyx/epilogue.tex [68]
+) (./zyx/epilogue.tex [67] [68
+
+
+]
 chapter without number
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/jkpl/m/sc/10.95'.
@@ -2618,8 +2617,6 @@ ty-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . May 2025. \T1/jkpl/m/sc/10.95 (+
 [69
 
 
-
-
 ] [70] [71]
 Underfull \hbox (badness 1337) in paragraph at lines 8--8
 []\T1/jkpl/m/n/10.95 (+20) Shibboleth Con-sor-tium. \T1/jkpl/m/it/10.95 (+20) P
@@ -2639,11 +2636,11 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66641 strings out of 474116
- 1469566 string characters out of 5743682
- 2670940 words of memory out of 5000000
- 86955 multiletter control sequences out of 15000+600000
- 744346 words of font info for 556 fonts, out of 8000000 for 9000
+ 66585 strings out of 474116
+ 1468685 string characters out of 5743682
+ 2670436 words of memory out of 5000000
+ 86895 multiletter control sequences out of 15000+600000
+ 744788 words of font info for 559 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,20n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
@@ -2659,10 +2656,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (88 pages, 508393 bytes).
+Output written on out/main.pdf (88 pages, 507402 bytes).
 PDF statistics:
- 1444 PDF objects out of 1728 (max. 8388607)
- 1307 compressed objects within 14 object streams
+ 1445 PDF objects out of 1728 (max. 8388607)
+ 1308 compressed objects within 14 object streams
  297 named destinations out of 1000 (max. 500000)
  120868 words of extra memory for PDF output out of 128383 (max. 10000000)
 

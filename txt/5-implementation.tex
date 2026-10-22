@@ -118,7 +118,7 @@ The identifier of the original request, which links the outbound report to the p
 is read from the inbound message context. 
  
 The outbound report is transmitted by the same mechanism as the post authentication report, including the 
-signature over timestamp and payload, as well as the switch between asynchronous and synchronous mode, but 
+HMAC over timestamp and payload, as well as the switch between asynchronous and synchronous mode, but 
 to a separate endpoint. 
 The backend stores it in its own index, and not as part of the post authentication report. 
 The separation is necessary because the backend treats a second submission with the same identifier 
@@ -150,15 +150,14 @@ component, so that it can be rotated without modifying the interceptor or the Lo
 
 \section{Transport Layer}\label{sec:impl-transport}
 
-Before the aggregated data is transmitted, the collecting component authenticates itself to 
-the monitoring tool using HMAC, as outlined in Section~\ref{sec:trust}. 
-Both Logstash and the interceptor hold the shared secret and sign the records they send, 
-so that the backend can verify that a received message originates from an authorised collection 
-component. 
+Before the aggregated data is transmitted, each collecting component computes an HMAC over 
+every record, as outlined in Section~\ref{sec:trust}. 
+Both Logstash and the interceptor hold the shared secret, so that the backend can verify that a 
+received record was not altered and originates from an authorised collection component. 
 
 The verification is conditional on configuration. 
-If no secret is configured on the sending side, the message is transmitted unsigned, and the 
-backend enforces validation only where a secret has been configured there as well. 
+If no secret is configured on the sending side, the message is transmitted without an HMAC, 
+and the backend enforces validation only where a secret has been configured there as well. 
 This makes it possible to deploy the system without prior key distribution, for instance in a 
 test environment, at the cost of accepting unauthenticated records in that case. 
 A production deployment is therefore expected to configure the secret on both sides. 

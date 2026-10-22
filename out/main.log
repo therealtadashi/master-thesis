@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 16:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 16:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2492,11 +2492,7 @@ chapter 3.
 Underfull \vbox (badness 2326) has occurred while \output is active []
 
  [14]
-[15]
-Underfull \vbox (badness 2326) has occurred while \output is active []
-
- [16]
-[17]) (./txt/4-system-design.tex [18]
+[15] [16] [17]) (./txt/4-system-design.tex [18]
 chapter 4.
 
 Overfull \hbox (0.41498pt too wide) in paragraph at lines 53--54
@@ -2538,11 +2534,11 @@ chapter 5.
 Underfull \vbox (badness 2326) has occurred while \output is active []
 
  [36]
-[37]
-Underfull \vbox (badness 1320) has occurred while \output is active []
+[37] [38] [39] [40]
+Underfull \vbox (badness 2326) has occurred while \output is active []
 
- [38]
-[39] [40] [41] [42]) (./txt/6-evaluation.tex [43] [44
+ [41]
+[42]) (./txt/6-evaluation.tex [43] [44
 
 
 ]
@@ -2645,7 +2641,7 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  66583 strings out of 474116
  1468671 string characters out of 5743682
- 2670436 words of memory out of 5000000
+ 2670448 words of memory out of 5000000
  86895 multiletter control sequences out of 15000+600000
  744788 words of font info for 559 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
@@ -2663,7 +2659,7 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 505868 bytes).
+Output written on out/main.pdf (86 pages, 505055 bytes).
 PDF statistics:
  1438 PDF objects out of 1440 (max. 8388607)
  1303 compressed objects within 14 object streams

@@ -200,45 +200,6 @@ references~\cite{OWASPAppSensor, NIST80092, TamperDetection}.
 The discrepancy-based approach used in this work therefore does not introduce the general concept 
 of detecting log integrity violations. 
 Instead, it applies an established detection principle to the specific domain of federated 
-identity management and extends it with application-level observations from the Shibboleth IdP.
-
-\section{Derivation of the Rules}\label{sec:rules}
-
-The derivation of the detection rules is based on three complementary sources: the FIM survey 
-by Simpson and Groß, the OASIS SAML Security and Privacy Considerations, and the STRIDE threat 
-classification scheme.
-The FIM survey identifies 11 vulnerabilities and 14 attack classes based on a systematic 
-literature review~\cite{FIMSurvey}. 
-The vulnerabilities are grouped into cross-protocol issues where the same weakness is exploited 
-by the same attack class, results in the same CIA consequence and is documented for at least 
-two different protocols. 
-The survey identifies 14 such issues. 
-Six of them concern SAML (issues 5, 7, 8, 9, 10 and 14 in the numbering of the survey), while 
-one directly concerns Shibboleth (issue 6). 
-The survey therefore provides the primary basis for identifying attack scenarios that are 
-relevant to federated identity management.
-
-While the survey describes vulnerabilities that have been documented in the literature, the 
-OASIS SAML Security and Privacy Considerations provides security recommendations for SAML 
-deployments by specifying security requirements and suggested countermeasures~\cite{SAMLSecurityConsideration}. 
-This allows the detection rules to be derived not only from observed or documented attacks, 
-but also from the security properties that a SAML deployment is expected to enforce.
-
-A third perspective is provided by STRIDE, which is a threat classification scheme that 
-categorises threats according to their mode of operation~\cite{ThreatModeling}. 
-It distinguishes between spoofing, tampering, repudiation, information disclosure, denial 
-of service and elevation of privilege. 
-Graves applies this framework to the analysis of threats against Shibboleth~\cite{ShibbolethGIAC}. 
-In this work, STRIDE is used to characterise the security impact of the attack scenarios 
-identified by the other two sources.
-
-The three sources therefore serve different purposes in the derivation process. 
-The FIM survey identifies documented vulnerabilities and attack classes, OASIS specifies the 
-security requirements that a SAML deployment should satisfy, and STRIDE provides a classification 
-of the resulting security impact. 
-Where the evidence from the survey and the requirements specified by OASIS overlap, the basis 
-for a detection rule is particularly strong. 
-Replay attacks provide an example of such an overlap, as they are documented in the literature 
-and explicitly addressed by the SAML security considerations.
+identity management and extends it with application-level observations from the Shibboleth IdP. 
 
 \end{document}

@@ -151,7 +151,7 @@ component, so that it can be rotated without modifying the interceptor or the Lo
 \section{Transport Layer}\label{sec:impl-transport}
 
 Before the aggregated data is transmitted, the collecting component authenticates itself to 
-the monitoring tool using an HMAC signature, as outlined in Section~\ref{sec:trust}. 
+the monitoring tool using HMAC, as outlined in Section~\ref{sec:trust}. 
 Both Logstash and the interceptor hold the shared secret and sign the records they send, 
 so that the backend can verify that a received message originates from an authorised collection 
 component. 

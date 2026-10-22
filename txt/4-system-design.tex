@@ -383,7 +383,7 @@ The collection components and the monitoring tool share a secret key that is use
 message authentication code for each transmitted message.
 
 The final design decision concerning the transport layer is whether the collection component should wait for 
-the monitoring tool to confirm receiving the data.
+the monitoring tool to confirm receiving the data. 
 The interceptors execute within the authentication flow of the IdP. 
 Any time spent transmitting a record is therefore time added to the login of the user who triggered it. 
 Waiting for a response would make the duration of every authentication dependent on the availability and 

@@ -34,10 +34,12 @@ altered.
 
 What this thesis contributes is therefore not a new architecture for collecting and correlating 
 security events. 
-It is the demonstration that an IdP holds security relevant information which no 
-log consuming system can obtain, an analysis of which properties are observable from which 
-position and an implementation that makes this information available at a cost that can be 
-stated in numbers rather than assumed. 
+It shows that an interceptor inside the authentication flow provides a second record of each login, 
+which is produced and transmitted independently of the audit log. 
+Combined with the audit log and the configuration, this record allows each login to be compared with 
+the declared state of its SP and with the audit entry of the same login. 
+In addition, the thesis analyses which properties are observable from which position and provides 
+an implementation. 
 Future work could extend the observation to the SPs, transfer the approach to OpenID Connect and 
 evaluate the rules on labelled productive traffic. 
 

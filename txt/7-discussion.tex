@@ -48,11 +48,14 @@ that indicate an attack, potentially leading to alert fatigue.
 The two rules rated low report indicators that are of limited value on their own. 
 In the evaluation, they served to verify the pipeline end to end, but in production they mainly add 
 volume. 
-\texttt{FAILED\_\allowbreak{}LOGIN} reports every failed login attempts, which account for a large 
-proportion of the alerts raised during the performance series. 
-In production, \texttt{FAILED\_\allowbreak{}LOGIN} could therefore be hidden, and 
-\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} could be shown in condensed form, for instance 
-as a daily count per SP. 
+\texttt{FAILED\_\allowbreak{}LOGIN} reports every failed login attempt, although 
+\texttt{BRUTE\_\allowbreak{}FORCE} evaluates the same attempts and reports a subject once they 
+accumulate. 
+\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} alone accounts for half of the alerts of 
+the performance series. 
+In production, \texttt{FAILED\_\allowbreak{}LOGIN} could therefore be hidden without affecting the 
+detection of brute force attacks, and \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} 
+could be shown in condensed form, for instance as a daily count per SP. 
 
 The third question asked what overhead the resulting system imposes. 
 With asynchronous transmission, the latency of a login did not differ measurably from a deployment 

@@ -32,20 +32,13 @@ The Shibboleth IdP also supports OpenID Connect through an official plugin~\cite
 
 Institutions in research and education usually join a national federation such as 
 DFN-AAI~\cite{DFNAAI}. 
-Its members do not agree on trust bilaterally with every partner. 
-Instead, a federation operator registers the IdPs and SPs of all members and publishes their 
-metadata, on which every member relies~\cite{DFNMRPS}. 
-DFN-AAI and the interfederation service eduGAIN use a full-mesh architecture, in which every 
-institution operates its own IdP and exchanges messages directly with the SPs. 
-Hub-and-spoke federations route all assertions through a central hub instead, and in their variant 
-with central login, a single IdP authenticates the users of all organisations~\cite{IdPSinglePointOfTrust}. 
-
-In a full-mesh federation, the IdP of an institution therefore becomes a single point of trust for 
-every SP that its users access. 
-Only with central login does one IdP have to be trusted by the entire 
-federation~\cite{IdPSinglePointOfTrust}. 
-A compromised, misconfigured or vulnerable IdP thus does not affect one application but every SP 
-that relies on its assertions. 
+A federation operator registers the IdPs and SPs of all members and publishes their metadata, on 
+which every member relies~\cite{DFNMRPS}. 
+DFN-AAI follow a full-mesh architecture, in which every institution operates its own IdP and 
+exchanges messages directly with the SPs of the federation~\cite{IdPSinglePointOfTrust}. 
+The IdP of an institution therefore becomes a single point of trust for every SP that its users 
+access. 
+A compromised, misconfigured or vulnerable IdP thus affects not one application but all of these SPs. 
 
 The Sunburst supply chain attack shows the consequences of such a compromise~\cite{FireEyeSSC}. 
 As Hartl and Derek note, after the initial compromise the attackers obtained the 
@@ -92,16 +85,11 @@ Three research questions guide this work:
 \end{itemize}
 
 To answer these questions, the system combines three sources whose records can be related to an 
-individual login, namely the audit log, two interceptors in the authentication flow and the 
-configuration and metadata of the SPs. 
+individual login. 
 The records are pseudonymised at their source, correlated in a separate backend and evaluated 
 against fifteen detection rules. 
 The evaluation in a test environment shows that the records of a login can be linked reliably, 
 that all rules behave as specified and that the interceptors add no measurable latency to a login. 
-The main contributions are an analysis of which security-relevant data are observable from which 
-position within the IdP, a monitoring system that correlates these sources across a trust boundary 
-and a catalogue of detection rules that includes two rules comparing independently produced records 
-of the same login. 
 
 The remainder of this thesis is structured as follows. 
 Chapter~\ref{ch:background} introduces the technical foundations of FIM, SAML and the Shibboleth IdP. 

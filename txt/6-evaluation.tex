@@ -176,23 +176,6 @@ below.
 The following paragraphs state what the figures show, from the coverage of the correlation to the 
 limits of the heuristics.
 
-\begin{table}[h]
-\centering
-\caption{Precision of the heuristic strategies per dataset}\label{tab:correlation-precision}
-\small
-\begin{tabular}{llrr}
-\toprule
-Dataset & Scenario & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
-\midrule
-D1 & Single user                 & 100\% & 100\%  \\
-D2 & Several users               & 100\% & 65.0\% \\
-D3 & Real browser                & 100\% & 100\%  \\
-D4 & Real browser, several users & 100\% & 89.9\% \\
-D5 & Shared address              & 100\% & 73.7\% \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 \paragraph{Every report finds its counterpart.}
 In the performance series, all 7{,}236 post authentication reports were correlated with their 
 audit entry through the inbound message identifier, and none expired without a counterpart. 
@@ -237,6 +220,23 @@ Within this zone, it selected the correct entry in 56 to 69 percent of cases, re
 the logins came from the harness or from browsers. 
 The differences between the overall figures therefore do not stem from the strategy but from how 
 many logins fall into the zone: 87 percent in D2, 84 percent in D5 and 23 percent in D4.
+
+\begin{table}[h]
+\centering
+\caption{Precision of the heuristic strategies per dataset}\label{tab:correlation-precision}
+\small
+\begin{tabular}{llrr}
+\toprule
+Dataset & Scenario & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
+\midrule
+D1 & Single user                 & 100\% & 100\%  \\
+D2 & Several users               & 100\% & 65.0\% \\
+D3 & Real browser                & 100\% & 100\%  \\
+D4 & Real browser, several users & 100\% & 89.9\% \\
+D5 & Shared address              & 100\% & 73.7\% \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[h]
 \centering

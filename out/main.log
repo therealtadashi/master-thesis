@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 13:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 13:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2547,11 +2547,7 @@ Underfull \vbox (badness 1320) has occurred while \output is active []
 
 ]
 chapter 6.
-[45] [46]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[47] [48]
+[45] [46] [47] [48]
 
 LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
 (Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 243.
@@ -2656,7 +2652,7 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (88 pages, 507503 bytes).
+Output written on out/main.pdf (88 pages, 507499 bytes).
 PDF statistics:
  1445 PDF objects out of 1728 (max. 8388607)
  1308 compressed objects within 14 object streams

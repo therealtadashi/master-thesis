@@ -2425,31 +2425,31 @@
     <bcf:citekey order="59" intorder="1">VulnerSAMLCloud</bcf:citekey>
     <bcf:citekey order="60" intorder="1">SecAnalysisSSO</bcf:citekey>
     <bcf:citekey order="61" intorder="1">FormalSecAnalysisSAML</bcf:citekey>
-    <bcf:citekey order="62" intorder="1">OWASPAppSensor</bcf:citekey>
-    <bcf:citekey order="63" intorder="1">EAPeduroam</bcf:citekey>
+    <bcf:citekey order="62" intorder="1">EAPeduroam</bcf:citekey>
+    <bcf:citekey order="63" intorder="1">BlackWatch</bcf:citekey>
     <bcf:citekey order="64" intorder="1">BlackWatch</bcf:citekey>
-    <bcf:citekey order="65" intorder="1">BlackWatch</bcf:citekey>
+    <bcf:citekey order="65" intorder="1">MonitoringAAI</bcf:citekey>
     <bcf:citekey order="66" intorder="1">MonitoringAAI</bcf:citekey>
-    <bcf:citekey order="67" intorder="1">MonitoringAAI</bcf:citekey>
-    <bcf:citekey order="68" intorder="1">UEBAFederation</bcf:citekey>
-    <bcf:citekey order="69" intorder="1">OWASPA09</bcf:citekey>
-    <bcf:citekey order="70" intorder="1">WazuhDocumentation</bcf:citekey>
-    <bcf:citekey order="71" intorder="1">ShibbolethGIAC</bcf:citekey>
-    <bcf:citekey order="72" intorder="1">CWE117</bcf:citekey>
-    <bcf:citekey order="73" intorder="1">OWASPA09</bcf:citekey>
-    <bcf:citekey order="74" intorder="1">OWASPAppSensor</bcf:citekey>
-    <bcf:citekey order="75" intorder="1">TamperDetection</bcf:citekey>
-    <bcf:citekey order="76" intorder="1">CryptoSupportSecureLogs</bcf:citekey>
-    <bcf:citekey order="76" intorder="2">TamperDetection</bcf:citekey>
-    <bcf:citekey order="77" intorder="1">TamperDetection</bcf:citekey>
+    <bcf:citekey order="67" intorder="1">UEBAFederation</bcf:citekey>
+    <bcf:citekey order="68" intorder="1">OWASPA09</bcf:citekey>
+    <bcf:citekey order="69" intorder="1">WazuhDocumentation</bcf:citekey>
+    <bcf:citekey order="70" intorder="1">ShibbolethGIAC</bcf:citekey>
+    <bcf:citekey order="71" intorder="1">CWE117</bcf:citekey>
+    <bcf:citekey order="72" intorder="1">OWASPA09</bcf:citekey>
+    <bcf:citekey order="73" intorder="1">OWASPAppSensor</bcf:citekey>
+    <bcf:citekey order="74" intorder="1">TamperDetection</bcf:citekey>
+    <bcf:citekey order="75" intorder="1">CryptoSupportSecureLogs</bcf:citekey>
+    <bcf:citekey order="75" intorder="2">TamperDetection</bcf:citekey>
+    <bcf:citekey order="76" intorder="1">TamperDetection</bcf:citekey>
+    <bcf:citekey order="77" intorder="1">OWASPAppSensor</bcf:citekey>
     <bcf:citekey order="78" intorder="1">OWASPAppSensor</bcf:citekey>
-    <bcf:citekey order="79" intorder="1">OWASPAppSensor</bcf:citekey>
-    <bcf:citekey order="79" intorder="2">NIST80092</bcf:citekey>
-    <bcf:citekey order="79" intorder="3">TamperDetection</bcf:citekey>
-    <bcf:citekey order="80" intorder="1">FIMSurvey</bcf:citekey>
-    <bcf:citekey order="81" intorder="1">SAMLSecurityConsideration</bcf:citekey>
-    <bcf:citekey order="82" intorder="1">ThreatModeling</bcf:citekey>
-    <bcf:citekey order="83" intorder="1">ShibbolethGIAC</bcf:citekey>
+    <bcf:citekey order="78" intorder="2">NIST80092</bcf:citekey>
+    <bcf:citekey order="78" intorder="3">TamperDetection</bcf:citekey>
+    <bcf:citekey order="79" intorder="1">FIMSurvey</bcf:citekey>
+    <bcf:citekey order="80" intorder="1">SAMLSecurityConsideration</bcf:citekey>
+    <bcf:citekey order="81" intorder="1">ThreatModeling</bcf:citekey>
+    <bcf:citekey order="82" intorder="1">ShibbolethGIAC</bcf:citekey>
+    <bcf:citekey order="83" intorder="1">OWASPAppSensor</bcf:citekey>
     <bcf:citekey order="84" intorder="1">Taxonomy</bcf:citekey>
     <bcf:citekey order="85" intorder="1">BlackWatch</bcf:citekey>
     <bcf:citekey order="86" intorder="1">LoggingConfiguration</bcf:citekey>

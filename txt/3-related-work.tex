@@ -43,6 +43,11 @@ which configuration is in effect.
 
 \section{Application-Level Intrusion Detection}\label{sec:app-detection}
 
+The OWASP AppSensor project describes an approach in which intrusion detection and response 
+capabilities are integrated directly into an application~\cite{OWASPAppSensor}. 
+In contrast to network-based security mechanisms, application-layer monitoring can make use of 
+information about the application's internal state and semantics.
+
 Rieckers applies the principle of passive observation to network traffic, capturing the RADIUS 
 and EAP-TLS traffic of the eduroam infrastructure to analyse the TLS parameters that clients 
 offer~\cite{EAPeduroam}. 

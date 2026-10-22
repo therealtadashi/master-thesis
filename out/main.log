@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 20:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  23 OCT 2026 01:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2084,13 +2084,21 @@ Package: supertabular 2020/02/02 v4.1g the supertabular environment
 ty
 Package: glossary-tree 2023/09/29 v4.53 (NLCT)
 \glstreeindent=\skip110
-)))
+))) (/usr/local/texlive/2024/texmf-dist/tex/latex/graphics/rotating.sty
+Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
+\c@r@tfl@t=\count533
+\rotFPtop=\skip111
+\rotFPbot=\skip112
+\rot@float@box=\box104
+\rot@mess@toks=\toks74
+)
 \glswrite=\write5
 \glo@main@file=\write6
 \openout6 = `main.glo'.
 
 Package glossaries Info: Writing glossary file main.glo on input line 70.
-) (./acronyms.tex)
+)
+(./acronyms.tex)
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 LaTeX Font Info:    Trying to load font information for T1+jkpl on input line 8
@@ -2174,17 +2182,17 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 (/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count533
+\scratchcounter=\count534
 \scratchdimen=\dimen349
-\scratchbox=\box104
-\nofMPsegments=\count534
-\nofMParguments=\count535
-\everyMPshowfont=\toks74
-\MPscratchCnt=\count536
+\scratchbox=\box105
+\nofMPsegments=\count535
+\nofMParguments=\count536
+\everyMPshowfont=\toks75
+\MPscratchCnt=\count537
 \MPscratchDim=\dimen350
-\MPnumerator=\count537
-\makeMPintoPDFobject=\count538
-\everyMPtoPDFconversion=\toks75
+\MPnumerator=\count538
+\makeMPintoPDFobject=\count539
+\everyMPtoPDFconversion=\toks76
 ) (/usr/local/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -2252,11 +2260,11 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 (/usr/local/texlive/2024/texmf-dist/tex/latex/bookmark/bkm-pdftex.def
 File: bkm-pdftex.def 2023-12-10 v1.31 bookmark driver for pdfTeX and luaTeX (HO
 )
-\BKM@id=\count539
+\BKM@id=\count540
 ))
-\c@lstlisting=\count540
+\c@lstlisting=\count541
 Package tocbasic Info: setting babel extension for `lol' on input line 8.
-\scr@dte@lstlisting@maxnumwidth=\skip111
+\scr@dte@lstlisting@maxnumwidth=\skip113
 Package csquotes Info: Redefining character " on input line 8.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: longtable package is loaded.
@@ -2264,6 +2272,7 @@ Package caption Info: longtable package is loaded.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/caption/ltcaption.sty
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 )
+Package caption Info: rotating package is loaded.
 Package caption Info: supertabular package is loaded.
 Package caption Info: End \AtBeginDocument code.
 Package biblatex Info: Trying to load language 'english'...
@@ -2342,10 +2351,10 @@ Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/jkpl/m/sc/14.4'.
 (microtype)             Ignoring protrusion settings for this character.
 Package epstopdf Info: Source file: <img/HM_Logo_rot_RGB.eps>
-(epstopdf)                    date: 2026-09-01 10:55:50
+(epstopdf)                    date: 2026-10-22 21:13:22
 (epstopdf)                    size: 261702 bytes
 (epstopdf)             Output file: <img/HM_Logo_rot_RGB-eps-converted-to.pdf>
-(epstopdf)                    date: 2026-09-01 11:02:36
+(epstopdf)                    date: 2026-10-22 21:14:36
 (epstopdf)                    size: 9926 bytes
 (epstopdf)             Command: <repstopdf --outfile=img/HM_Logo_rot_RGB-eps-co
 nverted-to.pdf img/HM_Logo_rot_RGB.eps>
@@ -2449,13 +2458,17 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 ]) (./txt/1-introduction.tex
 chapter 1.
-[1
+
+Underfull \vbox (badness 2941) has occurred while \output is active []
+
+ [1
 
 
 ]
 LaTeX Font Info:    Trying to load font information for TS1+jkpl on input line 
-89.
- (/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/ts1jkpl.fd
+82.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/ts1jkpl.fd
 File: ts1jkpl.fd 2007/08/30 Fontinst v1.928 font definitions for TS1/jkpl.
 )
 Package microtype Info: Loading generic protrusion settings for font family
@@ -2469,7 +2482,7 @@ chapter 2.
 
 
 ] [4] [5]
-<./txt/../img/sp-init-sso.png, id=343, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=342, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 162.
@@ -2499,20 +2512,13 @@ Overfull \hbox (0.41498pt too wide) in paragraph at lines 86--87
 en-ti-cated trans-port and pseudonymi-
  []
 
-<./txt/../img/deployment.png, id=464, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=463, 1567.8575pt x 745.78625pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
 Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 109.
-(pdftex.def)             Requested size: 426.79143pt x 176.36078pt.
+(pdftex.def)             Requested size: 426.79143pt x 203.00366pt.
 [16] [17 <./txt/../img/deployment.png>] [18] [19] [20] [21] [22] [23] [24]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[25]
-Underfull \vbox (badness 4660) has occurred while \output is active []
-
- [26]
-[27] [28] [29]) (./txt/5-implementation.tex [30]
+[25] [26] [27] [28] [29]) (./txt/5-implementation.tex [30]
 chapter 5.
 [31
 
@@ -2626,13 +2632,13 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66486 strings out of 474116
- 1467377 string characters out of 5743682
- 2669671 words of memory out of 5000000
- 86805 multiletter control sequences out of 15000+600000
+ 66561 strings out of 474116
+ 1468633 string characters out of 5743682
+ 2670926 words of memory out of 5000000
+ 86877 multiletter control sequences out of 15000+600000
  744788 words of font info for 559 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
- 125i,20n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 125i,21n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
 /usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbne.pfb></usr
 /local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmi.pfb></usr/loca
@@ -2646,10 +2652,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (82 pages, 501732 bytes).
+Output written on out/main.pdf (82 pages, 522098 bytes).
 PDF statistics:
- 1409 PDF objects out of 1440 (max. 8388607)
- 1279 compressed objects within 13 object streams
+ 1408 PDF objects out of 1440 (max. 8388607)
+ 1278 compressed objects within 13 object streams
  288 named destinations out of 1000 (max. 500000)
  120868 words of extra memory for PDF output out of 128383 (max. 10000000)
 

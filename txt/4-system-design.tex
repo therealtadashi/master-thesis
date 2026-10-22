@@ -25,11 +25,40 @@ Since an IdP authenticates on behalf of other entities, such a comparison requir
 independent sources.
 One source describing the intended configuration and another describing what actually occurred.
 
-The classification in Section~\ref{sec:why-inside} placed this work at the \textit{Monitor \& Detect} 
-level, with \textit{Plan \& Prevent} deliberately excluded. 
-The system must therefore report detected security-relevant events without automatically intervening.
+The proposed system can be classified using the taxonomy for self-protecting software systems 
+introduced by Yuan and Malek~\cite{Taxonomy}. 
+Two dimensions of this taxonomy are particularly relevant to the scope of this work: the 
+\texttt{Architecture Level} and the \texttt{Self-Protection Level}.
+The \texttt{Architecture Level} describes the layer at which a security mechanism operates and 
+distinguishes between Network, Host, Software/Application and Services. 
+This dimension allows the observation position of different security mechanisms to be compared. 
+Network-based IDS, such as Suricata and Snort, operate primarily at the network level, 
+whereas endpoint detection and response solutions operate at the host level. 
+The proposed system operates at the Software / Application level, as it observes events directly 
+within the Shibboleth IdP. 
+The distinction between these systems therefore lies primarily in the layer at which 
+security-relevant information becomes observable. 
 
-As mentioned in Section~\ref{sec:why-inside}, Hall et al. identify the integration of detection 
+While the Architecture Level describes where the system operates, the \texttt{Self-Protection Level} 
+describes the degree of self-protection according to the MAPE process of Monitor, Analyze, 
+Plan and Execute. 
+The proposed system fully covers the \textit{Monitor \& Detect} level by collecting and detecting 
+security-relevant events within the IdP. 
+The \textit{Analyze \& Characterize} level is partially addressed through event correlation and 
+severity classification. 
+In contrast, \textit{Plan \& Prevent} is outside the scope of this work. 
+The system generates alerts based on detected events but does not autonomously modify the system 
+state or take preventive countermeasures.
+
+This limited level of self-protection is intentional and follows from the passive design 
+principle of this work. 
+The proposed system follows the principle of passive observation, in which security-relevant 
+events are made observable without interfering with the operation of the monitored system. 
+An erroneous automated response could affect the availability of the IdP and thereby every SP that 
+relies on it (Section~\ref{sec:design}). 
+The system must therefore report detected security-relevant events without automatically intervening. 
+
+As mentioned in Section~\ref{sec:app-detection}, Hall et al. identify the integration of detection 
 points into the application as a central difficulty~\cite{BlackWatch}. 
 The system is therefore implemented as a plugin that uses an extension point provided by Shibboleth, 
 allowing the monitoring functionality to be added without modifying the underlying IdP implementation. 

@@ -41,7 +41,7 @@ Neither verifies whether a deployed system actually satisfies those assumptions.
 Formal analysis therefore answers which configuration is secure, whereas this work observes 
 which configuration is in effect.
 
-\section{Application-Level Intrusion Detection}\label{sec:why-inside}\label{sec:app-detection}
+\section{Application-Level Intrusion Detection}\label{sec:app-detection}
 
 As discussed in Chapter~\ref{ch:introduction}, the proposed monitoring system operates 
 directly within the application layer of the Shibboleth IdP. 
@@ -54,56 +54,11 @@ capabilities are integrated directly into an application~\cite{OWASPAppSensor}.
 In contrast to network-based security mechanisms, application-layer monitoring can make use of 
 information about the application's internal state and semantics.
 
-A network firewall primarily controls network communication, while a network-based \gls{ids} 
-has limited visibility into application-specific behaviour. 
-A \gls{waf} can provide additional protection against generic application-layer attacks, such 
-as SQL injection, but typically has limited knowledge of the internal logic and state of a specific 
-application. 
-Consequently, application-integrated detection mechanisms can complement network- and perimeter-based 
-security controls by analysing application-specific events and behaviour~\cite{OWASPAppSensor}.
-
-This application-level perspective also provides a basis for classifying the proposed system 
-within an established security taxonomy.
-In the following, the proposed system is classified using the taxonomy for self-protecting software 
-systems introduced by Yuan and Malek~\cite{Taxonomy}. 
-Two dimensions of this taxonomy are particularly relevant to the scope of this work: the 
-\texttt{Architecture Level} and the \texttt{Self-Protection Level}.
-
-The \texttt{Architecture Level} describes the layer at which a security mechanism operates and 
-distinguishes between Network, Host, Software/Application and Services. 
-This dimension allows the observation position of different security mechanisms to be compared. 
-Network-based IDS, such as Suricata and Snort, operate primarily at the network level, 
-whereas \gls{edr} solutions operate at the host level. 
-The proposed system operates at the Software / Application level, as it observes events directly 
-within the Shibboleth IdP. 
-The distinction between these systems therefore lies primarily in the layer at which 
-security-relevant information becomes observable.
-
-While the Architecture Level describes where the system operates, the \texttt{Self-Protection Level} 
-describes the degree of self-protection according to the MAPE process of Monitor, Analyze, 
-Plan and Execute. 
-The proposed system fully covers the \textit{Monitor \& Detect} level by collecting and detecting 
-security-relevant events within the IdP. 
-The \textit{Analyze \& Characterize} level is partially addressed through event correlation and 
-severity classification. 
-In contrast, \textit{Plan \& Prevent} is outside the scope of this work. 
-The system generates alerts based on detected events but does not autonomously modify the system 
-state or take preventive countermeasures.
-
-This limited level of self-protection is intentional and follows from the passive design 
-principle of this work. 
-The proposed system follows the principle of passive observation, in which security-relevant 
-events are made observable without interfering with the operation of the monitored system. 
-Rieckers applies the principle of passive observation to network traffic, capturing the RADIUS and 
-EAP-TLS traffic of the eduroam infrastructure to analyse the TLS parameters that clients 
-offer~\cite{EAPeduroam}. 
+Rieckers observes the eduroam infrastructure passively by capturing its RADIUS and EAP-TLS traffic 
+and analysing the TLS parameters that clients offer\cite{EAPeduroam}. 
 In captured traffic, information that exists only inside the application, such as the structure 
 of a SAML assertion or the configuration of an SP, is not visible. 
 This work adopts the principle and applies it inside the Shibboleth IdP itself. 
-Extending the system with automatic response mechanisms would contradict this passive 
-observation principle. 
-Furthermore, erroneous automated responses could negatively affect the availability or operation 
-of the IdP and thereby potentially impact multiple SPs that rely on it.
 
 The principle of passive observation is also reflected in existing application-level 
 monitoring approaches. 

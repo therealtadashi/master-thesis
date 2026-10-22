@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 16:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  22 OCT 2026 19:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2469,7 +2469,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 ]
 chapter 2.
 [5] [6] [7]
-<./txt/../img/sp-init-sso.png, id=354, 539.01375pt x 432.61626pt>
+<./txt/../img/sp-init-sso.png, id=351, 539.01375pt x 432.61626pt>
 File: ./txt/../img/sp-init-sso.png Graphic file (type png)
 <use ./txt/../img/sp-init-sso.png>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.png  used on input line 162.
@@ -2489,43 +2489,34 @@ Overfull \hbox (1.20769pt too wide) in paragraph at lines 259--266
 ]
 chapter 3.
 [13]
-Underfull \vbox (badness 2326) has occurred while \output is active []
+Underfull \vbox (badness 1342) has occurred while \output is active []
 
  [14]
-[15] [16] [17]) (./txt/4-system-design.tex [18]
-chapter 4.
+Underfull \vbox (badness 2495) has occurred while \output is active []
 
-Overfull \hbox (0.41498pt too wide) in paragraph at lines 53--54
+ [15]
+[16]) (./txt/4-system-design.tex [17] [18
+
+
+]
+chapter 4.
+[19]
+Overfull \hbox (0.41498pt too wide) in paragraph at lines 82--83
 []\T1/jkpl/m/n/10.95 (-20) Storage out-side the mon-i-tored sys-tem, with au-th
 en-ti-cated trans-port and pseudonymi-
  []
 
-[19
-
-
-]
-<./txt/../img/deployment.png, id=496, 1608.0075pt x 664.4825pt>
+<./txt/../img/deployment.png, id=486, 1608.0075pt x 664.4825pt>
 File: ./txt/../img/deployment.png Graphic file (type png)
 <use ./txt/../img/deployment.png>
-Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 76.
+Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 105.
 (pdftex.def)             Requested size: 426.79143pt x 176.36078pt.
- [20 <./txt/../img/deployment.png>] [21] [22] [23] [24] [25] [26] [27]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[28]
+[20] [21 <./txt/../img/deployment.png>] [22] [23] [24] [25] [26] [27] [28]
+[29] [30]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [29]
-[30]
-Underfull \vbox (badness 5077) has occurred while \output is active []
-
- [31])
-(./txt/5-implementation.tex
-Underfull \vbox (badness 1571) has occurred while \output is active []
-
- [32]
-[33] [34
+ [31]
+[32]) (./txt/5-implementation.tex [33] [34
 
 
 ]
@@ -2639,10 +2630,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66583 strings out of 474116
- 1468671 string characters out of 5743682
- 2670448 words of memory out of 5000000
- 86895 multiletter control sequences out of 15000+600000
+ 66490 strings out of 474116
+ 1467372 string characters out of 5743682
+ 2669668 words of memory out of 5000000
+ 86805 multiletter control sequences out of 15000+600000
  744788 words of font info for 559 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,20n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2659,10 +2650,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (86 pages, 505055 bytes).
+Output written on out/main.pdf (86 pages, 503389 bytes).
 PDF statistics:
- 1438 PDF objects out of 1440 (max. 8388607)
- 1303 compressed objects within 14 object streams
- 295 named destinations out of 1000 (max. 500000)
+ 1429 PDF objects out of 1440 (max. 8388607)
+ 1295 compressed objects within 13 object streams
+ 292 named destinations out of 1000 (max. 500000)
  120868 words of extra memory for PDF output out of 128383 (max. 10000000)
 

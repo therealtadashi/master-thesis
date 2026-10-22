@@ -48,7 +48,8 @@ that indicate an attack, potentially leading to alert fatigue.
 The two rules rated low report indicators that are of limited value on their own. 
 In the evaluation, they served to verify the pipeline end to end, but in production they mainly add 
 volume. 
-\texttt{FAILED\_\allowbreak{}LOGIN} reports every failed login attempt. 
+\texttt{FAILED\_\allowbreak{}LOGIN} reports every failed login attempts, which account for a large 
+proportion of the alerts raised during the performance series. 
 In production, \texttt{FAILED\_\allowbreak{}LOGIN} could therefore be hidden, and 
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} could be shown in condensed form, for instance 
 as a daily count per SP. 
@@ -98,25 +99,25 @@ the SP checking the credentials it receives~\cite{FIMSurvey}.
 A man-in-the-middle attack exploits a lack of binding, where a token is not tied to the SP for which 
 it was issued, and the survey names binding the token to its intended SP as the countermeasure~\cite{FIMSurvey}. 
 The attack itself takes place on the communication path after the message has left the IdP. 
-The IdP can at most observe whether an outgoing assertion is restricted to its intended recipient, 
-but not whether the SP enforces this restriction or whether a message was intercepted. 
+The IdP can at most observe whether an outgoing assertion is restricted to its intended recipient. 
+None of the implemented rules currently examines this condition. 
 
 The same reasons apply to attack classes of the survey that do not form cross-protocol issues, such 
 as distributed denial of service, cross-site scripting and session swapping~\cite{FIMSurvey}. 
 Two further attack classes, UI redressing and ACS spoofing, were reported only for SAML and exploit a 
 vulnerable IdP~\cite{FIMSurvey}. 
-UI redressing is mitigated by response headers that the web server in front of the IdP sets, and lie outside 
-the profile flows that the interceptors observe~\cite{GuardiansClouds, ShibbolethGIAC}. 
-ACS spoofing, in contrast, could be detected by a rule that compares the requested endpoint with the 
-endpoints in the metadata of the SP, which the current catalogue does not contain~\cite{GuardiansClouds, MetadataForSP}. 
+UI redressing is mitigated by response headers that the web server in front of the IdP sets~\cite{GuardiansClouds, ShibbolethGIAC}. 
+These headers lie outside the profile flows that the interceptors observe. 
+ACS spoofing, in contrast, could be detected by comparing the requested endpoint with the endpoints in 
+the metadata of the SP, but the current catalogue contains no such rule~\cite{GuardiansClouds, MetadataForSP}. 
 
 Two cases deserve separate attention. 
 The bogus merchant scenario is the only cross-protocol issue that concerns Shibboleth directly, and 
-it remains uncovered by the monitoring tool because a malicious SP is a regular participant registered 
+it remains uncovered by the monitoring system because a malicious SP is a regular participant registered 
 in the federation metadata. 
-From the perspective of the IdP, it need not differ from any other partner. 
-Monitoring changes to the configuration and metadata would only reveal a provider whose behaviour had 
-changed, not one that had been malicious from the start.
+From the perspective of the IdP, such an SP does not differ from any other partner. 
+Monitoring changes to its configuration and metadata would only reveal a provider whose behaviour has 
+changed, not one that was malicious from the start. 
 
 The second case is more fundamental. 
 The malicious provider scenario describes an IdP that abuses its own position within the 

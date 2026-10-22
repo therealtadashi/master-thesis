@@ -41,7 +41,7 @@ Neither verifies whether a deployed system actually satisfies those assumptions.
 Formal analysis therefore answers which configuration is secure, whereas this work observes 
 which configuration is in effect.
 
-\section{Why Monitor from the Inside?}\label{sec:why-inside}
+\section{Application-Level Intrusion Detection}\label{sec:why-inside}
 
 As discussed in Chapter~\ref{ch:introduction}, the proposed monitoring system operates 
 directly within the application layer of the Shibboleth IdP. 
@@ -150,18 +150,15 @@ structure, attribute release policies or SP metadata is consequently not conside
 Taken together with the present work, the two perspectives address opposite ends of the 
 same federation.
 
-\section{Why SIEM Functionality Is Not Enough}\label{sec:why-not-siem}
+\section{Monitoring of Federated Infrastructures}\label{sec:why-not-siem}
 
 A \gls{siem} primarily operates on logs and security-relevant events. 
-This is not a criticism, but a description of its basic operating principle. 
 Two limitations follow from this principle. 
 First, information that is not represented in an event or log is not available to the SIEM for 
 analysis. 
 Second, the SIEM generally relies on the information provided by its data sources and therefore 
 cannot independently verify information that is incorrect or has been manipulated at the source.
 
-These limitations do not diminish the value of SIEM systems, but they define the boundary within 
-which they operate. 
 The collection, storage and correlation of log data used in this work therefore correspond to 
 established SIEM functionality and do not constitute an original contribution. 
 OWASP A09 explicitly recommends centralised logging and monitoring and identifies solutions such 

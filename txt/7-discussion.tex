@@ -85,57 +85,38 @@ pass the IdP again, so that only the replay of a request remains observable (Tab
 
 This limited coverage is not primarily caused by missing implementations but by the observation 
 position of the monitoring system. 
-The four remaining issues fall into three groups, namely those affecting a different system layer, 
-those affecting a different party and those observable only indirectly. 
-
-The first group consists of an issue that primarily affects a different system layer. 
+The four remaining issues lie at a different system layer, at a different party or outside the path 
+that the IdP observes~\cite{FIMSurvey}. 
 DNS poisoning concerns name resolution and therefore a layer beneath the application~\cite{FIMSurvey}. 
 The IdP processes the request it receives regardless of how the client resolved the corresponding 
 address. 
-
-The second group consists of issues that affect a different party within the federation. 
 Cross-site request forgery describes an implementation vulnerability at the SP~\cite{FIMSurvey}. 
 The relevant interaction occurs between the browser and the SP and therefore does not pass 
 through the IdP. 
 The same applies to message modification enabled by a lack of binding, whose mitigation lies in 
-the SP checking the credentials it receives~\cite{FIMSurvey}.
-
-The third group contains an issue that can be observed only indirectly from the IdP. 
-A man-in-the-middle attack is the issue in this category. 
-It exploits a lack of binding, where a token is not tied to the SP for which it was issued, and the 
-survey names binding the token to its intended SP as the countermeasure~\cite{FIMSurvey}. 
+the SP checking the credentials it receives~\cite{FIMSurvey}. 
+A man-in-the-middle attack exploits a lack of binding, where a token is not tied to the SP for which 
+it was issued, and the survey names binding the token to its intended SP as the countermeasure~\cite{FIMSurvey}. 
 The attack itself takes place on the communication path after the message has left the IdP. 
 The IdP can at most observe whether an outgoing assertion is restricted to its intended recipient, 
-but not whether the SP enforces this restriction or whether a message was intercepted, and none of 
-the implemented rules currently examines this condition.
+but not whether the SP enforces this restriction or whether a message was intercepted. 
 
-The survey further lists attack classes that do not form cross-protocol issues and are therefore not 
-part of the coverage figure. 
-Distributed denial of service, cross-site scripting and session swapping occur at the network level, 
-in the browser or at the SP and lie outside the observation point of the IdP for the same reasons~\cite{FIMSurvey}. 
+The same reasons apply to attack classes of the survey that do not form cross-protocol issues, such 
+as distributed denial of service, cross-site scripting and session swapping~\cite{FIMSurvey}. 
 Two further attack classes, UI redressing and ACS spoofing, were reported only for SAML and exploit a 
 vulnerable IdP~\cite{FIMSurvey}. 
-UI redressing loads a page of the IdP into an invisible frame and tricks the user into clicking it, 
-and is mitigated by response headers such as \texttt{X-Frame-Options}~\cite{GuardiansClouds}. 
-These headers are typically set by the web server in front of the IdP~\cite{ShibbolethGIAC} and 
-lie outside the profile flows that the interceptors observe. 
-ACS spoofing places an endpoint controlled by the attacker in the authentication request and 
-succeeds if the IdP does not check it against the endpoints registered for the SP~\cite{GuardiansClouds}. 
-Since the IdP sends responses only to endpoints enumerated in the SP's metadata~\cite{MetadataForSP}, 
-a rule comparing the requested endpoint with the metadata would be conceivable, but it is not part 
-of the current catalogue. 
+UI redressing is mitigated by response headers that the web server in front of the IdP sets, and lie outside 
+the profile flows that the interceptors observe~\cite{GuardiansClouds, ShibbolethGIAC}. 
+ACS spoofing, in contrast, could be detected by a rule that compares the requested endpoint with the 
+endpoints in the metadata of the SP, which the current catalogue does not contain~\cite{GuardiansClouds, MetadataForSP}. 
 
-Two cases are considered separately because of their particular relevance.
-The first is the bogus merchant scenario, which is the only cross-protocol issue in the survey 
-that concerns Shibboleth directly and is nevertheless not covered by the monitoring system. 
-The reason is that the malicious SP is a regular federation participant, registered in the 
-federation metadata as a legitimate partner. 
-From the perspective of the IdP it therefore need not exhibit any observable property that 
-distinguishes it from other legitimate participants. 
-Monitoring changes to the configuration and metadata of an SP could provide an additional source of 
-information, since in the absence of a basis for prior trust a change is the only usable signal. 
-Such a mechanism would, however, detect the transition of a provider rather than a provider that 
-was malicious from the outset.
+Two cases deserve separate attention. 
+The bogus merchant scenario is the only cross-protocol issue that concerns Shibboleth directly, and 
+it remains uncovered by the monitoring tool because a malicious SP is a regular participant registered 
+in the federation metadata. 
+From the perspective of the IdP, it need not differ from any other partner. 
+Monitoring changes to the configuration and metadata would only reveal a provider whose behaviour had 
+changed, not one that had been malicious from the start.
 
 The second case is more fundamental. 
 The malicious provider scenario describes an IdP that abuses its own position within the 
@@ -150,7 +131,7 @@ Snodgrass et al. make the same assumption in their threat model, where only serv
 compromised system remain trustworthy once an adversary has gained control of 
 it~\cite{TamperDetection}. 
 Detecting this class of behaviour would require an observation point outside the IdP, for instance 
-at the SPs or at the level of the federation itself.
+at the SPs or at the level of the federation itself. 
 
 A final limitation connects back to the motivation of this work. 
 The risk classification used for the severity assignment in Section~\ref{subsec:severity} 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  23 OCT 2026 01:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  23 OCT 2026 11:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2512,12 +2512,16 @@ Overfull \hbox (0.41498pt too wide) in paragraph at lines 86--87
 en-ti-cated trans-port and pseudonymi-
  []
 
-<./txt/../img/deployment.png, id=463, 1567.8575pt x 745.78625pt>
-File: ./txt/../img/deployment.png Graphic file (type png)
-<use ./txt/../img/deployment.png>
-Package pdftex.def Info: ./txt/../img/deployment.png  used on input line 109.
-(pdftex.def)             Requested size: 426.79143pt x 203.00366pt.
-[16] [17 <./txt/../img/deployment.png>] [18] [19] [20] [21] [22] [23] [24]
+
+
+pdfTeX warning: pdflatex (file ./txt/../img/deployment.pdf): PDF inclusion: fou
+nd PDF version <1.7>, but at most version <1.5> allowed
+<./txt/../img/deployment.pdf, id=463, 1129.33919pt x 536.96606pt>
+File: ./txt/../img/deployment.pdf Graphic file (type pdf)
+<use ./txt/../img/deployment.pdf>
+Package pdftex.def Info: ./txt/../img/deployment.pdf  used on input line 109.
+(pdftex.def)             Requested size: 426.79143pt x 202.92673pt.
+[16] [17 <./txt/../img/deployment.pdf>] [18] [19] [20] [21] [22] [23] [24]
 [25] [26] [27] [28] [29]) (./txt/5-implementation.tex [30]
 chapter 5.
 [31
@@ -2632,13 +2636,13 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66561 strings out of 474116
- 1468633 string characters out of 5743682
- 2670926 words of memory out of 5000000
- 86877 multiletter control sequences out of 15000+600000
- 744788 words of font info for 559 fonts, out of 8000000 for 9000
+ 66563 strings out of 474116
+ 1468650 string characters out of 5743682
+ 2669927 words of memory out of 5000000
+ 86875 multiletter control sequences out of 15000+600000
+ 745241 words of font info for 562 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
- 125i,21n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 125i,20n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
 /usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbne.pfb></usr
 /local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplmi.pfb></usr/loca
@@ -2652,10 +2656,10 @@ xmf-dist/fonts/type1/public/kpfonts/jkplsy.pfb></usr/local/texlive/2024/texmf-d
 ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/ty
 pe1/public/lm/lmtlo10.pfb>
-Output written on out/main.pdf (82 pages, 522098 bytes).
+Output written on out/main.pdf (82 pages, 462002 bytes).
 PDF statistics:
- 1408 PDF objects out of 1440 (max. 8388607)
- 1278 compressed objects within 13 object streams
+ 1428 PDF objects out of 1440 (max. 8388607)
+ 1297 compressed objects within 13 object streams
  288 named destinations out of 1000 (max. 500000)
  120868 words of extra memory for PDF output out of 128383 (max. 10000000)
 

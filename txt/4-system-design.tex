@@ -529,28 +529,31 @@ Which rules are active in a given deployment is thus determined by what that dep
 
 \subsection{Derivation of the Rules}\label{subsec:rules-derivation}
 
-The derivation of the detection rules is based on three complementary sources: the FIM survey 
-by Simpson and Groß, the OASIS SAML Security and Privacy Considerations, and the STRIDE threat 
-classification scheme.
-The FIM survey identifies 11 vulnerabilities and 14 attack classes based on a systematic 
-literature review~\cite{FIMSurvey}. 
+The rules are derived from two complementary sources. 
+The first is the FIM survey by Simpson and Groß, which identifies 11 vulnerabilities and 14 attack 
+classes based on a systematic literature review~\cite{FIMSurvey}. 
 The vulnerabilities are grouped into cross-protocol issues where the same weakness is exploited 
 by the same attack class, results in the same CIA consequence and is documented for at least 
 two different protocols. 
 The survey identifies 14 such issues. 
 Six of them concern SAML (issues 5, 7, 8, 9, 10 and 14 in the numbering of the survey), while 
 one directly concerns Shibboleth (issue 6). 
+Issue 4, weak user credentials exploited by brute force, is reported only for OpenID and OAuth. 
+It concerns the authentication at the IdP, however, and therefore applies regardless of the protocol. 
+For each of these issues, it was examined whether its vulnerability or its attack becomes visible 
+in one of the three sources described in Section~\ref{sec:data-aggregation}. 
 The survey therefore provides the primary basis for identifying attack scenarios that are 
-relevant to federated identity management.
+relevant to federated identity management. 
 
 While the survey describes vulnerabilities that have been documented in the literature, the 
-OASIS SAML Security and Privacy Considerations provides security recommendations for SAML 
-deployments by specifying security requirements and suggested countermeasures~\cite{SAMLSecurityConsideration}. 
+second source, OASIS SAML Security and Privacy Considerations provides security recommendations 
+for SAML deployments by specifying security requirements and suggested 
+countermeasures~\cite{SAMLSecurityConsideration}. 
 This allows the detection rules to be derived not only from observed or documented attacks, 
 but also from the security properties that a SAML deployment is expected to enforce.
 
-A third perspective is provided by STRIDE, which is a threat classification scheme that 
-categorises threats according to their mode of operation~\cite{ThreatModeling}. 
+The rules are derived from the two complementarity sources, and are also classified along the 
+STRIDE framework~\cite{ThreatModeling}. 
 It distinguishes between spoofing, tampering, repudiation, information disclosure, denial 
 of service and elevation of privilege. 
 Graves applies this framework to the analysis of threats against Shibboleth~\cite{ShibbolethGIAC}. 
@@ -564,18 +567,24 @@ of the resulting security impact.
 Where the evidence from the survey and the requirements specified by OASIS overlap, the basis 
 for a detection rule is particularly strong. 
 Replay attacks provide an example of such an overlap, as they are documented in the literature 
-and explicitly addressed by the SAML security considerations.
+and explicitly addressed by the SAML security considerations. 
 
-Thirteen of the fifteen rules can be traced to documented sources. 
-For these rules, the fifth requirement of Section~\ref{sec:requirements} is met.
-Ten of them were derived from the three frameworks introduced above, namely 
-the survey by Simpson and Groß, the OASIS security considerations and the STRIDE classification. 
-One further rule, \texttt{FAILED\_\allowbreak{}LOGIN}, reports an indicator rather than an attack 
-and follows the OWASP guidance on security logging. 
-The two rules that compare independently produced records follow the log integrity argument of 
-Section~\ref{sec:why-not-siem}. 
-The remaining two rules cannot be traced and are discussed after Table~\ref{tab:rules}, 
-which shows the resulting assignment for each rule. 
+Table~\ref{tab:rules} shows the resulting assignment. 
+Five rules follow from the survey alone, three from the survey and OASIS and one from OASIS alone. 
+The last column of the table also lists sources that specify the condition of a rule, such as the 
+technical guideline of the BSI, which defines which algorithms count as weak~\cite{BSITR02102}, 
+and Graves, who describes threats specific to Shibboleth~\cite{ShibbolethGIAC}. 
+Two further rules follow from works discussed in Chapter~\ref{ch:related-work}. 
+\texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} rests on the analysis by 
+Somorovsky et al. and on Graves~\cite{BreakingSAML, ShibbolethGIAC}, since the survey reports 
+message modification through the message format only for other protocols (issue 1). 
+\texttt{FAILED\_\allowbreak{}LOGIN} reports an indicator rather than an attack and follows the 
+OWASP guidance on security logging~\cite{OWASPA09}. 
+Two rules, \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} and \texttt{FIELD\_\allowbreak{}MISMATCH} 
+compare independently produced records and follow the log integrity argument of Section~\ref{sec:why-not-siem}. 
+Thirteen of the fifteen rules can thus be traced to documented weaknesses, attacks or 
+recommendations, which meets the fifth requirement of Section~\ref{sec:requirements}. 
+The remaining two rules are discussed after Table~\ref{tab:rules}.
 
 \begin{table}[h]
 \centering
@@ -583,7 +592,7 @@ which shows the resulting assignment for each rule.
 \small
 \begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{2.7cm}>{\raggedright\arraybackslash}p{2.4cm}p{1.3cm}l}
 \toprule
-Rule & Vulnerability & Attack Class & STRIDE & Source \\
+Rule & Vulnerability & Attack Class & STRIDE & Sources \\
 \midrule
 \texttt{WEAK\_\allowbreak{}ENCRYPTION}                            & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey,BSITR02102,SAMLSecurityConsideration} \\
 \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION}                      & Unencrypted Communications & Message Modification     & I, T    & \cite{FIMSurvey,ShibbolethGIAC} \\
@@ -598,8 +607,8 @@ Rule & Vulnerability & Attack Class & STRIDE & Source \\
 \texttt{CERTIFICATE\_\allowbreak{}EXPIRED}                        & Security recommendations   & None                     & S       & \cite{SAMLSecurityConsideration} \\
 \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}                    & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
 \texttt{FIELD\_\allowbreak{}MISMATCH}                             & Log integrity              & Log tampering            & T, R    & \cite{OWASPAppSensor,OWASPA09,CWE117} \\
-\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}        & None                       & None                     & ---     & --- \\
-\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}                          & None                       & Detection method         & S       & --- \\
+\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT}        & None                       & None                     & ---     & \cite{OWASPAppSensor} \\
+\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY}                          & None                       & Detection method         & S       & \cite{OWASPAppSensor} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -647,7 +656,17 @@ class could be established.
 \texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} is a detection method rather than an attack class, since it may reveal several 
 different attacks indirectly without corresponding to any one of them. 
 Both rules are retained in the catalogue, and the absence of a derivation is stated here rather 
-than omitted.
+than omitted. 
+
+Two rules cannot be assigned to a vulnerability or an attack class. 
+\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} identifies an indicator for which no documented relation to a specific attack 
+class could be established. 
+It comes closest to the AppSensor detection point RP3, \textit{Suspicious Client-Side Behavior}~\cite{OWASPAppSensor}. 
+\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} is a detection method rather than an attack class, since it may reveal several 
+different attacks indirectly without corresponding to any one of them. 
+It corresponds to the detection point UT1, \textit{Irregular Use of Application}~\cite{OWASPAppSensor}. 
+Both rules are retained in the catalogue, and the absence of a derivation from a vulnerability or 
+an attack class is stated here rather than omitted. 
 
 \subsection{Severity Classification}\label{subsec:severity}
 

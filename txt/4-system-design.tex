@@ -682,10 +682,13 @@ The categories serve as an orientation for the severity of each rule, which is l
 Table~\ref{tab:severity}. 
 
 A rule is rated critical if its condition directly endangers the authentication of users at an SP, 
-for instance an assertion that is transmitted without encryption or a request that shows the traces 
-of a signature wrapping attack. 
+for instance an assertion that is transmitted without encryption. 
 Rules rated high report an attack in progress, such as a series of failed logins for the same 
-subject or a replayed request. 
+subject, a replayed request or a request that shows the traces of a signature wrapping attack. 
+The attacks examined by Somorovsky et al. target the processing of assertions at the 
+SP~\cite{BreakingSAML}. 
+At the IdP, the rule examines incoming requests, in which such traces show an attempt but not a 
+compromised login. 
 Rules rated low report indicators that are not harmful on their own, such as a single failed login 
 or the user agent of a script. 
 None of the rules addresses R5, since it presupposes a compromise of the signing key. 
@@ -717,9 +720,8 @@ and medium otherwise.
 \toprule
 Severity & Rules \\
 \midrule
-Critical & \texttt{UNENCRYPTED\_ASSERTION}, \texttt{WEAK\_CONFIGURATION}, \texttt{ASSERTION\_REPLAY}, \\
-         & \texttt{SIGNATURE\_WRAPPING\_SUSPECTED} \\
-High     & \texttt{BRUTE\_FORCE}, \texttt{REQUEST\_REPLAY}, \texttt{FIELD\_MISMATCH} \\
+Critical & \texttt{UNENCRYPTED\_ASSERTION}, \texttt{WEAK\_CONFIGURATION}, \texttt{ASSERTION\_REPLAY} \\
+High     & \texttt{BRUTE\_FORCE}, \texttt{REQUEST\_REPLAY}, \texttt{FIELD\_MISMATCH}, \texttt{SIGNATURE\_WRAPPING\_SUSPECTED} \\
 Medium   & \texttt{CORRELATION\_DISCREPANCY} \\
 Low      & \texttt{FAILED\_LOGIN}, \texttt{SUSPICIOUS\_USER\_AGENT} \\
 Context  & \texttt{MISSING\_MFA}, \texttt{MFA\_BYPASS}, \texttt{WEAK\_ENCRYPTION}, \\

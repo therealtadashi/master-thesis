@@ -541,33 +541,30 @@ one directly concerns Shibboleth (issue 6).
 Issue 4, weak user credentials exploited by brute force, is reported only for OpenID and OAuth. 
 It concerns the authentication at the IdP, however, and therefore applies regardless of the protocol. 
 For each of these issues, it was examined whether its vulnerability or its attack becomes visible 
-in one of the three sources described in Section~\ref{sec:data-aggregation}. 
-The survey therefore provides the primary basis for identifying attack scenarios that are 
-relevant to federated identity management. 
+in the audit log, in the reports of the interceptors or in the configuration of an 
+SP (Section~\ref{sec:data-aggregation}). 
+This is the case for issues 4, 5 and 9, which the rules therefore address. 
+The remaining issues are observable from the IdP only through their preconditions or not at all 
+and are discussed in Section~\ref{sec:limitation}. 
 
 While the survey describes vulnerabilities that have been documented in the literature, the 
-second source, OASIS SAML Security and Privacy Considerations provides security recommendations 
+second source, OASIS SAML Security and Privacy Considerations, provides security recommendations 
 for SAML deployments by specifying security requirements and suggested 
 countermeasures~\cite{SAMLSecurityConsideration}. 
 This allows the detection rules to be derived not only from observed or documented attacks, 
 but also from the security properties that a SAML deployment is expected to enforce.
+Where the evidence from the survey and the requirements specified by OASIS overlap, the basis 
+for a detection rule is particularly strong. 
+Replay attacks provide an example of such an overlap, as they are documented in the literature 
+and explicitly addressed by the SAML security considerations. 
 
 The rules are derived from the two complementarity sources, and are also classified along the 
 STRIDE framework~\cite{ThreatModeling}. 
 It distinguishes between spoofing, tampering, repudiation, information disclosure, denial 
 of service and elevation of privilege. 
 Graves applies this framework to the analysis of threats against Shibboleth~\cite{ShibbolethGIAC}. 
-In this work, STRIDE is used to characterise the security impact of the attack scenarios 
-identified by the other two sources.
-
-The three sources therefore serve different purposes in the derivation process. 
-The FIM survey identifies documented vulnerabilities and attack classes, OASIS specifies the 
-security requirements that a SAML deployment should satisfy, and STRIDE provides a classification 
-of the resulting security impact. 
-Where the evidence from the survey and the requirements specified by OASIS overlap, the basis 
-for a detection rule is particularly strong. 
-Replay attacks provide an example of such an overlap, as they are documented in the literature 
-and explicitly addressed by the SAML security considerations. 
+STRIDE does not derive any rule but characterises the kind of threat that a detected weakness or 
+attack represents. 
 
 Table~\ref{tab:rules} shows the resulting assignment. 
 Five rules follow from the survey alone, three from the survey and OASIS and one from OASIS alone. 
@@ -580,7 +577,7 @@ Somorovsky et al. and on Graves~\cite{BreakingSAML, ShibbolethGIAC}, since the s
 message modification through the message format only for other protocols (issue 1). 
 \texttt{FAILED\_\allowbreak{}LOGIN} reports an indicator rather than an attack and follows the 
 OWASP guidance on security logging~\cite{OWASPA09}. 
-Two rules, \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} and \texttt{FIELD\_\allowbreak{}MISMATCH} 
+Two rules, \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} and \texttt{FIELD\_\allowbreak{}MISMATCH}, 
 compare independently produced records and follow the log integrity argument of Section~\ref{sec:why-not-siem}. 
 Thirteen of the fifteen rules can thus be traced to documented weaknesses, attacks or 
 recommendations, which meets the fifth requirement of Section~\ref{sec:requirements}. 
@@ -649,14 +646,6 @@ interceptor cannot read after the encryption, whereas the audit log records them
 Unlike the other rules, the comparison does not withdraw as a whole when a field is missing. 
 It compares only the fields that the interceptor observed and that the audit format of the 
 deployment records. 
-
-Two rules cannot be traced to any documented source. 
-\texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} identifies an indicator for which no documented relation to a specific attack 
-class could be established. 
-\texttt{BEHAVIOUR\_\allowbreak{}ANOMALY} is a detection method rather than an attack class, since it may reveal several 
-different attacks indirectly without corresponding to any one of them. 
-Both rules are retained in the catalogue, and the absence of a derivation is stated here rather 
-than omitted. 
 
 Two rules cannot be assigned to a vulnerability or an attack class. 
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} identifies an indicator for which no documented relation to a specific attack 
@@ -817,7 +806,7 @@ The third alternative was to use machine learning instead of explicitly defined 
 In such an approach, the system would learn normal behaviour statistically and identify deviations 
 from it as anomalies.
 This approach was rejected because the detection rules developed in this work are explicitly 
-derived from documented vulnerabilities, security requirements and threat classifications. 
+derived from documented vulnerabilities and security requirements. 
 A rule based approach therefore provides direct traceability from a finding to the underlying 
 security rationale, which is a central objective of the derivation described in 
 Section~\ref{subsec:rules-derivation}. 

@@ -1530,10 +1530,10 @@
       \field{year}{2008}
       \field{urldateera}{ce}
       \verb{urlraw}
-      \verb https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0-cd-02.html
+      \verb https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0-cd-02.pdf
       \endverb
       \verb{url}
-      \verb https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0-cd-02.html
+      \verb https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0-cd-02.pdf
       \endverb
     \endentry
     \entry{EAPeduroam}{thesis}{}

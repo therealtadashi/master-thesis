@@ -107,10 +107,10 @@ Two limitations follow from this principle.
 First, information that is not represented in an event or log is not available to the SIEM for 
 analysis. 
 Second, the SIEM generally relies on the information provided by its data sources and therefore 
-cannot independently verify information that is incorrect or has been manipulated at the source.
+cannot independently verify information that is incorrect or has been manipulated at the source. 
 
 The collection, storage and correlation of log data used in this work therefore correspond to 
-established SIEM functionality and do not constitute an original contribution. 
+established SIEM functionality. 
 OWASP A09 explicitly recommends centralised logging and monitoring and identifies solutions such 
 as the ELK stack as possible tools for addressing logging and monitoring 
 vulnerabilities~\cite{OWASPA09}.
@@ -201,5 +201,78 @@ The discrepancy-based approach used in this work therefore does not introduce th
 of detecting log integrity violations. 
 Instead, it applies an established detection principle to the specific domain of federated 
 identity management and extends it with application-level observations from the Shibboleth IdP. 
+
+\section{Positioning of this Work}\label{sec:positioning}
+
+Table~\ref{tab:comparision} compares the related works discussed in this chapter with the approach 
+proposed in this work. 
+The security analyses of SAML and Shibboleth identify vulnerable implementations and configurations. 
+Rieckers demonstrates passive network-layer monitoring by observing RADIUS and EAP-TLS traffic in 
+the eduroam infrastructure. 
+Hall et al. extend this principle by developing an application-layer monitoring system, while 
+Suvanto applies a similar approach to Shibboleth infrastructures. 
+Hall et al.'s approach integrates detection points into the monitored application, requiring an 
+in-depth understanding of the monitored system. 
+In contrast, Suvanto's approach focuses primarily on availability. 
+
+The aggregation of multiple application-level data sources is an established practice, as 
+demonstrated by AAIEye, SIEM systems, and Wazuh. 
+However, none of the approaches discussed compares the declared configuration of the 
+infrastructure with the events observed at runtime. 
+
+Log integrity is addressed in different ways. 
+Schneider and Kelsey, as well as Snodgrass et al., propose cryptographic approaches that make 
+modifications to system resources detectable. 
+However, these approaches require changes to the logging and storage architecture and introduce 
+an overhead of up to 16\%. 
+AppSensor defines a detection point for log integrity (IE6), while Wazuh detects changes to 
+monitored files through checksum-based file integrity monitoring. 
+The table therefore marks AppSensor and Wazuh as partial. 
+None of these approaches provides a second, independently generated record of the same event. 
+
+This work combines all three properties within the IdP. 
+Its collection, storage, and correlation mechanisms follow established SIEM practices, which 
+are extended by aggregating information from multiple sources and applying integrity monitoring. 
+
+\begin{table}[h]
+    \centering
+    \caption{Comparison of the related work}\label{tab:comparision}
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}Xccc}
+    \toprule
+    Work & Observation point & Purpose 
+    & \begin{tabular}[b]{@{}c@{}}Multiple\\sources\end{tabular}
+    & \begin{tabular}[b]{@{}c@{}}Event vs.\\declared\\configuration\end{tabular}
+    & \begin{tabular}[b]{@{}c@{}}Log\\integrity\end{tabular} \\
+    \midrule
+    Somorovsky et al., Kaur and Bansal~\cite{BreakingSAML,VulnerSAMLCloud} 
+    & SAML implementations & Vulnerability analysis & --- & --- & --- \\
+    Sommer, Hartl and Derek~\cite{SecAnalysisSSO, FormalSecAnalysisSAML} 
+    & Shibboleth model, SAML specification & Formal analysis & --- & --- & --- \\
+    AppSensor~\cite{OWASPAppSensor} 
+    & Inside the application & Intrusion detection & --- & --- & (\checkmark) \\
+    BlackWatch~\cite{BlackWatch} 
+    & Inside the web application & Intrusion detection & --- & --- & --- \\
+    Rieckers~\cite{EAPeduroam} 
+    & Network traffic & TLS analysis & --- & --- & --- \\
+    AAIEye~\cite{MonitoringAAI} 
+    & Probes at the IdP and the SP & Operational monitoring & \checkmark & --- & --- \\
+    Martín et al.~\cite{UEBAFederation} 
+    & SP after authentication & Anomaly detection & --- & --- & --- \\
+    SIEM~\cite{OWASPA09} 
+    & Collected logs & Log analysis & \checkmark & --- & --- \\
+    Wazuh~\cite{WazuhDocumentation} 
+    & Host & Log analysis, configuration assessment & \checkmark & --- & (\checkmark) \\
+    Snodgrass et al.~\cite{TamperDetection} 
+    & Stored logs & Tamper detection & --- & --- & \checkmark \\
+    Schneier and Kelsey~\cite{CryptoSupportSecureLogs} 
+    & Stored logs & Tamper detection & --- & --- & \checkmark \\
+    \midrule
+    This work 
+    & Inside the IdP & Security monitoring & \checkmark & \checkmark & \checkmark \\
+    \bottomrule
+    \end{tabularx}
+\end{table}
 
 \end{document}

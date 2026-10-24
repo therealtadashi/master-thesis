@@ -202,39 +202,46 @@ of detecting log integrity violations.
 Instead, it applies an established detection principle to the specific domain of federated 
 identity management and extends it with application-level observations from the Shibboleth IdP. 
 
-\section{Positioning of this Work}\label{sec:positioning}
+\section{Positioning of This Work}\label{sec:positioning}
 
 Table~\ref{tab:comparision} compares the related works discussed in this chapter with the approach 
 proposed in this work. 
+Its last three columns show the properties that this work combines, so that a dash marks a 
+different focus rather than a shortcoming of the respective work. 
 The security analyses of SAML and Shibboleth identify vulnerable implementations and configurations. 
 Rieckers demonstrates passive network-layer monitoring by observing RADIUS and EAP-TLS traffic in 
 the eduroam infrastructure. 
-Hall et al. extend this principle by developing an application-layer monitoring system, while 
-Suvanto applies a similar approach to Shibboleth infrastructures. 
-Hall et al.'s approach integrates detection points into the monitored application, requiring an 
-in-depth understanding of the monitored system. 
-In contrast, Suvanto's approach focuses primarily on availability. 
+Hall et al. and the OWASP AppSensor project place the monitoring inside the application itself, 
+which requires detection points to be integrated into the monitored system. 
+Suvanto applies monitoring to Shibboleth infrastructures, but his approach focuses on their 
+operation rather than on their security. 
+Martín et al. observe users at the SP after authentication and leave the IdP out of scope. 
 
-The aggregation of multiple application-level data sources is an established practice, as 
-demonstrated by AAIEye, SIEM systems, and Wazuh. 
+The aggregation of multiple data sources is established practice, as AAIEye, SIEM 
+systems and Wazuh demonstrate. 
 However, none of the approaches discussed compares the declared configuration of the 
 infrastructure with the events observed at runtime. 
 
 Log integrity is addressed in different ways. 
-Schneider and Kelsey, as well as Snodgrass et al., propose cryptographic approaches that make 
-modifications to system resources detectable. 
+Schneier and Kelsey, as well as Snodgrass et al., propose cryptographic approaches that make 
+modifications to stored logs detectable. 
 However, these approaches require changes to the logging and storage architecture and introduce 
 an overhead of up to 16\%. 
-AppSensor defines a detection point for log integrity (IE6), while Wazuh detects changes to 
-monitored files through checksum-based file integrity monitoring. 
+AppSensor defines a detection point for log integrity (IE6) but leaves its realisation to the 
+application. 
+Wazuh detects changes to monitored files through checksum-based file integrity monitoring, but 
+since a log file changes with every new entry, a changed checksum alone does not distinguish a 
+manipulation from a regular write. 
 The table therefore marks AppSensor and Wazuh as partial. 
 None of these approaches provides a second, independently generated record of the same event. 
 
 This work combines all three properties within the IdP. 
-Its collection, storage, and correlation mechanisms follow established SIEM practices, which 
-are extended by aggregating information from multiple sources and applying integrity monitoring. 
+Its collection, storage and correlation follow established SIEM practice. 
+Its contribution lies in two comparisons that the position inside the IdP makes possible. 
+It compares an observed login with the configuration declared for the SP, and it compares two 
+independently produced records of the same login. 
 
-\begin{table}[h]
+\begin{table}[!htb]
     \centering
     \caption{Comparison of the related work}\label{tab:comparision}
     \small

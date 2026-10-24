@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  24 OCT 2026 13:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  24 OCT 2026 13:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2505,11 +2505,7 @@ chapter 3.
 Underfull \vbox (badness 2326) has occurred while \output is active []
 
  [13]
-[14]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-) (./txt/4-system-design.tex [15] [16]
+[14]) (./txt/4-system-design.tex [15] [16]
 chapter 4.
 [17
 
@@ -2669,7 +2665,7 @@ ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpsya.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
 ublic/lm/lmtlo10.pfb>
-Output written on out/main.pdf (84 pages, 469902 bytes).
+Output written on out/main.pdf (84 pages, 470289 bytes).
 PDF statistics:
  1493 PDF objects out of 1728 (max. 8388607)
  1331 compressed objects within 14 object streams

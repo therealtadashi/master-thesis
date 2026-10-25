@@ -9,15 +9,14 @@ of credentials and often reuse the same password for several services.
 These accounts are frequently linked to personal data such as an email address, a phone number or 
 even an official identity document. 
 Attackers exploit password reuse by testing large collections of leaked credentials against other 
-services, an attack known as credential stuffing. 
+services~\cite{PasswordReuse}, an attack known as credential stuffing. 
 Verizon's 2026 Data Breach Investigations Report shows that this risk is shifting rather than 
 disappearing. 
 Credential abuse, the most common initial access vector of the previous year, is down to 13\% of 
 more than 22{,}000 confirmed breaches, while the exploitation of vulnerabilities has risen to 
 31\%~\cite{VerizonDBIR2026}. 
 
-\Gls{fim} addresses the credential side of this risk by reducing the number of places where 
-credentials are created and stored. 
+\Gls{fim} addresses the credential side of this risk by centralising authentication. 
 It concentrates authentication behind a single trusted authority, the \gls{idp}, so that users 
 can access several \glspl{sp} with one set of credentials. 
 When a user wants to access an SP, the SP redirects the user's browser to the IdP. 
@@ -34,7 +33,7 @@ Institutions in research and education usually join a national federation such a
 DFN-AAI~\cite{DFNAAI}. 
 A federation operator registers the IdPs and SPs of all members and publishes their metadata, on 
 which every member relies~\cite{DFNMRPS}. 
-DFN-AAI follow a full-mesh architecture, in which every institution operates its own IdP and 
+DFN-AAI follows a full-mesh architecture, in which every institution operates its own IdP and 
 exchanges messages directly with the SPs of the federation~\cite{IdPSinglePointOfTrust}. 
 The IdP of an institution therefore becomes a single point of trust for every SP that its users 
 access. 

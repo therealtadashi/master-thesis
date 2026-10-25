@@ -107,7 +107,7 @@ Figure~\ref{fig:deployment} illustrates the UML deployment diagram of the propos
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{../img/deployment}
-    \caption{UML Deployment diagram of the proposed monitoring system}
+    \caption{UML deployment diagram of the proposed monitoring system}
     \label{fig:deployment}
 \end{figure}
 
@@ -250,7 +250,7 @@ an SP does not support it, which means that assertions for that partner are tran
 in plain text. 
 The second concerns authentication. 
 A deployment may specify which authentication flows are permitted for a partner, and thereby 
-require multi factor authentication for some SP while accepting password based authentication 
+require multi factor authentication for some SPs while accepting password based authentication 
 for others.
 
 Both settings describe a target state. 
@@ -299,11 +299,10 @@ In particular, information related to the authenticated identity and resolved at
 at this stage. 
 The interceptor can also modify the context before the outgoing response is constructed, including 
 changes to the authenticated identity or attributes~\cite{ProfileHandling}. 
-
-This makes the post authentication interception point particularly suitable for the monitoring 
-system developed in this work, as it provides access to authentication related information that is 
-not yet available at the inbound stage, and it does so before the profile constructs the outgoing 
-message.
+Access to this later state makes the post authentication interception point particularly suitable 
+for the monitoring system developed in this work. 
+It provides authentication-related information that is not yet available at the inbound stage, and 
+it does so before the profile constructs the outgoing message. 
 
 Outbound interceptors run shortly before the final stage of profile processing that produces the 
 response to the client. 
@@ -687,8 +686,9 @@ Rules rated high report an attack in progress, such as a series of failed logins
 subject, a replayed request or a request that shows the traces of a signature wrapping attack. 
 The attacks examined by Somorovsky et al. target the processing of assertions at the 
 SP~\cite{BreakingSAML}. 
-At the IdP, the rule examines incoming requests, in which such traces show an attempt but not a 
-compromised login. 
+\texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED}, in contrast, examines the 
+requests that the IdP receives. 
+In such a request, the traces of a wrapping attack show an attempt but not a compromised login. 
 Rules rated low report indicators that are not harmful on their own, such as a single failed login 
 or the user agent of a script. 
 None of the rules addresses R5, since it presupposes a compromise of the signing key. 

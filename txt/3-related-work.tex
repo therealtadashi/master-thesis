@@ -111,7 +111,7 @@ analysis.
 Second, the SIEM generally relies on the information provided by its data sources and therefore 
 cannot independently verify information that is incorrect or has been manipulated at the source. 
 
-The collection, storage and correlation of log data used in this work therefore correspond to 
+The collection, storage and correlation of log data used in this work correspond to 
 established SIEM functionality. 
 OWASP A09 explicitly recommends centralised logging and monitoring and identifies solutions such 
 as the ELK stack as possible tools for addressing logging and monitoring 
@@ -162,8 +162,8 @@ Snodgrass et al. report an overhead of up to 16 percent for their approach~\cite
 The approach taken in this work is different. 
 Instead of modifying the existing logging infrastructure, two independently generated records 
 of the same event are compared. 
-The protection therefore does not rest on cryptography, but on the temporal and architectural 
-separation between the records. 
+The detection of tampering therefore does not rest on cryptography, but on the temporal and 
+architectural separation between the records. 
 A log file may remain accessible to an attacker with file-system access for an extended period, 
 whereas a record generated within the application process itself exists only for the duration of 
 the corresponding processing before it is transmitted away. 

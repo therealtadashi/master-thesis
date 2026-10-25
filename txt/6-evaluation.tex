@@ -75,7 +75,7 @@ An analysis program in the test sources of the backend proceeds as follows:
 
 \begin{itemize}
     \item It collects all post authentication reports of a configurable time period that were correlated via \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID}.
-    \item For each report and each window size from $\pm$1 to $\pm$60\,s, it executes the query of the heuristic strategy unchanged and selects the same candidate as the productive system would, namely the one with the smallest temporal distance.
+    \item For each report and each window size from $\pm$1 to $\pm$60\,s, it executes the query of the heuristic strategy unchanged and selects the same candidate as the production system would, namely the one with the smallest temporal distance.
     \item It compares the selected candidate with the known correct audit entry and classifies the outcome as a hit, an incorrect assignment or no match. Precision is the share of hits among the assigned reports, coverage the share of reports that were assigned at all.
     \item It records the offset between the reception of the report and the event time of its audit entry, and the distance to the nearest other audit entry of the same SP as a measure of the local login density.
 \end{itemize}
@@ -133,7 +133,7 @@ forms as a browser does, and shows how closely spaced the logins of one user are
 browser timing.
 
 D3 still covers only one user. 
-D4 combines the two previous steps: three users log in simultaneously, each through its own 
+D4 combines the two previous steps: three users log in simultaneously, each through their own 
 browser, which comes closest to several people logging in at the same time. 
 It shows whether the weakness of \texttt{TIME\_\allowbreak{}WINDOW} that D2 exposes also occurs 
 under browser timing, and how often. 
@@ -264,7 +264,7 @@ logins fell below 100\,ms.
 The weakness of \texttt{TIME\_\allowbreak{}WINDOW} is thus not an artefact of the harness, since it 
 is just as pronounced within the zone, but the harness reaches the zone far more often than browser 
 traffic does. 
-How often a productive IdP reaches it depends on its load at peak times and cannot be derived from 
+How often a production IdP reaches it depends on its load at peak times and cannot be derived from 
 the test environment.
 
 \paragraph{Each hash covers the case in which the other one is uninformative.}
@@ -337,7 +337,7 @@ and \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}).
 
 This section examines whether each rule behaves as specified, that is whether it raises an alert 
 when the condition it examines occurs and remains silent when it does not. 
-Since no productive logins with a known classification are available, the rules are tested in 
+Since no production logins with a known classification are available, the rules are tested in 
 scenarios whose expected outcome is fixed in advance, on the test levels introduced in Section~\ref{sec:setup}. 
 In addition, series of legitimate logins show whether the rules remain silent when no alert is expected. 
 
@@ -563,8 +563,8 @@ the scenarios reproduce the conditions that the rules describe.
 The results therefore show that the implementation behaves as specified: every rule raises its 
 alert when its condition occurs, and legitimate logins remain without false alarms. 
 How often the rules detect real attacks in production, and how many of their alerts would be false 
-for productive traffic with its unusual but legitimate configurations, cannot be derived from them. 
-That would require productive logins labelled as legitimate or malicious independently of the 
+for production traffic with its unusual but legitimate configurations, cannot be derived from them. 
+That would require production logins labelled as legitimate or malicious independently of the 
 rules, which no test environment can produce.
 
 \section{Performance Overhead}\label{sec:overhead}
@@ -821,7 +821,7 @@ different browsers and networks.
 Since no logins of real users were available, the evaluations show how the system behaves in the 
 situations they reproduce, but not how often these situations arise in production. 
 This concerns how often logins at an SP follow each other closely enough to confuse the time-only 
-correlation, which load a productive IdP reaches at its peak and how often the rules detect real 
+correlation, which load a production IdP reaches at its peak and how often the rules detect real 
 attacks or raise false alarms (Section~\ref{subsec:eval-detection-results}). 
 Single sign-on follow-up requests, which reuse an existing session, were not measured either. 
 Since such requests are faster than a full login, the interceptors would account for a larger share 

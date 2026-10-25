@@ -7,7 +7,7 @@
 This thesis presented an application layer monitoring tool for the Shibboleth IdP that detects 
 documented vulnerabilities, configuration weaknesses and anomalous authentication behaviour by 
 combining three separate sources of information from within the IdP. 
-These sources are the audit log, two interceptors in the authentication flow and the configuration 
+These sources are the audit log, two interceptors in the authentication flow, and the configuration 
 and metadata of the SPs. 
 The collected data is transmitted to an external backend, where it is stored, correlated and 
 evaluated against a catalogue of fifteen detection rules. 
@@ -41,6 +41,6 @@ the declared state of its SP and with the audit entry of the same login.
 In addition, the thesis analyses which properties are observable from which position and provides 
 an implementation whose overhead was measured. 
 Future work could extend the observation to the SPs, transfer the approach to OpenID Connect and 
-evaluate the rules on labelled productive traffic. 
+evaluate the rules on labelled production traffic. 
 
 \end{document}

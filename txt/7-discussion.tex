@@ -4,8 +4,8 @@
 
 \chapter{Discussion}\label{ch:discussion}
 
-This chapter interprets the results with respect to the research questions, discusses 
-the structural limitations of the approach and outlines directions for future work. 
+This chapter interprets the results with respect to the research questions. 
+It then discusses the structural limitations of the approach and outlines directions for future work. 
 
 \section{Interpretation of the Results}\label{sec:interpretation}
 
@@ -34,10 +34,10 @@ The hashed heuristic (\texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowb
 reliable up to about three logins per second for a given combination of subject, address and SP, a rate 
 that interactive users do not reach (Section~\ref{subsec:eval-correlation-results}). 
 The fifteen detection rules behave as intended for the scenarios constructed for them. 
-All of them are verified against a real Elasticsearch instance, thirteen are also tested through the 
-complete pipeline, eleven of them with a detected condition. 
+All of them are verified against a real Elasticsearch instance. 
+Thirteen are also tested through the complete pipeline, eleven of them with a detected condition. 
 Whether they also detect real attacks reliably and without false alarms in production cannot be 
-derived from these tests, since this would require productive logins labelled independently of the 
+derived from these tests, since this would require production logins labelled independently of the 
 rules (Section~\ref{subsec:eval-detection-results}).
 
 The number of alerts deserves attention as well. 
@@ -174,7 +174,7 @@ presupposes cooperation between parties that are administratively independent.
 A second direction concerns the observation point within the IdP itself. 
 The outbound interceptor added in this work makes the response level fields available from a second, 
 independent source, and it enables the comparison with the audit entry described in 
-Section~\ref{subsec:detection}. 
+Section~\ref{subsec:rules-derivation}. 
 What it cannot provide are the assertion internal fields of encrypted assertions, since the 
 encryption has already taken place at that hook. 
 An observation point before the encryption would close this gap, but the interception points that 
@@ -205,7 +205,7 @@ whether they are complementary in the same sense and which rules follow from the
 weaknesses of that protocol. 
 
 Finally, one question cannot be addressed by extending the system at all. 
-Determining how reliably the rules detect genuine attacks requires productive traffic in which 
+Determining how reliably the rules detect genuine attacks requires production traffic in which 
 each authentication is independently labelled, as discussed in 
 Section~\ref{subsec:eval-detection-results}. 
 Producing such a dataset is a research problem in its own right rather than an implementation 

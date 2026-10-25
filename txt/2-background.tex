@@ -25,7 +25,7 @@ An SP can require a minimum authentication assurance level, which the IdP fulfil
 the assertion~\cite{NIST80063C}, and from the second level upwards this requires two distinct 
 authentication factors~\cite{NIST80063B}. 
 Concentrating authentication at one well-managed site also focuses administrative effort. 
-It also makes multi factor authentication more acceptable to users, since with single sign-on they 
+It also makes \gls{mfa} more acceptable to users, since with single sign-on they 
 are asked for the second factor once per session at the IdP rather than at every service~\cite{ShibbolethGIAC}. 
 Administration follows the same pattern, since accounts are created, modified and revoked 
 centrally rather than in each service individually.
@@ -63,7 +63,7 @@ Both sides therefore hold configuration that describes the same relationship, an
 maintained independently. 
 What binds them together is the metadata each party publishes about itself. 
 This includes the endpoints at which it can be reached, and the certificates by which its statements can be verified. 
-Trust within a federation rests on these metadata being current and correctly exchanged~\cite{SAMLMetadata}. 
+Trust within a federation rests on this metadata being current and correctly exchanged~\cite{SAMLMetadata}. 
 Whether the two configurations remain consistent with one another, however, is not something the 
 SAML standard itself verifies.
 

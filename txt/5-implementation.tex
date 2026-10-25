@@ -131,8 +131,7 @@ identifier of the request that it answers and the issue time of the response, so
 level fields can be compared with the audit entry. 
 The Logstash pipeline already mapped the corresponding tokens to fields.
 
-The information collected by the two interceptors is extracted, parsed and combined into 
-a single payload. 
+The information that each interceptor collects is extracted, parsed and combined into a payload. 
 Before this payload leaves the IdP, the sensitive identifiers it contains are 
 pseudonymised, as required by the design described in Section~\ref{sec:trust}.
 
@@ -179,7 +178,7 @@ the record again.
 To quantify the cost of this design decision, the interceptors also support a synchronous mode. 
 In this mode each of them waits for the backend to confirm receipt before the authentication flow 
 continues, which makes the time spent on transmission visible in the overall duration of a login. 
-The mode is not intended for productive use but serves as a reference point against which 
+The mode is not intended for production use but serves as a reference point against which 
 the asynchronous variant can be compared. 
 The resulting measurements are presented in Section~\ref{sec:overhead}.
 The synchronous mode applies to both interceptors and is selected by the same environment 
@@ -187,8 +186,8 @@ variable, so that a login in that mode contains two blocking transmissions.
 
 \section{Correlation and Detection Layer}\label{sec:impl-processing}
 
-This section describes the main technical components of the backend application, 
-following the same structure as Section~\ref{sec:processing}. 
+This section describes the main technical components of the backend application. 
+It follows the same structure as Section~\ref{sec:processing}. 
 
 \subsection{Storage}\label{subsec:impl-storage}
 
@@ -364,7 +363,7 @@ binding removes the signature from the message and transmits it as a URL paramet
 
 The remaining rules follow one of these patterns or compare an observed event against the 
 configuration declared for the SP involved, as described for \texttt{MFA\_\allowbreak{}BYPASS} in 
-Section~\ref{subsec:detection}. 
+Section~\ref{subsec:rules-derivation}. 
 Their assignment to documented vulnerabilities and attack classes is given in 
 Table~\ref{tab:rules}. 
 

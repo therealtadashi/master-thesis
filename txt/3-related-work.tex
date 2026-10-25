@@ -43,21 +43,22 @@ which configuration is in effect.
 
 \section{Monitoring of Applications and Federations}\label{sec:app-detection}
 
+Monitoring approaches differ in the position from which they observe a system. 
 The OWASP AppSensor project describes an approach in which intrusion detection and response 
 capabilities are integrated directly into an application~\cite{OWASPAppSensor}. 
 In contrast to network-based security mechanisms, application-layer monitoring can make use of 
 information about the application's internal state and semantics.
 
-Rieckers applies the principle of passive observation to network traffic, capturing the RADIUS 
-and EAP-TLS traffic of the eduroam infrastructure to analyse the TLS parameters that clients 
-offer~\cite{EAPeduroam}. 
+Network-based monitoring observes a system from the outside instead. 
+Rieckers applies the principle of passive observation to the eduroam infrastructure, capturing its 
+RADIUS and EAP-TLS traffic to analyse the TLS parameters that clients offer~\cite{EAPeduroam}. 
 In captured traffic, information that exists only inside the application, such as the structure 
 of a SAML assertion or the configuration of an SP, is not visible. 
 This work adopts the principle and applies it inside the Shibboleth IdP itself. 
 
 The principle of passive observation is also reflected in existing application-level 
 monitoring approaches. 
-One relevant architectural precedent is BlackWatch by Hall et al.~\cite{BlackWatch}.
+One relevant architectural precedent is BlackWatch by Hall et al.~\cite{BlackWatch}. 
 BlackWatch applies a similar architecture to generic web applications. 
 Detection points are placed directly within the application to identify security-relevant events. 
 These events are collected by the separate BlackWatch application, where they are analysed using 
@@ -71,7 +72,7 @@ points within the application.
 Developers must identify suitable locations where suspicious behaviour can be detected and 
 implement the corresponding detection logic~\cite{BlackWatch}. 
 
-A domain-specific precedent is provided by Suvanto's AAIEye, a monitoring system for Shibboleth- 
+A domain-specific example is provided by Suvanto's AAIEye, a monitoring system for Shibboleth- 
 and SAML 2.0-based federations~\cite{MonitoringAAI}. 
 Motivated by the lack of effective monitoring solutions for authentication and authorisation 
 infrastructures, AAIEye deploys probes alongside the monitored IdP and SP components. 
@@ -81,8 +82,9 @@ work: runtime authentication events and federation metadata.
 However, the evaluation applied to this data differs fundamentally. 
 The usage statistics probe records an authentication event only as a data point for a login count, 
 without assessing whether the event itself is suspicious. 
-The metadata probe verifies only the currency of a metadata file, through a checksum comparison 
-against a reference copy, not its security-relevant content such as certificate validity or endpoint 
+The metadata probe only verifies whether a metadata file is up to date by comparing its checksum 
+against a reference copy. 
+It does not verify its security-relevant content, such as certificate validity or endpoint 
 configuration. 
 Suvanto notes that problems in federation operation are often caused by configuration mistakes or 
 changes that cannot currently be easily detected~\cite{MonitoringAAI}. 

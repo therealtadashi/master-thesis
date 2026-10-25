@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  25 OCT 2026 15:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  25 OCT 2026 15:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2490,8 +2490,11 @@ Package pdftex.def Info: ./txt/../img/sp-init-sso.pdf  used on input line 162.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [6 <./txt/../img/sp-init-sso.pdf>] [7]
-Overfull \hbox (1.20769pt too wide) in paragraph at lines 260--267
+ [6 <./txt/../img/sp-init-sso.pdf>]
+Underfull \vbox (badness 1502) has occurred while \output is active []
+
+ [7]
+Overfull \hbox (1.20769pt too wide) in paragraph at lines 257--264
 []\T1/jkpl/m/n/10.95 (-20) Three of these child con-texts are rel-e-vant in the
  fol-low-ing. The in-bound \T1/lmtt/m/n/10.95 MessageContext
  []
@@ -2520,7 +2523,7 @@ en-ti-cated trans-port and pseudonymi-
 
 pdfTeX warning: pdflatex (file ./txt/../img/deployment.pdf): PDF inclusion: fou
 nd PDF version <1.7>, but at most version <1.5> allowed
-<./txt/../img/deployment.pdf, id=544, 1129.33919pt x 536.96606pt>
+<./txt/../img/deployment.pdf, id=545, 1129.33919pt x 536.96606pt>
 File: ./txt/../img/deployment.pdf Graphic file (type pdf)
 <use ./txt/../img/deployment.pdf>
 Package pdftex.def Info: ./txt/../img/deployment.pdf  used on input line 109.
@@ -2646,7 +2649,7 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  66581 strings out of 474116
  1469115 string characters out of 5743682
- 2671228 words of memory out of 5000000
+ 2672228 words of memory out of 5000000
  86884 multiletter control sequences out of 15000+600000
  745665 words of font info for 565 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
@@ -2665,10 +2668,10 @@ ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpsya.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
 ublic/lm/lmtlo10.pfb>
-Output written on out/main.pdf (84 pages, 538261 bytes).
+Output written on out/main.pdf (84 pages, 538150 bytes).
 PDF statistics:
- 1523 PDF objects out of 1728 (max. 8388607)
- 1353 compressed objects within 14 object streams
+ 1524 PDF objects out of 1728 (max. 8388607)
+ 1354 compressed objects within 14 object streams
  294 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

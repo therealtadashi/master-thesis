@@ -254,7 +254,8 @@ is held separately in a structure referred to as the context tree.
 Its root is the \texttt{ProfileRequestContext}, which is created when a request arrives and 
 accompanies it through the entire profile execution. 
 Attached to this root are child contexts, each holding one aspect of the request, so that the 
-state grows as processing advances rather than being assembled in a single object at the outset.
+state grows as processing advances rather than being assembled in a single object at the 
+outset~\cite{GeneralArchitecture, ProfileRequestContext}. 
 
 Three of these child contexts are relevant in the following. 
 The inbound \texttt{MessageContext} holds the message as it was received, the 

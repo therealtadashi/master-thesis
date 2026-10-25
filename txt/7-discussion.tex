@@ -36,8 +36,9 @@ that interactive users do not reach (Section~\ref{subsec:eval-correlation-result
 The fifteen detection rules behave as intended for the scenarios constructed for them. 
 All of them are verified against a real Elasticsearch instance, thirteen are also tested through the 
 complete pipeline, eleven of them with a detected condition. 
-This establishes the fidelity of the implementation, though not the detection quality in 
-production, a distinction developed in Section~\ref{subsec:eval-detection-results}. 
+Whether they also detect real attacks reliably and without false alarms in production cannot be 
+derived from these tests, since this would require productive logins labelled independently of the 
+rules (Section~\ref{subsec:eval-detection-results}).
 
 The number of alerts deserves attention as well. 
 During the performance series, the detection layer raised 21{,}712 alerts for 10{,}854 logins, 

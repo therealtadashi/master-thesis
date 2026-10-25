@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  25 OCT 2026 13:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  25 OCT 2026 13:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2458,13 +2458,17 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 ]) (./txt/1-introduction.tex
 chapter 1.
-[1
+
+Underfull \vbox (badness 2941) has occurred while \output is active []
+
+ [1
 
 
 ]
 LaTeX Font Info:    Trying to load font information for TS1+jkpl on input line 
-80.
- (/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/ts1jkpl.fd
+81.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/kpfonts/ts1jkpl.fd
 File: ts1jkpl.fd 2007/08/30 Fontinst v1.928 font definitions for TS1/jkpl.
 )
 Package microtype Info: Loading generic protrusion settings for font family
@@ -2478,7 +2482,7 @@ chapter 2.
 
 
 ] [4] [5]
-<./txt/../img/sp-init-sso.pdf, id=349, 408.39894pt x 329.36067pt>
+<./txt/../img/sp-init-sso.pdf, id=350, 408.39894pt x 329.36067pt>
 File: ./txt/../img/sp-init-sso.pdf Graphic file (type pdf)
 <use ./txt/../img/sp-init-sso.pdf>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.pdf  used on input line 162.
@@ -2516,7 +2520,7 @@ en-ti-cated trans-port and pseudonymi-
 
 pdfTeX warning: pdflatex (file ./txt/../img/deployment.pdf): PDF inclusion: fou
 nd PDF version <1.7>, but at most version <1.5> allowed
-<./txt/../img/deployment.pdf, id=539, 1129.33919pt x 536.96606pt>
+<./txt/../img/deployment.pdf, id=540, 1129.33919pt x 536.96606pt>
 File: ./txt/../img/deployment.pdf Graphic file (type pdf)
 <use ./txt/../img/deployment.pdf>
 Package pdftex.def Info: ./txt/../img/deployment.pdf  used on input line 109.
@@ -2642,7 +2646,7 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  66577 strings out of 474116
  1468935 string characters out of 5743682
- 2671161 words of memory out of 5000000
+ 2672161 words of memory out of 5000000
  86881 multiletter control sequences out of 15000+600000
  745665 words of font info for 565 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
@@ -2661,10 +2665,10 @@ ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpsya.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
 ublic/lm/lmtlo10.pfb>
-Output written on out/main.pdf (84 pages, 537583 bytes).
+Output written on out/main.pdf (84 pages, 537669 bytes).
 PDF statistics:
- 1517 PDF objects out of 1728 (max. 8388607)
- 1347 compressed objects within 14 object streams
+ 1518 PDF objects out of 1728 (max. 8388607)
+ 1348 compressed objects within 14 object streams
  293 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

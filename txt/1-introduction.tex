@@ -25,19 +25,20 @@ SP~\cite{FIMSurvey}.
 
 Shibboleth is one of the most widely deployed open-source implementations of FIM in the research 
 and education sector~\cite{Shibboleth}. 
-A user authenticates once with the IdP of their organisation, which then issues signed SAML 
-assertions that SPs accept as proof of identity. 
-The Shibboleth IdP also supports OpenID Connect through an official plugin~\cite{ShibbolethOIDC}. 
+Its IdP natively supports the Security Assertion Markup Language, with which an IdP confirms 
+the identity of a user to an SP through signed statements called assertions~\cite{SAMLOverview}. 
+OpenID Connect and some OAuth 2.0 features are available through an official 
+plugin~\cite{ShibbolethOIDC}. 
 
-Institutions in research and education usually join a national federation such as 
-DFN-AAI~\cite{DFNAAI}. 
+In research and education, Shibboleth IdPs are usually operated within a national federation, for 
+example DFN-AAI~\cite{DFNAAI}. 
 A federation operator registers the IdPs and SPs of all members and publishes their metadata, on 
 which every member relies~\cite{DFNMRPS}. 
 DFN-AAI follows a full-mesh architecture, in which every institution operates its own IdP and 
 exchanges messages directly with the SPs of the federation~\cite{IdPSinglePointOfTrust}. 
 The IdP of an institution therefore becomes a single point of trust for every SP that its users 
 access. 
-A compromised, misconfigured or vulnerable IdP thus affects not one application but all of these SPs. 
+A compromised, misconfigured or vulnerable IdP thus affects not one application but all of these SPs.
 
 The Sunburst supply chain attack shows the consequences of such a compromise~\cite{FireEyeSSC}. 
 As Hartl and Derek note, after the initial compromise the attackers obtained the 

@@ -84,9 +84,11 @@ Three research questions guide this work:
 
 To answer these questions, the system combines three sources within the IdP whose records can be 
 related to an individual login. 
-Before the records leave the IdP, the identifiers are pseudonymised. 
-A separate backend links the login records via strategies and checks them against fifteen detection rules 
-based on documented vulnerabilities. 
+Before the records leave the IdP, user names and IP addresses are pseudonymised. 
+A separate backend links the records of each login through the identifier of the request or, through 
+the pseudonymised user, address and time. 
+It then checks them against fifteen detection rules, derived mainly from documented vulnerabilities 
+and security recommendations. 
 In a test environment, this linking proved reliable, all rules behaved as specified and the interceptors 
 added no measurable latency to a login. 
 

@@ -86,10 +86,10 @@ Three research questions guide this work:
 
 To answer these questions, the system combines three sources whose records can be related to an 
 individual login. 
-The records are pseudonymised at their source, correlated in a separate backend and evaluated 
-against fifteen detection rules. 
-The evaluation in a test environment shows that the records of a login can be linked reliably, 
-that all rules behave as specified and that the interceptors add no measurable latency to a login. 
+Before the records leave the IdP, the identifiers are pseudonymised. 
+A separate backend then links the login records and checks them against fifteen detection rules. 
+In a test environment, this linking proved reliable, all rules behaved as specified and the interceptors 
+added no measurable latency to a login. 
 
 The remainder of this thesis is structured as follows. 
 Chapter~\ref{ch:background} introduces the technical foundations of FIM, SAML and the Shibboleth IdP. 

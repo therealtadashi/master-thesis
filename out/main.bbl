@@ -577,25 +577,25 @@
            given={Nikita},
            giveni={N\bibinitperiod},
            givenun=0}}%
-        {{un=0,uniquepart=base,hash=93a575777f636107b8f65a815802b18f}{%
+        {{un=0,uniquepart=base,hash=3458cd1c70f73bfd22ae3e41ff50f362}{%
            family={Wang},
            familyi={W\bibinitperiod},
-           given={Xiaofeng},
+           given={XiaoFeng},
            giveni={X\bibinitperiod},
            givenun=0}}%
       }
       \strng{namehash}{54d6a6689e85a240e92a43bb745fe6cc}
-      \strng{fullhash}{d7b066ed8e8574ebd8775d8dd62a1ad7}
-      \strng{bibnamehash}{d7b066ed8e8574ebd8775d8dd62a1ad7}
-      \strng{authorbibnamehash}{d7b066ed8e8574ebd8775d8dd62a1ad7}
+      \strng{fullhash}{e0eb4c1e46c687546b50f09d7985efaf}
+      \strng{bibnamehash}{e0eb4c1e46c687546b50f09d7985efaf}
+      \strng{authorbibnamehash}{e0eb4c1e46c687546b50f09d7985efaf}
       \strng{authornamehash}{54d6a6689e85a240e92a43bb745fe6cc}
-      \strng{authorfullhash}{d7b066ed8e8574ebd8775d8dd62a1ad7}
+      \strng{authorfullhash}{e0eb4c1e46c687546b50f09d7985efaf}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Network and Distributed System Security Symposium (NDSS)}
       \field{isbn}{1-891562-35-5}
-      \field{journaltitle}{Proceedings of NDSS 2014}
       \field{month}{01}
       \field{title}{The Tangled Web of Password Reuse}
       \field{year}{2014}

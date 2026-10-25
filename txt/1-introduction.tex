@@ -72,21 +72,21 @@ It makes application-layer security parameters and authentication workflows visi
 the IdP from outside cannot see.
 Rather than testing the deployment actively, the system observes it passively. 
 This principle has been applied to the eduroam infrastructure by analysing its network 
-traffic~\cite{EAPeduroam}, whereas this work applies it inside the application, at the application 
-layer of the IdP. 
+traffic~\cite{EAPeduroam}, whereas this work applies it inside the application. 
 The system thereby provides the operators of an IdP with a continuous view of its security posture. 
-
 Three research questions guide this work:
+
 \begin{itemize}
     \item \textbf{RQ1:} Which security-relevant data can be collected at the application layer of a Shibboleth IdP, and through which mechanisms are these data accessible?
     \item \textbf{RQ2:} How can these data be correlated in order to detect configuration weaknesses and anomalies in the authentication process?
     \item \textbf{RQ3:} What measurable overhead does the resulting system impose on the monitored IdP?
 \end{itemize}
 
-To answer these questions, the system combines three sources whose records can be related to an 
-individual login. 
+To answer these questions, the system combines three sources within the IdP whose records can be 
+related to an individual login. 
 Before the records leave the IdP, the identifiers are pseudonymised. 
-A separate backend then links the login records and checks them against fifteen detection rules. 
+A separate backend links the login records via strategies and checks them against fifteen detection rules 
+based on documented vulnerabilities. 
 In a test environment, this linking proved reliable, all rules behaved as specified and the interceptors 
 added no measurable latency to a login. 
 

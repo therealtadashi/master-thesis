@@ -21,8 +21,8 @@ Where the audit log records the identifier of the request, every record was link
 login. 
 Without this identifier, a fallback based on the pseudonymised user and address also linked every 
 record correctly in all tested scenarios. 
-All rules behaved as specified in tests against a real database, and thirteen of them also in tests 
-of the complete pipeline. 
+All rules behaved as specified in tests against a real database, and eleven of them also detected 
+their condition in tests of the complete pipeline. 
 Legitimate logins raised no false alarms. 
 With asynchronous transmission, the interceptors added no measurable login delay but cost about 
 28\,ms of processor time per login.

@@ -106,8 +106,8 @@ The attack itself takes place on the communication path after the message has le
 The IdP can at most observe whether an outgoing assertion is restricted to its intended recipient. 
 None of the implemented rules currently examines this condition. 
 
-The same reasons apply to attack classes of the survey that do not form cross-protocol issues, such 
-as distributed denial of service, cross-site scripting and session swapping~\cite{FIMSurvey}. 
+Other attack classes of the survey, such as distributed denial of service, cross-site scripting 
+and session swapping, are not reported for SAML~\cite{FIMSurvey}. 
 Two further attack classes, UI redressing and ACS spoofing, were reported only for SAML and exploit a 
 vulnerable IdP~\cite{FIMSurvey}. 
 UI redressing is mitigated by response headers that the web server in front of the IdP sets~\cite{GuardiansClouds, ShibbolethGIAC}. 
@@ -124,8 +124,10 @@ Monitoring changes to its configuration and metadata would only reveal a provide
 changed, not one that was malicious from the start. 
 
 The second case is more fundamental. 
-The malicious provider scenario describes an IdP that abuses its own position within the 
-federation. 
+The malicious provider scenario is reported for other protocols, among them Liberty, which builds 
+on SAML~\cite{FIMSurvey}. 
+It describes an IdP that abuses its own position within the federation and therefore concerns 
+any IdP, regardless of the protocol. 
 Since the monitoring system is integrated into the IdP, the observer and the potential attacker 
 reside within the same system. 
 An entity that fully controls the IdP therefore also controls the collection layer of the 

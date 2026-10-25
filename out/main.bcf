@@ -2550,17 +2550,16 @@
     <bcf:citekey order="182" intorder="1">FIMSurvey</bcf:citekey>
     <bcf:citekey order="183" intorder="1">FIMSurvey</bcf:citekey>
     <bcf:citekey order="184" intorder="1">FIMSurvey</bcf:citekey>
-    <bcf:citekey order="185" intorder="1">FIMSurvey</bcf:citekey>
+    <bcf:citekey order="185" intorder="1">GuardiansClouds</bcf:citekey>
+    <bcf:citekey order="185" intorder="2">ShibbolethGIAC</bcf:citekey>
     <bcf:citekey order="186" intorder="1">GuardiansClouds</bcf:citekey>
-    <bcf:citekey order="186" intorder="2">ShibbolethGIAC</bcf:citekey>
-    <bcf:citekey order="187" intorder="1">GuardiansClouds</bcf:citekey>
-    <bcf:citekey order="187" intorder="2">MetadataForSP</bcf:citekey>
-    <bcf:citekey order="188" intorder="1">FIMSurvey</bcf:citekey>
-    <bcf:citekey order="189" intorder="1">TamperDetection</bcf:citekey>
-    <bcf:citekey order="190" intorder="1">UEBAFederation</bcf:citekey>
-    <bcf:citekey order="191" intorder="1">OpenIDConnectCore</bcf:citekey>
-    <bcf:citekey order="192" intorder="1">RFC7636</bcf:citekey>
-    <bcf:citekey order="192" intorder="2">RFC9700</bcf:citekey>
+    <bcf:citekey order="186" intorder="2">MetadataForSP</bcf:citekey>
+    <bcf:citekey order="187" intorder="1">FIMSurvey</bcf:citekey>
+    <bcf:citekey order="188" intorder="1">TamperDetection</bcf:citekey>
+    <bcf:citekey order="189" intorder="1">UEBAFederation</bcf:citekey>
+    <bcf:citekey order="190" intorder="1">OpenIDConnectCore</bcf:citekey>
+    <bcf:citekey order="191" intorder="1">RFC7636</bcf:citekey>
+    <bcf:citekey order="191" intorder="2">RFC9700</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

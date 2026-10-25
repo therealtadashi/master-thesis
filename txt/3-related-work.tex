@@ -249,16 +249,20 @@ identity management and extends it with application-level observations from the 
 
 Table~\ref{tab:comparision} compares the related works discussed in this chapter with the approach 
 proposed in this work. 
-Its last three columns show the properties that this work combines, so that a dash marks a 
-different focus rather than a shortcoming of the respective work. 
-The security analyses of SAML and Shibboleth identify vulnerable implementations and configurations. 
-Rieckers demonstrates passive network-layer monitoring by observing RADIUS and EAP-TLS traffic in 
-the eduroam infrastructure. 
-Hall et al. and the OWASP AppSensor project place the monitoring inside the application itself, 
-which requires detection points to be integrated into the monitored system. 
-Suvanto applies monitoring to Shibboleth infrastructures, but his approach focuses on their 
-operation rather than on their security. 
-Martín et al. observe users at the SP after authentication and leave the IdP out of scope. 
+The last three columns show the properties that this work combines. 
+A dash indicates a different focus rather than a shortcoming of the respective work. 
+
+This work builds on each of these lines of research in a different way. 
+The analyses of SAML and Shibboleth establish which implementations and configurations are 
+vulnerable, and this work observes whether a running deployment exhibits such a configuration. 
+From Rieckers, it adopts the principle of passive observation but moves it from the network into 
+the IdP. 
+AppSensor and BlackWatch show that detection points can be placed inside an application, and the 
+difficulty of integrating them motivates the realisation as a plugin. 
+AAIEye already collects authentication events and metadata, which this work evaluates for their 
+security rather than for operation. 
+Martín et al. observe users at the SP after authentication and thus complement this work, which 
+observes the IdP. 
 
 The aggregation of multiple data sources is established practice, as AAIEye, SIEM 
 systems and Wazuh demonstrate. 

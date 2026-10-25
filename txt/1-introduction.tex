@@ -25,7 +25,7 @@ SP~\cite{FIMSurvey}.
 
 Shibboleth is one of the most widely deployed open-source implementations of FIM in the research 
 and education sector~\cite{Shibboleth}. 
-Its IdP natively supports the Security Assertion Markup Language, with which an IdP confirms 
+Its IdP natively supports the \gls{saml}, with which an IdP confirms 
 the identity of a user to an SP through signed statements called assertions~\cite{SAMLOverview}. 
 OpenID Connect and some OAuth 2.0 features are available through an official 
 plugin~\cite{ShibbolethOIDC}. 
@@ -86,7 +86,7 @@ Three research questions guide this work:
 To answer these questions, the system combines three sources within the IdP whose records can be 
 related to an individual login. 
 Before the records leave the IdP, user names and IP addresses are pseudonymised. 
-A separate backend links the records of each login through the identifier of the request or, through 
+A separate backend links the records of each login through the identifier of the request or through 
 the pseudonymised user, address and time. 
 It then checks them against fifteen detection rules, derived mainly from documented vulnerabilities 
 and security recommendations. 

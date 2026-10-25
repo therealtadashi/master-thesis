@@ -517,7 +517,7 @@
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
       \field{month}{03}
-      \field{title}{Assertions and protocols for the OASIS security assertion markup language (SAML) V2.0}
+      \field{title}{Assertions and Protocols for the OASIS Security Assertion Markup Language (SAML) V2.0}
       \field{urlday}{3}
       \field{urlmonth}{9}
       \field{urlyear}{2026}
@@ -572,7 +572,7 @@
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
       \field{month}{03}
-      \field{title}{Metadata for the OASIS security assertion markup language (SAML) V2.0}
+      \field{title}{Metadata for the OASIS Security Assertion Markup Language (SAML) V2.0}
       \field{urlday}{3}
       \field{urlmonth}{9}
       \field{urlyear}{2026}
@@ -991,7 +991,7 @@
       \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{booktitle}{Proceedings of the The 1st International Workshop on Cloud Computing and Information Security}
+      \field{booktitle}{Proceedings of the 1st International Workshop on Cloud Computing and Information Security}
       \field{isbn}{978-90-78677-88-8}
       \field{issn}{1951-6851}
       \field{month}{11}
@@ -1981,7 +1981,7 @@
       \verb https://shibboleth.net/api/java-identity-provider/5.2.0/net/shibboleth/idp/session/context/SessionContext.html
       \endverb
     \endentry
-    \entry{Shibboleth}{online}{}
+    \entry{SubjectContext}{online}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=e7128861457d28486d8c415b74b4feaf}{%
            family={{Shibboleth Consortium}},
@@ -1998,19 +1998,19 @@
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{Shaping the future of shibboleth software}
-      \field{urlday}{1}
+      \field{title}{SubjectContext}
+      \field{urlday}{15}
       \field{urlmonth}{9}
       \field{urlyear}{2026}
       \field{urldateera}{ce}
       \verb{urlraw}
-      \verb https://www.shibboleth.net/about-us/the-shibboleth-project/
+      \verb https://shibboleth.net/api/java-identity-provider/5.2.0/net/shibboleth/idp/authn/context/SubjectContext.html
       \endverb
       \verb{url}
-      \verb https://www.shibboleth.net/about-us/the-shibboleth-project/
+      \verb https://shibboleth.net/api/java-identity-provider/5.2.0/net/shibboleth/idp/authn/context/SubjectContext.html
       \endverb
     \endentry
-    \entry{SubjectContext}{online}{}
+    \entry{Shibboleth}{online}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=e7128861457d28486d8c415b74b4feaf}{%
            family={{Shibboleth Consortium}},
@@ -2027,16 +2027,16 @@
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{SubjectContext}
-      \field{urlday}{15}
+      \field{title}{The Shibboleth Project}
+      \field{urlday}{1}
       \field{urlmonth}{9}
       \field{urlyear}{2026}
       \field{urldateera}{ce}
       \verb{urlraw}
-      \verb https://shibboleth.net/api/java-identity-provider/5.2.0/net/shibboleth/idp/authn/context/SubjectContext.html
+      \verb https://www.shibboleth.net/about-us/the-shibboleth-project/
       \endverb
       \verb{url}
-      \verb https://shibboleth.net/api/java-identity-provider/5.2.0/net/shibboleth/idp/authn/context/SubjectContext.html
+      \verb https://www.shibboleth.net/about-us/the-shibboleth-project/
       \endverb
     \endentry
     \entry{ThreatModeling}{book}{}
@@ -2214,7 +2214,7 @@
       \field{booktitle}{Proceedings of the Thirtieth International Conference on Very Large Data Bases - Volume 30}
       \field{isbn}{0120884690}
       \field{series}{VLDB '04}
-      \field{title}{Tamper detection in audit logs}
+      \field{title}{Tamper Detection in Audit Logs}
       \field{year}{2004}
       \field{pages}{504\bibrangedash 515}
       \range{pages}{12}
@@ -2482,7 +2482,7 @@
       \field{booktitle}{Proceedings of the 7th International Symposium on Software Engineering for Adaptive and Self-Managing Systems}
       \field{isbn}{9781467317870}
       \field{series}{SEAMS '12}
-      \field{title}{A taxonomy and survey of self-protecting software systems}
+      \field{title}{A Taxonomy and Survey of Self-Protecting Software Systems}
       \field{year}{2012}
       \field{pages}{109\bibrangedash 118}
       \range{pages}{10}

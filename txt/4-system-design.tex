@@ -269,7 +269,7 @@ to the profile processing.
 The following paragraphs examine what each of them can observe and which of them suit the 
 monitoring system. 
 
-Inbound interceptors are executed during the processing of an incoming request. 
+Inbound interceptors run before the user is authenticated. 
 At this point, the inbound \texttt{Message\allowbreak{}Context} tree is fully populated. 
 A \texttt{Relying\allowbreak{}Party\allowbreak{}Context} has typically been created as well, together 
 with contexts required for operations such as transport or message authentication~\cite{ProfileHandling}.
@@ -296,8 +296,6 @@ The interceptor can also modify the context before the outgoing response is cons
 changes to the authenticated identity or attributes~\cite{ProfileHandling}. 
 Access to this later state makes the post authentication interception point particularly suitable 
 for the monitoring system developed in this work. 
-It provides authentication-related information that is not yet available at the inbound stage, and 
-it does so before the profile constructs the outgoing message. 
 
 Outbound interceptors run shortly before the final stage of profile processing that produces the 
 response to the client. 
@@ -415,17 +413,15 @@ The interceptors execute within the authentication flow of the IdP.
 Any time spent transmitting a record is therefore time added to the login of the user who triggered it. 
 Waiting for a response would make the duration of every authentication dependent on the availability and 
 response time of a component outside the IdP, and a monitoring tool that is slow or temporarily unreachable 
-would delay the service it observes.
+would delay the service it observes. 
 
 The records are consequently transmitted asynchronously. 
-Each interceptor dispatches its record and continues processing without awaiting a response. 
-This has a cost. 
-If a transmission fails, the record is not sent again and is missing in the monitoring tool, and 
-only a warning in the log of the IdP indicates the failure. 
-The design therefore prioritises non-interference with the monitored service over a guarantee of delivery. 
-For a monitoring system that observes a central authentication service, this trade-off appears justified. 
-A monitoring component that degrades the availability of the service it observes would undermine its own purpose. 
-Hall et al. decouple analysis for a similar reason: responses are retrieved separately rather than returned in 
+Each interceptor dispatches its record and continues without awaiting a response. 
+If a transmission fails, the record is lost, and only a warning in the log of the IdP indicates 
+the failure. 
+The design thus accepts that individual records may be lost in order not to delay the service it 
+observes. 
+In BlackWatch, Hall et al. make a similar choice and retrieve responses separately rather than in 
 reply to the submitted event~\cite{BlackWatch}. 
 
 \section{Correlation and Detection Layer}\label{sec:processing}

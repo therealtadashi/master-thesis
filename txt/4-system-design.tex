@@ -131,9 +131,9 @@ is accessible through defined extension points, it exposes status endpoint and i
 instance via Java Management Extensions~\cite{MetricsConfiguration}. 
 
 Not all of these are suitable for the purpose of this work. 
-The system described here associates every finding with an individual authentication event, since a security 
-relevant condition is only meaningful in the context of the transaction in which it occurred. 
-A channel that cannot be related to a single login can therefore not contribute to correlation or detection. 
+The system described here associates every finding to the logins it affects, since a weakness or an 
+attack is only meaningful in the context of the transactions in which it occurs. 
+A channel that cannot be related to a single login therefore cannot contribute to correlation or detection. 
 
 Two of the five channels fail this criterion. 
 The status endpoint describes the state of the deployment as a whole in free-form text~\cite{IdPStatus}. 
@@ -141,7 +141,7 @@ It therefore addresses availability rather than the security of individual trans
 The metrics are counters, timers and gauges~\cite{MetricsConfiguration}, and none of them refers 
 to an individual login. 
 A counter reports that a number of logins occurred, not which login was affected. 
-An alert derived from either source could not be assigned to a login. 
+An alert derived from either source could not be related to a single login. 
 
 The remaining three channels form the collection layer of this work. 
 These are the audit log, the configuration files and the runtime state accessible through interceptors. 
@@ -222,10 +222,10 @@ The metadata therefore forms an essential part of the IdP configuration, as it d
 federation entities are known to the IdP and which endpoints, protocols and cryptographic 
 information are associated with them. 
 
-Alongside the runtime information recorded in the audit log, the IdP holds a second class of 
-information that describes not what happened, but what is supposed to happen. 
-This information is contained in the configuration files of the deployment, most notably in 
-\textit{relying-party.xml} (Section~\ref{subsec:config}).
+The metadata describes what an SP declares about itself. 
+What the IdP intends to do for that SP is defined in the configuration of the deployment, most 
+notably in \textit{relying-party.xml} (Section~\ref{subsec:config}). 
+Unlike the audit log, both describe not what happened, but what is supposed to happen. 
 
 This file specifies which functional features the IdP supports and allows these settings to be 
 customised based on the identity of a relying party. 
@@ -259,18 +259,15 @@ is the reason why the configuration is treated as an independent data source in 
 
 Finally, \textit{relying-party.xml} is also the file in which interceptor flows are enabled for a 
 profile. 
-The extension point used by the collection mechanism described in 
-Section~\ref{subsec:interceptor} is therefore configured in the same place as the security settings 
-it observes.
+The extension point used by the collection mechanism described in Section~\ref{subsec:interceptor} 
+is therefore configured in the same place as the security settings it observes. 
 
 \subsection{Interceptor}\label{subsec:interceptor}
 
-As mentioned in Section~\ref{subsec:profile-flows}, Shibboleth provides three interception points 
-within its profile processing: inbound message processing, post authentication processing and 
-outbound message processing. 
-Interceptors are implemented as Spring Web Flow subflows that are executed at these predefined 
-points without requiring modifications to the underlying profile 
-flow~\cite{ProfileHandling, ProfileInterceptConfiguration}.
+Section~\ref{subsec:profile-flows} introduced the three hooks at which interceptors can be attached 
+to the profile processing. 
+The following paragraphs examine what each of them can observe and which of them suit the 
+monitoring system. 
 
 Inbound interceptors are executed during the processing of an incoming request. 
 At this point, the inbound \texttt{Message\allowbreak{}Context} tree is fully populated. 

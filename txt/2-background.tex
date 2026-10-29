@@ -248,17 +248,17 @@ No modification of the IdP source code is required~\cite{ProfileInterceptConfigu
 
 While a flow describes the sequence of processing steps, the state of the request being processed 
 is held separately in a structure referred to as the context tree. 
-Its root is the \texttt{ProfileRequestContext}, which is created when a request arrives and 
-accompanies it through the entire profile execution. 
+Its root is the \texttt{Profile\allowbreak{}Request\allowbreak{}Context}, which is created when a 
+request arrives and accompanies it through the entire profile execution. 
 Attached to this root are child contexts, each holding one aspect of the request, so that the 
 state grows as processing advances rather than being assembled in a single object at the 
 outset~\cite{GeneralArchitecture, ProfileRequestContext}. 
 
 Three of these child contexts are relevant in the following. 
-The inbound \texttt{MessageContext} holds the message as it was received, the 
-\texttt{RelyingPartyContext} identifies the SP the request originates from and records whether 
-that identity could be verified, and the \texttt{SubjectContext} holds the authenticated subject 
-once authentication has completed~\cite{ProfileHandling}. 
+The inbound \texttt{Message\allowbreak{}Context} holds the message as it was received, the 
+\texttt{Relying\allowbreak{}Party\allowbreak{}Context} identifies the SP the request originates from 
+and records whether that identity could be verified, and the \texttt{Subject\allowbreak{}Context} 
+holds the authenticated subject once authentication has completed~\cite{ProfileHandling}. 
 The last of these illustrates the incremental nature of the structure, since it does not exist 
 before the user has been authenticated.
 

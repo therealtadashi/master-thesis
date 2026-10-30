@@ -78,12 +78,10 @@ The backend therefore does not receive the same configuration repeatedly, but on
 deployment has actually been modified, which is also what makes the detection rules operating on 
 configuration meaningful at all. 
 
-Unlike the log shippers, the interceptor is a custom component developed as part of this work. 
-It is registered as a Spring bean within the Shibboleth IdP and activated through the 
-\texttt{postAuthenticationFlows} property of the corresponding profile configuration~\cite{ProfileInterceptConfiguration}. 
-The post authentication interceptor therefore integrates into the IdP without any 
-modification of its source code, which is how the third requirement of 
-Section~\ref{sec:requirements} is met. 
+Unlike the log shippers, the two interceptors are custom components developed as part of this work. 
+They are registered as described in Section~\ref{subsec:profile-flows}, the post authentication 
+interceptor through the \texttt{postAuthenticationFlows} property and the outbound interceptor 
+through the \texttt{outboundInterceptorFlows} property~\cite{ProfileInterceptConfiguration}. 
 
 The post authentication interceptor extends the \texttt{Abstract\allowbreak{}Profile\allowbreak{}Action} 
 API of the Shibboleth IdP and operates on the \texttt{Profile\allowbreak{}Request\allowbreak{}Context}, 

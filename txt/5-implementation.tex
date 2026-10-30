@@ -129,21 +129,16 @@ it answers and the issue time of the response.
 They allow the response-level fields of the outbound report to be compared with the audit entry, as 
 \texttt{FIELD\_\allowbreak{}MISMATCH} requires (Section~\ref{subsec:rules-derivation}). 
 
-The information that each interceptor collects is extracted, parsed and combined into a payload. 
-Before this payload leaves the IdP, the sensitive identifiers it contains are 
-pseudonymised, as required by the design described in Section~\ref{sec:trust}.
-
-The implementation of this step is complicated by the fact that it takes place in two 
-different components. 
-The interceptor pseudonymises the identifiers it collects within the Java application, 
-whereas the audit fields are pseudonymised by Logstash during preprocessing. 
-Both must produce the same value for the same identifier, since the correlation described 
-in Section~\ref{subsec:correlation} relies on comparing hashed subjects and addresses 
-across the two sources. 
-A mismatch would not cause an error but would silently prevent records from being matched.
+Before any record leaves the IdP, its sensitive identifiers are pseudonymised 
+(Section~\ref{sec:trust}). 
+This takes place in two different components. 
+The interceptors pseudonymise the identifiers they collect within the Java application, whereas 
+Logstash pseudonymises the audit fields during preprocessing. 
+If the two produced different values for the same identifier, no error would occur, but the 
+records could no longer be matched through their pseudonyms. 
 Both components therefore apply the same hash function and share the same secret salt. 
 The salt is provided through the deployment configuration rather than embedded in either 
-component, so that it can be rotated without modifying the interceptor or the Logstash pipeline.
+component, so that it can be rotated without modifying the interceptors or the Logstash pipeline. 
 
 \section{Transport Layer}\label{sec:impl-transport}
 

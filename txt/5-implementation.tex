@@ -24,9 +24,8 @@ authentication secret with the interceptor, as described in Section~\ref{sec:imp
 A key aspect of the implementation is the handling of audit log entries. 
 Instead of parsing the audit log according to a fixed format, Logstash processes 
 the audit fields as key-value pairs. 
-This provides the technical basis for adapting to changes in the configured audit 
-format and enables the monitoring system to handle the dynamic structure of the 
-audit logs. 
+This allows the monitoring system to adapt to dynamic changes in the configured 
+audit format. 
 
 The monitoring tool handles these dynamic changes by maintaining a field registry. 
 The registry periodically retrieves the most recent audit entries stored in the 
@@ -58,8 +57,7 @@ If the audit format of a deployment does not include a field that a rule depends
 no exception is raised and no entry is written to any log. 
 The information is simply absent, and a rule evaluating it would silently operate on 
 incomplete data. 
-The registry therefore does not only serve adaptability, but also makes this absence 
-explicit and detectable. 
+The registry therefore also makes this absence detectable. 
 
 The static configuration files are collected by the same log shipping stack, but 
 processed differently. 
@@ -353,12 +351,9 @@ A signature refers to the element it protects through this identifier
 which of the two was signed. 
 Signature elements only appear in requests sent with the HTTP-POST binding, since the HTTP-Redirect 
 binding removes the signature from the message and transmits it as a URL parameter~\cite{SAMLBinding}. 
-
 The remaining rules follow one of these patterns or compare an observed event against the 
 configuration declared for the SP involved, as described for \texttt{MFA\_\allowbreak{}BYPASS} in 
 Section~\ref{subsec:rules-derivation}. 
-Their assignment to documented vulnerabilities and attack classes is given in 
-Table~\ref{tab:rules}. 
 
 A further difficulty arose with the comparison between configuration and runtime event. 
 The authentication flows permitted for an SP are listed in \textit{relying-party.xml} by their 
@@ -403,18 +398,15 @@ the domain of the monitoring tool.
 They present findings together with the records from which they were derived and follow the 
 relationships that the correlation layer establishes, neither of which can be expressed through 
 generic index queries alone. 
-The main pages implemented for the web application are described below.
 
 The dashboard provides an overview of the most important data within a specified timeframe. 
 It includes the total number of logins, failed logins, successful logins and detected alerts. 
 In addition, it provides a line chart showing the number of logins over the selected timeframe, 
 an overview of the total number of logins per SP and a detailed table of the individual login 
-events.
-
+events. 
 The login overview for each SP also provides a detailed dialog containing the configuration and 
 metadata defined for the respective SP in the Shibboleth IdP. 
-The SP details further include an overview of any misconfigurations detected by the rule engines 
-described in Section~\ref{subsec:impl-detection}.
+The SP details also list the misconfigurations that have been detected. 
 
 The second major page of the web application is the alert page. 
 As its name suggests, this page displays the recent alerts detected by the monitoring tool. 

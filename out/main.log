@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  30 OCT 2026 11:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  30 OCT 2026 17:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2550,47 +2550,51 @@ chapter 5.
 [33
 
 
-] [34] [35] [36] [37] [38] [39] [40]) (./txt/6-evaluation.tex [41] [42
+] [34] [35] [36] [37] [38]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-]
+ [39])
+(./txt/6-evaluation.tex [40]
 chapter 6.
-[43] [44]
+[41
+
+
+] [42]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[45] [46]
+[43] [44]
 
 LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
 (Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 243.
 
-[47] [48] [49]
+[45] [46] [47]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[50] [51] [52] [53]
+[48] [49] [50] [51]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [54]
-[55]
+ [52]
+[53]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[56] [57]) (./txt/7-discussion.tex [58]
+[54] [55]) (./txt/7-discussion.tex [56]
 chapter 7.
-[59
+[57
 
 
-] [60]
+] [58]
 Underfull \vbox (badness 1163) has occurred while \output is active []
 
- [61])
-(./txt/8-conclusion.tex [62]
+ [59])
+(./txt/8-conclusion.tex [60]
 chapter 8.
-) (./zyx/epilogue.tex [63
+) (./zyx/epilogue.tex [61
 
 
-] [64
+] [62
 
 
 ]
@@ -2626,17 +2630,17 @@ ty-Con-fig-u-ra-tion\T1/jkpl/m/n/10.95 (+20) . May 2025. \T1/jkpl/m/sc/10.95 (+
 20) url\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / /
  []
 
-[65
+[63
 
 
-] [66] [67] [68]
+] [64] [65] [66]
 Underfull \hbox (badness 1337) in paragraph at lines 8--8
 []\T1/jkpl/m/n/10.95 (+20) Shibboleth Con-sor-tium. \T1/jkpl/m/it/10.95 (+20) P
 ro-fil-eRequest-Con-text\T1/jkpl/m/n/10.95 (+20) . \T1/jkpl/m/sc/10.95 (+20) ur
 l\T1/jkpl/m/n/10.95 (+20) : []$\T1/lmtt/m/n/10.95 https : / / shibboleth .
  []
 
-[69]) [70] (out/main.aux)
+[67]) [68] (out/main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
@@ -2648,8 +2652,8 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66616 strings out of 474116
- 1469831 string characters out of 5743682
+ 66614 strings out of 474116
+ 1469817 string characters out of 5743682
  2671570 words of memory out of 5000000
  86920 multiletter control sequences out of 15000+600000
  745378 words of font info for 562 fonts, out of 8000000 for 9000
@@ -2669,10 +2673,10 @@ ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpsya.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
 ublic/lm/lmtlo10.pfb>
-Output written on out/main.pdf (84 pages, 504161 bytes).
+Output written on out/main.pdf (82 pages, 502711 bytes).
 PDF statistics:
- 1539 PDF objects out of 1728 (max. 8388607)
- 1371 compressed objects within 14 object streams
- 297 named destinations out of 1000 (max. 500000)
+ 1529 PDF objects out of 1728 (max. 8388607)
+ 1363 compressed objects within 14 object streams
+ 295 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

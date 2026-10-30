@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  30 OCT 2026 17:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  30 OCT 2026 18:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2566,7 +2566,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [43] [44]
 
 LaTeX Font Warning: Font shape `T1/lmtt/m/it' in size <10> not available
-(Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 243.
+(Font)              Font shape `T1/lmtt/m/sl' tried instead on input line 242.
 
 [45] [46] [47]
 
@@ -2673,7 +2673,7 @@ ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpsya.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
 ublic/lm/lmtlo10.pfb>
-Output written on out/main.pdf (82 pages, 502711 bytes).
+Output written on out/main.pdf (82 pages, 502702 bytes).
 PDF statistics:
  1529 PDF objects out of 1728 (max. 8388607)
  1363 compressed objects within 14 object streams

@@ -17,11 +17,10 @@ log shipping stack.
 Only the backend application of the monitoring tool and the test code run directly on the host. 
 
 Two SPs are deployed, referred to as the weak SP and the clean SP in the following. 
-The weak SP is used for the detection scenarios and is configured to exhibit the weaknesses
+The weak SP is used for the detection scenarios and is configured to exhibit the weaknesses 
 that the rules are intended to identify. 
-The clean SP encrypts its assertions and serves as a reference for
-the false positive rate, since any alert raised for a legitimate login against it is by
-definition a false positive. 
+The clean SP encrypts its assertions and serves as the reference for the false positive rate, 
+since no legitimate login against it should raise an alert. 
 
 The evaluation distinguishes three levels of testing. 
 Unit tests examine individual components in isolation, with their dependencies replaced by

@@ -80,8 +80,8 @@ configuration meaningful at all.
 
 Unlike the log shippers, the two interceptors are custom components developed as part of this work. 
 They are registered as described in Section~\ref{subsec:profile-flows}, the post authentication 
-interceptor through the \texttt{postAuthenticationFlows} property and the outbound interceptor 
-through the \texttt{outboundInterceptorFlows} property~\cite{ProfileInterceptConfiguration}. 
+interceptor through the \textit{postAuthenticationFlows} property and the outbound interceptor 
+through the \textit{outboundInterceptorFlows} property~\cite{ProfileInterceptConfiguration}. 
 
 The post authentication interceptor extends the \texttt{Abstract\allowbreak{}Profile\allowbreak{}Action} 
 API of the Shibboleth IdP and operates on the \texttt{Profile\allowbreak{}Request\allowbreak{}Context}, 
@@ -96,12 +96,10 @@ Further contexts, among them the \texttt{Authentication\allowbreak{}Context} and
 \texttt{SessionContext}, supply information about the authentication flow that was used 
 and the session state at the time of the request~\cite{AuthenticationContext, SessionContext}. 
 
-The outbound interceptor is implemented as a second action class with its own Spring Web Flow 
-subflow, which is registered next to the post authentication interceptor. 
-It is enabled for an SP in \textit{relying-party.xml} through the \textit{outboundInterceptorFlows} 
-property of the profile configuration. 
-The flow contains a single state that calls the action and then proceeds, so that the processing 
-of the profile is not influenced~\cite{ProfileInterceptConfiguration}.
+Like the post authentication interceptor, the outbound interceptor consists of an action class and 
+its own Spring Web Flow subflow. 
+The subflow contains a single state that calls the action and then returns control to the 
+profile~\cite{ProfileInterceptConfiguration}. 
  
 The action reads the outbound message context. 
 If it does not contain a SAML 2 response, the action returns without effect. 
@@ -116,20 +114,20 @@ ciphertext at this point and the IdP holds no key to decrypt it.
 The destination attribute of the response is empty at this hook and is therefore not used. 
 The identifier of the original request, which links the outbound report to the post authentication report, 
 is read from the inbound message context. 
- 
-The outbound report is transmitted by the same mechanism as the post authentication report, including the 
-HMAC over timestamp and payload, as well as the switch between asynchronous and synchronous mode, but 
-to a separate endpoint. 
-The backend stores it in its own index, and not as part of the post authentication report. 
+
+Both reports are transmitted by the same mechanism, but to separate endpoints. 
+Section~\ref{sec:impl-transport} describes this mechanism in more detail. 
+The backend stores each report in its own index. 
 The separation is necessary because the backend treats a second submission with the same identifier 
 as a resubmission of the request and increments a counter that the replay rule evaluates. 
 During development, registering the action of the post authentication interceptor at both hooks produced 
 reports with a submission count of two and would have triggered that rule for every login. 
  
-The audit format of the deployment was extended by three tokens, the identifier of the response, the 
-identifier of the request that it answers and the issue time of the response, so that the response 
-level fields can be compared with the audit entry. 
-The Logstash pipeline already mapped the corresponding tokens to fields.
+Since the audit format is configurable (Section~\ref{subsec:audit-log}), the deployment used in this 
+work was extended by three tokens: the identifier of the response, the identifier of the request that 
+it answers and the issue time of the response. 
+They allow the response-level fields of the outbound report to be compared with the audit entry, as 
+\texttt{FIELD\_\allowbreak{}MISMATCH} requires (Section~\ref{subsec:rules-derivation}). 
 
 The information that each interceptor collects is extracted, parsed and combined into a payload. 
 Before this payload leaves the IdP, the sensitive identifiers it contains are 

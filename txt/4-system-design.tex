@@ -201,11 +201,6 @@ Rather than relying on a fixed set of fields, the correlation must adapt to the 
 that a given deployment provides, which requires a strategy capable of selecting an appropriate 
 matching approach depending on the fields available for a given audit event. 
 
-The audit format of the deployment was extended by the identifier and the issue time of the 
-response and by the identifier of the request that it answers. 
-These tokens make the response level fields that the outbound interceptor reads comparable with 
-the audit entry, as described in Section~\ref{sec:impl-aggregation}.
-
 \subsection{Metadata and Relying Party File}\label{subsec:static-configuration}
 
 SAML metadata, introduced in Section~\ref{subsec:saml-metadata}, describes the entities that 

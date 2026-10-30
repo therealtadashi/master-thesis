@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  30 OCT 2026 10:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  30 OCT 2026 11:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2526,21 +2526,31 @@ File: ./txt/../img/deployment.pdf Graphic file (type pdf)
 <use ./txt/../img/deployment.pdf>
 Package pdftex.def Info: ./txt/../img/deployment.pdf  used on input line 109.
 (pdftex.def)             Requested size: 426.79143pt x 202.92673pt.
-[18] [19 <./txt/../img/deployment.pdf>] [20] [21] [22] [23] [24] [25] [26]
-[27] [28] [29] [30] [31]) (./txt/5-implementation.tex [32]
+[18] [19 <./txt/../img/deployment.pdf>] [20]
+Underfull \vbox (badness 1460) has occurred while \output is active []
+
+ [21]
+[22]
+Underfull \vbox (badness 1163) has occurred while \output is active []
+
+ [23]
+[24] [25] [26]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \vbox (badness 7888) has occurred while \output is active []
+
+ [27]
+Underfull \vbox (badness 4660) has occurred while \output is active []
+
+ [28]
+[29] [30] [31]) (./txt/5-implementation.tex [32]
 chapter 5.
 [33
 
 
-]
-Underfull \vbox (badness 2326) has occurred while \output is active []
-
- [34]
-[35] [36] [37] [38]
-Underfull \vbox (badness 2326) has occurred while \output is active []
-
- [39]
-[40]) (./txt/6-evaluation.tex [41] [42
+] [34] [35] [36] [37] [38] [39] [40]) (./txt/6-evaluation.tex [41] [42
 
 
 ]
@@ -2638,11 +2648,11 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66612 strings out of 474116
- 1469788 string characters out of 5743682
+ 66616 strings out of 474116
+ 1469831 string characters out of 5743682
  2671570 words of memory out of 5000000
  86920 multiletter control sequences out of 15000+600000
- 744925 words of font info for 559 fonts, out of 8000000 for 9000
+ 745378 words of font info for 562 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,20n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/kpfonts/jkplbn8a.pfb><
@@ -2659,10 +2669,10 @@ ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpsya.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
 ublic/lm/lmtlo10.pfb>
-Output written on out/main.pdf (84 pages, 504965 bytes).
+Output written on out/main.pdf (84 pages, 504510 bytes).
 PDF statistics:
- 1538 PDF objects out of 1728 (max. 8388607)
- 1370 compressed objects within 14 object streams
+ 1540 PDF objects out of 1728 (max. 8388607)
+ 1372 compressed objects within 14 object streams
  297 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

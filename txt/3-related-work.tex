@@ -28,11 +28,11 @@ own OpenSAML-based SSO environment and rating its severity with CVSS, which fell
 a mitigation was applied~\cite{VulnerSAMLCloud}. 
 
 A second line of work approaches the problem formally. 
-Sommer analyses the Shibboleth implementation with respect to authentication, session integrity 
+Sommer analyses a model of Shibboleth with respect to authentication, session integrity 
 and logout consistency~\cite{SecAnalysisSSO}, while Hartl and Derek analyse the SAML 
 specification itself~\cite{FormalSecAnalysisSAML}. 
 The latter derive eight protocol variants from the optional features of a single use case and 
-prove the security properties of each separately. 
+verify or falsify the security properties of each separately. 
 Their premise is that SAML is not a security protocol in itself, but a framework whose optional 
 features can be composed in different ways.
 
@@ -88,6 +88,10 @@ It does not verify its security-relevant content, such as certificate validity o
 configuration. 
 Suvanto notes that problems in federation operation are often caused by configuration mistakes or 
 changes that cannot currently be easily detected~\cite{MonitoringAAI}. 
+Suvanto addresses them with login tests, in which a central server logs in to the monitored SPs 
+with test accounts. 
+Such a test reveals a configuration mistake only once it breaks a login. 
+A configuration that is insecure but still works remains unnoticed. 
 This is precisely the gap addressed in this work. 
 The same categories of data that AAIEye already collects for operational purposes are evaluated 
 here for their security semantics instead. 
@@ -113,9 +117,8 @@ cannot independently verify information that is incorrect or has been manipulate
 
 The collection, storage and correlation of log data used in this work correspond to 
 established SIEM functionality. 
-OWASP A09 explicitly recommends centralised logging and monitoring and identifies solutions such 
-as the ELK stack as possible tools for addressing logging and monitoring 
-vulnerabilities~\cite{OWASPA09}.
+OWASP A09 lists logs that are only stored locally as a weakness and names log correlation 
+software such as the ELK stack as a possible solution~\cite{OWASPA09}. 
 
 Therefore, the question changes from how events are analysed to how their underlying sources can 
 be verified. 

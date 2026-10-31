@@ -129,7 +129,7 @@ If the harness is considerably denser than real traffic, D2 overstates how often
 fails. 
 D3 therefore repeats D1 with Chrome driven by Selenium, which loads every page and submits the 
 forms as a browser does, and shows how closely spaced the logins of one user are under real 
-browser timing.
+browser timing. 
 
 D3 still covers only one user. 
 D4 combines the two previous steps: three users log in simultaneously, each through their own 
@@ -142,9 +142,8 @@ This makes it possible to analyse the same data a second time without \textit{us
 to determine whether \textit{ipHash} alone keeps the users apart.
 
 Separate addresses cannot be taken for granted, however. 
-Behind a gateway with network address translation, for instance in a company network, a dormitory 
-or a public wireless network, many users appear under the same address, and \textit{ipHash} no 
-longer distinguishes them. 
+Behind a gateway with network address translation, for instance in a company network, many users 
+appear under the same address and \textit{ipHash} no longer distinguishes them. 
 The separation then rests on \textit{usernameHash} alone. 
 D5 reproduces this case by running three users as threads of a single process, so that all logins 
 originate from one address. 

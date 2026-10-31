@@ -56,8 +56,8 @@ In captured traffic, information that exists only inside the application, such a
 of a SAML assertion or the configuration of an SP, is not visible. 
 This work adopts the principle and applies it inside the Shibboleth IdP itself. 
 
-The principle of passive observation is also reflected in existing application-level 
-monitoring approaches. 
+Placing detection inside the application is also the basis of existing application-level 
+approaches. 
 One relevant architectural precedent is BlackWatch by Hall et al.~\cite{BlackWatch}. 
 BlackWatch applies a similar architecture to generic web applications. 
 Detection points are placed directly within the application to identify security-relevant events. 
@@ -77,7 +77,7 @@ and SAML 2.0-based federations~\cite{MonitoringAAI}.
 Motivated by the lack of effective monitoring solutions for authentication and authorisation 
 infrastructures, AAIEye deploys probes alongside the monitored IdP and SP components. 
 These probes collect two categories of information that closely resemble the sources used in this 
-work: runtime authentication events and federation metadata.
+work: runtime authentication events and federation metadata. 
 
 However, the evaluation applied to this data differs fundamentally. 
 The usage statistics probe records an authentication event only as a data point for a login count, 

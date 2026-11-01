@@ -36,7 +36,7 @@ verify or falsify the security properties of each separately.
 Their premise is that SAML is not a security protocol in itself, but a framework whose optional 
 features can be composed in different ways.
 
-Both approaches establish which configurations are secure under a given set of assumptions. 
+Both formal analyses establish which configurations are secure under a given set of assumptions. 
 Neither verifies whether a deployed system actually satisfies those assumptions. 
 Formal analysis therefore answers which configuration is secure, whereas this work observes 
 which configuration is in effect.
@@ -146,7 +146,8 @@ log entry~\cite{OWASPAppSensor}.
 Snodgrass et al. assume such an attacker in their threat model, who after a successful penetration 
 has access to the database, the operating system and the hardware~\cite{TamperDetection}. 
 
-This makes the correlation of independent event sources more than a technical convenience. 
+The possibility of altered log entries makes the correlation of independent event sources more than 
+a technical convenience. 
 It provides an additional means of identifying inconsistencies between records of the same event. 
 A system that relies solely on log analysis can compare multiple log sources, but if all sources 
 are stored as files on the same system, they remain exposed to an attacker with sufficient 

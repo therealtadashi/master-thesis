@@ -17,8 +17,8 @@ What each source can see is defined by its position in the processing sequence, 
 combination allows comparisons that no single source supports on its own. 
 The configuration describes what is intended for an SP, while the audit log and the interceptors 
 record independently of each other what actually happened. 
-For the second question, the records of a login can be linked reliably as long as the audit log records the 
-identifier of the request or the pseudonymised user and address. 
+For the second question, the records of a login can be linked reliably as long as the audit log records 
+the identifier of the request or the pseudonymised user and address. 
 Only a correlation by time alone fails when logins at the same SP follow each other within less than 100\,ms. 
 The rules correlate observed logins with the declared configuration and compare the records of a login with 
 each other. 

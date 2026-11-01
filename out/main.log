@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  1 NOV 2026 16:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  1 NOV 2026 23:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2585,11 +2585,7 @@ chapter 7.
 [57
 
 
-] [58]
-Underfull \vbox (badness 1163) has occurred while \output is active []
-
- [59])
-(./txt/8-conclusion.tex [60]
+] [58] [59]) (./txt/8-conclusion.tex [60]
 chapter 8.
 ) (./zyx/epilogue.tex [61
 
@@ -2673,7 +2669,7 @@ ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpsya.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
 ublic/lm/lmtlo10.pfb>
-Output written on out/main.pdf (82 pages, 502593 bytes).
+Output written on out/main.pdf (82 pages, 502541 bytes).
 PDF statistics:
  1529 PDF objects out of 1728 (max. 8388607)
  1363 compressed objects within 14 object streams

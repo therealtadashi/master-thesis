@@ -222,8 +222,8 @@ What the IdP intends to do for that SP is defined in the configuration of the de
 notably in \textit{relying-party.xml} (Section~\ref{subsec:config}). 
 Unlike the audit log, both describe not what happened, but what is supposed to happen. 
 
-This file specifies which functional features the IdP supports and allows these settings to be 
-customised based on the identity of a relying party. 
+\textit{relying-party.xml} specifies which functional features the IdP supports and allows these 
+settings to be customised based on the identity of a relying party. 
 It determines which profiles are enabled for a given partner and allows security configurations 
 to be attached at various levels. 
 These include whether assertions and other content are encrypted, at which layer signing is 
@@ -727,7 +727,7 @@ detected information to an operator through a user interface.
 The layer does not generate new information. 
 Instead, it presents the data produced and aggregated by the preceding layers. 
 
-Accordingly, the interface provides visibility into detected findings but does not offer any 
+The interface provides visibility into detected findings but does not offer any 
 functionality for modifying or controlling the IdP. 
 This is a deliberate design decision rather than an omission and implements the second 
 requirement described in Section~\ref{sec:requirements}, which follows from the passive 

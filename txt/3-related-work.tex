@@ -115,14 +115,11 @@ analysis.
 Second, the SIEM generally relies on the information provided by its data sources and therefore 
 cannot independently verify information that is incorrect or has been manipulated at the source. 
 
-The collection, storage and correlation of log data used in this work correspond to 
-established SIEM functionality. 
-OWASP A09 lists logs that are only stored locally as a weakness and names log correlation 
-software such as the ELK stack as a possible solution~\cite{OWASPA09}. 
-
-Therefore, the question changes from how events are analysed to how their underlying sources can 
-be verified. 
-In this context, Wazuh is particularly relevant, as it combines log analysis with file integrity 
+The collection, storage and correlation of log data used in this work correspond to established 
+SIEM functionality~\cite{NIST80092}. 
+What remains open is the second limitation, namely how the sources underlying the events can be 
+verified. 
+In this context, Wazuh is particularly relevant, as it combines log analysis with file integrity
 monitoring and security configuration assessment. 
 This addresses both event-based analysis and the verification of the system state~\cite{WazuhDocumentation}. 
 However, these mechanisms mainly focus on configuration and file state rather than the relationship 
@@ -142,8 +139,8 @@ CWE-117 describes the underlying mechanism: input that is written to a log witho
 allows an attacker to insert forged entries and thereby mislead subsequent analysis~\cite{CWE117}. 
 An attacker who has gained access to the system can go further and alter entries that have already 
 been written. 
-OWASP A09 lists insufficient protection of logs against tampering as a weakness and recommends audit 
-trails with integrity controls to prevent tampering or deletion~\cite{OWASPA09}. 
+OWASP A09 lists logs that are only stored locally and logs that are not protected against 
+tampering as weaknesses, and recommends audit trails with integrity controls~\cite{OWASPA09}. 
 AppSensor dedicates a detection point to this issue (IE6), which involves modifying an existing 
 log entry~\cite{OWASPAppSensor}. 
 Snodgrass et al. assume such an attacker in their threat model, who after a successful penetration 

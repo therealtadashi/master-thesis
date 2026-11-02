@@ -609,8 +609,9 @@ that the relative overhead turns out larger rather than smaller.
 Each login uses a fresh client with an empty cookie store, so that it passes through the complete 
 authentication without reusing a session, and the next login starts as soon as the previous one has 
 completed. 
-The series comprises 18 runs, each of which measures all three configurations, which yields 54 
-measurements. 
+The performance series comprises 18 runs, each of which measures all three configurations one 
+after another, which yields 54 measurements. 
+The runs use all six possible orders of the three configurations, each three times. 
 For every measurement, the IdP container is recreated with the settings of the configuration, and 
 a single check login verifies that the configuration is in effect by testing whether the expected 
 reports arrive at the backend. 
@@ -620,13 +621,12 @@ The backend runs during all measurements, including the baseline, so that the en
 same, and a pause of four minutes after each measurement gives it time to process the records. 
 The whole series took about five hours and comprised 10{,}854 logins.
 
-Within a session, later measurements tended to be slower than earlier ones. 
-In this series, the third position of a run was on average about 10\,ms slower than the first, 
-which is of the same order as the effects to be measured, although the difference is not 
-statistically established. 
-As a precaution against attributing such a drift to a configuration, the order of the 
-configurations is rotated between runs, so that each configuration occupies each of the three 
-positions six times. 
+Within a run, later measurements tended to be slower than earlier ones. 
+In this series, the third position was on average about 10\,ms slower than the first. 
+That is about as large as the effects to be measured, even though the difference is not 
+statistically significant. 
+Since every configuration occupies each of the three positions six times, such a drift cannot be 
+attributed to a configuration. 
 
 \paragraph{Analysis.}
 The run, not the individual login, is the unit of the analysis. 

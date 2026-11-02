@@ -2459,7 +2459,7 @@
     <bcf:citekey order="109" intorder="1">EAPeduroam</bcf:citekey>
     <bcf:citekey order="110" intorder="1">MonitoringAAI</bcf:citekey>
     <bcf:citekey order="111" intorder="1">UEBAFederation</bcf:citekey>
-    <bcf:citekey order="112" intorder="1">OWASPA09</bcf:citekey>
+    <bcf:citekey order="112" intorder="1">NIST80092</bcf:citekey>
     <bcf:citekey order="113" intorder="1">WazuhDocumentation</bcf:citekey>
     <bcf:citekey order="114" intorder="1">TamperDetection</bcf:citekey>
     <bcf:citekey order="115" intorder="1">CryptoSupportSecureLogs</bcf:citekey>

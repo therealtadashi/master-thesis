@@ -534,11 +534,10 @@ establishes that the two records disagree, not which of them was altered.
 With Filebeat stopped, the report of the login was marked as expired after the waiting period and 
 raised a \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} alert, while the report of a regular login 
 was correlated and raised none. 
-An audit entry that arrives only after the waiting period is no longer correlated, so that the 
-alert remains although the record exists. 
-This requires a delay that is longer than the configurable waiting period. 
-Such a delay can occur, for example, during an interruption to the log shipping stack. 
-In the performance series, no report expired (Section~\ref{subsec:eval-correlation-results}). 
+An audit entry that arrives only after the configurable waiting period is no longer correlated, so 
+that the alert remains although the record exists. 
+This can happen, for example, during an interruption to the log shipping stack. 
+In the performance series, no report expired (Section~\ref{subsec:eval-correlation-results}).
 
 \paragraph{The results establish the fidelity of the implementation, not its detection quality in production.}
 The rules were derived from documented weaknesses and requirements (Section~\ref{subsec:rules-derivation}), and 
@@ -551,12 +550,12 @@ That would require production logins labelled as legitimate or malicious indepen
 rules, which no test environment can produce. 
 
 \section{Performance Overhead}\label{sec:overhead}
- 
-The two interceptors run inside the IdP, the post authentication interceptor as a 
-\textit{post\allowbreak{}Authentication\allowbreak{}Flow} and the outbound interceptor as an 
-\textit{outbound\allowbreak{}Interceptor\allowbreak{}Flow}. 
-Both therefore lie on the critical path of every login, so that any time they take is added to the 
-time a user waits for access to the SP, and any processor time they use is taken from the IdP. 
+
+The two interceptors run inside the IdP, at the post authentication and the outbound hook 
+(Section~\ref{subsec:interceptor}). 
+Both therefore lie on the critical path of every login. 
+The time they require increases the authentication latency experienced by the user, while the 
+processor time they consume adds to the IdP's computational load. 
 The evaluation addresses two questions. 
 The first is how much the interceptors add to a login, in latency and in processor time, in the 
 configuration intended for production. 
@@ -564,9 +563,10 @@ The second concerns the way in which they transmit their records.
 As described in Section~\ref{sec:impl-transport}, they send them without waiting for a response, 
 so that a login does not depend on the backend. 
 A failed transmission is only recorded in the log of the IdP, and the record is not sent again. 
-Waiting for a confirmation would allow the login to react to such a failure, and the second 
-question is what waiting would cost and whether the choice of fire-and-forget transmission is 
-justified.
+Waiting for an acknowledgement would allow the login process to detect transmission failures, but would 
+also introduce additional latency. 
+The evaluation therefore measures the latency overhead of waiting for an acknowledgement and assesses 
+whether fire-and-forget transmission provides a reasonable trade-off. 
 
 Three configurations are compared. 
 In \textit{baseline}, neither interceptor is configured for the SP, so that a login runs as in an 

@@ -706,16 +706,21 @@ at the 90th percentile.
 
 \paragraph{Asynchronous transmission costs processor time, and waiting does not save it.}
 In the asynchronous configuration, the IdP spends 28\,ms more processor time on a login than in the 
-baseline, with a 95 percent confidence interval from 19 to 37\,ms. 
-This is 22 percent of the 126\,ms that a login costs without interceptors. 
-The synchronous configuration shows a lower utilisation than the asynchronous one because it 
-completes fewer logins per second, 2.36 instead of 2.71, since each login waits for the backend. 
-Per login, however, it does not use less processor time than the asynchronous configuration. 
-The additional processor time does not show in the latency of the asynchronous configuration because 
-the transmission runs in background threads. 
-At the load of the test it occupies less than half a percent of the 16 logical processors of the host, but it 
-grows with the number of logins, so that 50 logins per second at a peak would require about 1.4 
-additional logical processors.
+baseline. 
+The 95 percent confidence interval ranges from 19 to 37\,ms. 
+Since even its lower end lies above zero, the additional processor time cannot be explained by 
+chance. 
+It amounts to 22 percent of the 126\,ms that a login costs without interceptors. 
+The cost does not appear in the latency, because the transmission runs in background threads. 
+At the load of the test, the additional processor time occupies less than half a percent of the 16 
+logical processors of the host. 
+It grows with the number of logins, however, so that a peak of 50 logins per second would require 
+about 1.4 additional logical processors. 
+
+At first sight, the synchronous configuration appears cheaper, since the IdP is less busy. 
+This is only because it completes fewer logins per second, 2.36 instead of 2.71, as each login waits 
+for the backend. 
+Per login, it even uses about 12\,ms more processor time than the asynchronous configuration. 
 
 In the configuration intended for production, the interceptors therefore add no measurable latency 
 and about 28\,ms of processor time to a login, which answers the first question. 

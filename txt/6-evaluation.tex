@@ -525,19 +525,20 @@ These figures apply to the two SP configurations and to the login flow of the te
 \paragraph{The comparison rules detect an altered or a missing record.} 
 In the manipulation scenario, the backend matched the post authentication report to the altered 
 audit entry through the unchanged inbound message identifier. 
-The consistency check then raised a \texttt{FIELD\_\allowbreak{}MISMATCH} alert of high severity 
-that named the altered field.
-The check thus detects a contradiction between two independently produced records of the same 
-login. 
+The consistency check then raised a \texttt{FIELD\_\allowbreak{}MISMATCH} alert that named the altered field. 
+The check thus detects a contradiction between two independently produced records of the same login. 
 Since only one field of a single entry was altered, the test shows that the mechanism works, not how 
 reliably it detects manipulations in general. 
 A manipulation can only become visible in the fields that the check compares, and the check 
 establishes that the two records disagree, not which of them was altered. 
 With Filebeat stopped, the report of the login was marked as expired after the waiting period and 
 raised a \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} alert, while the report of a regular login 
-was correlated and raised none.
-An audit entry that arrives only afterwards, for instance because of a delay in the log shipping 
-stack, is no longer correlated, so that the alert remains although the record exists. 
+was correlated and raised none. 
+An audit entry that arrives only after the waiting period is no longer correlated, so that the 
+alert remains although the record exists. 
+This requires a delay that is longer than the configurable waiting period. 
+Such a delay can occur, for example, during an interruption to the log shipping stack. 
+In the performance series, no report expired (Section~\ref{subsec:eval-correlation-results}). 
 
 \paragraph{The results establish the fidelity of the implementation, not its detection quality in production.}
 The rules were derived from documented weaknesses and requirements (Section~\ref{subsec:rules-derivation}), and 

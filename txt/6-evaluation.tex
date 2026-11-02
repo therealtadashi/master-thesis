@@ -736,7 +736,6 @@ After the missing identifier had been added to the audit format, the exact strat
 itself while the system was running, without a restart, as intended by the dynamic field adaptation 
 of Section~\ref{sec:impl-aggregation}. 
 All six defects were corrected, and the results in this chapter refer to the corrected system. 
-What this pattern means for the monitoring of an IdP is discussed in Section~\ref{sec:interpretation}.
 
 \begin{table}[h]
 \centering
@@ -826,9 +825,11 @@ rest on the integration test, which passes its input directly to the rule engine
 In production, the input of \texttt{MFA\_\allowbreak{}BYPASS} arrives through the log shipping stack, 
 and that of \texttt{SIGNATURE\_\allowbreak{}WRAPPING\_\allowbreak{}SUSPECTED} with the post 
 authentication report. 
-A fault on either path, such as the one in Logstash described in Section~\ref{sec:defects}, would 
-remain undetected for these two rules if it only affected fields that none of the rules with an 
-end-to-end test reads. 
-For the two replay rules, the same applies to the true positive case.
+A fault on either path, such as the Logstash defect in Section~\ref{sec:defects}, would only be 
+noticed if it also affected a field that a rule with an end-to-end test reads. 
+A fault that only affects, for instance, the authentication flow in the audit entry or the raw SAML 
+request in the report would remain undetected. 
+The two replay rules are tested end-to-end only for the absence of an alert, so the same applies 
+to their detection. 
 
 \end{document}

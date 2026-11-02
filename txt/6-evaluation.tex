@@ -558,12 +558,12 @@ stack, is no longer correlated, so that the alert remains although the record ex
 \paragraph{The results establish the fidelity of the implementation, not its detection quality in production.}
 The rules were derived from documented weaknesses and requirements (Section~\ref{subsec:rules-derivation}), and 
 the scenarios reproduce the conditions that the rules describe. 
-The results therefore show that the implementation behaves as specified: every rule raises its 
-alert when its condition occurs, and legitimate logins remain without false alarms. 
+The results therefore show that the implementation behaves as specified. 
+Specifically, every rule raises its alert when its condition occurs, and legitimate logins remain without false alarms. 
 How often the rules detect real attacks in production, and how many of their alerts would be false 
 for production traffic with its unusual but legitimate configurations, cannot be derived from them. 
 That would require production logins labelled as legitimate or malicious independently of the 
-rules, which no test environment can produce.
+rules, which no test environment can produce. 
 
 \section{Performance Overhead}\label{sec:overhead}
  

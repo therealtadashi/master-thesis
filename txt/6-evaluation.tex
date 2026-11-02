@@ -632,10 +632,10 @@ attributed to a configuration.
 The run, not the individual login, is the unit of the analysis. 
 The hundred logins of a measurement share the same JVM, the same container and the same load, so 
 that they are not independent observations. 
-The medians of different runs differ considerably more than the scatter of the logins within a run 
-would suggest, so that treating the logins as independent would overstate the precision.
-Each measurement therefore contributes the median of its hundred logins and its processor time per 
-login, which yields 18 values per configuration. 
+The results vary considerably more between runs than between the logins of one run. 
+Treating each login as an independent observation would therefore overstate the precision. 
+Each measurement is instead summarised by the median of its hundred logins and by its processor 
+time per login, which yields 18 values per configuration. 
 The slower logins are described by the 90th percentile of each measurement. 
 The differences between the configurations are estimated with a linear model that accounts for 
 the run and the position within the run besides the configuration, and they are reported with their 
@@ -643,7 +643,7 @@ the run and the position within the run besides the configuration, and they are 
 As a simple check, the number of runs in which one configuration was slower than the other is 
 counted as well. 
 With 18 runs, the confidence intervals of the latency differences have a half width of about 
-11\,ms, so that smaller differences cannot be distinguished from zero.
+11\,ms, so that smaller differences cannot be distinguished from zero. 
 
 \subsection{Results}\label{subsec:eval-overhead-results}
 

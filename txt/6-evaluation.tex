@@ -501,8 +501,7 @@ In the 100 logins at the clean SP, none of the logins raised an alert, and in th
 weak SP, where the alerts caused by its weaknesses are expected, no 
 \texttt{FIELD\_\allowbreak{}MISMATCH} was raised. 
 In all 200 logins, the post authentication report was correlated with its audit entry through the 
-inbound message identifier, and the consistency check passed, with five compared fields at the 
-clean SP and ten at the weak SP (Table~\ref{tab:consistency-fp}). 
+inbound message identifier, and the consistency check found no mismatch. 
 No false alarm in 100 logins does not prove that false alarms cannot occur, but it makes a rate 
 above 3.7 percent per SP unlikely, with 95 percent confidence according to the Wilson 
 interval~\cite{Wilson}. 
@@ -519,24 +518,9 @@ all of them expected: one \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and one
 addresses the weak SP and is not a browser, and four configuration alerts. 
 Since these two rules report every affected login rather than the condition once, a persistent 
 weakness of an SP produces one alert per login. 
-None of the alerts was a \texttt{FIELD\_\allowbreak{}MISMATCH} or 
-\texttt{CORRELATION\_\allowbreak{}DISCREPANCY} alert, although the 7{,}236 logins with active 
-interceptors passed through the consistency check. 
+All 7{,}236 logins with active interceptors were correlated and passed the consistency check, 
+without a single \texttt{FIELD\_\allowbreak{}MISMATCH} or \texttt{CORRELATION\_\allowbreak{}DISCREPANCY} alert. 
 These figures apply to the two SP configurations and to the login flow of the test environment. 
-
-\begin{table}[h]
-\centering
-\caption{Consistency check for legitimate logins}\label{tab:consistency-fp}
-\small
-\begin{tabular}{lrrrr}
-\toprule
-SP & Logins & Fields compared & Mismatches & Upper bound (95\,\%) \\
-\midrule
-Clean SP & 100 & 5  & 0 & 3.7\,\% \\
-Weak SP  & 100 & 10 & 0 & 3.7\,\% \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 \paragraph{The comparison rules detect an altered or a missing record.} 
 In the manipulation scenario, the backend matched the post authentication report to the altered 

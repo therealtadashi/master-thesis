@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  2 NOV 2026 15:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.1)  2 NOV 2026 17:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2485,7 +2485,7 @@ chapter 2.
 
 pdfTeX warning: pdflatex (file ./txt/../img/sp-init-sso.pdf): PDF inclusion: fo
 und PDF version <1.7>, but at most version <1.5> allowed
-<./txt/../img/sp-init-sso.pdf, id=348, 408.39575pt x 329.36049pt>
+<./txt/../img/sp-init-sso.pdf, id=346, 408.39575pt x 329.36049pt>
 File: ./txt/../img/sp-init-sso.pdf Graphic file (type pdf)
 <use ./txt/../img/sp-init-sso.pdf>
 Package pdftex.def Info: ./txt/../img/sp-init-sso.pdf  used on input line 162.
@@ -2517,7 +2517,7 @@ en-ti-cated trans-port and pseudonymi-
 
 pdfTeX warning: pdflatex (file ./txt/../img/deployment.pdf): PDF inclusion: fou
 nd PDF version <1.7>, but at most version <1.5> allowed
-<./txt/../img/deployment.pdf, id=550, 1129.33919pt x 536.96606pt>
+<./txt/../img/deployment.pdf, id=548, 1129.33919pt x 536.96606pt>
 File: ./txt/../img/deployment.pdf Graphic file (type pdf)
 <use ./txt/../img/deployment.pdf>
 Package pdftex.def Info: ./txt/../img/deployment.pdf  used on input line 109.
@@ -2568,15 +2568,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[52] [53]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[54]
-Underfull \vbox (badness 5302) has occurred while \output is active []
-
- [55])
-(./txt/7-discussion.tex [56]
+[52] [53] [54] [55]) (./txt/7-discussion.tex [56]
 chapter 7.
 [57
 
@@ -2644,10 +2636,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 66610 strings out of 474116
- 1469770 string characters out of 5743682
- 2671570 words of memory out of 5000000
- 86920 multiletter control sequences out of 15000+600000
+ 66607 strings out of 474116
+ 1469709 string characters out of 5743682
+ 2671465 words of memory out of 5000000
+ 86918 multiletter control sequences out of 15000+600000
  744925 words of font info for 559 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  125i,20n,145p,10977b,3577s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2665,10 +2657,10 @@ ist/fonts/type1/public/kpfonts/jkpssbn8a.pfb></usr/local/texlive/2024/texmf-dis
 t/fonts/type1/public/kpfonts/jkpsya.pfb></usr/local/texlive/2024/texmf-dist/fon
 ts/type1/public/lm/lmtl10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/p
 ublic/lm/lmtlo10.pfb>
-Output written on out/main.pdf (82 pages, 502570 bytes).
+Output written on out/main.pdf (82 pages, 502019 bytes).
 PDF statistics:
- 1529 PDF objects out of 1728 (max. 8388607)
- 1363 compressed objects within 14 object streams
- 295 named destinations out of 1000 (max. 500000)
+ 1525 PDF objects out of 1728 (max. 8388607)
+ 1359 compressed objects within 14 object streams
+ 294 named destinations out of 1000 (max. 500000)
  120876 words of extra memory for PDF output out of 128383 (max. 10000000)
 

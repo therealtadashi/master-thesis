@@ -679,27 +679,30 @@ a lower bound, but it shows that collecting the data does not weigh on the login
 Any larger difference between the configurations must therefore stem from building and sending the reports. 
 
 \paragraph{Asynchronous transmission adds no latency that the experiment can distinguish from zero.}
-A median login takes 6.2\,ms longer than in the baseline, and the 95 percent confidence interval 
-ranges from $-4.7$ to $+17.1$\,ms and thus includes zero. 
-In twelve of the 18 runs the asynchronous configuration was the slower one, which is a weak 
-tendency but not an established effect. 
-The slower logins behave in the same way, with a difference of 8.1\,ms at the 90th percentile and 
-an upper bound of 22\,ms, or 5.2 percent. 
-With 95 percent confidence, the overhead therefore lies below 17.1\,ms, or 4.8 percent of a median 
-login. 
-Smaller effects, such as the point estimate suggests, are below the resolution of the experiment.
+A median login takes 6.2\,ms longer than in the baseline. 
+This difference alone does not show an overhead, since the individual runs vary by more than that. 
+The 95 percent confidence interval ranges from $-4.7$ to $+17.1$\,ms. 
+Since it contains zero, the measurements are consistent with no overhead at all. 
+At the same time, its upper end shows that the overhead is at most about 17\,ms, or 4.8 percent 
+of a median login. 
+A comparison of the individual runs leads to the same result. 
+Without any overhead, about half of the 18 runs would be slower than the baseline by chance alone, 
+and with 12 slower runs the asynchronous configuration remains within this range. 
+The slower logins show the same picture, with a difference of 8.1\,ms at the 90th percentile and an 
+upper bound of 22\,ms. 
 
 \paragraph{Synchronous transmission adds about 60 milliseconds to every login.}
-A median login takes 59.6\,ms or 16.7 percent longer than in the baseline, with a 95 percent 
-confidence interval from $+48.7$ to $+70.4$\,ms, and the synchronous configuration was the slower 
-one in all 18 runs. 
+A median login takes 59.6\,ms, or 16.7 percent, longer than in the baseline. 
+The 95 percent confidence interval ranges from $+48.7$ to $+70.4$\,ms. 
+Since it lies entirely above zero, the overhead is clearly established. 
+The synchronous configuration was also slower than the baseline in all 18 runs. 
 Compared with the asynchronous configuration, the difference is 53.4\,ms. 
-Since every login contains two blocking transmissions, each of them costs roughly 27 to 30\,ms. 
-The slower logins are affected more strongly, as the difference grows to 92.0\,ms or 21.6 percent at 
-the 90th percentile. 
 Since both configurations build and send the same reports, this difference is the time spent 
 waiting, during which the backend validates each report and stores it in Elasticsearch before it 
 answers. 
+Every login contains two blocking transmissions, so each of them costs roughly 27 to 30\,ms. 
+The slower logins are affected more strongly, as the difference grows to 92.0\,ms, or 21.6 percent, 
+at the 90th percentile. 
 
 \paragraph{Asynchronous transmission costs processor time, and waiting does not save it.}
 In the asynchronous configuration, the IdP spends 28\,ms more processor time on a login than in the 

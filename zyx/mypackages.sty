@@ -128,7 +128,10 @@ captionpos=b, float=htbp, xleftmargin=2em,frame=single,framexleftmargin=1.5em, b
 % Situation sensitive spacing at the end of commands
 \usepackage{xspace}
 % literature references
-\usepackage[style=numeric-comp,uniquename=init, maxcitenames=2, minbibnames=5, maxbibnames=5, giveninits=true]{biblatex}
+\usepackage[style=numeric-comp,uniquename=init, maxcitenames=2, minbibnames=5, maxbibnames=5, giveninits=true, giveninits=true, urldate=iso, seconds=false]{biblatex}
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
 % other styles suitable: ieee alphabetic-verb numeric-comp [Just try them^^]
 % Prevent line break at before citation number in textcite
 \renewcommand\namelabeldelim{\addnbspace}

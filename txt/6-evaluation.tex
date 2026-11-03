@@ -67,10 +67,10 @@ datasets that differ in the number of users and in the login generator.
 \paragraph{Ground truth.}
 To determine the precision of the heuristic strategies, a reference is required that indicates 
 whether a given correlation was correct. 
-The correlation via \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} establishes a 
-one-to-one relationship, since the identifier is unique per request. 
-Wherever this strategy produced a match, the correct counterpart is therefore known without 
-ambiguity, which allows it to serve as a ground truth for the heuristic strategies. 
+The exact strategy establishes a one-to-one relationship, since the inbound message identifier is 
+unique per request. 
+Wherever it produced a match, the correct counterpart is therefore known without ambiguity, which 
+allows it to serve as a ground truth for the heuristic strategies. 
 An analysis program in the test sources of the backend proceeds as follows:
 
 \begin{itemize}

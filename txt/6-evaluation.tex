@@ -185,9 +185,9 @@ Section~\ref{subsec:impl-correlation}, which marks reports without a counterpart
 uncorrelated after a waiting period, so that a lost report can be told apart from one that is still 
 waiting. 
 The heuristics, too, assigned every report in all five datasets, even with the smallest window of $\pm$1\,s. 
-This follows from the offsets in Table~\ref{tab:correlation-offset}: a report arrives at most about 
-160\,ms before or after the event time of its audit entry, so that the correct entry always lies 
-within the window. 
+In the four datasets in which the offset was recorded, a report arrived at most 158\,ms before and 
+at most 110\,ms after the event time of its audit entry (Table~\ref{tab:correlation-offset}). 
+The correct entry therefore always lay within the window. 
 Where a heuristic fails, it therefore assigns a report to the wrong counterpart rather than to none, 
 which is why the following paragraphs concern precision.
 
@@ -209,8 +209,8 @@ The default of $\pm$10\,s covers both with a wide margin, at the price of examin
 6.4 candidates per report in D1. 
 
 \paragraph{Without the hashes, wrong assignments occur only between logins less than 100\,ms apart.}
-\texttt{TIME\_\allowbreak{}WINDOW} reached 65.0 percent in D2, 73.7 percent in D5 and 89.9 percent 
-in D4. 
+\texttt{TIME\_\allowbreak{}WINDOW} reached a precision of 65.0 percent in D2, 73.7 percent in D5 and 
+89.9 percent in D4. 
 Table~\ref{tab:correlation-density} breaks these figures down by the distance of each login to the 
 nearest other login at the same SP, with the number of logins in each range in parentheses. 
 All wrong assignments concern logins with a distance below 100\,ms. 
@@ -256,15 +256,16 @@ Share below 100\,ms & 86.8\%     & 0\%         & 22.8\%       & 84.0\%       \\
 \end{table}
 
 \paragraph{Real browser traffic reaches this zone far less often.}
-With a single browser user (D3), every login lay more than one second away from the next, and a 
-window of $\pm$1\,s contained on average one candidate instead of 6.4 with the harness. 
+With a single browser user (D3), consecutive logins were always more than one second apart. 
+A window of $\pm$1\,s therefore contained one candidate on average, compared with 6.4 in the same 
+scenario with the harness (D1). 
 Even with three users logging in simultaneously through browsers (D4), less than a quarter of the 
 logins fell below 100\,ms. 
 The weakness of \texttt{TIME\_\allowbreak{}WINDOW} is thus not an artefact of the harness, since it 
 is just as pronounced within the zone, but the harness reaches the zone far more often than browser 
 traffic does. 
 How often a production IdP reaches it depends on its load at peak times and cannot be derived from 
-the test environment.
+the test environment. 
 
 \paragraph{Each hash covers the case in which the other one is uninformative.}
 In D4, every user had an address of their own. 
@@ -284,8 +285,10 @@ identifiers distinguishes the users, and it falls back to the density dependence
 Table~\ref{tab:correlation-offset} shows the offset between the reception of a report and the event 
 time of its audit entry. 
 This was not recorded for D2. 
-It is mostly negative, by about 30\,ms, because the post authentication interceptor runs in the 
-middle of the profile flow, whereas \texttt{\%T} marks the completion of the transaction. 
+The offset is mostly negative, by about 30\,ms, which means that the report arrives before the 
+event time of its audit entry. 
+The reason is that the post authentication interceptor runs in the middle of the profile flow, 
+whereas the event time marks the completion of the transaction. 
 Since the heuristics select the entry closest to the reception time, a neighbouring login can only 
 be selected instead of the correct one if the two lie closer together than twice the largest 
 absolute offset (last column). 
@@ -299,7 +302,7 @@ strategy fails in dense traffic.
 The bound is conservative, since wrong assignments were only observed below 100\,ms. 
 All offsets were measured on a single host, where the IdP and the backend share one clock. 
 On separate hosts, the difference between the clocks adds to the offset and lowers the limit, so 
-that the offset, which the analysis records, has to be measured again in a different environment.
+that the offset, which the analysis records, has to be measured again in a different environment. 
 
 \begin{table}[h]
 \centering
@@ -322,8 +325,8 @@ identifier or at least one separating hash, it found the correct one in every te
 Only an audit log that records neither the identifier nor the hashes leaves the correlation to time 
 alone, and it then assigns reports to the wrong entry where logins at the same SP follow each other 
 within less than 100\,ms. 
-Operators should therefore record \texttt{\%I} in the audit format or, where that is not possible, 
-at least the subject and the address.
+Operators should therefore record the inbound message identifier in the audit format or, where 
+that is not possible, at least the subject and the address. 
 
 \section{Detection}\label{sec:eval-detection}
 

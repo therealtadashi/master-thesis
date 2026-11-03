@@ -20,8 +20,7 @@ record independently of each other what actually happened.
 For the second question, the records of a login can be linked reliably as long as the audit log records 
 the identifier of the request or the pseudonymised user and address. 
 Only a correlation by time alone fails when logins at the same SP follow each other within less than 100\,ms. 
-The rules correlate observed logins with the declared configuration and compare the records of a login with 
-each other. 
+The rules compare observed logins with the declared configuration and the records of a login with each other. 
 All of them behaved as specified in the tested scenarios. 
 For the third question, asynchronous transmission introduced no measurable latency overhead. 
 The cost appears as processor time instead. 

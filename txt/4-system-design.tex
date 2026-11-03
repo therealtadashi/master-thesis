@@ -131,7 +131,7 @@ is accessible through defined extension points, it exposes status endpoint and i
 instance via Java Management Extensions~\cite{MetricsConfiguration}. 
 
 Not all of these are suitable for the purpose of this work. 
-The system described here associates every finding to the logins it affects, since a weakness or an 
+The system described here relates every finding to the logins it affects, since a weakness or an 
 attack is only meaningful in the context of the transactions in which it occurs. 
 A channel that cannot be related to a single login therefore cannot contribute to correlation or detection. 
 
@@ -360,6 +360,8 @@ convenience.
 What the separation protects is the data that has already been transmitted. 
 An attacker who gains control of the IdP can influence which records are produced from that point 
 onward, but not those that have already left the system. 
+This holds as long as the collecting components can only add records to the backend, but not 
+change or delete stored ones. 
 The independence is thus temporal rather than absolute. 
 
 This design decision has consequences. 
@@ -490,7 +492,8 @@ Once the data has been stored, the detection layer evaluates it against a catalo
 Each rule describes a condition that indicates a weakness or an attack and reports a finding when 
 this condition is met. 
 Since the conditions are defined explicitly rather than learned from data, every finding can be 
-traced back to its rule and to a documented weakness or requirement (Table~\ref{tab:rules}). 
+traced back to the rule that produced it. 
+The sources from which the rules are derived are described in Section~\ref{subsec:rules-derivation}.
 
 The rules do not all operate on the same kind of input. 
 Four input types occur in this system: login events derived from the audit log, the configuration 

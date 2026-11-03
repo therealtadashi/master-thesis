@@ -50,6 +50,7 @@ Section~\ref{subsec:impl-correlation} described the correlation mechanism, which
 post authentication report to the audit entry of the same login. 
 It first tries \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} and falls back to two 
 heuristic strategies where the identifier is not available. 
+This strategy referred to as the exact strategy in the following. 
 Both heuristics query the audit entries of the same SP within a time window around the report. 
 \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} additionally requires the 
 same \textit{usernameHash} and \textit{ipHash}, whereas \texttt{TIME\_\allowbreak{}WINDOW} relies 
@@ -404,9 +405,9 @@ At the clean SP, three users log in alternately, 100 times in total, and after a
 100 seconds, in which the scheduler evaluates all entries, none of the logins may have raised an alert. 
 Since every alert in this run would be a false alarm, the run is at the same time a true negative 
 test for every rule that can react to a login. 
-The same run against the weak SP tests the consistency check in the presence of the alerts that the 
-weaknesses of this SP rightly cause. 
-In this run, no \texttt{FIELD\_\allowbreak{}MISMATCH} alert may arise. 
+The same run is repeated at the weak SP. 
+There, its weaknesses are expected to raise alerts, but the consistency check must not report a 
+\texttt{FIELD\_\allowbreak{}MISMATCH}. 
 In addition, a single legitimate login at the clean SP provides end-to-end true negative tests for eight 
 rules, among them the two replay rules, for which no true positive scenario exists at this level. 
 

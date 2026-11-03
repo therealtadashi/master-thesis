@@ -7,7 +7,7 @@
 This chapter evaluates the proposed monitoring system. 
 It presents the test setup, evaluates the correlation and detection capabilities, 
 measures the performance overhead introduced by the interceptors, lists the defects that the 
-evaluation uncovered and concludes with a discussion of the threats to validity.
+evaluation uncovered and concludes with a discussion of the threats to validity. 
 
 \section{Test Setup}\label{sec:setup}
 
@@ -35,7 +35,7 @@ by the IdP and submitting them without rendering the pages.
 Selenium based tests drive an actual browser through the same sequence. 
 The two differ in the interval between consecutive logins, since the harness proceeds as fast 
 as the server responds whereas a browser adds the time required for page loading and form 
-interaction.
+interaction. 
 This difference is relevant for the correlation measurements in Section~\ref{sec:eval-correlation},
 where the temporal density of logins determines how reliably records can be matched. 
 
@@ -333,7 +333,7 @@ instance an assertion that was sent unencrypted or a series of failed logins for
 Two rules compare records that were produced independently of each other (\texttt{FIELD\_\allowbreak{}MISMATCH} 
 and \texttt{CORRELATION\_\allowbreak{}DISCREPANCY}). 
 
-This section examines whether each rule behaves as specified, that is whether it raises an alert 
+This section examines whether each rule behaves as specified, that is, whether it raises an alert 
 when the condition it examines occurs and remains silent when it does not. 
 Since no production logins with a known classification are available, the rules are tested in 
 scenarios whose expected outcome is fixed in advance, on the test levels introduced in Section~\ref{sec:setup}. 
@@ -370,8 +370,8 @@ load.
 Every rule has at least one scenario at the integration level that contains the condition it is 
 meant to detect. 
 For most rules this is a single prepared input, such as an audit entry that records an unencrypted 
-assertion or a SAML request with two signature elements, a typical trace of a signature wrapping 
-attack, which the rule treats as a possible signature wrapping attempt~\cite{BreakingSAML}. 
+assertion or a SAML request with two signature elements, which the rule treats as a possible signature 
+wrapping attempt~\cite{BreakingSAML}. 
 Rules that depend on history receive it in the same way. 
 
 At the end-to-end level, eight rules are triggered by a login in the browser. 
@@ -405,8 +405,8 @@ At the clean SP, three users log in alternately, 100 times in total, and after a
 Since every alert in this run would be a false alarm, the run is at the same time a true negative 
 test for every rule that can react to a login. 
 The same run against the weak SP tests the consistency check in the presence of the alerts that the 
-weaknesses of this SP rightly cause, so that there no \texttt{FIELD\_\allowbreak{}MISMATCH} alert may 
-arise. 
+weaknesses of this SP rightly cause. 
+In this run, no \texttt{FIELD\_\allowbreak{}MISMATCH} alert may arise. 
 In addition, a single legitimate login at the clean SP provides end-to-end true negative tests for eight 
 rules, among them the two replay rules, for which no true positive scenario exists at this level. 
 
@@ -474,7 +474,7 @@ Rule & End-to-end & Trigger or reason \\
 \end{table}
 
 \paragraph{Every rule is tested against a real Elasticsearch instance, and thirteen are also tested end-to-end.} 
-All fifteen rules have a true positive test on the unit and on the integration level, so that for 
+All fifteen rules have a true positive test at the unit and the integration level, so that for 
 every rule the queries, the index mapping and the stored documents are covered and not only the 
 detection logic. 
 The test suite comprises 118 unit tests for the rules, 21 integration tests and 18 end-to-end 

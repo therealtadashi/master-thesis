@@ -185,9 +185,9 @@ Section~\ref{subsec:impl-correlation}, which marks reports without a counterpart
 uncorrelated after a waiting period, so that a lost report can be told apart from one that is still 
 waiting. 
 The heuristics, too, assigned every report in all five datasets, even with the smallest window of $\pm$1\,s. 
-In the four datasets in which the offset was recorded, a report arrived at most 158\,ms before and 
-at most 110\,ms after the event time of its audit entry (Table~\ref{tab:correlation-offset}). 
-The correct entry therefore always lay within the window. 
+A report arrived at most 158\,ms before and at most 110\,ms after the event time of its audit 
+entry (Table~\ref{tab:correlation-offset}). 
+The correct entry thus always lay within the window. 
 Where a heuristic fails, it therefore assigns a report to the wrong counterpart rather than to none, 
 which is why the following paragraphs concern precision.
 
@@ -209,7 +209,7 @@ The default of $\pm$10\,s covers both with a wide margin, at the price of examin
 6.4 candidates per report in D1. 
 
 \paragraph{Without the hashes, wrong assignments occur only between logins less than 100\,ms apart.}
-\texttt{TIME\_\allowbreak{}WINDOW} reached a precision of 65.0 percent in D2, 73.7 percent in D5 and 
+\texttt{TIME\_\allowbreak{}WINDOW} reached a precision of 71.2 percent in D2, 73.7 percent in D5 and 
 89.9 percent in D4. 
 Table~\ref{tab:correlation-density} breaks these figures down by the distance of each login to the 
 nearest other login at the same SP, with the number of logins in each range in parentheses. 
@@ -218,7 +218,7 @@ At larger distances, \texttt{TIME\_\allowbreak{}WINDOW} was correct in every cas
 Within this zone, it selected the correct entry in 56 to 69 percent of cases, regardless of whether 
 the logins came from the harness or from browsers. 
 The differences between the overall figures therefore do not stem from the strategy but from how 
-many logins fall into the zone: 87 percent in D2, 84 percent in D5 and 23 percent in D4.
+many logins fall into the zone: 86 percent in D2, 84 percent in D5 and 23 percent in D4.
 
 \begin{table}[h]
 \centering
@@ -229,7 +229,7 @@ many logins fall into the zone: 87 percent in D2, 84 percent in D5 and 23 percen
 Dataset & Scenario & \texttt{HASH\_AND\_TIME\_WINDOW} & \texttt{TIME\_WINDOW} \\
 \midrule
 D1 & Single user                 & 100\% & 100\%  \\
-D2 & Several users               & 100\% & 65.0\% \\
+D2 & Several users               & 100\% & 71.2\% \\
 D3 & Real browser                & 100\% & 100\%  \\
 D4 & Real browser, several users & 100\% & 89.9\% \\
 D5 & Shared address              & 100\% & 73.7\% \\
@@ -245,12 +245,12 @@ D5 & Shared address              & 100\% & 73.7\% \\
 \toprule
 Distance & D2 & D3 & D4 & D5 \\
 \midrule
-$<$\,100\,ms      & 59.7\% (521) & --- (0)     & 55.8\% (138) & 68.7\% (504) \\
-100--300\,ms      & 100\% (65)   & --- (0)     & 100\% (132)  & 100\% (96)   \\
-300\,ms--1\,s     & 100\% (14)   & --- (0)     & 100\% (258)  & --- (0)      \\
+$<$\,100\,ms      & 66.5\% (516) & --- (0)     & 55.8\% (138) & 68.7\% (504) \\
+100--300\,ms      & 100\% (84)   & --- (0)     & 100\% (132)  & 100\% (96)   \\
+300\,ms--1\,s     & --- (0)      & --- (0)     & 100\% (258)  & --- (0)      \\
 $>$\,1\,s         & --- (0)      & 100\% (202) & 100\% (78)   & --- (0)      \\
 \midrule
-Share below 100\,ms & 86.8\%     & 0\%         & 22.8\%       & 84.0\%       \\
+Share below 100\,ms & 86.0\%     & 0\%         & 22.8\%       & 84.0\%       \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -283,7 +283,6 @@ identifiers distinguishes the users.
 \paragraph{Operating limit of the heuristics.}
 Table~\ref{tab:correlation-offset} shows the offset between the reception of a report and the event 
 time of its audit entry. 
-This was not recorded for D2. 
 The offset is mostly negative, by about 30\,ms, which means that the report arrives before the 
 event time of its audit entry. 
 The reason is that the post authentication interceptor runs in the middle of the profile flow, 
@@ -312,6 +311,7 @@ that the offset, which the analysis records, has to be measured again in a diffe
 Dataset & Minimum & Maximum & Critical distance \\
 \midrule
 D1 & $-98$\,ms  & $+75$\,ms  & 196\,ms \\
+D2 & $-110$\,ms & $+78$\,ms  & 220\,ms \\
 D3 & $-102$\,ms & $-17$\,ms  & 204\,ms \\
 D4 & $-158$\,ms & $+42$\,ms  & 316\,ms \\
 D5 & $-50$\,ms  & $+110$\,ms & 220\,ms \\

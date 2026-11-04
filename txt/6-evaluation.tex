@@ -50,7 +50,7 @@ Section~\ref{subsec:impl-correlation} described the correlation mechanism, which
 post authentication report to the audit entry of the same login. 
 It first tries \texttt{INBOUND\_\allowbreak{}MESSAGE\_\allowbreak{}ID} and falls back to two 
 heuristic strategies where the identifier is not available. 
-This strategy referred to as the exact strategy in the following. 
+This strategy is referred to as the exact strategy in the following. 
 Both heuristics query the audit entries of the same SP within a time window around the report. 
 \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} additionally requires the 
 same \textit{usernameHash} and \textit{ipHash}, whereas \texttt{TIME\_\allowbreak{}WINDOW} relies 
@@ -347,9 +347,9 @@ In addition, series of legitimate logins show whether the rules remain silent wh
 
 \paragraph{Tests.}
 There are two types of tests. 
-A true positive test constructs a scenario in which a rule is supposed to raise an alert and 
+A true positive (TP) test constructs a scenario in which a rule is supposed to raise an alert and 
 confirms that it does. 
-A true negative test constructs a scenario in which no alert is due and confirms that none is 
+A true negative (TN) test constructs a scenario in which no alert is due and confirms that none is 
 raised. 
 How much a test shows depends on the level at which it runs. 
 In an integration test, the test builds the input of the rule itself, for instance an audit entry 
@@ -511,11 +511,11 @@ above 3.7 percent per SP unlikely, with 95 percent confidence according to the W
 interval~\cite{Wilson}. 
 For both SPs together, the limit is 1.9 percent. 
 At the clean SP this applies to every alert that a login can trigger, at the weak SP to the 
-consistency check.
+consistency check. 
 Findings about the configuration of an SP are not triggered by logins. 
 The clean SP, for instance, receives a \texttt{MISSING\_\allowbreak{}MFA} alert once per day, since it 
 does not offer an MFA flow. 
-Sustained load did not change this. 
+Sustained load did not produce false alarms either. 
 During the 10{,}854 logins of the performance series, the detection layer raised 21{,}712 alerts, 
 all of them expected: one \texttt{UNENCRYPTED\_\allowbreak{}ASSERTION} and one 
 \texttt{SUSPICIOUS\_\allowbreak{}USER\_\allowbreak{}AGENT} alert per login, since the benchmark 

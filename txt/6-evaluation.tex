@@ -278,8 +278,7 @@ In D5, where all users shared one address, the same variant produced exactly the
 \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbreak{}WINDOW} nevertheless remained at 
 100 percent, because \textit{usernameHash} separated the users on its own. 
 In all tested scenarios, the heuristic thus stays exact as long as at least one of the two 
-identifiers distinguishes the users, and it falls back to the density dependence of 
-\texttt{TIME\_\allowbreak{}WINDOW} only when both are missing or uninformative.
+identifiers distinguishes the users. 
 
 \paragraph{Operating limit of the heuristics.}
 Table~\ref{tab:correlation-offset} shows the offset between the reception of a report and the event 
@@ -322,7 +321,7 @@ D5 & $-50$\,ms  & $+110$\,ms & 220\,ms \\
 
 Taken together, the correlation found a counterpart for every report, and with the inbound message 
 identifier or at least one separating hash, it found the correct one in every tested scenario. 
-Only an audit log that records neither the identifier nor the hashes leaves the correlation to time 
+Only an audit log that lacks the identifier and at least one of the hashes leaves the correlation to time 
 alone, and it then assigns reports to the wrong entry where logins at the same SP follow each other 
 within less than 100\,ms. 
 Operators should therefore record the inbound message identifier in the audit format or, where 

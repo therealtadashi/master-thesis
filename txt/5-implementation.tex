@@ -19,7 +19,7 @@ Logstash for preprocessing and transmitting the collected data.
 Both components run as separate containers on the same host as the IdP and access its log files 
 and configuration through mounted directories. 
 This placement is what allows them to share the pseudonymisation salt and the message 
-authentication secret with the interceptor, as described in Section~\ref{sec:impl-transport}.
+authentication secret with the interceptors, as described in Section~\ref{sec:impl-transport}.
 
 A key aspect of the implementation is the handling of audit log entries. 
 Instead of parsing the audit log according to a fixed format, Logstash processes 
@@ -142,7 +142,7 @@ component, so that it can be rotated without modifying the interceptors or the L
 
 Before the aggregated data is transmitted, each collecting component computes an HMAC over 
 every record, as outlined in Section~\ref{sec:trust}. 
-Both Logstash and the interceptor hold the shared secret, so that the backend can verify that a 
+Both Logstash and the interceptors hold the shared secret, so that the backend can verify that a 
 received record was not altered and originates from an authorised collection component. 
 
 The verification is conditional on configuration. 
@@ -264,7 +264,8 @@ The second strategy, \texttt{HASH\_\allowbreak{}AND\_\allowbreak{}TIME\_\allowbr
 the candidates by SP, pseudonymised subject and pseudonymised client address, and additionally restricts 
 them to a configurable time window around the event. 
 The third strategy, \texttt{TIME\_\allowbreak{}WINDOW}, retains only the SP and the time window. 
-It is therefore used where neither the message identifier nor the pseudonymised identifiers are recorded. 
+It is therefore used where the message identifier is not recorded and at least one of the pseudonymised 
+identifiers is missing. 
 
 Both time window strategies may return more than one candidate. 
 In this case the entry with the smallest temporal distance to the post authentication report is selected. 

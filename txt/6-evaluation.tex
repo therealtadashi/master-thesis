@@ -363,12 +363,9 @@ path as well, which makes it the only level at which a fault in the log shipping
 \paragraph{Scenarios.}
 In production, the detection layer has to meet two expectations at once. 
 It has to report the weaknesses and attacks that the rules describe, and it has to remain quiet 
-during the vast majority of logins, which are legitimate, since an operator who receives alerts for 
-ordinary logins soon stops reading them. 
+during the vast majority of logins, which are legitimate. 
 The two comparison rules carry a third expectation, namely to notice when a record has been altered 
 or has gone missing. 
-The scenarios address these expectations in turn and finally repeat the second one under sustained 
-load.
 
 Every rule has at least one scenario at the integration level that contains the condition it is 
 meant to detect. 
